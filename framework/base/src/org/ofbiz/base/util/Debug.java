@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
@@ -957,5 +959,57 @@ public final class Debug {
      */
     public static void restoreThreadLevelAllow() {
         threadLevelAllowCache.remove();
+    }
+
+    /**
+     * SCIPIO: Checks the current thread stack trace to find calling method that does not belong to the specified classes,
+     * and returns its StackTraceElement (or null if all excluded).
+     * The calling method is automatically excluded.
+     * WARN: This method is very slow and should only be used if verbose on.
+     * Added 2018-11-29.
+     */
+    public static StackTraceElement getCallerInfo(Collection<String> excludeClasses) {
+        StackTraceElement[] stList = Thread.currentThread().getStackTrace();
+        for(int i = 2; i < stList.length; i++) { // 2: skip this method and the caller
+            StackTraceElement st = stList[i];
+            if (!excludeClasses.contains(st.getClassName()) && !Debug.class.getName().equals(st.getClassName())) {
+                return st;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Checks the current thread stack trace to find calling method,
+     * and returns its StackTraceElement (or null if all excluded).
+     * The calling method is automatically excluded.
+     * WARN: This method is very slow and should only be used if verbose on.
+     * Added 2018-11-29.
+     */
+    public static StackTraceElement getCallerInfo() {
+        return getCallerInfo(Collections.emptyList());
+    }
+
+    /**
+     * SCIPIO: Checks the current thread stack trace to find calling method that does not belong to the specified classes,
+     * and returns a short string with class simple name, method and line number (or empty string if all excluded).
+     * The calling method is automatically excluded.
+     * WARN: This method is very slow and should only be used if verbose on.
+     * Added 2018-11-29.
+     */
+    public static String getCallerShortInfo(Collection<String> excludeClasses) {
+        return formatCallerShortInfo(getCallerInfo(excludeClasses));
+    }
+
+    /**
+     * SCIPIO: Formats StackTraceElement to a short string with class simple name, method and line number.
+     * Added 2018-11-29.
+     */
+    public static String formatCallerShortInfo(StackTraceElement callerInfo) {
+        if (callerInfo == null) {
+            return "";
+        }
+        return callerInfo.getClassName().substring(callerInfo.getClassName().lastIndexOf('.') + 1) 
+                + "." + callerInfo.getMethodName() + "@" + callerInfo.getLineNumber();
     }
 }

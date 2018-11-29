@@ -1178,11 +1178,13 @@ public final class UtilProperties implements Serializable {
 
     private static Set<String> resourceNotFoundMessagesShown = new HashSet<>();
     /** Returns the specified resource/properties file as a ResourceBundle
+     * SCIPIO: 2018-11-29: Added optional support.
      * @param resource The name of the resource - can be a file, class, or URL
      * @param locale The locale that the given resource will correspond to
+     * @param optional (SCIPIO) If true, no error if missing and generates empty instead (default is usually false)
      * @return The ResourceBundle
      */
-    public static ResourceBundle getResourceBundle(String resource, Locale locale) {
+    public static ResourceBundle getResourceBundle(String resource, Locale locale, boolean optional) {
         if (UtilValidate.isEmpty(resource)) {
             throw new IllegalArgumentException("resource cannot be null or empty");
         }
@@ -1191,7 +1193,7 @@ public final class UtilProperties implements Serializable {
         }
         ResourceBundle bundle = null;
         try {
-            bundle = UtilResourceBundle.getBundle(resource, locale, (ClassLoader) null);
+            bundle = UtilResourceBundle.getBundle(resource, locale, (ClassLoader) null, optional); // SCIPIO: optional
         } catch (MissingResourceException e) {
             String resourceCacheKey = createResourceName(resource, locale, false);
             if (!resourceNotFoundMessagesShown.contains(resourceCacheKey)) {
@@ -1203,6 +1205,15 @@ public final class UtilProperties implements Serializable {
         return bundle;
     }
 
+    /** Returns the specified resource/properties file as a ResourceBundle
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param locale The locale that the given resource will correspond to
+     * @return The ResourceBundle
+     */
+    public static ResourceBundle getResourceBundle(String resource, Locale locale) {    
+        return getResourceBundle(resource, locale, false);
+    }
+    
     /** Returns the specified resource/properties file as a Map with the original
      *  ResourceBundle in the Map under the key _RESOURCE_BUNDLE_
      * @param resource The name of the resource - can be a file, class, or URL
@@ -1222,6 +1233,19 @@ public final class UtilProperties implements Serializable {
      */
     public static ResourceBundleMapWrapper getResourceBundleMap(String resource, Locale locale, Map<String, Object> context) {
         return new ResourceBundleMapWrapper(getResourceBundle(resource, locale), context);
+    }
+    
+    /** Returns the specified resource/properties file as a Map with the original
+     *  ResourceBundle in the Map under the key _RESOURCE_BUNDLE_
+     * SCIPIO: 2018-11-29: Added 2018-11-29 for optional flag.
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param locale The locale that the given resource will correspond to
+     * @param context The screen rendering context
+     * @param optional (SCIPIO) If true, no error if missing and generates empty instead (default is usually false)
+     * @return Map containing all entries in The ResourceBundle
+     */
+    public static ResourceBundleMapWrapper getResourceBundleMap(String resource, Locale locale, Map<String, Object> context, boolean optional) {
+        return new ResourceBundleMapWrapper(getResourceBundle(resource, locale, optional), context);
     }
 
     /** Returns the specified resource/properties file.<p>Note that this method
@@ -2193,7 +2217,12 @@ public final class UtilProperties implements Serializable {
             this.hashCode = hashString.hashCode();
         }
 
-        public static ResourceBundle getBundle(String resource, Locale locale, ClassLoader loader) throws MissingResourceException {
+        /**
+         * Gets bundle.
+         * <p>
+         * SCIPIO: 2018-11-29: Added optional (usually default false).
+         */
+        public static ResourceBundle getBundle(String resource, Locale locale, ClassLoader loader, boolean optional) throws MissingResourceException {
             String resourceName = createResourceName(resource, locale, true);
             UtilResourceBundle bundle = bundleCache.get(resourceName);
             if (bundle == null) {
@@ -2232,7 +2261,13 @@ public final class UtilProperties implements Serializable {
                     }
                 }
                 if (bundle == null) {
-                    throw new MissingResourceException("Resource " + resource + ", locale " + locale + " not found", null, null);
+                    if (optional) {
+                        // SCIPIO: optional; create dummy bundle in cache to prevent further lookups
+                        Debug.logInfo("Optional resource " + resource + ", locale " + locale + " not found", module);
+                        bundle = new UtilResourceBundle(new ExtendedProperties(), locale, parentBundle);
+                    } else {
+                        throw new MissingResourceException("Resource " + resource + ", locale " + locale + " not found", null, null);
+                    }
                 } else if (!bundle.getLocale().equals(locale)) {
                     // Create a "dummy" bundle for the requested locale
                     bundle = new UtilResourceBundle(bundle.properties, locale, parentBundle);
@@ -2245,6 +2280,10 @@ public final class UtilProperties implements Serializable {
                 bundleCache.putIfAbsent(resourceName, bundle);
             }
             return bundle;
+        }
+
+        public static ResourceBundle getBundle(String resource, Locale locale, ClassLoader loader) throws MissingResourceException {
+            return getBundle(resource, locale, loader, false);
         }
 
         @Override

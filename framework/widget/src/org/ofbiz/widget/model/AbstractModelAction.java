@@ -482,12 +482,14 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         private final FlexibleStringExpander globalExdr;
         private final FlexibleMapAccessor<ResourceBundleMapWrapper> mapNameAcsr;
         private final FlexibleStringExpander resourceExdr;
+        private final boolean optional; // SCIPIO
 
         public PropertyMap(ModelWidget modelWidget, Element setElement) {
             super(modelWidget, setElement);
             this.resourceExdr = FlexibleStringExpander.getInstance(setElement.getAttribute("resource"));
             this.mapNameAcsr = FlexibleMapAccessor.getInstance(setElement.getAttribute("map-name"));
             this.globalExdr = FlexibleStringExpander.getInstance(setElement.getAttribute("global"));
+            this.optional = "true".equals(setElement.getAttribute("optional"));
         }
 
         @Override
@@ -504,10 +506,11 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
             String resource = this.resourceExdr.expandString(context, locale);
             ResourceBundleMapWrapper existingPropMap = this.mapNameAcsr.get(context);
             if (existingPropMap == null) {
-                this.mapNameAcsr.put(context, UtilProperties.getResourceBundleMap(resource, locale, context));
+                this.mapNameAcsr.put(context, UtilProperties.getResourceBundleMap(resource, locale, context,
+                        optional)); // SCIPIO: optional
             } else {
                 try {
-                    existingPropMap.addBottomResourceBundle(resource);
+                    existingPropMap.addBottomResourceBundle(resource, optional); // SCIPIO: optional
                 } catch (IllegalArgumentException e) {
                     // log the error, but don't let it kill everything just for a typo or bad char in an l10n file
                     Debug.logError(e, "Error adding resource bundle [" + resource + "]: " + e.toString(), module);
@@ -518,7 +521,8 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
                 if (globalCtx != null) {
                     ResourceBundleMapWrapper globalExistingPropMap = this.mapNameAcsr.get(globalCtx);
                     if (globalExistingPropMap == null) {
-                        this.mapNameAcsr.put(globalCtx, UtilProperties.getResourceBundleMap(resource, locale, context));
+                        this.mapNameAcsr.put(globalCtx, UtilProperties.getResourceBundleMap(resource, locale, context,
+                                optional)); // SCIPIO: optional
                     } else {
                         // is it the same object? if not add it in here too...
                         if (existingPropMap != globalExistingPropMap) {

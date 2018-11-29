@@ -94,6 +94,15 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
         this.addBottomResourceBundle(new InternalRbmWrapper(UtilProperties.getResourceBundle(resource, this.initialResourceBundle.getLocale())));
     }
 
+    /** Don't pass the locale to make sure it has the same locale as the base. sCPI */
+    public void addBottomResourceBundle(String resource, boolean optional) { // SCIPIO: optional
+        if (this.initialResourceBundle == null) {
+            throw new IllegalArgumentException("Cannot add bottom resource bundle, this wrapper was not properly initialized (there is no base/initial ResourceBundle).");
+        }
+        this.addBottomResourceBundle(new InternalRbmWrapper(UtilProperties.getResourceBundle(resource, this.initialResourceBundle.getLocale(), optional)));
+    }
+    
+    
     /** In general we don't want to use this, better to start with the more specific ResourceBundle and add layers of common ones...
      * Puts ResourceBundle on the top of the stack (top meaning will override lower layers on the stack)
      */

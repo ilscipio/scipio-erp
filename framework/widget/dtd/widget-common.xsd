@@ -465,6 +465,15 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute type="xs:boolean" name="optional" default="false">
+                <xs:annotation>
+                    <xs:documentation>
+                        SCIPIO: If set to true, missing property-map will not generate an error.
+                        NOTE: You may need to restart the system or clear various caches to see the effect of changing this flag.
+                        Added 2018-11-29.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="property-to-field" substitutionGroup="AllActions">

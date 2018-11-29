@@ -393,7 +393,7 @@
     <@row>
         <@cell medium=5 large=5>
             <@section title=uiLabelMap.SetupAccountingTransactionTypes>
-                <@table>
+                <@table type="data-list">
                     <@thead>
                         <@tr>
                             <@td>${uiLabelMap.FormFieldTitle_acctgTransTypeId}</@td>
@@ -411,7 +411,7 @@
         </@cell>
         <@cell medium=4 large=4>
             <@section title=uiLabelMap.SetupAccountingTransactionEntryTypes>
-                <@table>
+                <@table type="data-list">
                     <@thead>
                         <@tr>
                             <@td>${uiLabelMap.FormFieldTitle_acctgTransEntryTypeId}</@td>

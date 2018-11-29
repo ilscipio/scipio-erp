@@ -231,6 +231,8 @@ public final class SimpleMethod extends MiniLangElement {
                     methodOp = factory.createMethodOperation(curOperElem, simpleMethod);
                 } else if ("else".equals(nodeName)) {
                     // don't add anything, but don't complain either, this one is handled in the individual operations
+                } else if ("finally".equals(nodeName)) {
+                    // SCIPIO: 2018-11-28: ignore finally, handled by Try
                 } else {
                     MiniLangValidate.handleError("Invalid element found", simpleMethod, curOperElem);
                 }

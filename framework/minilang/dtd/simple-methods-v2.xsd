@@ -4895,6 +4895,32 @@ under the License.
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="try" substitutionGroup="OtherOperations">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Wraps the code in a java try/finally block.
+                TODO: Does not yet support catch block.
+                Added 2018-11-28.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group minOccurs="0" maxOccurs="unbounded" ref="AllOperations" />
+                <xs:element minOccurs="0" maxOccurs="1" ref="finally"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="finally">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Code that always runs whether try works or throws an exception.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="AllOperations"/>
+        </xs:complexType>
+    </xs:element>
+
     <!--
         ======================================================
         ========== The Simple Map Processor Section ==========

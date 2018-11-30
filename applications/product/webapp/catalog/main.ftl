@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#if !sessionAttributes.userLogin??>
+<#if !userLogin??>
       <@panel>${uiLabelMap.ProductGeneralMessage}</@panel>
 </#if>
 

@@ -7,9 +7,10 @@ code package.
 
 <@heading>${uiLabelMap.ProductProductsLastViewed}</@heading>
 
-<#if sessionAttributes.lastViewedProducts?? && sessionAttributes.lastViewedProducts?has_content>
+<#assign lastViewedProducts = lastViewedProducts!sessionAttributes.lastViewedProducts!><#-- SCIPIO: Access sessionAttributes only once -->
+<#if lastViewedProducts?? && lastViewedProducts?has_content>
   <@table type="generic">
-    <#list sessionAttributes.lastViewedProducts as productId>
+    <#list lastViewedProducts as productId>
       <@tr>
         <@td>
           <@render resource="component://shop/widget/CatalogScreens.xml#productsummary" reqAttribs={"optProductId":productId, "listIndex":productId_index}/>

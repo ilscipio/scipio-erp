@@ -6,7 +6,7 @@ code package.
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
 <#assign maxToShow = 4/>
-<#assign lastViewedProducts = sessionAttributes.lastViewedProducts!/>
+<#assign lastViewedProducts = lastViewedProducts!sessionAttributes.lastViewedProducts!/>
 <#if lastViewedProducts?has_content>
   <#if (lastViewedProducts?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(lastViewedProducts?size-1)/></#if>
   <#macro menuContent menuArgs={}>

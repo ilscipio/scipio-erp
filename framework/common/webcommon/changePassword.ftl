@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#assign username = requestParameters.USERNAME!(sessionAttributes.autoUserLogin.userLoginId)!"">
+<#assign username = requestParameters.USERNAME!(autoUserLogin.userLoginId)!""><#-- SCIPIO: Don't use sessionAttributes here -->
 <#assign tenantId = requestParameters.userTenantId!>
 
 <@row>

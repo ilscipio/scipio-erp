@@ -57,3 +57,7 @@ context.productFeatureTypeIdsOrdered = productFeatureTypeIdsOrdered;
 context.searchOperator = searchOperator;
 context.searchConstraintStrings = searchConstraintStrings;
 context.searchSortOrderString = searchSortOrderString;
+
+if (context.orderPartyId == null) { // SCIPIO
+    context.orderPartyId = session.getAttribute("orderPartyId");
+}

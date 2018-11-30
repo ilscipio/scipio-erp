@@ -14,7 +14,7 @@ code package.
 <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
 <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
 <#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>
-<#assign username = requestParameters.USERNAME!(sessionAttributes.autoUserLogin.userLoginId)!"">
+<#assign username = requestParameters.USERNAME!(autoUserLogin.userLoginId)!""><#-- SCIPIO: Don't use sessionAttributes here -->
 
 <@row>
     <@cell class="${styles.grid_large!}centered ${styles.login_wrap!}" last=true id="login">

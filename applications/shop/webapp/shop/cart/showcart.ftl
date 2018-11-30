@@ -57,8 +57,9 @@ function setAlternateGwp(field) {
 
 <#assign cartHasItems = (shoppingCartSize > 0)>
 <#assign cartEmpty = (!cartHasItems)>
-<#if ((sessionAttributes.lastViewedProducts)?has_content && (sessionAttributes.lastViewedProducts?size > 0))>
-  <#assign continueLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=(sessionAttributes.lastViewedProducts.get(0)) rawParams=true/></#assign>
+<#assign lastViewedProducts = lastViewedProducts!sessionAttributes.lastViewedProducts!><#-- SCIPIO: Access session only once -->
+<#if ((lastViewedProducts)?has_content && (lastViewedProducts?size > 0))>
+  <#assign continueLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=(lastViewedProducts.get(0)) rawParams=true/></#assign>
 <#else>
   <#assign continueLink = makeOfbizUrl("main")>
 </#if>

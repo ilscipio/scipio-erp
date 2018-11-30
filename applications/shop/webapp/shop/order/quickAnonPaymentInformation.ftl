@@ -109,8 +109,9 @@ function getPaymentInformation() {
       <input type="hidden" name="partyId" value="${partyId!}"/>
       <input type="hidden" name="paymentMethodTypeId" value="${paymentMethodTypeId!}"/>
       <input type="hidden" name="createNew" value="Y"/>
-      <#if session.getAttribute("billingContactMechId")??>
-        <input type="hidden" name="contactMechId" value="${session.getAttribute("billingContactMechId")!}"/>
+      <#assign billingContactMechId = sessionAttributes.billingContactMechId!><#-- SCIPIO: Access session only once -->
+      <#if billingContactMechId?has_content>
+        <input type="hidden" name="contactMechId" value="${billingContactMechId}"/>
       </#if>
 
       <div class="errorMessage" id="noPaymentMethodSelectedError"></div>

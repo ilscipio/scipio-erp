@@ -31,7 +31,8 @@ code package.
 </@script>
 
 <@section title=uiLabelMap.EcommerceSignUpForContactList id="miniSignUpForContactList">
-  <#if sessionAttributes.autoName?has_content>
+  <#assign autoName = sessionAttributes.autoName!><#-- SCIPIO: Access session only once -->
+  <#if autoName?has_content>
   <#-- The visitor potentially has an account and party id -->
     <#if userHasAccount>
     <#-- They are logged in so lets present the form to sign up with their email address -->
@@ -62,7 +63,7 @@ code package.
     <#else>
     <#-- Not logged in so ask them to log in and then sign up or clear the user association -->
       <p>${uiLabelMap.EcommerceSignUpForContactListLogIn}</p>
-      <p><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a> ${sessionAttributes.autoName}</p>
+      <p><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a> ${autoName}</p>
       <p>(${uiLabelMap.CommonNotYou}? <a href="<@ofbizUrl>autoLogout</@ofbizUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
     </#if>
   <#else>

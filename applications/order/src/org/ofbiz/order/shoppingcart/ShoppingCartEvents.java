@@ -2025,10 +2025,10 @@ public class ShoppingCartEvents {
 
                 // check permission for taking the order
                 boolean hasPermission = false;
-                if (("PURCHASE_ORDER".equals(cart.getOrderType())) && (security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session))) {
+                if (("PURCHASE_ORDER".equals(cart.getOrderType())) && (security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", request))) { // SCIPIO: Now using request; was: session
                     hasPermission = true;
                 } else if ("SALES_ORDER".equals(cart.getOrderType())) {
-                    if (security.hasEntityPermission("ORDERMGR", "_SALES_CREATE", session)) {
+                    if (security.hasEntityPermission("ORDERMGR", "_SALES_CREATE", request)) { // SCIPIO: Now using request; was: session
                         hasPermission = true;
                     } else {
                         // if the user is a rep of the store, then he also has permission

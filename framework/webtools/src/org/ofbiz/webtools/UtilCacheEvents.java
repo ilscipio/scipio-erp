@@ -50,7 +50,7 @@ public final class UtilCacheEvents {
         Locale locale = UtilHttp.getLocale(request);
 
         Security security = (Security) request.getAttribute("security");
-        if (!security.hasPermission("UTIL_CACHE_EDIT", request.getSession())) {
+        if (!security.hasPermission("UTIL_CACHE_EDIT", request)) { // SCIPIO: Now using request; was: request.getSession()
             errMsg = UtilProperties.getMessage(err_resource, "utilCacheEvents.permissionEdit", locale) + ".";
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
@@ -122,7 +122,7 @@ public final class UtilCacheEvents {
         Locale locale = UtilHttp.getLocale(request);
 
         Security security = (Security) request.getAttribute("security");
-        if (!security.hasPermission("UTIL_CACHE_EDIT", request.getSession())) {
+        if (!security.hasPermission("UTIL_CACHE_EDIT", request)) { // SCIPIO: Now using request; was: request.getSession()
             errMsg = UtilProperties.getMessage(err_resource, "utilCacheEvents.permissionEdit", locale) + ".";
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
@@ -159,7 +159,7 @@ public final class UtilCacheEvents {
         Locale locale = UtilHttp.getLocale(request);
 
         Security security = (Security) request.getAttribute("security");
-        if (!security.hasPermission("UTIL_CACHE_EDIT", request.getSession())) {
+        if (!security.hasPermission("UTIL_CACHE_EDIT", request)) { // SCIPIO: Now using request; was: request.getSession()
             errMsg = UtilProperties.getMessage(err_resource, "utilCacheEvents.permissionEdit", locale) + ".";
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
@@ -181,7 +181,7 @@ public final class UtilCacheEvents {
         Locale locale = UtilHttp.getLocale(request);
 
         Security security = (Security) request.getAttribute("security");
-        if (!security.hasPermission("UTIL_CACHE_EDIT", request.getSession())) {
+        if (!security.hasPermission("UTIL_CACHE_EDIT", request)) { // SCIPIO: Now using request; was: request.getSession()
             errMsg = UtilProperties.getMessage(err_resource, "utilCacheEvents.permissionEdit", locale) + ".";
             request.setAttribute("_EVENT_MESSAGE_", errMsg);
             return "error";

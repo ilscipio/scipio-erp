@@ -104,8 +104,8 @@ public class GenericWebEvent {
         }
 
         // check permissions before moving on...
-        if (!security.hasEntityPermission("ENTITY_DATA", "_" + updateMode, request.getSession()) &&
-            !security.hasEntityPermission(entity.getPlainTableName(), "_" + updateMode, request.getSession())) {
+        if (!security.hasEntityPermission("ENTITY_DATA", "_" + updateMode, request) && // SCIPIO: Now using request; was: request.getSession()
+            !security.hasEntityPermission(entity.getPlainTableName(), "_" + updateMode, request)) { // SCIPIO: Now using request; was: request.getSession()
                 Map<String, String> messageMap = UtilMisc.toMap("updateMode", updateMode, "entityName", entity.getEntityName(), "entityPlainTableName", entity.getPlainTableName());
                 String errMsg = UtilProperties.getMessage(GenericWebEvent.err_resource, "genericWebEvent.not_sufficient_permissions_01", messageMap, locale);
                 errMsg += UtilProperties.getMessage(GenericWebEvent.err_resource, "genericWebEvent.not_sufficient_permissions_02", messageMap, locale) + ".";

@@ -62,7 +62,7 @@ public class ContentEvents {
         String doAll = request.getParameter("doAll");
 
         // check permissions before moving on...
-        if (!security.hasEntityPermission("CONTENTMGR", "_" + updateMode, request.getSession())) {
+        if (!security.hasEntityPermission("CONTENTMGR", "_" + updateMode, request)) { // SCIPIO: Now using request; was: request.getSession()
             Map<String, String> messageMap = UtilMisc.toMap("updateMode", updateMode);
             errMsg = UtilProperties.getMessage(resource,"contentevents.not_sufficient_permissions", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);

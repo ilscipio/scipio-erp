@@ -214,7 +214,7 @@ public class CoreEvents {
             serviceContext.put("locale", locale);
         }
 
-        if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request.getSession())) {
+        if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request)) { // SCIPIO: Now using request; was: request.getSession() 
             String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.not_authorized_to_call", locale);
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
@@ -471,7 +471,7 @@ public class CoreEvents {
             return "error";
         }
 
-        if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request.getSession())) {
+        if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request)) { // SCIPIO: Now using request; was: request.getSession()
             String errMsg = UtilProperties.getMessage(CoreEvents.err_resource, "coreEvents.not_authorized_to_call", locale);
             request.setAttribute("_ERROR_MESSAGE_", errMsg + ".");
             return "error";

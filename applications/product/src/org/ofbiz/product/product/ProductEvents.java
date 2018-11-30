@@ -87,7 +87,7 @@ public class ProductEvents {
         String doAll = request.getParameter("doAll");
 
         // check permissions before moving on...
-        if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
+        if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request)) { // SCIPIO: Now using request; was: request.getSession()
             Map<String, String> messageMap = UtilMisc.toMap("updateMode", updateMode);
             errMsg = UtilProperties.getMessage(resource,"productevents.not_sufficient_permissions", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
@@ -208,7 +208,7 @@ public class ProductEvents {
         }
 
         // check permissions before moving on...
-        if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
+        if (!security.hasEntityPermission("CATALOG", "_" + updateMode, request)) { // SCIPIO: Now using request; was: request.getSession()
             Map<String, String> messageMap = UtilMisc.toMap("updateMode", updateMode);
             errMsg = UtilProperties.getMessage(resource,"productevents.not_sufficient_permissions", messageMap, UtilHttp.getLocale(request));
             request.setAttribute("_ERROR_MESSAGE_", errMsg);

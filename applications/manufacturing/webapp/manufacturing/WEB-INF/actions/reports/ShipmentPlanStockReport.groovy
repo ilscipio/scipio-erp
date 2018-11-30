@@ -85,7 +85,7 @@ if (shipment) {
 
     // check permission
     hasPermission = false;
-    if (security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
+    if (security.hasEntityPermission("MANUFACTURING", "_VIEW", request)) {
         hasPermission = true;
     }
     context.hasPermission = hasPermission;

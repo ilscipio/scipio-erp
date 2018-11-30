@@ -4,7 +4,7 @@ import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.base.util.cache.UtilCache
 import org.ofbiz.common.uom.UomWorker
 
-context.hasUtilCacheEdit = security.hasEntityPermission("UTIL_CACHE", "_EDIT", session);
+context.hasUtilCacheEdit = security.hasEntityPermission("UTIL_CACHE", "_EDIT", request);
 
 final module = "MemoryInfo.groovy"
 

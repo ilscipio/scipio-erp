@@ -59,7 +59,7 @@ if (!paymentMethodData) paymentMethodData = [:];
 if (paymentMethodData) context.paymentMethodData = paymentMethodData;
 
 //prepare security flag
-if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && (context.creditCard || context.giftCard || context.eftAccount) && context.paymentMethod && (!userLogin?.partyId || !userLogin.partyId.equals(context.paymentMethod.partyId))) {
+if (!security.hasEntityPermission("PARTYMGR", "_VIEW", request) && (context.creditCard || context.giftCard || context.eftAccount) && context.paymentMethod && (!userLogin?.partyId || !userLogin.partyId.equals(context.paymentMethod.partyId))) {
     context.canNotView = true;
 } else {
     context.canNotView = false;

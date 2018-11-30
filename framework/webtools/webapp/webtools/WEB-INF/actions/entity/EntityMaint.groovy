@@ -68,12 +68,12 @@ entities.each { entityName ->
     }
 
     entityPermissionView = "N";
-    if (security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(entity.getPlainTableName(), "_VIEW", session)) {
+    if (security.hasEntityPermission("ENTITY_DATA", "_VIEW", request) || security.hasEntityPermission(entity.getPlainTableName(), "_VIEW", request)) {
         entityPermissionView = "Y";
     }
 
     entityPermissionCreate = "N";
-    if (security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(entity.getPlainTableName(), "_CREATE", session)) {
+    if (security.hasEntityPermission("ENTITY_DATA", "_CREATE", request) || security.hasEntityPermission(entity.getPlainTableName(), "_CREATE", request)) {
         entityPermissionCreate = "Y";
     }
 

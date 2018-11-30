@@ -134,7 +134,7 @@ if (!ofbizHome) {
 }
 
 // ONLY respond to reload requests if we are admin (using entities for now). otherwise could be abused.
-if (security.hasEntityPermission("ENTITY_DATA", "_ADMIN", session)) {
+if (security.hasEntityPermission("ENTITY_DATA", "_ADMIN", request)) {
     reloadDataModel = Boolean.TRUE.equals(fdtwArgs.reloadDataModel);
 } else {
     reloadDataModel = false;

@@ -45,7 +45,7 @@ context.modelEntity = modelEntity;
 plainTableName = modelEntity?.getPlainTableName();
 context.plainTableName = plainTableName;
 
-hasViewPermission = security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(plainTableName, "_VIEW", session);
+hasViewPermission = security.hasEntityPermission("ENTITY_DATA", "_VIEW", request) || security.hasEntityPermission(plainTableName, "_VIEW", request);
 context.hasViewPermission = hasViewPermission;
 
 // SCIPIO: return instead of crashing

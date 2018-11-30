@@ -23,7 +23,7 @@ import org.ofbiz.entity.model.ModelEntity;
 
 controlPath = parameters._CONTROL_PATH_;
 
-if (security.hasPermission("ENTITY_MAINT", session)) {
+if (security.hasPermission("ENTITY_MAINT", request)) {
     addMissing = "true".equals(parameters.addMissing);
     checkFkIdx = "true".equals(parameters.checkFkIdx);
     checkFks = "true".equals(parameters.checkFks);

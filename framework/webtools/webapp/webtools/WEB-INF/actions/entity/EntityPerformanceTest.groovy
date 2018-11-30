@@ -27,7 +27,7 @@ import org.ofbiz.base.util.*;
 
 DecimalFormat decimalFormat = new DecimalFormat("#,##0.#######");
 
-if (security.hasPermission("ENTITY_MAINT", session)) {
+if (security.hasPermission("ENTITY_MAINT", request)) {
     performanceList = [];
 
     calls = 1000;

@@ -81,10 +81,10 @@ context.entityName = modelEntity?.getEntityName() ?: entityName;
 plainTableName = modelEntity?.getPlainTableName()
 context.plainTableName = plainTableName;
 
-String hasViewPermission = (security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(plainTableName, "_VIEW", session)) == true ? "Y" : "N";
-String hasCreatePermission = (security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(plainTableName, "_CREATE", session)) == true ? "Y" : "N";
-String hasUpdatePermission = (security.hasEntityPermission("ENTITY_DATA", "_UPDATE", session) || security.hasEntityPermission(plainTableName, "_UPDATE", session)) == true ? "Y" : "N";
-String hasDeletePermission = (security.hasEntityPermission("ENTITY_DATA", "_DELETE", session) || security.hasEntityPermission(plainTableName, "_DELETE", session)) == true ? "Y" : "N";
+String hasViewPermission = (security.hasEntityPermission("ENTITY_DATA", "_VIEW", request) || security.hasEntityPermission(plainTableName, "_VIEW", request)) == true ? "Y" : "N";
+String hasCreatePermission = (security.hasEntityPermission("ENTITY_DATA", "_CREATE", request) || security.hasEntityPermission(plainTableName, "_CREATE", request)) == true ? "Y" : "N";
+String hasUpdatePermission = (security.hasEntityPermission("ENTITY_DATA", "_UPDATE", request) || security.hasEntityPermission(plainTableName, "_UPDATE", request)) == true ? "Y" : "N";
+String hasDeletePermission = (security.hasEntityPermission("ENTITY_DATA", "_DELETE", request) || security.hasEntityPermission(plainTableName, "_DELETE", request)) == true ? "Y" : "N";
 
 context.hasViewPermission = hasViewPermission;
 context.hasCreatePermission = hasCreatePermission;

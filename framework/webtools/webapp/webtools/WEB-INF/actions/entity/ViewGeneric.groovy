@@ -59,14 +59,14 @@ context.put("entity", entity);
 plainTableName = entity?.getPlainTableName();
 context.put("plainTableName", plainTableName);
 
-boolean hasAllView = security.hasEntityPermission("ENTITY_DATA", "_VIEW", session);
-boolean hasAllCreate = security.hasEntityPermission("ENTITY_DATA", "_CREATE", session);
-boolean hasAllUpdate = security.hasEntityPermission("ENTITY_DATA", "_UPDATE", session);
-boolean hasAllDelete = security.hasEntityPermission("ENTITY_DATA", "_DELETE", session);
-boolean hasViewPermission = hasAllView || security.hasEntityPermission(plainTableName, "_VIEW", session);
-boolean hasCreatePermission = hasAllCreate || security.hasEntityPermission(plainTableName, "_CREATE", session);
-boolean hasUpdatePermission = hasAllUpdate || security.hasEntityPermission(plainTableName, "_UPDATE", session);
-boolean hasDeletePermission = hasAllDelete || security.hasEntityPermission(plainTableName, "_DELETE", session);
+boolean hasAllView = security.hasEntityPermission("ENTITY_DATA", "_VIEW", request);
+boolean hasAllCreate = security.hasEntityPermission("ENTITY_DATA", "_CREATE", request);
+boolean hasAllUpdate = security.hasEntityPermission("ENTITY_DATA", "_UPDATE", request);
+boolean hasAllDelete = security.hasEntityPermission("ENTITY_DATA", "_DELETE", request);
+boolean hasViewPermission = hasAllView || security.hasEntityPermission(plainTableName, "_VIEW", request);
+boolean hasCreatePermission = hasAllCreate || security.hasEntityPermission(plainTableName, "_CREATE", request);
+boolean hasUpdatePermission = hasAllUpdate || security.hasEntityPermission(plainTableName, "_UPDATE", request);
+boolean hasDeletePermission = hasAllDelete || security.hasEntityPermission(plainTableName, "_DELETE", request);
 
 context.put("hasAllView", hasAllView);
 context.put("hasAllCreate", hasAllCreate);
@@ -352,7 +352,7 @@ for (int relIndex = 0; relIndex < entity.getRelationsSize(); relIndex++) {
     ModelEntity relatedEntity = reader.getModelEntity(relation.getRelEntityName());
 
     boolean relCreate = false;
-    if (security.hasEntityPermission(relatedEntity.getPlainTableName(), "_CREATE", session)) {
+    if (security.hasEntityPermission(relatedEntity.getPlainTableName(), "_CREATE", request)) {
         relCreate = true;
     }
 
@@ -365,7 +365,7 @@ for (int relIndex = 0; relIndex < entity.getRelationsSize(); relIndex++) {
 
     if ("one".equals(relation.getType()) || "one-nofk".equals(relation.getType())) {
         if (value != null) {
-            if (hasAllView || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_VIEW", session)) {
+            if (hasAllView || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_VIEW", request)) {
                 Iterator tempIter = UtilMisc.toIterator(value.getRelated(relation.getTitle() + relatedEntity.getEntityName(), null, null, false));
                 GenericValue valueRelated = null;
                 if (tempIter != null && tempIter.hasNext()) {
@@ -456,7 +456,7 @@ for (int relIndex = 0; relIndex < entity.getRelationsSize(); relIndex++) {
         }
     } else if (relation.getType().equalsIgnoreCase("many")) {
         if (value != null) {
-            if (hasAllView || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_VIEW", session)) {
+            if (hasAllView || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_VIEW", request)) {
                 mapRelation.put("relType", "many");
 
                 String findString = "entityName=" + relatedEntity.getEntityName();

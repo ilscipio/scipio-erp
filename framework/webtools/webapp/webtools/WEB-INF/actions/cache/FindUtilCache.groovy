@@ -21,7 +21,7 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.security.Security;
 
-context.hasUtilCacheEdit = security.hasEntityPermission("UTIL_CACHE", "_EDIT", session);
+context.hasUtilCacheEdit = security.hasEntityPermission("UTIL_CACHE", "_EDIT", request);
 
 // SCIPIO: 2017-12-15: small filter to help find caches (otherwise too painful)
 targetName = context.cacheName != null ? context.cacheName : parameters.cacheName?.toString();

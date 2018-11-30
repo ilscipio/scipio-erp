@@ -21,6 +21,7 @@ package org.ofbiz.security;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.entity.Delegator;
@@ -78,6 +79,21 @@ public interface Security {
 
     /**
      * Checks to see if the currently logged in userLogin has the passed permission.
+     * <p>
+     * SCIPIO: 2018-10-30: New overload that takes request instead of session; should be preferred
+     * over the other.
+     *
+     * @param permission Name of the permission to check.
+     * @param request The current HTTP request, contains the logged in userLogin as an attribute in request or session.
+     * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
+     */
+    public boolean hasPermission(String permission, HttpServletRequest request);
+
+    /**
+     * Checks to see if the currently logged in userLogin has the passed permission.
+     * <p>
+     * SCIPIO: NOTE: 2018-10-30: This is not deprecated (yet), but in most cases you should use
+     * {@link #hasPermission(String, HttpServletRequest)} instead.
      *
      * @param permission Name of the permission to check.
      * @param session The current HTTP session, contains the logged in userLogin as an attribute.
@@ -97,6 +113,23 @@ public interface Security {
     /**
      * Like hasPermission above, except it has functionality specific to Entity permissions. Checks the entity for the
      * specified action, as well as for "_ADMIN" to allow for simplified general administration permission.
+     * <p>
+     * SCIPIO: 2018-10-30: New overload that takes request instead of session; should be preferred
+     * over the other.
+     *
+     * @param entity The name of the Entity corresponding to the desired permission.
+     * @param action The action on the Entity corresponding to the desired permission.
+     * @param request The current HTTP request, contains the logged in userLogin as an attribute in request or session.
+     * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
+     */
+    public boolean hasEntityPermission(String entity, String action, HttpServletRequest request);
+
+    /**
+     * Like hasPermission above, except it has functionality specific to Entity permissions. Checks the entity for the
+     * specified action, as well as for "_ADMIN" to allow for simplified general administration permission.
+     * <p>
+     * SCIPIO: NOTE: 2018-10-30: This is not deprecated (yet), but in most cases you should use
+     * {@link #hasEntityPermission(String, String, HttpServletRequest)} instead.
      *
      * @param entity The name of the Entity corresponding to the desired permission.
      * @param action The action on the Entity corresponding to the desired permission.
@@ -120,6 +153,26 @@ public interface Security {
      * Like hasEntityPermission above, this checks the specified action, as well as for "_ADMIN" to allow for simplified
      * general administration permission, but also checks action_ROLE and validates the user is a member for the
      * application.
+     * <p>
+     * SCIPIO: 2018-10-30: New overload that takes request instead of session; should be preferred
+     * over the other.
+     *
+     * @param application The name of the application corresponding to the desired permission.
+     * @param action The action on the application corresponding to the desired permission.
+     * @param primaryKey The primary key for the role check.
+     * @param role The roleTypeId which the user must validate with.
+     * @param request The current HTTP request, contains the logged in userLogin as an attribute in request or session.
+     * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
+     */
+    public boolean hasRolePermission(String application, String action, String primaryKey, String role, HttpServletRequest request);
+
+    /**
+     * Like hasEntityPermission above, this checks the specified action, as well as for "_ADMIN" to allow for simplified
+     * general administration permission, but also checks action_ROLE and validates the user is a member for the
+     * application.
+     * <p>
+     * SCIPIO: NOTE: 2018-10-30: This is not deprecated (yet), but in most cases you should use
+     * {@link #hasRolePermission(String, String, String, String, HttpServletRequest)} instead.
      *
      * @param application The name of the application corresponding to the desired permission.
      * @param action The action on the application corresponding to the desired permission.
@@ -162,6 +215,26 @@ public interface Security {
      * Like hasEntityPermission above, this checks the specified action, as well as for "_ADMIN" to allow for simplified
      * general administration permission, but also checks action_ROLE and validates the user is a member for the
      * application.
+     * <p>
+     * SCIPIO: 2018-10-30: New overload that takes request instead of session; should be preferred
+     * over the other.
+     *
+     * @param application The name of the application corresponding to the desired permission.
+     * @param action The action on the application corresponding to the desired permission.
+     * @param primaryKey The primary key for the role check.
+     * @param roles List of roleTypeId of which the user must validate with (ORed).
+     * @param request The current HTTP request, contains the logged in userLogin as an attribute in request or session.
+     * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
+     */
+    public boolean hasRolePermission(String application, String action, String primaryKey, List<String> roles, HttpServletRequest request);
+
+    /**
+     * Like hasEntityPermission above, this checks the specified action, as well as for "_ADMIN" to allow for simplified
+     * general administration permission, but also checks action_ROLE and validates the user is a member for the
+     * application.
+     * <p>
+     * SCIPIO: NOTE: 2018-10-30: This is not deprecated (yet), but in most cases you should use
+     * {@link #hasRolePermission(String, String, String, List, HttpServletRequest)} instead.
      *
      * @param application The name of the application corresponding to the desired permission.
      * @param action The action on the application corresponding to the desired permission.

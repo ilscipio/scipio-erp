@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Assert;
@@ -135,6 +136,15 @@ public final class SecurityFactory {
         }
 
         @Override
+        public boolean hasEntityPermission(String entity, String action, HttpServletRequest request) { // SCIPIO
+            GenericValue userLogin = getUserLoginForRequest(request);
+            if (userLogin != null) {
+                return hasEntityPermission(entity, action, userLogin);
+            }
+            return hasEntityPermission(entity, action, request.getSession(false));
+        }
+
+        @Override
         public boolean hasEntityPermission(String entity, String action, HttpSession session) {
             if (session == null) {
                 return false;
@@ -160,6 +170,15 @@ public final class SecurityFactory {
             return false;
         }
 
+        @Override
+        public boolean hasPermission(String permission, HttpServletRequest request) { // SCIPIO
+            GenericValue userLogin = getUserLoginForRequest(request);
+            if (userLogin != null) {
+                return hasPermission(permission, userLogin);
+            }
+            return hasPermission(permission, request.getSession(false));
+        }
+        
         @Override
         public boolean hasPermission(String permission, HttpSession session) {
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -240,6 +259,15 @@ public final class SecurityFactory {
         }
 
         @Override
+        public boolean hasRolePermission(String application, String action, String primaryKey, List<String> roles, HttpServletRequest request) { // SCIPIO
+            GenericValue userLogin = getUserLoginForRequest(request);
+            if (userLogin != null) {
+                return hasRolePermission(application, action, primaryKey, roles, userLogin);
+            }
+            return hasRolePermission(application, action, primaryKey, roles, request.getSession(false));
+        }
+        
+        @Override
         public boolean hasRolePermission(String application, String action, String primaryKey, List<String> roles, HttpSession session) {
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
             return hasRolePermission(application, action, primaryKey, roles, userLogin);
@@ -252,6 +280,15 @@ public final class SecurityFactory {
                 roles = UtilMisc.toList(role);
             }
             return hasRolePermission(application, action, primaryKey, roles, userLogin);
+        }
+
+        @Override
+        public boolean hasRolePermission(String application, String action, String primaryKey, String role, HttpServletRequest request) { // SCIPIO
+            GenericValue userLogin = getUserLoginForRequest(request);
+            if (userLogin != null) {
+                return hasRolePermission(application, action, primaryKey, role, userLogin);
+            }
+            return hasRolePermission(application, action, primaryKey, role, request.getSession(false));
         }
 
         @Override
@@ -277,6 +314,12 @@ public final class SecurityFactory {
             }
             Assert.notNull("delegator", delegator);
             this.delegator = delegator;
+        }
+
+        protected GenericValue getUserLoginForRequest(HttpServletRequest request) { // SCIPIO
+            // SCIPIO: TODO: for now this always returns null, leaving it to the session login,
+            // but this should check request attribute in the future, for request consistency/atomicity
+            return null;
         }
     }
 }

@@ -17,6 +17,11 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ModelServiceIface;
 
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl.JFairyDataGenerator;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl.LocalDataGenerator;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl.MockarooDataGenerator;
+
 public class DemoSuiteDataGeneratorUtil {
 
 	private static final String DEMO_DATA_GENERATOR_SERVICE_INTERFACE_NAME = "demoDataGenerator";
@@ -56,6 +61,27 @@ public class DemoSuiteDataGeneratorUtil {
 			return name;
 		}
 	}
+	
+	public enum DataGeneratorProviders {
+        JFAIRY(JFairyDataGenerator.class), MOCKAROO(MockarooDataGenerator.class), LOCAL(LocalDataGenerator.class);
+
+        private final Class<? extends AbstractDataGenerator> dataGenerator;
+        
+        private String name;
+
+        DataGeneratorProviders(Class<? extends AbstractDataGenerator> dataGenerator) {
+            this.dataGenerator = dataGenerator;
+        }
+        
+        public Class<? extends AbstractDataGenerator> getGeneratorClass() {
+            return dataGenerator;
+        }
+      
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 
 	public static List<Map<String, Object>> getDemoDataServices(LocalDispatcher dispatcher)
 			throws GenericServiceException {

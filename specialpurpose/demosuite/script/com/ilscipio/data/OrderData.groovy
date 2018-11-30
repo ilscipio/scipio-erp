@@ -1,20 +1,19 @@
-import java.sql.Timestamp
-import java.util.Map
-
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilMisc
-import org.ofbiz.base.util.UtilNumber
 import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
-import org.ofbiz.product.catalog.CatalogWorker
 import org.ofbiz.product.store.ProductStoreWorker
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGeneratorProvider
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper.DataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGeneratorUtil.DataGeneratorProviders
 
+
+@DataGeneratorProvider(providers=[DataGeneratorProviders.LOCAL])
 public class OrderData extends DataGeneratorGroovyBaseScript {
     public static final String module = "OrderData.groovy";
     

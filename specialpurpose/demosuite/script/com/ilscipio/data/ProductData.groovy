@@ -7,12 +7,14 @@ import org.ofbiz.product.category.CategoryWorker
 import org.ofbiz.product.store.ProductStoreWorker
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGeneratorProvider
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper.DataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGeneratorUtil.DataGeneratorProviders
 
 
-
+@DataGeneratorProvider(providers=[DataGeneratorProviders.LOCAL])
 public class ProductData extends DataGeneratorGroovyBaseScript {
 
     public String getDataType() {

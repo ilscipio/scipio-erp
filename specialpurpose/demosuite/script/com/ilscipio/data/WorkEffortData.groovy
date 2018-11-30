@@ -4,10 +4,14 @@ import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
 
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGeneratorProvider
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper.DataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGeneratorUtil.DataGeneratorProviders
 
+
+@DataGeneratorProvider(providers=[DataGeneratorProviders.LOCAL])
 public class WorkEffortData extends DataGeneratorGroovyBaseScript {
 
     WorkEffortData() {

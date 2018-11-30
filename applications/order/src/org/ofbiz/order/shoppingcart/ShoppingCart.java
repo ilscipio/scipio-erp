@@ -6243,4 +6243,13 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     public static CartSync createLockObject() {
         return CartSync.create();
     }
+
+    /**
+     * SCIPIO: Returns true if debug logging is on. Roughly same as verbose logging.
+     * NOTE: Some things controlled by this may lower performance when on.
+     * Added 2018-11-30. 
+     */
+    public static boolean isDebug() {
+        return (ShoppingCart.DEBUG || Debug.verboseOn());
+    }
 }

@@ -21,7 +21,7 @@ code package.
         <fo:region-after extent="1in"/>
     </fo:simple-page-master>
 </fo:layout-master-set>
-<#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_VIEW", request)>
 
 <#if orderPurchasePaymentSummaryList?has_content>
         <fo:page-sequence master-reference="main">

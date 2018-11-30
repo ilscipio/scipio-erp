@@ -22,7 +22,7 @@ by hand from a real template using a ruler.
 
     <fo:page-sequence master-reference="checks">
         <fo:flow flow-name="xsl-region-body">
-            <#if !security.hasEntityPermission("ACCOUNTING", "_PRINT_CHECKS", session)>
+            <#if !security.hasEntityPermission("ACCOUNTING", "_PRINT_CHECKS", request)>
                 <fo:block padding="20pt">${uiLabelMap.AccountingPrintChecksPermissionError}</fo:block>
             <#else>
                 <#if payments.size() == 0>

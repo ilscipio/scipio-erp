@@ -19,7 +19,7 @@ code package.
         <fo:region-after extent="1in"/>
     </fo:simple-page-master>
 </fo:layout-master-set>
-<#if security.hasEntityPermission("ORDERMGR", "_SALES_ENTRY", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_SALES_ENTRY", request)>
 
 <#if productReportList?has_content>
         <fo:page-sequence master-reference="main">

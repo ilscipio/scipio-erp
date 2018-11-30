@@ -6,7 +6,7 @@ code package.
 
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-    <#if security.hasEntityPermission("PARTYMGR", "_NOTE", session)>
+    <#if security.hasEntityPermission("PARTYMGR", "_NOTE", request)>
       <@menuitem type="link" href=makeOfbizUrl("AddPartyNote?partyId=${partyId}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}" />
     </#if>
     </@menu>

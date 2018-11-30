@@ -5,7 +5,7 @@ code package.
 -->
 <#-- SCIPIO: based on component://webtools/webapp/webtools/entity/EntityImport.ftl -->
 <#assign eiActionUri = "importCmsData">
-<#assign eiAllowServerLocs = security.hasPermission("ENTITY_MAINT", session)>
+<#assign eiAllowServerLocs = security.hasPermission("ENTITY_MAINT", request)>
 <#assign eiUnsafeFieldOpt = false>
 <#assign eiInfoMsg>
   ${uiLabelMap.WebtoolsXMLImportInfo}

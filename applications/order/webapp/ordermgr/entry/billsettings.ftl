@@ -18,7 +18,7 @@ function makeExpDate() {
 }
 </@script>
 
-<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_CREATE", request) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", request)>
 <@section>
     <@row>
         <@cell columns=6>

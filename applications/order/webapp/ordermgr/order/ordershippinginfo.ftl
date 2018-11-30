@@ -445,7 +445,7 @@ code package.
             </@td>
             <@td valign="top" colspan="3">
                 <#if shipGroup.maySplit?upper_case == "N">
-                    <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+                    <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>
                       <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
                         <form name="allowordersplit_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizUrl>allowordersplit</@ofbizUrl>">
                           <input type="hidden" name="orderId" value="${orderId}"/>
@@ -553,7 +553,7 @@ code package.
          </@tr>
 
        <#-- ToDo: These shipment options are somewhat useful, but we should consider adding them to the action menu instead-->
-       <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && ((orderHeader.statusId == "ORDER_CREATED") || (orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
+       <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request) && ((orderHeader.statusId == "ORDER_CREATED") || (orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
          <@tr>
             <@td colspan="4" valign="top" align="center">
              <#if orderHeader.orderTypeId == "SALES_ORDER">

@@ -247,7 +247,7 @@ code package.
                 </#if>
             </@td>
             <@td nowrap="nowrap" align="right">
-                <#if cartLine.getIsPromo() || (shoppingCart.getOrderType() == "SALES_ORDER" && !security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
+                <#if cartLine.getIsPromo() || (shoppingCart.getOrderType() == "SALES_ORDER" && !security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", request))>
                   <@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=currencyUomId/>
                 <#else>
                     <#if (cartLine.getSelectedAmount() > 0) >

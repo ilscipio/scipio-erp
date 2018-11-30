@@ -7,7 +7,7 @@ code package.
 <@heading>${uiLabelMap.PageTitleEntityExport}</@heading>
 <p>${uiLabelMap.WebtoolsXMLExportSingleInfo!""}</p>
 <hr />
-<#if security.hasPermission("ENTITY_MAINT", session)>
+<#if security.hasPermission("ENTITY_MAINT", request)>
   <@menu type="button">
     <@menuitem type="link" href=makeOfbizUrl("xmldsrawdump") target="_blank" text="Click Here to Get Data (or save to file)" class="+${styles.action_run_sys!} ${styles.action_export!}" />
   </@menu>
@@ -27,7 +27,7 @@ code package.
 <@alert type="info">${uiLabelMap.WebtoolsXMLExportInfo}</@alert>
 
 
-<#if security.hasPermission("ENTITY_MAINT", session)>
+<#if security.hasPermission("ENTITY_MAINT", request)>
   <#if exportList?has_content>
       <#--
          # Format Number of Bytes in SI Units

@@ -24,7 +24,7 @@ code package.
   <#-- SCIPIO: Removed
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-    <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
+    <#if security.hasEntityPermission("PAY_INFO", "_CREATE", request) || security.hasEntityPermission("ACCOUNTING", "_CREATE", request)>
       <@menuitem type="link" href=makeOfbizUrl("editeftaccount?partyId=${partyId}") text=uiLabelMap.AccountingCreateNewEftAccount class="+${styles.action_nav!} ${styles.action_add!}"/>
       <@menuitem type="link" href=makeOfbizUrl("editgiftcard?partyId=${partyId}") text=uiLabelMap.AccountingCreateNewGiftCard class="+${styles.action_nav!} ${styles.action_add!}"/>
       <@menuitem type="link" href=makeOfbizUrl("editcreditcard?partyId=${partyId}") text=uiLabelMap.AccountingCreateNewCreditCard class="+${styles.action_nav!} ${styles.action_add!}"/>
@@ -41,7 +41,7 @@ code package.
             <#assign paymentMethod = paymentMethodValueMap.paymentMethod/>
             <@tr>
               <#macro deleteButton>
-                <#if security.hasEntityPermission("PAY_INFO", "_DELETE", session) || security.hasEntityPermission("ACCOUNTING", "_DELETE", session)>
+                <#if security.hasEntityPermission("PAY_INFO", "_DELETE", request) || security.hasEntityPermission("ACCOUNTING", "_DELETE", request)>
                   <a href="<@ofbizUrl>deletePaymentMethod/viewprofile?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonExpire}</a>
                 <#else>
                   &nbsp;
@@ -60,7 +60,7 @@ code package.
                   ${creditCard.lastNameOnCard}
                   <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
                   &nbsp;-&nbsp;
-                  <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
+                  <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                     ${creditCard.cardType}
                     <@maskSensitiveNumber cardNumber=(creditCard.cardNumber!)/>
                     ${creditCard.expireDate}
@@ -73,10 +73,10 @@ code package.
                   <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate})</#if>
                 </@td>
                 <@td class="button-col">
-                  <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
+                  <#if security.hasEntityPermission("MANUAL", "_PAYMENT", request)>
                     <a href="<@ofbizInterWebappUrl>/accounting/control/manualETx?paymentMethodId=${paymentMethod.paymentMethodId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>">${uiLabelMap.PartyManualTx}</a>
                   </#if>
-                  <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
+                  <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", request) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", request)>
                     <a href="<@ofbizUrl>editcreditcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   </#if>
                   <@deleteButton />
@@ -87,7 +87,7 @@ code package.
                   ${uiLabelMap.AccountingGiftCard}
                 </@td>
                 <@td>
-                  <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
+                  <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                     ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                   <#else>
                     <@maskSensitiveNumber cardNumber=(giftCard.cardNumber!)/>
@@ -99,7 +99,7 @@ code package.
                   <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate.toString()}</b></#if>
                 </@td>
                 <@td class="button-col">
-                  <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
+                  <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", request) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", request)>
                     <a href="<@ofbizUrl>editgiftcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   </#if>
                   <@deleteButton />
@@ -116,7 +116,7 @@ code package.
                   <#if paymentMethod.thruDate?has_content><b>(${uiLabelMap.PartyContactEffectiveThru}:&nbsp;${paymentMethod.thruDate.toString()}</#if>
                 </@td>
                 <@td class="button-col">
-                  <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", session)>
+                  <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", request) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", request)>
                     <a href="<@ofbizUrl>editeftaccount?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   </#if>
                   <@deleteButton />

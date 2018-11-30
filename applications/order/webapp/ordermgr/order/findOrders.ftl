@@ -70,7 +70,7 @@ function submitFindForm(val){
 
 </@script>
 
-<#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_VIEW", request)>
 <#if parameters.hideFields?has_content>
 <form name="lookupandhidefields${findParams.hideFields!"Y"}" method="post" action="<@ofbizUrl>searchorders</@ofbizUrl>">
 

@@ -18,7 +18,7 @@ code package.
   </#if>
 </#if>
 <#-- Sales Order Entry -->
-<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_CREATE", request)>
   <#if shoppingCartOrderType != "PURCHASE_ORDER">
     <#assign sectionTitle>${rawLabel('OrderSalesOrder')}<#if shoppingCart??> ${rawLabel('OrderInProgress')}</#if></#assign>
     <#macro menuContent menuArgs={}>
@@ -68,7 +68,7 @@ code package.
 </#if>
 
 <#-- Purchase Order Entry -->
-<#if security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", request)>
   <#if shoppingCartOrderType != "SALES_ORDER">
     <#assign sectionTitle>${rawLabel('OrderPurchaseOrder')}<#if shoppingCart??> ${rawLabel('OrderInProgress')}</#if></#assign>
     <#macro menuContent menuArgs={}>

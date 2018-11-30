@@ -163,7 +163,7 @@ code package.
                 ${contactMech.infoString} <@updateOrderContactMech orderHeader=(orderHeader!) contactMechTypeId=contactMech.contactMechTypeId contactMechList=(emailContactMechList!) contactMechPurposeTypeId=(contactMechPurpose.contactMechPurposeTypeId!) contactMechAddress=(contactMech!) />
                   
                   <#-- ToDo: Validate usefulness
-                      <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
+                      <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", request)>
                          <a href="<@ofbizUrl>confirmationmailedit?orderId=${orderId}&amp;partyId=${partyId}&amp;sendTo=${contactMech.infoString}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_update!}" >${uiLabelMap.OrderSendConfirmationEmail}</a>
                       <#else>
                          <a href="mailto:${contactMech.infoString}" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">(${uiLabelMap.OrderSendEmail})</a>

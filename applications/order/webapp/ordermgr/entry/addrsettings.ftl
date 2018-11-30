@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_CREATE", request) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", request)>
 
   <@section title=uiLabelMap.OrderSelectAShippingAddress> <#-- class="boxoutside" -->
     <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">

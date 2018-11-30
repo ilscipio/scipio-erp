@@ -15,7 +15,7 @@ function addRoutingTask() {
 }
 </@script>
 
-<#if security.hasEntityPermission("MANUFACTURING", "_CREATE", session)>
+<#if security.hasEntityPermission("MANUFACTURING", "_CREATE", request)>
 <form method="post" action="<@ofbizUrl>AddRoutingTaskAssoc</@ofbizUrl>" name="addtaskassocform">
     <input type="hidden" name="workEffortId" value="${workEffortId}"/>
     <input type="hidden" name="workEffortIdFrom" value="${workEffortId}"/>

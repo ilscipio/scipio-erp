@@ -114,7 +114,7 @@
               <@td class="${styles.grid_large!}2">${uiLabelMap.PartyAvsString}
               </@td>
               <@td colspan="3">
-                  <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
+                  <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", request)>
                       <@modal id="modal_avsstring_${parameters.partyId}" label=((avsOverride.avsDeclineString)!uiLabelMap.CommonGlobal)>
                          <@heading>${uiLabelMap.PartyAvsOver}</@heading>
                          <form name="updateAvsOverride" method="post" action="<@ofbizUrl>updateAvsOverride</@ofbizUrl>">

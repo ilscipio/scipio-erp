@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
+<#if security.hasEntityPermission("FACILITY", "_VIEW", request)>
   <#if !(showWarningForm)>
     <@section title="${rawLabel('ProductWeighPackageOnly')} ${rawLabel('CommonIn')} ${facility.facilityName!} [${rawString((facility.facilityId)!)}]">
         <#if invoiceIds?has_content>

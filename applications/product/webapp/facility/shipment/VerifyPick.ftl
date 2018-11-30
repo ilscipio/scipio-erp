@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
+<#if security.hasEntityPermission("FACILITY", "_VIEW", request)>
     <#assign showInput = "Y">
     
     <#if (shipments?has_content) || (isOrderStatusApproved == false)>

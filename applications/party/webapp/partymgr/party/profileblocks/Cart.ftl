@@ -7,7 +7,7 @@ code package.
   <#if savedCartItems?has_content>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-      <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
+      <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", request)>
         <#if savedCartListId?has_content>
           <#assign listParam = "&amp;shoppingListId=" + savedCartListId>
         <#else>

@@ -72,12 +72,12 @@ code package.
                 </@td>
                 <@td class="button-col">
                   &nbsp;
-                  <#if security.hasEntityPermission("FACILITY", "_UPDATE", session)>
+                  <#if security.hasEntityPermission("FACILITY", "_UPDATE", request)>
                     <a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                   </#if>
                 </@td>
                 <@td>
-                  <#if security.hasEntityPermission("FACILITY", "_DELETE", session)>
+                  <#if security.hasEntityPermission("FACILITY", "_DELETE", request)>
                     <form action="<@ofbizUrl>deleteContactMech/ViewContactMechs</@ofbizUrl>" name="deleteContactForm_${contactMechMap_index}" method="post">
                       <input type="hidden" name="facilityId" value="${facilityId!}"/>
                       <input type="hidden" name="contactMechId" value="${contactMech.contactMechId!}"/>

@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#if security.hasEntityPermission("MANUAL", "_PAYMENT", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
+<#if security.hasEntityPermission("MANUAL", "_PAYMENT", request) || security.hasEntityPermission("ACCOUNTING", "_CREATE", request)>
     <#assign dummy = setRequestAttribute("validTx", "false")>
     <form name="manualTxForm" method="post" action="<@ofbizUrl>manualETx</@ofbizUrl>">
         <#if requestParameters.paymentMethodId??>

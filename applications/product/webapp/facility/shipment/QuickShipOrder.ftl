@@ -10,7 +10,7 @@ function setWeight(weight) {
 }
 </@script>
 
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
+<#if security.hasEntityPermission("FACILITY", "_VIEW", request)>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${facilityId}") text=uiLabelMap.ProductNextShipment class="+${styles.action_run_sys!} ${styles.action_continue!}"/>

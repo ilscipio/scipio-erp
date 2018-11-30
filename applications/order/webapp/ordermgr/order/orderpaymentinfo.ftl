@@ -60,13 +60,13 @@ ToDo: Update menu with Authorize and Capture transaction actions
            <#assign statusItem = payment.getRelatedOne("StatusItem", false)>
            <#assign partyName = delegator.findOne("PartyNameView", {"partyId" : payment.partyIdTo}, true)>
            <@tr>
-             <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
+             <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                <@td scope="row" class="${styles.grid_large!}3"><a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${payment.paymentId}</@ofbizInterWebappUrl>">${payment.paymentId}</a></@td>
              <#else>
                <@td scope="row" class="${styles.grid_large!}3">${payment.paymentId}</@td>
              </#if>
              <@td>${partyName.groupName!}${partyName.lastName!} ${partyName.firstName!} ${partyName.middleName!}
-             <#if security.hasPermission("PARTYMGR_VIEW", session) || security.hasPermission("PARTYMGR_ADMIN", session)>
+             <#if security.hasPermission("PARTYMGR_VIEW", request) || security.hasPermission("PARTYMGR_ADMIN", request)>
                [<a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${partyId!}</@ofbizInterWebappUrl>">${partyId!}</a>]
              <#else>
                [${partyId!}]
@@ -343,7 +343,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                               ${creditCard.lastNameOnCard!(uiLabelMap.CommonNA)}
                               <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
                               <br />
-                              <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
+                              <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                                 ${creditCard.cardType}
                                 <@maskSensitiveNumber cardNumber=(creditCard.cardNumber!)/>
                                 ${creditCard.expireDate}
@@ -463,7 +463,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                     <@row>
                         <@cell columns=6>
                             <#if giftCard?has_content>
-                              <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
+                              <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                                 ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                                 &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               <#else>
@@ -582,7 +582,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                            <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
                                              <#assign creditCard = paymentMethodValueMap.creditCard/>
                                              <#if (creditCard?has_content)>
-                                               <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
+                                               <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                                                  ${creditCard.cardType!} <@maskSensitiveNumber cardNumber=(creditCard.cardNumber!)/> ${creditCard.expireDate!}
                                                <#else>
                                                  ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}

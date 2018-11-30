@@ -4,7 +4,7 @@
 <#-- SCIPIO: NOTE: an updated and interactive version of catalog tree
     now exists in EditCatalogTree*.ftl -->
 
-<#if security.hasEntityPermission("CATALOG", "_VIEW", session)>
+<#if security.hasEntityPermission("CATALOG", "_VIEW", request)>
     <#assign treePlugin = [{"name":"massload"}]/>
     <#assign menuEvent>
             var $node = data.node;

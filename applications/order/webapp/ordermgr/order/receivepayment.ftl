@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>
   <@section title=uiLabelMap.OrderReceiveOfflinePayments>
       <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
       <a href="javascript:document.paysetupform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>

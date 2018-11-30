@@ -5,7 +5,7 @@ code package.
 -->
     <p>${uiLabelMap.WebtoolsDataFileMessage1}.</p>
 
-    <#if security.hasPermission("DATAFILE_MAINT", session)>
+    <#if security.hasPermission("DATAFILE_MAINT", request)>
       <form method="post" action="<@ofbizUrl>viewdatafile</@ofbizUrl>">
         <@table type="fields">
           <@tr>

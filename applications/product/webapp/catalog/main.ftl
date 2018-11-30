@@ -8,7 +8,7 @@ code package.
       <@panel>${uiLabelMap.ProductGeneralMessage}</@panel>
 </#if>
 
-<#if security.hasEntityPermission("CATALOG", "_VIEW", session)>
+<#if security.hasEntityPermission("CATALOG", "_VIEW", request)>
     <@grid columns=2>
       <@fields type="default-manual">
         <li>

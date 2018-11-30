@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", request)>
   <@section title=uiLabelMap.OrderSendConfirmationEmail>
     <@row>
       <@cell columns=6>

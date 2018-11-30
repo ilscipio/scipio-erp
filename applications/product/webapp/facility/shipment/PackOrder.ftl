@@ -17,7 +17,7 @@ code package.
     }
 </@script>
 
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
+<#if security.hasEntityPermission("FACILITY", "_VIEW", request)>
     <#assign showInput = requestParameters.showInput?default("Y")>    
 
     <#if (requestParameters.forceComplete?has_content && !invoiceIds?has_content)>

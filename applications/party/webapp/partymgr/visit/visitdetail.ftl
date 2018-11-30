@@ -114,7 +114,7 @@ JIRA OFBIZ-4488: BEGIN
 https://issues.apache.org/jira/browse/OFBIZ-4488
 *******************************************************************************
 <@section title=uiLabelMap.PartyPagePushFollowing>
-      <#if security.hasPermission("SEND_CONTROL_APPLET", session)>
+      <#if security.hasPermission("SEND_CONTROL_APPLET", request)>
         <@table type="fields">
             <@tr>
               <@th>${uiLabelMap.PartyPushURL}</@th>

@@ -23,7 +23,7 @@ code package.
     }
 </@script>
 
-<#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_VIEW", request)>
   <#assign tasksFound = false>
   <@section title=uiLabelMap.OrderOrderNeedingAttention>
 

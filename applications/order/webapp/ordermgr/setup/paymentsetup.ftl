@@ -6,7 +6,7 @@ code package.
 
 <#-- TODO: Convert hard-coded text to UI label properties -->
 
-<#if security.hasEntityPermission("PAYPROC", "_VIEW", session)>
+<#if security.hasEntityPermission("PAYPROC", "_VIEW", request)>
 
     <#macro menuContent menuArgs={}>
       <@menu type="button" class="+button-style-1" args=menuArgs>
@@ -44,10 +44,10 @@ code package.
                     <@td>${paymentSetting.paymentRefundService!}</@td>
                     <@td>${paymentSetting.paymentConfiguration!}</@td>
                     <@td nowrap="nowrap">&nbsp;
-                      <#if security.hasEntityPermission("PAYPROC", "_UPDATE", session)>
+                      <#if security.hasEntityPermission("PAYPROC", "_UPDATE", request)>
                         <a href="<@ofbizUrl>paysetup?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>&nbsp;
                       </#if>
-                      <#if security.hasEntityPermission("PAYPROC", "_DELETE", session)>
+                      <#if security.hasEntityPermission("PAYPROC", "_DELETE", request)>
                         <a href="<@ofbizUrl>removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>&nbsp;
                       </#if>
                       </@td>
@@ -60,7 +60,7 @@ code package.
         </#if>
     </@section>
 
-<#if security.hasEntityPermission("PAYPROC", "_CREATE", session)>
+<#if security.hasEntityPermission("PAYPROC", "_CREATE", request)>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
       <#if webSitePayment?has_content>

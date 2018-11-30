@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_VIEW", request)>
   <@section>
     <@table type="summary">
         <@thead>

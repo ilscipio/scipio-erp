@@ -28,7 +28,7 @@ code package.
   <@section><#-- title=uiLabelMap.PageTitleEntityExport -->
     <p>${uiLabelMap.CmsExportFuncInfo}</p>
     <#--<hr />-->
-    <#if (useEntityMaintCheck!false)==false || security.hasPermission("ENTITY_MAINT", session)>
+    <#if (useEntityMaintCheck!false)==false || security.hasPermission("ENTITY_MAINT", request)>
       <@menu type="button">
         <@menuitem type="link" href=makeOfbizUrl("CmsDataExportRaw.xml") target="_blank" text=uiLabelMap.CmsClickHereToGetData class="+${styles.action_run_sys!} ${styles.action_export!}" />
       </@menu>
@@ -63,7 +63,7 @@ code package.
 <p>${uiLabelMap.CmsExportFuncInfo}</p>
 <#--<hr />-->
 
-<#if (useEntityMaintCheck!false)==false || security.hasPermission("ENTITY_MAINT", session)>
+<#if (useEntityMaintCheck!false)==false || security.hasPermission("ENTITY_MAINT", request)>
 
   <@script>
     jQuery(document).ready(function() {

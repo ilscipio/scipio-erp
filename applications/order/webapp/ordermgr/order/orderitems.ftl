@@ -85,7 +85,7 @@ code package.
                                 <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)>
                                 <@td class="${styles.text_right!}">
                                     <#assign productItemStatus>
-                                                <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>                                       
+                                                <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>                                       
                                                     <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveItem}</a>
                                                     <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId!""}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
                                                         <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
@@ -93,7 +93,7 @@ code package.
                                                         <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId!}"/>
                                                     </form>
                                                     <br/>
-                                                <#elseif ("ITEM_APPROVED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+                                                <#elseif ("ITEM_APPROVED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>
                                                     <#assign paymentMethod = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(orderPaymentPreferences).getRelatedOne("PaymentMethod", false)!>
                                                     <#if !paymentMethod?has_content>
                                                         <#assign paymentMethodType = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(orderPaymentPreferences).getRelatedOne("PaymentMethodType", false)>            

@@ -26,7 +26,7 @@ code package.
                 <@pli><a href="<@ofbizUrl>ViewComponents</@ofbizUrl>">${uiLabelMap.WebtoolsViewComponents}</a></@pli>
               </@pul>  
             </li>
-            <#if security.hasPermission("ARTIFACT_INFO_VIEW", session)>
+            <#if security.hasPermission("ARTIFACT_INFO_VIEW", request)>
             <li>
               <@pul title=uiLabelMap.WebtoolsGeneralArtifactInfoTools>
                 <@pli><a href="<@ofbizUrl>ViewComponents</@ofbizUrl>" target="_blank">${uiLabelMap.WebtoolsArtifactInfo}</a></@pli>
@@ -35,14 +35,14 @@ code package.
               </@pul>
             </li>
             </#if>
-            <#if security.hasPermission("LABEL_MANAGER_VIEW", session)>
+            <#if security.hasPermission("LABEL_MANAGER_VIEW", request)>
             <li>
               <@pul title=uiLabelMap.WebtoolsLabelManager>
                 <@pli><a href="<@ofbizUrl>SearchLabels</@ofbizUrl>">${uiLabelMap.WebtoolsLabelManager}</a></@pli>
               </@pul>
             </li>
             </#if>
-            <#if security.hasPermission("ENTITY_MAINT", session)>
+            <#if security.hasPermission("ENTITY_MAINT", request)>
             <li>
                 <@pul title=uiLabelMap.WebtoolsEntityEngineTools>
               <@pli><a href="<@ofbizUrl>entitymaint</@ofbizUrl>">${uiLabelMap.WebtoolsEntityDataMaintenance}</a></@pli>
@@ -75,7 +75,7 @@ code package.
             </@pul>
             </li>
             </#if>
-            <#if security.hasPermission("SERVICE_MAINT", session)>
+            <#if security.hasPermission("SERVICE_MAINT", request)>
             <li>
                 <@pul title=uiLabelMap.WebtoolsServiceEngineTools>
                   <@pli><a href="<@ofbizUrl>ServiceList</@ofbizUrl>">${uiLabelMap.WebtoolsServiceReference}</a></@pli>
@@ -89,7 +89,7 @@ code package.
                 </@pul>
             </li>
             </#if>         
-            <#if security.hasPermission("DATAFILE_MAINT", session)>
+            <#if security.hasPermission("DATAFILE_MAINT", request)>
             <li>
               <@pul title=uiLabelMap.WebtoolsDataFileTools>
                 <@pli><a href="<@ofbizUrl>viewdatafile</@ofbizUrl>">${uiLabelMap.WebtoolsWorkWithDataFiles}</a></@pli>
@@ -98,12 +98,12 @@ code package.
             </#if>
             <li>
             <@pul title=uiLabelMap.WebtoolsMiscSetupTools>
-                <#if security.hasPermission("PORTALPAGE_ADMIN", session)>
+                <#if security.hasPermission("PORTALPAGE_ADMIN", request)>
                 <@pli><a href="<@ofbizUrl>FindPortalPage</@ofbizUrl>">${uiLabelMap.WebtoolsAdminPortalPage}</a></@pli>
                 <@pli><a href="<@ofbizUrl>FindGeo</@ofbizUrl>">${uiLabelMap.WebtoolsGeoManagement}</a></@pli>
                 <@pli><a href="<@ofbizUrl>WebtoolsLayoutDemo</@ofbizUrl>">${uiLabelMap.WebtoolsLayoutDemo}</a></@pli>
                 </#if>
-                <#if security.hasPermission("ENUM_STATUS_MAINT", session)>
+                <#if security.hasPermission("ENUM_STATUS_MAINT", request)>
                 <#--
                 <@pli><a href="<@ofbizUrl>EditEnumerationTypes</@ofbizUrl>">Edit Enumerations</a></@pli>
                 <@pli><a href="<@ofbizUrl>EditStatusTypes</@ofbizUrl>">Edit Status Options</a></@pli>
@@ -116,7 +116,7 @@ code package.
                 <@pli><a href="<@ofbizUrl>EntityPerformanceTest</@ofbizUrl>">${uiLabelMap.WebtoolsEntityEngine}</a></@pli>
             </@pul>
             </li>
-            <#if security.hasPermission("SERVER_STATS_VIEW", session)>
+            <#if security.hasPermission("SERVER_STATS_VIEW", request)>
             <li>
               <@pul title=uiLabelMap.WebtoolsServerHitStatisticsTools>
                     <@pli><a href="<@ofbizUrl>StatsSinceStart</@ofbizUrl>">${uiLabelMap.WebtoolsStatsSinceServerStart}</a></@pli>

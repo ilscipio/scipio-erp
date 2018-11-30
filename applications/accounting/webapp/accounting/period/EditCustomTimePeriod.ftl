@@ -11,7 +11,7 @@ code package.
 </#macro>
 
 <@section menuContent=menuContent>
-    <#if security.hasPermission("PERIOD_MAINT", session)>
+    <#if security.hasPermission("PERIOD_MAINT", request)>
     <#-- 
         <@section title=uiLabelMap.AccountingShowOnlyPeriodsWithOrganization>
             <form method="post" action="<@ofbizUrl>EditCustomTimePeriod</@ofbizUrl>" name="setOrganizationPartyIdForm">

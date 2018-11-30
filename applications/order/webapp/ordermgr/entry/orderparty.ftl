@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_CREATE", request)>
   <@section title=uiLabelMap.PartyParty> <#-- class="boxoutside" -->
       <@table type="fields" width="100%" class="+boxbottom">
         <@tr>

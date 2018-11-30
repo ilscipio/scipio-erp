@@ -9,13 +9,13 @@ code package.
 
   <#-- price change rules -->
   <#assign allowPriceChange = false/>
-  <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER' || security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", session))>
+  <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER' || security.hasEntityPermission("ORDERMGR", "_SALES_PRICEMOD", request))>
       <#assign allowPriceChange = true/>
   </#if>
 
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-    <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+    <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>
       <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
         <@menuitem type="link" href="javascript:document.updateItemInfo.submit()" text=uiLabelMap.OrderUpdateItems class="+${styles.action_run_sys!} ${styles.action_update!}"/>
         <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelSelectedOrderItems')}';document.updateItemInfo.submit()" text=uiLabelMap.OrderCancelSelectedItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
@@ -120,7 +120,7 @@ code package.
                               <@td class="${styles.text_right!}">
                                   <@modal id="${productId}_st" label=currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)>
                                    
-                                            <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
+                                            <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>
                                                 
                                                     <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveItem}</a>
                                                   <#assign nestedFormMarkup>${nestedFormMarkup}
@@ -319,7 +319,7 @@ code package.
                               <#assign shippedQuantity = orderReadHelper.getItemShipGroupAssocShippedQuantity(orderItem, shipGroup.shipGroupSeqId)>
                               <#if shipGroupAssoc.quantity != shippedQuantity>
                                 <#assign itemStatusOkay = (orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && (shipGroupAssoc.cancelQuantity?default(0) < shipGroupAssoc.quantity?default(0)) && ("Y" != orderItem.isPromo!))>
-                                <#assign itemSelectable = (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
+                                <#assign itemSelectable = (security.hasEntityPermission("ORDERMGR", "_ADMIN", request) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", request) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
                                 <@tr>
                                     <@td class="align-text">
                                         ${uiLabelMap.OrderShipGroup}&nbsp;[${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1!(uiLabelMap.OrderNotShipped)}
@@ -448,7 +448,7 @@ code package.
         </#list>
 
         <#-- add new adjustment -->
-        <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_REJECTED">
+        <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request) && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_REJECTED">
             <form name="addAdjustmentForm" method="post" action="<@ofbizUrl>createOrderAdjustment</@ofbizUrl>">
                 <input type="hidden" name="comments" value="Added manually by [${userLogin.userLoginId}]"/>
                 <input type="hidden" name="isManual" value="Y"/>

@@ -13,7 +13,7 @@ code package.
   <#-- SCIPIO: Removed
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-    <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
+    <#if security.hasEntityPermission("PARTYMGR", "_CREATE", request) || userLogin.partyId == partyId>
       <@menuitem type="link" href=makeOfbizUrl("editcontactmech?partyId=${partyId}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
     </#if>
     </@menu>
@@ -123,10 +123,10 @@ code package.
               </@td>
               <@td><b>(${partyContactMech.allowSolicitation!})</b></@td>
               <@td class="button-col">
-                <#if (security.hasEntityPermission("PARTYMGR", "_UPDATE", session) || userLogin.partyId == partyId) && !partyInfoViewOnly>
+                <#if (security.hasEntityPermission("PARTYMGR", "_UPDATE", request) || userLogin.partyId == partyId) && !partyInfoViewOnly>
                   <a href="<@ofbizUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                 </#if>
-                <#if (security.hasEntityPermission("PARTYMGR", "_DELETE", session) || userLogin.partyId == partyId) && !partyInfoViewOnly>
+                <#if (security.hasEntityPermission("PARTYMGR", "_DELETE", request) || userLogin.partyId == partyId) && !partyInfoViewOnly>
                   <form name="partyDeleteContact" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)">
                     <input name="partyId" value="${partyId}" type="hidden"/>
                     <input name="contactMechId" value="${contactMech.contactMechId}" type="hidden"/>

@@ -1,4 +1,4 @@
-<#if security.hasPermission("PERIOD_MAINT", session)>    
+<#if security.hasPermission("PERIOD_MAINT", request)>    
     <@section>
         <form method="post" action="<@ofbizUrl>createCustomTimePeriod</@ofbizUrl>" name="createCustomTimePeriodForm">
             <input type="hidden" name="findOrganizationPartyId" value="${findOrganizationPartyId!}" />

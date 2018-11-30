@@ -16,7 +16,7 @@ code package.
         <fo:region-after extent="1in"/>
     </fo:simple-page-master>
 </fo:layout-master-set>
-<#if security.hasEntityPermission("MANUFACTURING", "_VIEW", session)>
+<#if security.hasEntityPermission("MANUFACTURING", "_VIEW", request)>
 
 <#if cuttingList?has_content>
         <fo:page-sequence master-reference="main">

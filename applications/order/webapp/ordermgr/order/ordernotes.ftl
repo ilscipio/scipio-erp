@@ -8,7 +8,7 @@ code package.
 
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-    <#if security.hasEntityPermission("ORDERMGR", "_NOTE", session)>
+    <#if security.hasEntityPermission("ORDERMGR", "_NOTE", request)>
       <@menuitem type="link" href=makeOfbizUrl("createnewnote?${rawString(paramString)}") text=uiLabelMap.OrderNotesCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
     </#if>
     </@menu>

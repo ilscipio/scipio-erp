@@ -1,7 +1,7 @@
-<#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
+<#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request) && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
   <@section> <#-- title=uiLabelMap.OrderActions -->
       <@menu type="button">
-        <#if security.hasEntityPermission("FACILITY", "_CREATE", session) && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
+        <#if security.hasEntityPermission("FACILITY", "_CREATE", request) && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
           <#-- Special shipment options -->
           <#if orderHeader.orderTypeId == "SALES_ORDER">
           <#else> <#-- PURCHASE_ORDER -->
@@ -167,7 +167,7 @@
                  </form>
               </@menuitem>
             </#if>
-            <#if security.hasEntityPermission("FACILITY","_CREATE", session)>
+            <#if security.hasEntityPermission("FACILITY","_CREATE", request)>
                 <#if orderHeader.orderTypeId == "SALES_ORDER">
                     <#if orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_SENT">
                          <@menuitem type="generic">
@@ -180,7 +180,7 @@
                 </#if>
             </#if>
         <#-- Return / Refund -->
-        <#if security.hasEntityPermission("ORDERMGR","_RETURN", session)>
+        <#if security.hasEntityPermission("ORDERMGR","_RETURN", request)>
             <#-- Apart from the returnableItems check, this is really just a duplicate of OrderQuickRefundEntireOrder
             <#if returnableItems?has_content>
                 <#if currentStatus.statusId == "ORDER_COMPLETED">

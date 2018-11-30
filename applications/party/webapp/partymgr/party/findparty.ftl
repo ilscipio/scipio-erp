@@ -257,7 +257,7 @@ code package.
         <@td class="button-col">
           <@menu type="button-dropdown" title=uiLabelMap.CommonActions><#-- SCIPIO: too many actions, so made into dropdown: type="button" -->
           <@menuitem type="link" href=makeOfbizUrl("viewprofile?partyId=${partyRow.partyId}") text=uiLabelMap.CommonDetails class="+${styles.action_nav!}" />
-      <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+      <#if security.hasEntityPermission("ORDERMGR", "_VIEW", request)>
           <@menuitem type="link" href="javascript:document.searchorders_o_${rowCount}.submit()" text=uiLabelMap.OrderOrders class="+${styles.action_run_sys!} ${styles.action_find!}">
             <form name="searchorders_o_${rowCount}" method="post" action="<@ofbizInterWebappUrl>/ordermgr/control/searchorders</@ofbizInterWebappUrl>">
               <input type="hidden" name="lookupFlag" value="Y" />
@@ -269,7 +269,7 @@ code package.
           </@menuitem>
           <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/FindQuote?partyId=${partyRow.partyId + rawString(externalKeyParam)}") text=uiLabelMap.OrderOrderQuotes class="+${styles.action_nav!} ${styles.action_find!}" />
       </#if>
-      <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
+      <#if security.hasEntityPermission("ORDERMGR", "_CREATE", request)>
           <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/checkinits?partyId=${partyRow.partyId + rawString(externalKeyParam)}") text=uiLabelMap.OrderNewOrder class="+${styles.action_nav!} ${styles.action_add!}" />
           <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/EditQuote?partyId=${partyRow.partyId + rawString(externalKeyParam)}") text=uiLabelMap.OrderNewQuote class="+${styles.action_nav!} ${styles.action_add!}" />
       </#if>

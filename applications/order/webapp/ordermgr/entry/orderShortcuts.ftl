@@ -26,7 +26,7 @@ code package.
           <@menuitem type="link" href=makeOfbizUrl("setCustomer") text=uiLabelMap.PartyCreateNewCustomer class="+${styles.action_nav!} ${styles.action_add!}" />
         </#if>
         <@menuitem type="link" href=makeOfbizUrl("checkinits") text=uiLabelMap.PartyChangeParty class="+${styles.action_nav!} ${styles.action_update!}" />
-        <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
+        <#if security.hasEntityPermission("CATALOG", "_CREATE", request)>
            <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?${externalKeyParam!}") target="catalog" text=uiLabelMap.ProductCreateNewProduct class="+${styles.action_nav!} ${styles.action_add!}" />
         </#if>
         <@menuitem type="link" href=makeOfbizUrl("quickadd") text=uiLabelMap.OrderQuickAdd class="+${styles.action_nav!} ${styles.action_add!}" />

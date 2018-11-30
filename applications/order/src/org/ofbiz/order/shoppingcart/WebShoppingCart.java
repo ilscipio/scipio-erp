@@ -46,6 +46,12 @@ public class WebShoppingCart extends ShoppingCart {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    /**
+     * Full constructor.
+     * <p>
+     * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
+     * block, because it modifies session variables that must match the cart contents.
+     */
     public WebShoppingCart(HttpServletRequest request, Locale locale, String currencyUom) {
         // for purchase orders, bill to customer partyId must be set - otherwise, no way to know who we're purchasing for.  supplierPartyId is furnished
         // by order manager for PO entry.
@@ -80,6 +86,12 @@ public class WebShoppingCart extends ShoppingCart {
         }
     }
 
+    /**
+     * Common constructor.
+     * <p>
+     * SCIPIO: NOTE: 2018-11-30: This constructor should ONLY be inside a {@link CartSync#synchronizedSection(HttpServletRequest)}
+     * block, because it modifies session variables that must match the cart contents.
+     */
     public WebShoppingCart(HttpServletRequest request) {
         this(request, UtilHttp.getLocale(request), UtilHttp.getCurrencyUom(request));
     }

@@ -791,6 +791,9 @@ public class ShoppingCartEvents {
         Locale locale = UtilHttp.getLocale(request);
         String supplierPartyId = request.getParameter("supplierPartyId_o_0");
 
+        // SCIPIO: NOTE: This must synchronize early because WebShoppingCart modifies session attributes
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
+
         // check the preferred currency of the supplier, if set, use that for the cart, otherwise use system defaults.
         ShoppingCart cart = null;
         try {
@@ -838,7 +841,6 @@ public class ShoppingCartEvents {
 
         cart.setOrderType("PURCHASE_ORDER");
 
-        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
         session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
@@ -1121,6 +1123,8 @@ public class ShoppingCartEvents {
                 // SCIPIO: check again inside synchronized block
                 cart = (ShoppingCart) session.getAttribute("shoppingCart");
                 if (cart == null) {
+                    // SCIPIO: DEV NOTE: This is the primary WebShoppingCart constructor call, but there 
+                    // may be a few others scattered for special cases
                     cart = new WebShoppingCart(request, locale, currencyUom);
                     session.setAttribute("shoppingCart", cart);
                     cartIsNew = true;

@@ -1082,6 +1082,8 @@ public class ShoppingCartEvents {
         session.removeAttribute("orderMode");
         session.removeAttribute("productStoreId");
         session.removeAttribute("CURRENT_CATALOG_ID");
+        // SCIPIO: 2018-11-29: Clear the request attribute as well, otherwise most cases are nonsensical (a few ambiguous)
+        request.removeAttribute("shoppingCart");
         }
         return "success";
     }

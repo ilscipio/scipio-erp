@@ -74,12 +74,12 @@ code package.
         <set from-field="userLoginContext.passwordHint" field="newUserLogin.passwordHint"/>
 
         <!-- Check the password, etc for validity -->
-        <script>groovy:
+        <script lang="groovy"><![CDATA[
             String password = (String) userLoginContext.get("currentPassword");
             String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
             String passwordHint = (String) userLoginContext.get("passwordHint");
             org.ofbiz.common.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale);
-        </script>
+        ]]></script>
 
         <!-- Create the Person -->
         <call-map-processor in-map-name="parameters" out-map-name="personContext">
@@ -370,10 +370,10 @@ code package.
             <set from-field="tempMap.partyId" field="personLookup.partyId"/>
             <find-by-primary-key map="personLookup" value-field="personVo" entity-name="Person"/>
             <if-empty field="parameters.CLUB_NUMBER">
-                <script>groovy:
+                <script lang="groovy"><![CDATA[
                     clubId = org.ofbiz.party.party.PartyWorker.createClubId(delegator, "999", 13);
                     parameters.put("CLUB_NUMBER", clubId);
-                </script>
+                ]]></script>
             </if-empty>
             <set from-field="parameters.CLUB_NUMBER" field="personVo.memberId"/>
             <store-value value-field="personVo"/>
@@ -381,7 +381,7 @@ code package.
 
         <!-- now finished, log in the user and set the cart's partyId to that of the newly created customer ... -->
         <if-compare field="allowPassword" operator="equals" value="Y">
-            <script>groovy:
+            <script lang="groovy"><![CDATA[
                 import org.ofbiz.order.shoppingcart.*;
                 org.ofbiz.webapp.control.LoginWorker.doBasicLogin(createdUserLogin, request);
                 org.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response);
@@ -396,7 +396,7 @@ code package.
                 } finally {
                     cartUpdate.close();
                 }
-            </script>
+            ]]></script>
         </if-compare>
 
         <!-- Associated to Product Store -->
@@ -489,14 +489,14 @@ code package.
             </call-object-method>
             <check-errors/>
             <if-not-empty field="cart">
-                <script>groovy:
+                <script lang="groovy"><![CDATA[
                     // clear out the login fields from the cart
                     try {
                         if (cart!=null) cart.setAutoUserLogin(null, dispatcher);
                     } catch (org.ofbiz.order.shoppingcart.CartItemModifyException e) {
                         Debug.logError(e, module);
                     }
-                </script>
+                ]]></script>
             </if-not-empty>
             <set from-field="tempMap.partyId" field="partyId"/>
             <if-not-empty field="partyId">
@@ -509,14 +509,14 @@ code package.
                         <call-object-method obj-field="cart" method-name="setOrderPartyId">
                             <field field="partyId"/>
                         </call-object-method>
-                        <script>groovy:
+                        <script lang="groovy"><![CDATA[
                             // clear out the login fields from the cart
                             try {
                                 if (cart!=null) cart.setUserLogin(userLogin, dispatcher);
                             } catch (org.ofbiz.order.shoppingcart.CartItemModifyException e) {
                                 Debug.logError(e, module);
                             }
-                        </script>
+                        ]]></script>
                         <!-- call-object-method obj-field="cart"  method-name="setUserLogin">
                             <field field="userLogin"  type="org.ofbiz.entity.GenericValue"/>
                             <field field="dispatcher" map-name="request" type="org.ofbiz.service.LocalDispatcher"/>
@@ -868,13 +868,13 @@ code package.
     </simple-method>
 
     <simple-method method-name="processShipOptions" short-description="Process Ship Options; to be called as a Request Event" login-required="false">
-        <script>groovy:
+        <script lang="groovy"><![CDATA[
            shipmentMethod = parameters.get("shipping_method");
            if(shipmentMethod != null){
               parameters.put("shipmentMethodTypeId", shipmentMethod.substring(0, shipmentMethod.indexOf("@")));
               parameters.put("carrierPartyId", shipmentMethod.substring(shipmentMethod.indexOf("@")+1));
            }
-       </script>
+       ]]></script>
        
         <!-- SCIPIO: Synchronized cart updates -->
         <try>
@@ -998,12 +998,12 @@ code package.
             <set field="newUserLogin.currentPassword" from-field="userLoginMap.currentPassword"/>
             <set field="newUserLogin.passwordHint" from-field="userLoginMap.passwordHint"/>
             <!-- Check the password, etc for validity -->
-            <script>groovy:
+            <script lang="groovy"><![CDATA[
                 String password = (String) userLoginMap.get("currentPassword");
                 String confirmPassword = (String) userLoginMap.get("currentPasswordVerify");
                 String passwordHint = (String) userLoginMap.get("passwordHint");
                 org.ofbiz.common.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale);
-            </script>
+            ]]></script>
             <check-errors/>
             <set-service-fields service-name="createUserLogin"  map="userLoginMap" to-map="userLoginCtx"/>
 
@@ -1017,10 +1017,10 @@ code package.
             </entity-one>
 
             <!-- now finished, log in the user and set the cart's partyId -->
-            <script>groovy:
+            <script lang="groovy"><![CDATA[
                     org.ofbiz.webapp.control.LoginWorker.doBasicLogin(userLogin, request);
                     org.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response);
-            </script>
+            ]]></script>
             <set field="parameters.userLogin" from-field="userLogin"/>
         <else>
             <if>
@@ -1058,13 +1058,13 @@ code package.
         <if-empty field="shoppingCart">
             <session-to-field field="shoppingCart"/>
         </if-empty>-->
-        <script>groovy:
+        <script lang="groovy"><![CDATA[
                 import org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper;
                 shoppingCart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO
                 context.shoppingCart = shoppingCart;
                 shippingEstWpr = ShippingEstimateWrapper.getWrapper(dispatcher, shoppingCart, 0);
                 parameters.put("shippingEstWpr", shippingEstWpr);
-        </script>
+        ]]></script>
         <set field="shippingEstWpr" from-field="parameters.shippingEstWpr"/>
         <call-object-method obj-field="shippingEstWpr" method-name="getShippingMethods" ret-field="carrierShipmentMethodList"/>
         <call-object-method obj-field="shoppingCart" method-name="getShipmentMethodTypeId" ret-field="shipmentMethodTypeId"/>
@@ -1113,7 +1113,7 @@ code package.
     </simple-method>
 
     <simple-method method-name="setShippingOption" short-description="Set shipping method" login-required="false">
-        <script>groovy:
+        <script lang="groovy"><![CDATA[
             String shippingMethod = parameters.get("shipMethod");
             String carrierPartyId = "";
             if(shippingMethod != null) {
@@ -1128,7 +1128,7 @@ code package.
                 parameters.put("shipmentMethodTypeId", shipmentMethodTypeId);
                 parameters.put("carrierPartyId", carrierPartyId);
             }
-        </script>
+        ]]></script>
         <set field="shipmentMethodTypeId" from-field="parameters.shipmentMethodTypeId"/>
         <set field="carrierPartyId" from-field="parameters.carrierPartyId"/>
         <set field="productStoreShipMethId" from-field="parameters.productStoreShipMethId"/>
@@ -1170,7 +1170,7 @@ code package.
         <set field="locale" from-field="parameters.locale" type="Object"/>
 
         <!-- SCIPIO: 2018-11-12: Ensure ship estimate is valid, return error otherwise! -->
-        <script>groovy:
+        <script lang="groovy"><![CDATA[
             import org.ofbiz.service.ServiceUtil;
             Map shipCost = org.ofbiz.order.shoppingcart.shipping.ShippingEvents.getShipGroupEstimate(dispatcher, delegator, shoppingCart, 0);
             context.shipCost = shipCost;
@@ -1179,12 +1179,12 @@ code package.
                 shipCostErrorMsg = ServiceUtil.getErrorMessage(shipCost);
             }
             context.shipCostErrorMsg = shipCostErrorMsg;
-        </script>
+        ]]></script>
         <if-not-empty field="shipCostErrorMsg">
             <add-error><fail-message message="${shipCostErrorMsg}"/></add-error>
             <check-errors/>
         </if-not-empty>
-        <script>groovy:
+        <script lang="groovy"><![CDATA[
             // SCIPIO
             //Map shipCost = org.ofbiz.order.shoppingcart.shipping.ShippingEvents.getShipGroupEstimate(dispatcher, delegator, shoppingCart, 0);
             Map shipCost = context.shipCost;
@@ -1205,7 +1205,7 @@ code package.
 
             cartGrandTotal = org.ofbiz.base.util.UtilFormatOut.formatCurrency(shoppingCart.getGrandTotal(), isoCode, locale);
             parameters.put("cartGrandTotal", cartGrandTotal);
-        </script>
+        ]]></script>
         <call-class-method method-name="doPromotions" class-name="org.ofbiz.order.shoppingcart.product.ProductPromoWorker">
             <field field="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart"/>
             <field field="dispatcher" type="org.ofbiz.service.LocalDispatcher"/>
@@ -1383,10 +1383,10 @@ code package.
                 <result-to-field result-name="newUserLogin"/>
             </call-service>
             <set-current-user-login value-field="newUserLogin"/>
-            <script>groovy:
+            <script lang="groovy"><![CDATA[
                     org.ofbiz.webapp.control.LoginWorker.doBasicLogin(newUserLogin, request);
                     org.ofbiz.webapp.control.LoginWorker.autoLoginSet(request, response);
-            </script>
+            ]]></script>
             <!-- disabledDateTime/disableForYears set time until a user login remains disabled -->
             <if-not-empty field="parameters.disabledDateTime">
                 <set field="disabledDateTime" from-field="parameters.disabledDateTime" type="Date"/>
@@ -1424,7 +1424,7 @@ code package.
             </else>
         </if-empty>
         <call-object-method obj-field="parameters.captcha" method-name="toLowerCase" ret-field="submittedCaptcha"/>
-        <script>groovy: context.actualCaptcha = request.getSession().getAttribute("_CAPTCHA_CODE_")?.get("captchaImage")?.toLowerCase()</script>
+        <script lang="groovy"><![CDATA[ context.actualCaptcha = request.getSession().getAttribute("_CAPTCHA_CODE_")?.get("captchaImage")?.toLowerCase()]]></script>
         <if-compare-field field="submittedCaptcha" operator="not-equals" to-field="actualCaptcha">
             <add-error><fail-property resource="MyPortalUiLabels" property="MyPortalCaptchaMissingError"/></add-error>
         </if-compare-field>

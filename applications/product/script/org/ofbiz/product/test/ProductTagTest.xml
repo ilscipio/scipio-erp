@@ -24,10 +24,10 @@ code package.
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
         <set field="request" from-field="parameters.request"/>
-        <script>groovy:
+        <script lang="groovy"><![CDATA[
             request.setParameter("productId", "PH-1000");
             request.setParameter("productTags", "test");
-        </script>
+        ]]></script>
         <call-class-method method-name="addProductTags" class-name="org.ofbiz.product.product.ProductEvents" ret-field="result">
             <field field="request" type="javax.servlet.http.HttpServletRequest"/>
             <field field="response" type="javax.servlet.http.HttpServletResponse"/>
@@ -61,10 +61,10 @@ code package.
             <if-compare field="checkProductKeywordApprove.statusId" operator="equals" value="KW_APPROVED"/>
         </assert>
         <!-- Step 5 -->
-        <script>groovy:
+        <script lang="groovy"><![CDATA[
             request.setParameter("productId", "PH-1000");
             request.setParameter("productTags", "'rock and roll' t-shirt red");
-        </script>
+        ]]></script>
         <call-class-method method-name="addProductTags" class-name="org.ofbiz.product.product.ProductEvents" ret-field="result">
             <field field="request" type="javax.servlet.http.HttpServletRequest"/>
             <field field="response" type="javax.servlet.http.HttpServletResponse"/>

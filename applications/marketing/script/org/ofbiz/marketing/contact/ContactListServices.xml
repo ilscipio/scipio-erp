@@ -274,7 +274,7 @@ code package.
         <if>
             <condition><if-compare field="newEntity.statusId" operator="equals" value="CLPT_PENDING"/></condition>
             <then>
-                <script>groovy:newEntity.set("optInVerifyCode", Long.toString(Math.round(9999999999L * Math.random())))</script>
+                <script lang="groovy"><![CDATA[newEntity.set("optInVerifyCode", Long.toString(Math.round(9999999999L * Math.random())))]]></script>
             </then>
         <else-if>
             <condition><if-compare field="newEntity.statusId" operator="equals" value="CLPT_ACCEPTED"/></condition>

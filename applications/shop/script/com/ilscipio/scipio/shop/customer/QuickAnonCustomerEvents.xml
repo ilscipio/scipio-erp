@@ -72,12 +72,12 @@ code package.
             <set field="newUserLogin.passwordHint" from-field="userLoginContext.passwordHint"/>
 
             <!-- Check the password, etc for validity -->
-            <script>groovy:
+            <script lang="groovy"><![CDATA[
                 String password = (String) userLoginContext.get("currentPassword");
                 String confirmPassword = (String) userLoginContext.get("currentPasswordVerify");
                 String passwordHint = (String) userLoginContext.get("passwordHint");
                 org.ofbiz.common.login.LoginServices.checkNewPassword(newUserLogin, null, password, confirmPassword, passwordHint, error_list, true, locale);
-            </script>
+            ]]></script>
         <else>
             <if-compare field="require_login" operator="equals" value="true">
                 <add-error><fail-property resource="PartyUiLabels" property="PartyUserNameMissing"/></add-error>
@@ -335,13 +335,13 @@ code package.
 
         <if-not-empty field="newUserLogin">
             <!-- If password encryption is enabled, encrpyt it now -->
-            <script>groovy:
+            <script lang="groovy"><![CDATA[
                 boolean useEncryption = "true".equals(org.ofbiz.entity.util.EntityUtilProperties.getPropertyValue("security", "password.encrypt", delegator)) // SCIPIO: use delegator
                 if (useEncryption) {
                     String hashType = org.ofbiz.common.login.LoginServices.getHashType()
                     newUserLogin.set("currentPassword", org.ofbiz.base.crypto.HashCrypt.digestHash(hashType, null, (String) newUserLogin.get("currentPassword")))
                 }
-            </script>
+            ]]></script>
             <!-- create the UserLogin manually to get around ordering and security constraints in the service -->
             <set field="userLoginContext.partyId" from-field="partyId"/>
             <create-value value-field="newUserLogin"/>
@@ -503,14 +503,14 @@ code package.
             </call-object-method>
             <check-errors/>
             <if-not-empty field="cart">
-                <script>groovy:
+                <script lang="groovy"><![CDATA[
                     // clear out the login fields from the cart
                     try {
                         if (cart!=null) cart.setAutoUserLogin(null, dispatcher);
                     } catch (org.ofbiz.order.shoppingcart.CartItemModifyException e) {
                         Debug.logError(e, module);
                     }
-                </script>
+                ]]></script>
             </if-not-empty>
             <if-not-empty field="partyId">
                 <set field="lookupKeyValue.userLoginId" value="anonymous"/>
@@ -522,14 +522,14 @@ code package.
                         <call-object-method obj-field="cart" method-name="setOrderPartyId">
                             <field field="partyId"/>
                         </call-object-method>
-                        <script>groovy:
+                        <script lang="groovy"><![CDATA[
                             // clear out the login fields from the cart
                             try {
                                 if (cart!=null) cart.setUserLogin(userLogin, dispatcher);
                             } catch (org.ofbiz.order.shoppingcart.CartItemModifyException e) {
                                 Debug.logError(e, module);
                             }
-                        </script>
+                        ]]></script>
                     </if-not-empty>
                 </if-not-empty>
             </if-not-empty>
@@ -572,13 +572,13 @@ code package.
     </simple-method>
 
     <simple-method method-name="processShipOptions" short-description="Process Ship Options; to be called as a Request Event" login-required="false">
-        <script>groovy:
+        <script lang="groovy"><![CDATA[
            shipmentMethod = parameters.get("shipping_method");
            if(shipmentMethod != null){
               parameters.put("shipmentMethodTypeId", shipmentMethod.substring(0, shipmentMethod.indexOf("@")));
               parameters.put("carrierPartyId", shipmentMethod.substring(shipmentMethod.indexOf("@")+1));
            }
-        </script>
+        ]]></script>
        
         <!-- SCIPIO: Synchronized cart updates -->
         <try>

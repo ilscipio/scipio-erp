@@ -37,10 +37,10 @@ code package.
         <set field="productStoreId" value="ScipioShop" type="String"/>
         <set field="currencyUom" value="USD" type="String"/>
 
-        <script>groovy:
+        <script lang="groovy"><![CDATA[
             shoppingCart = new org.ofbiz.order.shoppingcart.ShoppingCart(delegator, productStoreId, locale, currencyUom);
             parameters.put("shoppingCart", shoppingCart);
-        </script>
+        ]]></script>
 
         <set field="orderTypeId" value="SALES_ORDER" type="String"/>
         <set field="paymentMethodTypeId" value="CREDIT_CARD" type="String"/>
@@ -250,11 +250,11 @@ code package.
         <check-errors/>
 
         <!-- Shopping Cart checkout and create order -->
-        <script>groovy:
+        <script lang="groovy"><![CDATA[
             checkOutHelper = new org.ofbiz.order.shoppingcart.CheckOutHelper(dispatcher, delegator, shoppingCart);
             java.util.Map orderMap = checkOutHelper.createOrder(userLogin);
             parameters.put("orderMap", orderMap);
-        </script>
+        ]]></script>
 
         <!-- Clear Shopping Cart -->
         <call-object-method method-name="clear" obj-field="shoppingCart"/>
@@ -619,10 +619,10 @@ code package.
         <entity-one entity-name="UserLogin" value-field="userLogin">
             <field-map field-name="userLoginId" value="DemoCustomer"/>
         </entity-one>
-        <script>groovy:
+        <script lang="groovy"><![CDATA[
             session = request.getSession();
             session.setAttribute("userLogin", userLogin);
-        </script>
+        ]]></script>
         <call-class-method method-name="initializeOrderEntry" class-name="org.ofbiz.order.shoppingcart.ShoppingCartEvents" ret-field="result">
             <field field="request" type="javax.servlet.http.HttpServletRequest"/>
             <field field="response" type="javax.servlet.http.HttpServletResponse"/>

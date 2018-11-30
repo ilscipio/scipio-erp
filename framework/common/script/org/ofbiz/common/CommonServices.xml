@@ -179,12 +179,12 @@ code package.
             <field-to-result field="parameters.bytesRead" result-name="bytesRead"/>
             <call-object-method obj-field="uploadProgressListener" method-name="hasStarted" ret-field="parameters.hasStarted"/>
             <field-to-result field="parameters.hasStarted" result-name="hasStarted"/>
-            <script>groovy:
+            <script lang="groovy"><![CDATA[
                 contentLength = parameters.get("contentLength")
                 bytesRead = parameters.get("bytesRead")
                 int readPercent = (bytesRead* 100)/contentLength
                 parameters.put("readPercent", readPercent)
-            </script>
+            ]]></script>
             <field-to-result field="parameters.readPercent" result-name="readPercent"/>
             <field-to-result field="parameters.hasStarted" result-name="hasStarted"/>
         </if-not-empty>

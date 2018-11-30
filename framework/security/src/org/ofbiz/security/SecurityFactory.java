@@ -181,6 +181,9 @@ public final class SecurityFactory {
         
         @Override
         public boolean hasPermission(String permission, HttpSession session) {
+            if (session == null) { // SCIPIO: null check
+                return false;
+            }
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
             if (userLogin == null) {
                 return false;
@@ -269,6 +272,9 @@ public final class SecurityFactory {
         
         @Override
         public boolean hasRolePermission(String application, String action, String primaryKey, List<String> roles, HttpSession session) {
+            if (session == null) { // SCIPIO: null check
+                return false;
+            }
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
             return hasRolePermission(application, action, primaryKey, roles, userLogin);
         }
@@ -293,6 +299,9 @@ public final class SecurityFactory {
 
         @Override
         public boolean hasRolePermission(String application, String action, String primaryKey, String role, HttpSession session) {
+            if (session == null) { // SCIPIO: null check
+                return false;
+            }
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
             return hasRolePermission(application, action, primaryKey, role, userLogin);
         }

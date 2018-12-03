@@ -1,8 +1,27 @@
+
+
+import org.ofbiz.base.component.ComponentConfig
+import org.ofbiz.base.component.ComponentConfig.WebappInfo
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.*;
+import org.ofbiz.webapp.WebAppUtil
+
 import com.ilscipio.scipio.setup.*;
 
 final module = "SetupWebsite.groovy";
+
+// SCIPIO (12/03/2018): Builds a map for webapp->websiteId used to show only the websiteIds available
+Map<Object, String> webappWebsiteMap = UtilMisc.newMap();
+for (WebappInfo webappInfo in ComponentConfig.getAllWebappResourceInfos()) {
+    String websiteId = WebAppUtil.getWebSiteId(webappInfo);
+    if (Debug.isOn(Debug.VERBOSE)) {
+        Debug.log("webappInfo[" + webappInfo.getName() + "]:               [" + webappInfo.getTitle() + "] > websiteId: " + websiteId);
+    }
+    if (UtilValidate.isNotEmpty(websiteId)) {
+        webappWebsiteMap.put(webappInfo, websiteId);
+    }
+}
+context.webappWebsiteMap = webappWebsiteMap;
 
 final defaultInitialWebSiteId = UtilProperties.getPropertyValue("scipiosetup", "website.defaultInitialWebSiteId");
 

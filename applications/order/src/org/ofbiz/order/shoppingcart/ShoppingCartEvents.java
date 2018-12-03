@@ -1220,11 +1220,23 @@ public class ShoppingCartEvents {
 
     /**
      * SCIPIO: Sets the cart in session and/or request as applicable immediately; if cart is null, removes the cart.
+     * <p>
+     * SPECIAL CASE: If session modification is enabled and we're in a CartUpdate session, this will instead
+     * trigger a {@link CartUpdate#commit(ShoppingCart)} call, to prevent session modifications. Note that
+     * this case may then also trigger a request attribute update regardless of modifyScopesFilter session.
+     * <p>
      * NOTE: For synchronized updates, use {@link CartUpdate} instead of this directly; if you must use this,
      * it must always be wrapped in a {@link CartSync#synchronizedSection(HttpServletRequest)}.
      * NOTE: This automatically marks the cart as changed in the request, so do not reassign an unmodified cart.
      * Added 2018-11-20. */
     public static ShoppingCart setCartObject(HttpServletRequest request, ShoppingCart cart, RequestVarScopes modifyScopesFilter) {
+        if (modifyScopesFilter.session()) {
+            CartUpdate currentUpdate = CartUpdate.getCurrentUpdate(request);
+            if (currentUpdate != null) {
+                currentUpdate.commit(cart);
+                return cart;
+            }
+        }
         RequestVarScopes.REQUEST_AND_SESSION.setOrRemoveValue(request, modifyScopesFilter, "shoppingCart", cart);
         if (modifyScopesFilter.session()) {
             markCartChanged(request);
@@ -1234,6 +1246,7 @@ public class ShoppingCartEvents {
 
     /**
      * SCIPIO: Sets the cart in session and request immediately; if cart is null, removes the cart.
+     * <p>
      * NOTE: For synchronized updates, use {@link CartUpdate} instead of this directly; if you must use this,
      * it must always be wrapped in a {@link CartSync#synchronizedSection(HttpServletRequest)}.
      * NOTE: This automatically marks the cart as changed in the request, so do not reassign an unmodified cart.
@@ -1363,6 +1376,7 @@ public class ShoppingCartEvents {
             cart = cartUpdate.getCartForUpdate();
             
             try {
+                // SCIPIO: FIXME?: In actuality the userLogin/autoUserLogin will get re-read here... for now no obvious issues
                 // if we just logged in set the UL
                 Optional<GenericValue> userLoginOpt = shouldCartLoginBeUpdated(session, cart.getUserLogin(), "userLogin", true);
                 if (userLoginOpt != null) {

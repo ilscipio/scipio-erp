@@ -24,10 +24,11 @@ code package.
     <handler name="shoppingCartSync" type="request-handler-wrapper" class="org.ofbiz.order.shoppingcart.CartSyncEventHandlerWrapper"/>
 
     <!-- Events to run on every request before security (chains exempt) -->
-    <!--
     <preprocessor>
+        <!-- SCIPIO: Some preparations for ShoppingCart for orderentry -->
+        <event name="prepareRequestForCart" type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="prepareRequestForCart"/>
     </preprocessor>
-    -->
+
     <!-- Events to run on every request after all other processing (chains exempt) -->
     <!--
     <postprocessor>

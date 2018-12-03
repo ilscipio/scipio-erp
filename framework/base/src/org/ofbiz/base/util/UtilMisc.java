@@ -1377,4 +1377,22 @@ public final class UtilMisc {
         }
         return new ArrayList<>(list);
     }
+
+    /**
+     * SCIPIO: Returns a new list composed of the given collection but reversed.
+     * Added 2018-12-03.
+     */
+    public static <T> List<T> asReversedList(Collection<T> list) {
+        List<T> newList = new ArrayList<>(list);
+        Collections.reverse(newList);
+        return newList;
+    }
+
+    /**
+     * SCIPIO: Returns a new list composed of the given collection but reversed.
+     * Added 2018-12-03.
+     */
+    public static <T> List<T> unmodifiableReversedList(Collection<T> list) {
+        return Collections.unmodifiableList(asReversedList(list));
+    }
 }

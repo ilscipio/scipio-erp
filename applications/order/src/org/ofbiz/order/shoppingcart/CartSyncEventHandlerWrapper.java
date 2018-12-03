@@ -53,53 +53,62 @@ public class CartSyncEventHandlerWrapper implements EventHandlerWrapper {
             }
             if (modelService != null) {
                 if (Boolean.TRUE.equals(modelService.getProperty("shoppingCart.update"))) {
-                    ShoppingCart prevRequestCart = (ShoppingCart) request.getAttribute("shoppingCart");
-                    boolean committed = false;
+                    if (ShoppingCart.isDebug()) {
+                        Debug.logInfo("Begin shoppingCart.update cart sync section for event service '" + serviceName + "'"
+                                + getLogSuffix(), module);
+                    }
                     String result;
-                    try {
-                        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) {
-                            // NOTE: If there's no shoppingCart in session, there's nothing for the service to modify,
-                            // so we don't need to do anything - HOWEVER we still need the synchronized block
-                            // to (help) ensure the session attribute shoppingCart is not changed between the time
-                            // we check it here and the time the ServiceEventHandler re-reads the attribute
-                            if (prevRequestCart != null || request.getSession().getAttribute("shoppingCart") != null) {
-                                ShoppingCart cart = cartUpdate.getCartForUpdate();
-                                // NOTE: This will take priority over the session attribute shoppingCart
-                                request.setAttribute("shoppingCart", cart);
-                                result = handlers.next().invoke(handlers, event, requestMap, request, response);
-                                if ("error".equals(result)) {
-                                    Debug.logWarning("Event service '" + serviceName 
-                                            + "' returned occur; discarding shoppingCart changes", module);
+                    final boolean createCartIfMissing = false;
+                    try (CartUpdate cartUpdate = CartUpdate.updateSection(request, createCartIfMissing)) {
+                        // NOTE: cartUpdate automatically populates the "shoppingCart" request attribute
+                        // for the service event handler to read (and if committed, also after we leave the block)
+                        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
+                        // NOTE: Cart may be null here (due to createCartIfMissing==false).
+                        // NOTE: Even if cart null the invoke must be done within this synchronized block
+                        // to ensure the session attribute shoppingCart is not changed between now
+                        // and the time the ServiceEventHandler re-reads the attribute.
+
+                        result = handlers.next().invoke(handlers, event, requestMap, request, response);
+
+                        // Special case: shoppingCart INOUT
+                        // If OUT cart changed, simply let it replace our cart copy through CartUpdate.commit
+                        ShoppingCart outCart = (ShoppingCart) request.getAttribute("shoppingCart");
+                        if (outCart != null && outCart != cart) {
+                            if (ShoppingCart.isDebug()) {
+                                if (cart != null) {
+                                    Debug.logInfo("Event changed shoppingCart request attribute"
+                                            + "; local cart copy will be replaced" + getLogSuffix(), module);
                                 } else {
-                                    // TODO?: handle case where shoppingCart is also OUT...
-                                    // (for now, prefer avoid looking up the ModelService until tangible need)
-                                    cartUpdate.commit(cart);
-                                    committed = cartUpdate.isCommitted();
+                                    Debug.logInfo("Event set new shoppingCart request attribute (was null)"
+                                            + getLogSuffix(), module);
                                 }
-                                return result;
                             }
+                            cart = outCart;
                         }
-                    } finally {
-                        if (committed) {
-                            if (prevRequestCart == null) {
-                                // If there was no shoppingCart req attribute before, there should be none after
-                                request.removeAttribute("shoppingCart");
-                            }
-                        } else {
-                            // Restore the request attribute
-                            if (prevRequestCart == null) {
-                                // There was no shoppingCart attribute before, so there should be none after;
-                                // see CartUpdate behavior
-                                request.removeAttribute("shoppingCart");
+
+                        if (cart != null) {
+                            if ("error".equals(result)) {
+                                Debug.logWarning("Event service '" + serviceName
+                                    + "' returned occur; discarding shoppingCart changes" + getLogSuffix(), module);
                             } else {
-                                request.setAttribute("shoppingCart", prevRequestCart);
+                                // Do the commit
+                                cartUpdate.commit(cart);
                             }
                         }
                     }
+                    if (ShoppingCart.isDebug()) {
+                        Debug.logInfo("End shoppingCart.update cart sync section for event service '" + serviceName + "'"
+                                + getLogSuffix(), module);
+                    }
+                    return result;
                 }
             }
         }
         return handlers.next().invoke(handlers, event, requestMap, request, response);
     }
 
+    private static String getLogSuffix() {
+        return " (thread " + Thread.currentThread().getId() + ")";
+    }
 }

@@ -64,12 +64,12 @@ public interface RequestVarScopes {
     /** If value is non-null, sets corresponding attributes; if value is null, removes them. */
     public default void setOrRemoveValue(HttpServletRequest request, String name, Object value) {
         if (value != null) { setValue(request, name, value); }
-        removeValue(request, name);
+        else { removeValue(request, name); }
     }
     /** If value is non-null, sets corresponding attributes; if value is null, removes them. */
     public default void setOrRemoveValue(HttpServletRequest request, RequestVarScopes limitScopes, String name, Object value) {
         if (value != null) { setValue(request, limitScopes, name, value); }
-        removeValue(request, limitScopes, name);
+        else { removeValue(request, limitScopes, name); }
     }
 
     /**  Returns the first non-null value (attribute or parameter) in the given scopes, from most specific to least. */
@@ -231,15 +231,15 @@ public interface RequestVarScopes {
         public static final Set<RequestVarScope> ALL = Collections.unmodifiableSet(EnumSet.allOf(RequestVarScope.class));
         public static final Set<RequestVarScope> NONE = Collections.unmodifiableSet(EnumSet.noneOf(RequestVarScope.class));
 
-        private final Set<RequestVarScope> scopes;
+        private Set<RequestVarScope> scopes;
 
         private RequestVarScope() {
-            this.scopes = Collections.unmodifiableSet(EnumSet.of(this));
+            //this.scopes = Collections.unmodifiableSet(EnumSet.of(this)); // java will not allow in constructor
         }
 
         @Override
-        public Set<RequestVarScope> scopes() { return scopes; }
-        @Override public Collection<RequestVarScope> reversedScopes() { return scopes; }
+        public Set<RequestVarScope> scopes() { if (scopes == null) { scopes = Collections.unmodifiableSet(EnumSet.of(this)); } return scopes; }
+        @Override public Collection<RequestVarScope> reversedScopes() { return scopes(); }
         @Override public boolean request() { return false; }
         @Override public boolean parameter() { return false; }
         @Override public boolean session() { return false; }

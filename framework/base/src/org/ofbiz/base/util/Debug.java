@@ -1002,6 +1002,17 @@ public final class Debug {
     }
 
     /**
+     * SCIPIO: Checks the current thread stack trace to find calling method,
+     * and returns a short string with class simple name, method and line number (or empty string if all excluded).
+     * The calling method is automatically excluded.
+     * WARN: This method is very slow and should only be used if verbose on.
+     * Added 2018-12-03.
+     */
+    public static String getCallerShortInfo() {
+        return formatCallerShortInfo(getCallerInfo(Collections.emptyList()));
+    }
+
+    /**
      * SCIPIO: Formats StackTraceElement to a short string with class simple name, method and line number.
      * Added 2018-11-29.
      */

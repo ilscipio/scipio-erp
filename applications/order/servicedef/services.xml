@@ -55,6 +55,18 @@ code package.
         <implements service="orderNotificationInterface"/>
     </service>
 
+    <!--SCIPIO: new payment notification services -->
+    <service name="sendOrderPayChangeNotification" engine="java" require-new-transaction="true" max-retry="3"
+             location="org.ofbiz.order.order.OrderServices" invoke="sendOrderPayChangeNotification">
+        <description>Send a order notification</description>
+        <implements service="orderNotificationInterface"/>
+    </service>
+    <service name="sendOrderPayCompleteNotification" engine="java" require-new-transaction="true" max-retry="3"
+             location="org.ofbiz.order.order.OrderServices" invoke="sendOrderPayCompleteNotification">
+        <description>Send a order notification</description>
+        <implements service="orderNotificationInterface"/>
+    </service>
+
     <service name="sendProcessNotification" engine="java" require-new-transaction="true" max-retry="3"
             location="org.ofbiz.order.order.OrderServices" invoke="sendProcessNotification">
         <description>Limit Service for order processing workflow; sends activitiy notifications</description>

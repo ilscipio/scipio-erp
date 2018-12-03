@@ -35,4 +35,21 @@ code package.
         <set field-name="moreInfoUrl" value="/ordermgr/control/orderview"/>
         <action service="createSystemInfoNote" mode="sync"/>
     </eca>
+
+    <!-- SCIPIO: new payment notifications. This would cover all paymentmethods, so disabled by default.
+        Can be used in combination with paymentMethodTypeId for specific payment methods
+    <eca entity="OrderPaymentPreference" operation="create-store" event="return">
+        <condition field-name="orderPaymentPreferenceId" operator="is-not-empty"/>
+        <condition field-name="statusId" operator="equals" value="PAYMENT_RECEIVED"/>
+        <action service="sendOrderPayCompleteNotification" mode="sync"/>
+    </eca>
+
+    <eca entity="OrderPaymentPreference" operation="create-store" event="return">
+        <condition field-name="orderPaymentPreferenceId" operator="is-not-empty"/>
+        <condition field-name="statusId" operator="not-equals" value="PAYMENT_RECEIVED"/>
+        <condition field-name="statusId" operator="not-equals" value="PAYMENT_CANCELLED"/>
+        <condition field-name="statusId" operator="not-equals" value="PAYMENT_SETTLED"/>
+        <action service="sendOrderPayChangeNotification" mode="sync"/>
+    </eca>
+    -->
 </entity-eca>

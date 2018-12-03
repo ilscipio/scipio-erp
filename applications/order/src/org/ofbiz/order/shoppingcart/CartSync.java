@@ -22,7 +22,7 @@ import org.ofbiz.base.util.UtilMisc;
  *    // ...
  * }</pre>
  * <p>
- * NOTE: If used from pre-java 8 code, must be closed in a finally block. 
+ * NOTE: If used from pre-java 8 code, must be closed in a finally block.
  * <p>
  * Added 2018-11-29.
  *
@@ -42,6 +42,11 @@ public class CartSync implements AutoCloseable, Serializable {
     private static final boolean oneInstancePerSection = true;
     private static final Collection<String> excludeClassesLogCaller = UtilMisc.toSet(CartSync.class.getName(), CartUpdate.class.getName());
 
+    /**
+     * An implementation of CartSync that does nothing, mainly for code simplification.
+     */
+    public static final CartSync DUMMY = new DummyCartSync();
+
     private final ReentrantLock cartLock;
     // NOTE: This flag may evaluate only once per session (roughly), which should be OK
     protected final boolean debug = (ShoppingCart.DEBUG || Debug.verboseOn());
@@ -52,7 +57,7 @@ public class CartSync implements AutoCloseable, Serializable {
     /**
      * Constructor for main lock instance (stored in session).
      */
-    private CartSync(ReentrantLock cartUpdateLock) {
+    protected CartSync(ReentrantLock cartUpdateLock) {
         this.cartLock = cartUpdateLock;
         endCalledOrOk = true;
     }
@@ -60,7 +65,7 @@ public class CartSync implements AutoCloseable, Serializable {
     /**
      * Lock-sharing copy constructor.
      */
-    private CartSync(CartSync other) {
+    protected CartSync(CartSync other) {
         this.cartLock = other.cartLock;
         endCalledOrOk = false;
     }
@@ -93,12 +98,12 @@ public class CartSync implements AutoCloseable, Serializable {
         try {
             cartLock.unlock();
         } catch(Exception e) {
-            Debug.logError(e, "CartSync: fatal: could not release cart lock - this should not happen" 
+            Debug.logError(e, "CartSync: fatal: could not release cart lock - this should not happen"
                     + getLogSuffixDetailed(), module);
         }
         endCalledOrOk = true;
     }
-    
+
     @Override
     public void close() {
         end();
@@ -123,15 +128,15 @@ public class CartSync implements AutoCloseable, Serializable {
                     if (cart != null) {
                         lock = cart.getLockObject();
                         request.getSession(true).setAttribute("shoppingCartLock", lock);
-                        Debug.logInfo("shoppingCartLock not found in session; setting to lock object found in cart (" 
-                                + lock + ")", module); 
+                        Debug.logInfo("shoppingCartLock not found in session; setting to lock object found in cart ("
+                                + lock + ")", module);
                     } else {
                         lock = ShoppingCart.createLockObject();
                         request.getSession(true).setAttribute("shoppingCartLock", lock);
                         // NOTE: In theory this should be a warning (because lock on session is not officially supported)
                         // , but it will happen regularly in orderentry
                         // and extremely unlikely to be a problem
-                        Debug.logInfo("shoppingCartLock not found in session; creating", module); 
+                        Debug.logInfo("shoppingCartLock not found in session; creating", module);
                     }
                 }
             }
@@ -154,7 +159,7 @@ public class CartSync implements AutoCloseable, Serializable {
     String getLogSuffixDetailed() {
         return " (" + Debug.getCallerShortInfo(excludeClassesLogCaller) + "; thread " + Thread.currentThread().getId() + ")";
     }
-    
+
     @Override
     protected void finalize() throws Throwable {
         if (!endCalledOrOk) {
@@ -164,9 +169,26 @@ public class CartSync implements AutoCloseable, Serializable {
             try {
                 cartLock.unlock();
             } catch(Exception e) {
-                Debug.logError(e, "CartSync: finalize: fatal: could not release cart lock; session may be ruined" 
+                Debug.logError(e, "CartSync: finalize: fatal: could not release cart lock; session cart may be ruined"
                         + getLogSuffixDetailed(), module);
             }
         }
     }
+
+    private static class DummyCartSync extends CartSync {
+        DummyCartSync() {
+            super((ReentrantLock) null);
+        }
+
+        @Override
+        protected void begin() {
+            // do nothing
+        }
+
+        @Override
+        protected void end() {
+            // do nothing
+        }
+    }
+
 }

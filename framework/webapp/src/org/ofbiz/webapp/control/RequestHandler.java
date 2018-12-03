@@ -28,6 +28,7 @@ import java.net.URL;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -89,6 +90,10 @@ public class RequestHandler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final boolean showSessionIdInLog = UtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y"); // SCIPIO: made static var & remove delegator
+
+    private static final Set<String> defaultViewLastParamExcludes = UtilMisc.unmodifiableHashSet(
+            "_SCP_VIEW_SAVE_ATTR_EXCL_", "_ALLOW_VIEW_SAVE_"); // SCIPIO
+
     private final String defaultStatusCodeString = UtilProperties.getPropertyValue("requestHandler", "status-code", "301");
     private final ViewFactory viewFactory;
     private final EventFactory eventFactory;
@@ -1212,8 +1217,9 @@ public class RequestHandler {
             // SCIPIO: 2017-10-04: NEW VIEW-SAVE ATTRIBUTE EXCLUDES - these can be set by event to prevent cached and volatile results from going into session
             Set<String> viewSaveAttrExcl = UtilGenerics.checkSet(req.getAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_"));
             if (viewSaveAttrExcl != null) {
-                viewSaveAttrExcl.add("_SCP_VIEW_SAVE_ATTR_EXCL_");
-                viewSaveAttrExcl.add("_ALLOW_VIEW_SAVE_");
+                viewSaveAttrExcl.addAll(getDefaultViewLastParamExcludes(req));
+            } else {
+                viewSaveAttrExcl = getDefaultViewLastParamExcludes(req);
             }
             //paramMap.putAll(UtilHttp.getAttributeMap(req));
             paramMap.putAll(UtilHttp.getAttributeMap(req, viewSaveAttrExcl));
@@ -2672,6 +2678,26 @@ public class RequestHandler {
         return (String) servletContext.getAttribute("_CONTROL_MAPPING_");
     }
 
+    /**
+     * SCIPIO: Returns set of request attribute/param names which should be excluded from saving
+     * into session by "view-last" and similar responses; this set is editable in-place and
+     * caller may simply add names to it.
+     * <p>
+     * Added 2018-12-03.
+     */
+    public static Set<String> getViewLastParamExcludes(HttpServletRequest request) {
+        Set<String> viewSaveAttrExcl = UtilGenerics.checkSet(request.getAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_"));
+        if (viewSaveAttrExcl == null) {
+            viewSaveAttrExcl = new HashSet<>();
+            request.setAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_", viewSaveAttrExcl);
+        }
+        return viewSaveAttrExcl;
+    }
+
+    public static Set<String> getDefaultViewLastParamExcludes(HttpServletRequest request) { // SCIPIO
+        return defaultViewLastParamExcludes;
+    }
+    
     /**
      * SCIPIO: Controls URL format for http-to-https redirects.
      * Added 2018-07-18.

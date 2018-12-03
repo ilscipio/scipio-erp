@@ -12,4 +12,4 @@ code package.
 <#else>
       ${uiLabelMap.OrderEmailSorry} ${orderHeader.orderId}.<br />
 </#if>
-    <br />${uiLabelMap.OrderEmailCustomerService} (email@email.com)<br /> <#-- Customer service email (not a variable why?) must be adapted - JLR 1/6/5 -->
+    <br />${uiLabelMap.OrderEmailCustomerService} (info@scipioerp.com)

@@ -130,6 +130,7 @@ code package.
             <actions>
                 <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleOrderChangeNotice}"/>
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
@@ -152,6 +153,7 @@ code package.
                 <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleOrderPaymentRetryNotice}"/>
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
@@ -160,6 +162,46 @@ code package.
                 <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <platform-specific><email><html-template location="component://shop/templates/email/emailpayretry.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PaymentChangeNotice">
+        <section>
+            <actions>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleOrderPaymentRetryNotice}"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/emailpaychange.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="PaymentCompletedNotice">
+        <section>
+            <actions>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleOrderPaymentRetryNotice}"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/emailpaycompleted.ftl"/></email></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -4274,6 +4274,19 @@
         <value xml:lang="zh">本电子邮件是通知你你支付的订单 #</value>
         <value xml:lang="zh-TW">本電子郵件是通知你你支付的訂單 #</value>
     </property>
+    <!--SCIPIO: New status messages -->
+    <property key="OrderEmailPaymentChange">
+        <value xml:lang="de">Ihre Zahlungsdaten wurden aktualisiert.</value>
+        <value xml:lang="en">Your payment status has been updated.</value>
+        <value xml:lang="es">Sus datos de pago han sido actualizados.</value>
+        <value xml:lang="fr">Les détails de votre paiement ont été mis à jour.</value>
+    </property>
+    <property key="OrderEmailPaymentCompleted">
+        <value xml:lang="de">Ihre Zahlung ist bei uns eingegangen. Der Auftrag wird nun von uns bearbeitet.</value>
+        <value xml:lang="en">Your payment has been received. The order will now be processed.</value>
+        <value xml:lang="es">Su pago ha sido recibido por nosotros. El pedido ahora será procesado por nosotros.</value>
+        <value xml:lang="fr">Votre paiement a été reçu par nous. La commande sera maintenant traitée par nous.</value>
+    </property>
     <property key="OrderEmailProblemCancelledNotProcessed">
         <value xml:lang="de">Ihr Auftrag wurde abgebrochen und wird nicht ausgeführt. Bei Fragen nehmen Sie bitte Kontakt mit dem Kundendienst auf.</value>
         <value xml:lang="en">At this time your order has been cancelled and will not be processed. Please contact customer service if you have any questions.</value>

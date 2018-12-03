@@ -66,6 +66,10 @@ public final class ProductStoreWorker {
 
         defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAYRETRY", "component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice");
 
+        // SCIPIO: new payment status mails
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAY_CHANGE", "component://shop/widget/EmailOrderScreens.xml#PaymentChangeNotice");
+        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAY_COMPLT", "component://shop/widget/EmailOrderScreens.xml#PaymentCompletedNotice");
+
         defaultProductStoreEmailScreenLocation.put("PRDS_RTN_ACCEPT", "component://shop/widget/EmailReturnScreens.xml#ReturnAccept");
         defaultProductStoreEmailScreenLocation.put("PRDS_RTN_COMPLETE", "component://shop/widget/EmailReturnScreens.xml#ReturnComplete");
         defaultProductStoreEmailScreenLocation.put("PRDS_RTN_CANCEL", "component://shop/widget/EmailReturnScreens.xml#ReturnCancel");

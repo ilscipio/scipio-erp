@@ -2578,6 +2578,18 @@
         <value xml:lang="zh">支付重试</value>
         <value xml:lang="zh-TW">付款重試</value>
     </property>
+    <property key="Enumeration.description.PRDS_ODR_PAY_CHANGE">
+        <value xml:lang="de">Aktualisierung des Bezahlstatus</value>
+        <value xml:lang="en">Payment Status Update</value>
+        <value xml:lang="es">Actualización del estado de pago</value>
+        <value xml:lang="fr">État du paiement</value>
+    </property>
+    <property key="Enumeration.description.PRDS_ODR_PAY_COMPLT">
+        <value xml:lang="de">Zahlung abgeschlossen</value>
+        <value xml:lang="en">Payment Complete</value>
+        <value xml:lang="es">Pago Completo</value>
+        <value xml:lang="fr">Paiement complet</value>
+    </property>
     <property key="Enumeration.description.PRDS_ODR_SHIP_COMPLT">
         <value xml:lang="ar">إكتمال الشحن</value>
         <value xml:lang="de">Zustellung Abgeschlossen</value>

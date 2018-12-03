@@ -2607,6 +2607,18 @@ public class OrderServices {
         return sendOrderNotificationScreen(ctx, context, "PRDS_ODR_PAYRETRY");
     }
 
+    /** SCIPIO:
+     * Service to email a customer with order payment status results */
+    public static Map<String, Object> sendOrderPayStatusNotification(DispatchContext ctx, Map<String, ? extends Object> context) {
+        return sendOrderNotificationScreen(ctx, context, "PRDS_ODR_PAY_CHANGE");
+    }
+
+    /** SCIPIO:
+     * Service to email a customer with order payment complete results */
+    public static Map<String, Object> sendOrderPayCompleteNotification(DispatchContext ctx, Map<String, ? extends Object> context) {
+        return sendOrderNotificationScreen(ctx, context, "PRDS_ODR_PAY_COMPLT");
+    }
+
     protected static Map<String, Object> sendOrderNotificationScreen(DispatchContext dctx, Map<String, ? extends Object> context, String emailType) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();

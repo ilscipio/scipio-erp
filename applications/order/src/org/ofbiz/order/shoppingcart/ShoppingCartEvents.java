@@ -67,6 +67,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.control.RequestVarScopes;
 
 /**
  * Shopping cart events.
@@ -841,7 +842,7 @@ public class ShoppingCartEvents {
 
         cart.setOrderType("PURCHASE_ORDER");
 
-        session.setAttribute("shoppingCart", cart);
+        ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
         session.setAttribute("orderPartyId", cart.getOrderPartyId());
@@ -1079,121 +1080,194 @@ public class ShoppingCartEvents {
         HttpSession session = request.getSession();
         try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
         clearCart(request, response);
-        session.removeAttribute("shoppingCart");
+        // SCIPIO: 2018-11-29: Clear the request attribute as well, otherwise most cases are nonsensical (a few ambiguous)
+        //session.removeAttribute("shoppingCart");
+        removeCartObject(request);
         session.removeAttribute("orderPartyId");
         session.removeAttribute("orderMode");
         session.removeAttribute("productStoreId");
         session.removeAttribute("CURRENT_CATALOG_ID");
-        // SCIPIO: 2018-11-29: Clear the request attribute as well, otherwise most cases are nonsensical (a few ambiguous)
-        request.removeAttribute("shoppingCart");
         }
         return "success";
     }
 
-    /** Gets or creates the shopping cart object */
-    public static ShoppingCart getCartObject(HttpServletRequest request, Locale locale, String currencyUom) {
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCart cart = (ShoppingCart) request.getAttribute("shoppingCart");
-        HttpSession session = request.getSession(true);
-        boolean fromReqAttr = (cart != null); // SCIPIO
-        if (cart == null) {
-            cart = (ShoppingCart) session.getAttribute("shoppingCart");
+    /** Gets or creates the shopping cart object.
+     * <p>
+     * SCIPIO: This method is rewritten.
+     * <p>
+     * SCIPIO: WARNING: 2018-12-03: The explicit <code>locale</code> and <code>currencyUom</code> parameters are completely
+     * removed because they complicated the cart get code with cart updates too much.
+     * <p>
+     * SCIPIO: NOTE: 2018-12-03: This no longer transfers the "shoppingCart" request attribute to the session
+     * attributes, and instead does the opposite: it transfers session attribute to request attribute in order to ensure
+     * cart instance read atomicity for the request. NOTE: However, CartUpdate sessions (upon entry) actually read
+     * the session first.
+     * <p>
+     * NOTE: If locale or currency has changed, <code>checkRequestFirst</code> may be ignored, because cart changes
+     * should always 
+     */
+    static ShoppingCart getCartObject(HttpServletRequest request, boolean checkRequestFirst, RequestVarScopes modifyScopesFilter) { // SCIPIO: added checkRequestFirst, modifyScopesFilter
+        // SCIPIO: Heavily refactored for synchronized cart updates
+        HttpSession session = request.getSession();
+        ShoppingCart cart = null, requestCart = (ShoppingCart) request.getAttribute("shoppingCart");
+        if (checkRequestFirst) {
+            // SCIPIO: Check request attribute first, typically for pure cart reads during a request, which use
+            // local request cache for consistency in the rendering
+            cart = requestCart;
+            if (cart == null) {
+                cart = (ShoppingCart) session.getAttribute("shoppingCart");
+            } else {
+                // SCIPIO: 2018-11-30: This code was destructive; do not automatically transfer the request attribute to 
+                // session anymore; instead, setCartObject and CartUpdate#close() do it, and as bonus we avoid extra sync blocks.
+                // NOTE: We now do the opposite further below and transfer session to request instead.
+                //session.setAttribute("shoppingCart", cart);
+            }
         } else {
-            // SCIPIO: Only set if not already there, otherwise will hit synchronized too often
-            // TODO: REVIEW: This whole section is questionable; why is the request attrib automatically
-            // copied to session at every call?
-            //session.setAttribute("shoppingCart", cart);
-            ShoppingCart prevCart = (ShoppingCart) session.getAttribute("shoppingCart");
-            if (prevCart != cart) {
-                try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
-                    prevCart = (ShoppingCart) session.getAttribute("shoppingCart");
-                    if (prevCart != cart) {
-                        if (prevCart != null) {
-                            Debug.logWarning("Replacing existing session shoppingCart with shoppingCart from request attributes", module);
-                        }
-                        session.setAttribute("shoppingCart", cart);
-                    }
+            // SCIPIO: Check session attributes first, typically only done at the beginning of a CartUpdate section
+            // (required there to avoid lost cart updates from other threads)
+            cart = (ShoppingCart) session.getAttribute("shoppingCart");
+            if (cart == null) {
+                cart = requestCart;
+            }
+        }
+
+        if (cart == null) {
+            try (CartSync cartSync = CartSync.synchronizedSection(request)) {
+                // SCIPIO: Check session cart again inside synchronized (only session might have changed)
+                ShoppingCart sessionCart = (ShoppingCart) session.getAttribute("shoppingCart");
+                cart = sessionCart;
+                if (cart == null) {
+                    // NEW CART
+                    cart = new WebShoppingCart(request);
+                    // Update both session and req attr (or per modifyScopesFilter)
+                    ShoppingCartEvents.setCartObject(request, cart, modifyScopesFilter);
+                    requestCart = cart; // Don't re-update below; done by setCartObject
                 }
             }
         }
 
-        boolean cartIsNew = false;
-        if (cart == null) {
-            try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
-                // SCIPIO: check again inside synchronized block
-                cart = (ShoppingCart) session.getAttribute("shoppingCart");
-                if (cart == null) {
-                    // SCIPIO: DEV NOTE: This is the primary WebShoppingCart constructor call, but there 
-                    // may be a few others scattered for special cases
-                    cart = new WebShoppingCart(request, locale, currencyUom);
-                    session.setAttribute("shoppingCart", cart);
-                    cartIsNew = true;
-                }
-            }
-        } 
-        if (!cartIsNew) {
-            // SCIPIO: Refactored for safe cart update
-            // This appears complicated because we must re-check everything again inside the synchronized block
-            boolean localeChanged = (locale != null && !locale.equals(cart.getLocale()));
-            boolean currencyChanged = (currencyUom != null && !currencyUom.equals(cart.getCurrency()));
-            if (localeChanged || currencyChanged) {
-                try {
-                    try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
-                    ShoppingCart newCart = cartUpdate.getCartForUpdate(); // NOTE: this re-fetches the cart inside synchronized, in case ref changed
-    
-                    localeChanged = (locale != null && !locale.equals(newCart.getLocale()));
-                    currencyChanged = (currencyUom != null && !currencyUom.equals(newCart.getCurrency()));
-                    
-                    if (localeChanged || currencyChanged) {
-                        if (localeChanged) {
-                            newCart.setLocale(locale);
-                        }
-                        if (currencyUom != null && !currencyUom.equals(newCart.getCurrency())) {
-                            newCart.setCurrency(dispatcher, currencyUom);
-                        }
-                        cart = cartUpdate.commit(newCart); // SCIPIO
-                        if (fromReqAttr) {
-                            request.setAttribute("shoppingCart", cart);
-                        }
-                    }
-
-                    }
-                } catch (CartItemModifyException e) {
-                    Debug.logError(e, "Unable to modify currency in cart", module);
-                }
-            }
+        // SCIPIO: 2018-11-30: Do the exact opposite of request-to-session copy above, and if session is found, transfer session-to-request.
+        // This helps ensure that read-only cart accesses in the rest of this request will all use the same cart.
+        // NOTE: However, cart update blocks do the opposite and read cart to modify from session first - see CartUpdate.begin().
+        // NOTE: Requires that the req attr was already null; will not crush it (caller - CartUpdate - will handle that as necessary)
+        if (requestCart == null && modifyScopesFilter.request()) {
+            request.setAttribute("shoppingCart", cart);
         }
         return cart;
     }
 
+    // SCIPIO: Removed update code related to old locale/currencyUom parameters, now removed
+//    private static boolean checkCartCurrencyLocaleChanged(ShoppingCart cart, Locale locale, String currencyUom) { // SCIPIO
+//        return ((locale != null && !locale.equals(cart.getLocale()))
+//                || (currencyUom != null && !currencyUom.equals(cart.getCurrency())));
+//    }
+//    
+//    /**
+//     * SCIPIO: If the locale or currencyUom has changed, creates a cart copy with the new values and updates
+//     * the request/session vars according to modifyScopesFilter.
+//     */
+//    private static ShoppingCart checkUpdateCartCurrencyLocale(HttpServletRequest request, ShoppingCart cart,
+//            Locale locale, String currencyUom, CartUpdate cartUpdate, RequestVarScopes modifyScopesFilter) { // SCIPIO
+//        boolean localeChanged = (locale != null && !locale.equals(cart.getLocale()));
+//        boolean currencyChanged = (currencyUom != null && !currencyUom.equals(cart.getCurrency()));
+//        
+//        if (localeChanged || currencyChanged) {
+//            cart = cartUpdate.copyCartForUpdate(cart); // make cart copy to edit
+//
+//            // CART CHANGED
+//            if (localeChanged) {
+//                cart.setLocale(locale);
+//            }
+//            if (currencyUom != null && !currencyUom.equals(cart.getCurrency())) {
+//                LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+//                try {
+//                    cart.setCurrency(dispatcher, currencyUom);
+//                } catch (CartItemModifyException e) {
+//                    Debug.logError(e, "Unable to modify currency in cart", module);
+//                }
+//            }
+//            setCartObject(request, cart, modifyScopesFilter);
+//        }
+//        return cart;
+//    }
+
+    /** Gets or creates the shopping cart object.
+     * @deprecated SCIPIO: 2018-12-03: DO NOT USE THIS OVERLOAD; locale and currencyUom are now ignored, because
+     * the implicit updates would cause unexpected behavior and complications - updates to locale and currencyUom
+     * should be done at clearly defined events, wrapped in {@link CartUpdate} sections.
+     */
+    @Deprecated
+    public static ShoppingCart getCartObject(HttpServletRequest request, Locale locale, String currencyUom) {
+        Debug.logWarning("DEPRECATED: getCartObject with explicit locale and currencyUom called (" + Debug.getCallerShortInfo() 
+            + ") - not supported - locale and currency will not be updated in cart - please report this issue or fix calling code", module);
+        return getCartObject(request, true, RequestVarScopes.ALL); // SCIPIO: checkRequestFirst, modifyScopesFilter
+    }
+
     /** Main get cart method, uses the locale and currency from the session */
     public static ShoppingCart getCartObject(HttpServletRequest request) {
-        return getCartObject(request, null, null);
+        return getCartObject(request, true, RequestVarScopes.ALL); // SCIPIO: checkRequestFirst, modifyScopesFilter
     }
 
     /** SCIPIO: Get cart method only if set, uses the locale and currency from the session. Added 2018-11-29. */
     public static ShoppingCart getCartObjectIfExists(HttpServletRequest request) {
-        ShoppingCart cart = (ShoppingCart) request.getAttribute("shoppingCart");
-        if (cart == null) {
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                cart = (ShoppingCart) session.getAttribute("shoppingCart");
-            }
+        return (ShoppingCart) RequestVarScopes.REQUEST_AND_SESSION.getValue(request, "shoppingCart");
+    }
+
+    /** SCIPIO: Get cart method only if set, uses the locale and currency from the session. Added 2018-11-30. */
+    public static ShoppingCart getCartObjectIfExists(HttpServletRequest request, boolean checkRequestFirst) { // SCIPIO: specificScopeFirst
+        return (ShoppingCart) RequestVarScopes.REQUEST_AND_SESSION.getValue(request, "shoppingCart", checkRequestFirst);
+    }
+
+    /**
+     * SCIPIO: Sets the cart in session and/or request as applicable immediately; if cart is null, removes the cart.
+     * NOTE: For synchronized updates, use {@link CartUpdate} instead of this directly; if you must use this,
+     * it must always be wrapped in a {@link CartSync#synchronizedSection(HttpServletRequest)}.
+     * NOTE: This automatically marks the cart as changed in the request, so do not reassign an unmodified cart.
+     * Added 2018-11-20. */
+    public static ShoppingCart setCartObject(HttpServletRequest request, ShoppingCart cart, RequestVarScopes modifyScopesFilter) {
+        RequestVarScopes.REQUEST_AND_SESSION.setOrRemoveValue(request, modifyScopesFilter, "shoppingCart", cart);
+        if (modifyScopesFilter.session()) {
+            markCartChanged(request);
         }
         return cart;
     }
 
     /**
-     * SCIPIO: Sets the cart in session (and request if applicable) immediately. 
-     * NOTE: For synchronized updates, prefer using {@link CartUpdate} instead of this directly. Added 2018-11-20. */
-    public static ShoppingCart replaceCurrentCartObject(HttpServletRequest request, ShoppingCart cart, boolean updateRequest) {
-        request.getSession(true).setAttribute("shoppingCart", cart);
-        // If the request attribute was set, we must replace it, otherwise rest of this request 
-        // will not see the changes properly (see getCartObject)
-        if (updateRequest && request.getAttribute("shoppingCart") != null) {
-            request.setAttribute("shoppingCart", cart);
-        }
-        return cart;
+     * SCIPIO: Sets the cart in session and request immediately; if cart is null, removes the cart.
+     * NOTE: For synchronized updates, use {@link CartUpdate} instead of this directly; if you must use this,
+     * it must always be wrapped in a {@link CartSync#synchronizedSection(HttpServletRequest)}.
+     * NOTE: This automatically marks the cart as changed in the request, so do not reassign an unmodified cart.
+     * Added 2018-11-20. */
+    public static ShoppingCart setCartObject(HttpServletRequest request, ShoppingCart cart) {
+        return setCartObject(request, cart, RequestVarScopes.ALL);
+    }
+
+    /**
+     * SCIPIO: Removes the cart in session and request immediately; same as <code>setCartObject(request, null)</code>.
+     * NOTE: For synchronized updates, use {@link CartUpdate} instead of this directly; if you must use this,
+     * it must always be wrapped in a {@link CartSync#synchronizedSection(HttpServletRequest)}.
+     * NOTE: This automatically marks the cart as changed in the request, so do not reassign an unmodified cart.
+     * Added 2018-11-20. */
+    public static ShoppingCart removeCartObject(HttpServletRequest request) {
+        return setCartObject(request, null, RequestVarScopes.ALL);
+    }
+
+    /**
+     * SCIPIO: Returns true if the current cart was changed during this request 
+     * (by CartUpdate or anything that sets "shoppingCartChanged").
+     * <p>
+     * Added 2018-11-30. 
+     */
+    public static boolean isCartChanged(HttpServletRequest request) {
+        return Boolean.TRUE.equals(request.getAttribute("shoppingCartChanged"));
+    }
+
+    /**
+     * SCIPIO: Marks the current cart has having been changed in the request. 
+     * Added 2018-11-30. 
+     */
+    public static void markCartChanged(HttpServletRequest request) {
+        request.setAttribute("shoppingCartChanged", true);
     }
 
     public static String switchCurrentCartObject(HttpServletRequest request, HttpServletResponse response) {
@@ -1229,7 +1303,7 @@ public class ShoppingCartEvents {
             }
             newCart = getCartObject(request);
         }
-        session.setAttribute("shoppingCart", newCart);
+        ShoppingCartEvents.setCartObject(request, newCart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", newCart);
         }
         return "success";
     }
@@ -1790,7 +1864,7 @@ public class ShoppingCartEvents {
         }
 
         try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
-        session.setAttribute("shoppingCart", cart);
+        ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
         session.setAttribute("orderPartyId", cart.getOrderPartyId());
@@ -1829,7 +1903,7 @@ public class ShoppingCartEvents {
         cart.setReadOnlyCart(true);
 
         try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
-        session.setAttribute("shoppingCart", cart);
+        ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
         session.setAttribute("orderPartyId", cart.getOrderPartyId());
@@ -1914,7 +1988,7 @@ public class ShoppingCartEvents {
         cart.setOrderId(null);
 
         try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
-        session.setAttribute("shoppingCart", cart);
+        ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
         session.setAttribute("productStoreId", cart.getProductStoreId());
         session.setAttribute("orderMode", cart.getOrderType());
         session.setAttribute("orderPartyId", cart.getOrderPartyId());
@@ -2538,6 +2612,8 @@ public class ShoppingCartEvents {
                             Debug.logError(errorMessage, module);
                             return "error";
                         }
+                        // SCIPIO: FIXME: This request.setAttribute + destroyCart will not work properly
+                        // (it was already strange)
                         request.setAttribute("shoppingCart", result.get("shoppingCart"));
                         ShoppingCartEvents.destroyCart(request, response);
                     } catch (GenericServiceException e) {

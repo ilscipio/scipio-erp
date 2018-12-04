@@ -1344,7 +1344,7 @@ public class ShoppingCartEvents {
     /** SCIPIO: Preliminary setup to prepare cart for request. Added 2018-12-03. */
     public static String prepareRequestForCart(HttpServletRequest request, HttpServletResponse response) {
         // Prevent shoppingCart from being cached in view-last cached parameters
-        RequestHandler.getViewLastParamExcludes(request).add("shoppingCart");
+        RequestHandler.addNoSaveRequestAttr(request, "shoppingCart");
         return "success";
     }
 
@@ -1383,7 +1383,7 @@ public class ShoppingCartEvents {
             modifyCart = false;
             try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
             cart = cartUpdate.getCartForUpdate();
-            
+
             try {
                 // SCIPIO: FIXME?: In actuality the userLogin/autoUserLogin will get re-read here... for now no obvious issues
                 // if we just logged in set the UL
@@ -1434,7 +1434,7 @@ public class ShoppingCartEvents {
                         cart.setAutoUserLoginAlways(autoUserLogin);
                     }
                 }
-        
+
                 // update the locale
                 if (cart.getLocale() == null || !locale.equals(cart.getLocale())) {
                     modifyCart = true;

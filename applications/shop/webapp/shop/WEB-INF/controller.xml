@@ -50,6 +50,11 @@ code package.
         <event name="clearGuestShoppingListCookies" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="clearGuestShoppingListCookies"/>
     </after-login>
 
+    <after-logout>
+        <!-- SCIPIO: Ensures the cart never carries over -->
+        <event name="cleanCartAfterLogout" type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="cleanCartAfterLogout"/>
+    </after-logout>
+
     <!-- SCIPIO: NOTE: 2018-07-09: Most requests changed to https true (now the framework default when unspecified) -->
 
     <!-- General Request Mappings -->

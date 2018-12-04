@@ -1349,6 +1349,12 @@ public class ShoppingCartEvents {
         return "success";
     }
 
+    /** SCIPIO: Extra cart cleaning after-logout event. Added 2018-12-03. */
+    public static String cleanCartAfterLogout(HttpServletRequest request, HttpServletResponse response) {
+        removeCartObject(request); // SCIPIO: 2018-12-03: Ensure cart request attribute is removed
+        return "success";
+    }
+
     /** Update the cart's UserLogin object if it isn't already set. */
     public static String keepCartUpdated(HttpServletRequest request, HttpServletResponse response) {
         prepareCartForRequest(request, response); // SCIPIO

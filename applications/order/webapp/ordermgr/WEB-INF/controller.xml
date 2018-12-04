@@ -35,6 +35,11 @@ code package.
         <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
+    
+    <after-logout>
+        <!-- SCIPIO: Ensures the cart never carries over -->
+        <event name="cleanCartAfterLogout" type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="cleanCartAfterLogout"/>
+    </after-logout>
 
     <!-- Request Mappings -->
     <request-map uri="view">

@@ -1011,7 +1011,8 @@ public class ShoppingCartEvents {
 
             // here we want to do a full logout, but not using the normal logout stuff because it saves things in the UserLogin record that we don't want changed for the anonymous user
             session.invalidate();
-            ShoppingCartEvents.removeCartObject(request); // SCIPIO: 2018-12-03: Ensure cart request attribute is removed
+            removeCartObject(request, RequestVarScopes.REQUEST); // SCIPIO: 2018-12-03: Ensure cart request attribute is removed
+
             session = request.getSession(true);
             if (null != locale) {
                 UtilHttp.setLocale(session, locale);
@@ -1278,6 +1279,16 @@ public class ShoppingCartEvents {
      * it must always be wrapped in a {@link CartSync#synchronizedSection(HttpServletRequest)}.
      * NOTE: This automatically marks the cart as changed in the request, so do not reassign an unmodified cart.
      * Added 2018-11-20. */
+    public static ShoppingCart removeCartObject(HttpServletRequest request, RequestVarScopes modifyScopesFilter) {
+        return setCartObject(request, null, modifyScopesFilter);
+    }
+
+    /**
+     * SCIPIO: Removes the cart in session and request immediately; same as <code>setCartObject(request, null)</code>.
+     * NOTE: For synchronized updates, use {@link CartUpdate} instead of this directly; if you must use this,
+     * it must always be wrapped in a {@link CartSync#synchronizedSection(HttpServletRequest)}.
+     * NOTE: This automatically marks the cart as changed in the request, so do not reassign an unmodified cart.
+     * Added 2018-11-20. */
     public static ShoppingCart removeCartObject(HttpServletRequest request) {
         return setCartObject(request, null, RequestVarScopes.ALL);
     }
@@ -1367,7 +1378,7 @@ public class ShoppingCartEvents {
 
     /** SCIPIO: Extra cart cleaning after-logout event. Added 2018-12-03. */
     public static String cleanCartAfterLogout(HttpServletRequest request, HttpServletResponse response) {
-        removeCartObject(request); // SCIPIO: 2018-12-03: Ensure cart request attribute is removed
+        removeCartObject(request, RequestVarScopes.REQUEST); // SCIPIO: 2018-12-03: Ensure cart request attribute is removed
         return "success";
     }
 

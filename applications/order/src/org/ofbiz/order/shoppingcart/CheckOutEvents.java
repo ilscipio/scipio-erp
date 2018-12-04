@@ -55,6 +55,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceErrorException;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.control.RequestVarScopes;
 import org.ofbiz.webapp.stats.VisitHandler;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
@@ -878,7 +879,7 @@ public class CheckOutEvents {
         // wipe the session
         if (("anonymous".equals(currentUser.getString("userLoginId"))) || (currentUser.getString("userLoginId")).equals(userLogin.getString("userLoginId"))) {
             session.invalidate();
-            ShoppingCartEvents.removeCartObject(request); // SCIPIO: 2018-12-03: Ensure cart request attribute is removed
+            ShoppingCartEvents.removeCartObject(request, RequestVarScopes.REQUEST); // SCIPIO: 2018-12-03: Ensure cart request attribute is removed
         }
         //Determine whether it was a success or not
         if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {

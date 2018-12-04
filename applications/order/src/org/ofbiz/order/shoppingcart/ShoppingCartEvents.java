@@ -1011,6 +1011,7 @@ public class ShoppingCartEvents {
 
             // here we want to do a full logout, but not using the normal logout stuff because it saves things in the UserLogin record that we don't want changed for the anonymous user
             session.invalidate();
+            ShoppingCartEvents.removeCartObject(request); // SCIPIO: 2018-12-03: Ensure cart request attribute is removed
             session = request.getSession(true);
             if (null != locale) {
                 UtilHttp.setLocale(session, locale);
@@ -2638,7 +2639,7 @@ public class ShoppingCartEvents {
                         // SCIPIO: 2018-12-03: TODO: REVIEW: this stock code no longer works at all because
                         // destroyCart is now in a CartUpdate section and those sections must always prioritize
                         // the session variable first (to prevent lost updates from other threads).
-                        // I'm not sure this code even did much useful, but just in case, we can at least
+                        // I'm not sure this code even did much useful originally, but just in case, we can at least
                         // call clear() on the cart (no sync/update section required because this is not the session cart)
                         //request.setAttribute("shoppingCart", result.get("shoppingCart"));
                         //ShoppingCartEvents.destroyCart(request, response);

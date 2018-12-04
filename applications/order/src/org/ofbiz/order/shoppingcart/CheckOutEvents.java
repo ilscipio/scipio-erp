@@ -878,6 +878,7 @@ public class CheckOutEvents {
         // wipe the session
         if (("anonymous".equals(currentUser.getString("userLoginId"))) || (currentUser.getString("userLoginId")).equals(userLogin.getString("userLoginId"))) {
             session.invalidate();
+            ShoppingCartEvents.removeCartObject(request); // SCIPIO: 2018-12-03: Ensure cart request attribute is removed
         }
         //Determine whether it was a success or not
         if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {

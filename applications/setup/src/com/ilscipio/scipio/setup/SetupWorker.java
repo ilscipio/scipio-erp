@@ -26,6 +26,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.webapp.control.RequestHandler;
 
 import com.ilscipio.scipio.setup.SetupWorker.StaticSetupWorker.StaticStepState;
 
@@ -870,12 +871,7 @@ public abstract class SetupWorker implements Serializable {
                     request.setAttribute(STATIC_WORKER_ATTR, staticWorker);
 
                     // SPECIAL: this prevents the cached data from getting saved into the session
-                    Set<String> saveViewAttrExcl = UtilGenerics.checkSet(request.getAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_"));
-                    if (saveViewAttrExcl == null) {
-                        saveViewAttrExcl = new HashSet<>();
-                    }
-                    saveViewAttrExcl.add(STATIC_WORKER_ATTR);
-                    request.setAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_", saveViewAttrExcl);
+                    RequestHandler.addNoSaveRequestAttr(request, STATIC_WORKER_ATTR);
                 }
                 return staticWorker;
             } else {

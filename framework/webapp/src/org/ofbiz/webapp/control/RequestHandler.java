@@ -26,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
 import java.security.cert.X509Certificate;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -91,8 +92,14 @@ public class RequestHandler {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final boolean showSessionIdInLog = UtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y"); // SCIPIO: made static var & remove delegator
 
-    private static final Set<String> defaultViewLastParamExcludes = UtilMisc.unmodifiableHashSet(
-            "_SCP_VIEW_SAVE_ATTR_EXCL_", "_ALLOW_VIEW_SAVE_"); // SCIPIO
+    /**
+     * SCIPIO: Default list of attributes which should never be saved in session and transferred across
+     * requests using view-last or request-redirect mechanisms.
+     */
+    private static final List<String> defaultNoSaveRequestAttributes = UtilMisc.unmodifiableArrayList(
+            "_SCP_NOSAVEREQATTR_", "_ALLOW_VIEW_SAVE_",
+            "_SCP_VIEW_SAVE_ATTR_EXCL_" // TODO: remove: _SCP_VIEW_SAVE_ATTR_EXCL_ deprecated, likely was not used
+            );
 
     private final String defaultStatusCodeString = UtilProperties.getPropertyValue("requestHandler", "status-code", "301");
     private final ViewFactory viewFactory;
@@ -1158,6 +1165,7 @@ public class RequestHandler {
         // SCIPIO: 2018-07-10: Do not include multiPartMap, to prevent storing uploaded files in session;
         // NOTE: This is a heuristic based on most common usage of multiPartMap - may be tweaked in future.
         reqAttrMap.remove("multiPartMap");
+        removeNoSaveRequestAttr(req, reqAttrMap); // SCIPIO: Explicit excludes
         if (reqAttrMap.size() > 0) {
             reqAttrMap.remove("_REQUEST_HANDLER_");  // RequestHandler is not serializable and must be removed first.  See http://issues.apache.org/jira/browse/OFBIZ-750
             byte[] reqAttrMapBytes = UtilObject.getBytes(reqAttrMap);
@@ -1211,18 +1219,16 @@ public class RequestHandler {
         req.setAttribute("_CURRENT_VIEW_", view);
 
         if (allowViewSave) {
-            // save the view in the session for the last view, plus the parameters Map (can use all parameters as they will never go into a URL, will only stay in the session and extra data will be ignored as we won't go to the original request just the view); note that this is saved after the request/view processing has finished so when those run they will get the value from the previous request
+            // save the view in the session for the last view, plus the parameters Map (can use all parameters as they 
+            // will never go into a URL, will only stay in the session and extra data will be ignored as we
+            // won't go to the original request just the view); note that this is saved after the request/view processing
+            // has finished so when those run they will get the value from the previous request
             Map<String, Object> paramMap = UtilHttp.getParameterMap(req, ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL, false); // SCIPIO: SPECIAL EXCLUDES: these will mess up rendering if they aren't excluded
             // add in the attributes as well so everything needed for the rendering context will be in place if/when we get back to this view
+            paramMap.putAll(UtilHttp.getAttributeMap(req));
             // SCIPIO: 2017-10-04: NEW VIEW-SAVE ATTRIBUTE EXCLUDES - these can be set by event to prevent cached and volatile results from going into session
-            Set<String> viewSaveAttrExcl = UtilGenerics.checkSet(req.getAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_"));
-            if (viewSaveAttrExcl != null) {
-                viewSaveAttrExcl.addAll(getDefaultViewLastParamExcludes(req));
-            } else {
-                viewSaveAttrExcl = getDefaultViewLastParamExcludes(req);
-            }
-            //paramMap.putAll(UtilHttp.getAttributeMap(req));
-            paramMap.putAll(UtilHttp.getAttributeMap(req, viewSaveAttrExcl));
+            // NOTE: These also must prevent request parameters with same name, so just remove all these names from the map
+            removeNoSaveRequestAttr(req, paramMap);
             UtilMisc.makeMapSerializable(paramMap);
             if (paramMap.containsKey("_LAST_VIEW_NAME_")) { // Used by lookups to keep the real view (request)
                 req.getSession().setAttribute("_LAST_VIEW_NAME_", paramMap.get("_LAST_VIEW_NAME_"));
@@ -2679,25 +2685,62 @@ public class RequestHandler {
     }
 
     /**
-     * SCIPIO: Returns set of request attribute/param names which should be excluded from saving
-     * into session by "view-last" and similar responses; this set is editable in-place and
+     * SCIPIO: Adds to the request attribute/param names which should be excluded from saving
+     * into session by "view-last", "request-redirect" and similar responses; this collection is editable in-place and
      * caller may simply add names to it.
-     * <p>
-     * Added 2018-12-03.
      */
-    public static Set<String> getViewLastParamExcludes(HttpServletRequest request) {
-        Set<String> viewSaveAttrExcl = UtilGenerics.checkSet(request.getAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_"));
-        if (viewSaveAttrExcl == null) {
-            viewSaveAttrExcl = new HashSet<>();
-            request.setAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_", viewSaveAttrExcl);
-        }
-        return viewSaveAttrExcl;
+    public static void addNoSaveRequestAttr(HttpServletRequest request, String attrName) { // SCIPIO
+        getNoSaveRequestAttr(request).add(attrName);
     }
 
-    public static Set<String> getDefaultViewLastParamExcludes(HttpServletRequest request) { // SCIPIO
-        return defaultViewLastParamExcludes;
+    /**
+     * SCIPIO: Adds to the request attribute/param names which should be excluded from saving
+     * into session by "view-last", "request-redirect" and similar responses; this collection is editable in-place and
+     * caller may simply add names to it.
+     */
+    public static void addNoSaveRequestAttr(HttpServletRequest request, Collection<String> attrName) { // SCIPIO
+        getNoSaveRequestAttr(request).addAll(attrName);
     }
-    
+
+    /**
+     * SCIPIO: Returns set of request attribute/param names which should be excluded from saving
+     * into session by "view-last", "request-redirect" and similar responses.
+     * <p>
+     * 2018-12-03: Previously this list was called "_SCP_VIEW_SAVE_ATTR_EXCL_", now is more generic
+     * and called "_SCP_NOSAVEREQATTR_".
+     */
+    public static Set<String> getNoSaveRequestAttr(HttpServletRequest request) { // SCIPIO
+        Set<String> excludes = UtilGenerics.checkSet(request.getAttribute("_SCP_NOSAVEREQATTR_"));
+        if (excludes == null) {
+            excludes = new HashSet<>();
+            request.setAttribute("_SCP_NOSAVEREQATTR_", excludes);
+        }
+        return excludes;
+    }
+
+    public static Collection<String> getDefaultNotSaveRequestAttr(HttpServletRequest request) { // SCIPIO
+        return defaultNoSaveRequestAttributes;
+    }
+
+    private static void removeNoSaveRequestAttr(HttpServletRequest request, Map<String, ?> map) { // SCIPIO
+        Collection<String> excludes = UtilGenerics.checkCollection(request.getAttribute("_SCP_NOSAVEREQATTR_"));
+        if (excludes != null) {
+            for(String exclude : excludes) {
+                map.remove(exclude);
+            }
+        }
+        for(String exclude : getDefaultNotSaveRequestAttr(request)) {
+            map.remove(exclude);
+        }
+        // Backward-compat (TODO: remove this, likely was not used)
+        excludes = UtilGenerics.checkCollection(request.getAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_"));
+        if (excludes != null) {
+            for(String exclude : excludes) {
+                map.remove(exclude);
+            }
+        }
+    }
+
     /**
      * SCIPIO: Controls URL format for http-to-https redirects.
      * Added 2018-07-18.

@@ -33,6 +33,7 @@ under the License.
                 <xs:element minOccurs="0" ref="postprocessor"/>
                 <xs:element minOccurs="0" ref="after-login"/>
                 <xs:element minOccurs="0" ref="before-logout"/>
+                <xs:element minOccurs="0" ref="after-logout"/><!-- SCIPIO -->
                 <xs:element minOccurs="0" ref="default-request"/>
                 <xs:element minOccurs="0" ref="view-as-json"/><!-- SCIPIO: 2017-05-15: new -->
                 <xs:element minOccurs="0" ref="common-settings"/><!-- SCIPIO: 2018-06-13: new -->
@@ -48,7 +49,7 @@ under the License.
 
                 Note that if you define any of the event blocks in this file (the including file) they
                 will override (replace) the one in the included file, effectively emptying it. The event
-                blocks are: firstvisit, preprocessor, postprocessor, after-login, and before-logout.
+                blocks are: firstvisit, preprocessor, postprocessor, after-login, before-logout, after-logout.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
@@ -244,6 +245,20 @@ under the License.
             <xs:documentation>
                 Event runs before logout and only then.
                 Any error will be ignored and will not affect the requests processing flow.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="event"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="after-logout">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Event runs right after logout and only then.
+                Any error will be ignored and will not affect the requests processing flow.
+                Added 2018-12-03.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>

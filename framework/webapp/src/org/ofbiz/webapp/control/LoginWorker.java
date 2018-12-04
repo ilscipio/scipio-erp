@@ -702,6 +702,9 @@ public class LoginWorker {
 
         doBasicLogout(userLogin, request, response);
 
+        // SCIPIO: after-logout
+        rh.runAfterLogoutEvents(request, response);
+
         if (request.getAttribute("_AUTO_LOGIN_LOGOUT_") == null) {
             return autoLoginCheck(request, response);
         }

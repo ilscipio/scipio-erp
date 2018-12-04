@@ -2499,7 +2499,6 @@ public class RequestHandler {
         return makeUrl(request, response, url, true, null, null);
     }
 
-
     public void runAfterLoginEvents(HttpServletRequest request, HttpServletResponse response) {
         try {
             for (ConfigXMLReader.Event event: getControllerConfig().getAfterLoginEventList().values()) {
@@ -2522,6 +2521,23 @@ public class RequestHandler {
             for (ConfigXMLReader.Event event: getControllerConfig().getBeforeLogoutEventList().values()) {
                 try {
                     String returnString = this.runEvent(request, response, event, null, "before-logout");
+                    if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
+                        throw new EventHandlerException("Pre-Processor event did not return 'success'.");
+                    }
+                } catch (EventHandlerException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        } catch (WebAppConfigurationException e) {
+            Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+        }
+    }
+
+    public void runAfterLogoutEvents(HttpServletRequest request, HttpServletResponse response) { // SCIPIO
+        try {
+            for (ConfigXMLReader.Event event: getControllerConfig().getAfterLogoutEventList().values()) {
+                try {
+                    String returnString = this.runEvent(request, response, event, null, "after-logout");
                     if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
                         throw new EventHandlerException("Pre-Processor event did not return 'success'.");
                     }

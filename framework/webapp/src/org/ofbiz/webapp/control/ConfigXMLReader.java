@@ -332,6 +332,7 @@ public class ConfigXMLReader {
         protected final Map<String, Event> postprocessorEventList; // = new LinkedHashMap<String, Event>();
         protected final Map<String, Event> afterLoginEventList; // = new LinkedHashMap<String, Event>();
         protected final Map<String, Event> beforeLogoutEventList; // = new LinkedHashMap<String, Event>();
+        protected final Map<String, Event> afterLogoutEventList; // = new LinkedHashMap<String, Event>(); // SCIPIO: added 2018-12-03
         protected final Map<String, String> eventHandlerMap; // = new HashMap<String, String>();
         protected final Map<String, String> viewHandlerMap; // = new HashMap<String, String>();
         protected final Map<String, RequestMap> requestMapMap; // = new HashMap<String, RequestMap>();
@@ -368,6 +369,7 @@ public class ConfigXMLReader {
             protected Map<String, Event> postprocessorEventList = new LinkedHashMap<String, Event>();
             protected Map<String, Event> afterLoginEventList = new LinkedHashMap<String, Event>();
             protected Map<String, Event> beforeLogoutEventList = new LinkedHashMap<String, Event>();
+            protected Map<String, Event> afterLogoutEventList = new LinkedHashMap<String, Event>();
             protected Map<String, String> eventHandlerMap = new HashMap<String, String>();
             protected Map<String, String> viewHandlerMap = new HashMap<String, String>();
             protected Map<String, RequestMap> requestMapMap = new HashMap<String, RequestMap>();
@@ -418,6 +420,7 @@ public class ConfigXMLReader {
             this.postprocessorEventList = builder.postprocessorEventList;
             this.afterLoginEventList = builder.afterLoginEventList;
             this.beforeLogoutEventList = builder.beforeLogoutEventList;
+            this.afterLogoutEventList = builder.afterLogoutEventList;
             this.eventHandlerMap = builder.eventHandlerMap;
             this.viewHandlerMap = builder.viewHandlerMap;
             this.requestMapMap = builder.requestMapMap;
@@ -455,6 +458,7 @@ public class ConfigXMLReader {
                 this.postprocessorEventList = getOrderedOptMap(srcConfig.getPostprocessorEventList());
                 this.afterLoginEventList = getOrderedOptMap(srcConfig.getAfterLoginEventList());
                 this.beforeLogoutEventList = getOrderedOptMap(srcConfig.getBeforeLogoutEventList());
+                this.afterLogoutEventList = getOrderedOptMap(srcConfig.getAfterLogoutEventList());
                 this.eventHandlerMap = getOptMap(srcConfig.getEventHandlerMap());
                 this.viewHandlerMap = getOptMap(srcConfig.getViewHandlerMap());
                 this.requestMapMap = getOptMap(srcConfig.getRequestMapMap());
@@ -479,6 +483,7 @@ public class ConfigXMLReader {
                 this.postprocessorEventList = srcConfig.postprocessorEventList;
                 this.afterLoginEventList = srcConfig.afterLoginEventList;
                 this.beforeLogoutEventList = srcConfig.beforeLogoutEventList;
+                this.afterLogoutEventList = srcConfig.afterLogoutEventList;
                 this.eventHandlerMap = srcConfig.eventHandlerMap;
                 this.viewHandlerMap = srcConfig.viewHandlerMap;
                 this.requestMapMap = srcConfig.requestMapMap;
@@ -576,6 +581,34 @@ public class ConfigXMLReader {
                         result.push(controllerConfig.getBeforeLogoutEventList());
                     } else {
                         result.push(controllerConfig.beforeLogoutEventList);
+                    }
+                }
+            }
+            return result;
+        }
+
+        public Map<String, Event> getAfterLogoutEventList() throws WebAppConfigurationException { // SCIPIO
+            MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getAfterLogoutEventList());
+                    } else {
+                        result.push(controllerConfig.afterLogoutEventList);
+                    }
+                }
+            }
+            result.push(afterLogoutEventList);
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getAfterLogoutEventList());
+                    } else {
+                        result.push(controllerConfig.afterLogoutEventList);
                     }
                 }
             }
@@ -1300,6 +1333,17 @@ public class ConfigXMLReader {
                     this.beforeLogoutEventList.put(eventName, new Event(eventElement));
                 }
             }
+            // SCIPIO: after-logout events
+            Element afterLogoutElement = UtilXml.firstChildElement(rootElement, "after-logout");
+            if (afterLogoutElement != null) {
+                for (Element eventElement : UtilXml.childElementList(afterLogoutElement, "event")) {
+                    String eventName = eventElement.getAttribute("name");
+                    if (eventName.isEmpty()) {
+                        eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
+                    }
+                    this.afterLogoutEventList.put(eventName, new Event(eventElement));
+                }
+            }
             // SCIPIO: new
             Element viewAsJsonElement = UtilXml.firstChildElement(rootElement, "view-as-json");
             if (viewAsJsonElement != null) {
@@ -1584,6 +1628,11 @@ public class ConfigXMLReader {
         }
 
         @Override
+        public Map<String, Event> getAfterLogoutEventList() throws WebAppConfigurationException {
+            return afterLogoutEventList;
+        }
+
+        @Override
         public String getDefaultRequest() throws WebAppConfigurationException {
             return defaultRequest;
         }
@@ -1682,7 +1731,7 @@ public class ConfigXMLReader {
 
     public static class Event {
         public static final List<String> TRIGGERS = UtilMisc.unmodifiableArrayList(
-                "firstvisit", "preprocessor", "security-auth", "request", "after-login", "before-logout"); // SCIPIO
+                "firstvisit", "preprocessor", "security-auth", "request", "after-login", "before-logout", "after-logout"); // SCIPIO
         public static final Set<String> TRIGGERS_SET = UtilMisc.unmodifiableHashSetCopy(TRIGGERS); // SCIPIO
 
         private static final int DEFAULT_TRANSACTION_TIMEOUT = 0; // SCIPIO

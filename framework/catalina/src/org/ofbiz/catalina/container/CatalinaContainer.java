@@ -74,6 +74,7 @@ import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.SSLUtil;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.Document;
@@ -608,6 +609,9 @@ public class CatalinaContainer implements Container {
         // their welcome-file-lists; previously they did not work properly because the Tomcat defaults
         // were getting priority (e.g. index.html was always used if it existed).
         context.setReplaceWelcomeFiles(true);
+
+        // SCIPIO: 2018-12-03: We set a special session listener for all webapps to initialize the session sync object
+        context.addApplicationLifecycleListener(UtilHttp.SessionSyncEventListener.getInstance());
 
         return context;
     }

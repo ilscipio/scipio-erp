@@ -49,6 +49,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
@@ -77,6 +78,12 @@ public final class UtilHttp {
     public static final int MULTI_ROW_DELIMITER_LENGTH = MULTI_ROW_DELIMITER.length();
     public static final int ROW_SUBMIT_PREFIX_LENGTH = ROW_SUBMIT_PREFIX.length();
     public static final int COMPOSITE_DELIMITER_LENGTH = COMPOSITE_DELIMITER.length();
+
+    /**
+     * SCIPIO: The name of a session attribute that contains an object to synchronize on for
+     * whole-session synchronization. Should be accessed using {@link #getSessionSyncObject(HttpSession)}.
+     */
+    public static final String SESSION_SYNC_OBJECT = "scpSyncObj";
 
     private static final String SESSION_KEY_TIMEZONE = "timeZone";
 
@@ -1641,5 +1648,81 @@ public final class UtilHttp {
      */
     public static List<String> getParameterNamesWithValue(HttpServletRequest request, String value, String paramNamePrefix) {
         return getParameterNamesWithValue(request, UtilMisc.toSet(value), paramNamePrefix);
+    }
+    
+    /**
+     * SCIPIO: Returns an object which can be used for full session synchronization (never null).
+     * <p>
+     * NOTE: This must be used instead of synchronizing directly on the session. It is not supported
+     * by the servlet API to synchronize on the HttpSession object itself, and it also prevents
+     * session facades from being used in projects.
+     * <p>
+     * The sync object is normally set on session creation by {@link SessionSyncEventListener}
+     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer. 
+     * This method will print a warning if it's missing, because such case can cause a race.
+     * <p>
+     * Added 2018-12-03.
+     */
+    public static Object getSessionSyncObject(HttpSession session) {
+        Object syncObj = session.getAttribute(SESSION_SYNC_OBJECT);
+        if (syncObj != null) {
+            return syncObj;
+        }
+        // The sync object should always be there, but if for some reason it got removed, add one...
+        // NOTE: For BEST-EFFORT emergency reasons, we'll lock on HttpSession here, but it is likely to do nothing.
+        synchronized(session) {
+            syncObj = session.getAttribute(SESSION_SYNC_OBJECT);
+            if (syncObj != null) {
+                return null;
+            }
+            syncObj = createSessionSyncObject();
+            session.setAttribute(SESSION_SYNC_OBJECT, syncObj);
+            Debug.logWarning("Session synchronization object (" + SESSION_SYNC_OBJECT 
+                    + ") not found in session attributes; creating", module); // log after to minimize exposure
+        }
+        return syncObj;
+    }
+
+    /**
+     * SCIPIO: Returns an object which can be used for full session synchronization (never null).
+     * <p>
+     * NOTE: This must be used instead of synchronizing directly on the session. It is not supported
+     * by the servlet API to synchronize on the HttpSession object itself, and it also prevents
+     * session facades from being used in projects.
+     * <p>
+     * The sync object is normally set on session creation by {@link SessionSyncEventListener}
+     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer. 
+     * This method will print a warning if it's missing, because such case can cause a race.
+     * <p>
+     * Added 2018-12-03.
+     */
+    public static Object getSessionSyncObject(HttpServletRequest request) {
+        return getSessionSyncObject(request.getSession());
+    }
+
+    @SuppressWarnings("serial")
+    public static Object createSessionSyncObject() { // SCIPIO
+        return new java.io.Serializable(){};
+    }
+
+    /**
+     * SCIPIO: Special listener to initialize the session sync object.
+     * Automatically added to all webapps by CatalinaContainer.
+     * Added 2018-12-03.
+     */
+    public static class SessionSyncEventListener implements javax.servlet.http.HttpSessionListener {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+        private static final SessionSyncEventListener INSTANCE = new SessionSyncEventListener();
+        public static javax.servlet.http.HttpSessionListener getInstance() { return INSTANCE; }
+        @Override
+        public void sessionCreated(HttpSessionEvent se) {
+            if (Debug.verboseOn()) {
+                Debug.logInfo("Initialized session sync object", module);
+            }
+            se.getSession().setAttribute(SESSION_SYNC_OBJECT, createSessionSyncObject());
+        }
+        @Override
+        public void sessionDestroyed(HttpSessionEvent se) {
+        }
     }
 }

@@ -12188,6 +12188,9 @@
         <value xml:lang="zh-CN">开所有表</value>
         <value xml:lang="zh-TW">大型檢視</value>
     </property>
+    <property key="CommonSystemNotConfigured">
+        <value xml:lang="en">System Not Configured</value>        
+    </property>
     <property key="CommonTally">
         <value xml:lang="ar">مراقب</value>
         <value xml:lang="cs">Záznam</value>

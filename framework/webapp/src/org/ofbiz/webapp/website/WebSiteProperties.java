@@ -34,6 +34,8 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
+import com.ilscipio.scipio.ce.webapp.base.website.WebSiteException;
+
 /**
  * Web site properties.
  * <p>
@@ -82,7 +84,7 @@ public final class WebSiteProperties {
      * @param request
      * @throws GenericEntityException
      */
-    public static WebSiteProperties from(HttpServletRequest request) throws GenericEntityException {
+    public static WebSiteProperties from(HttpServletRequest request) throws GenericEntityException, WebSiteException {
         Assert.notNull("request", request);
         WebSiteProperties webSiteProps = (WebSiteProperties) request.getAttribute("_WEBSITE_PROPS_");
         if (webSiteProps == null) {
@@ -103,7 +105,8 @@ public final class WebSiteProperties {
                 delegator = (Delegator) request.getAttribute("delegator");
                 webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
                 if (webSiteValue == null) {
-                    throw new GenericEntityException("Scipio: Could not find WebSite for webSiteId '" + webSiteId + "'");
+                    // SCIPIO (12/04/2018): Throwing this new WebSiteException so it can be caught in GlobalDecorator early stages
+                    throw new WebSiteException("Scipio: Could not find WebSite", webSiteId);
                 }
                 // 2018-09-25: emergency fallback case: this should not happen, but will help both debugging and emergency cases work
                 if (extWebappInfo == null) {
@@ -188,10 +191,15 @@ public final class WebSiteProperties {
         // case the current request will have those settings (returned by request.getServerName(), etc.),
         // which should not be applied to the target webapp.
         if (interWebapp) {
-            WebSiteProperties currentWebSiteProps = from(request);
-            if (!defaults.equalsServerFieldsWithHardDefaults(currentWebSiteProps)) {
-                requestOverridesStatic = false;
+            try {
+                WebSiteProperties currentWebSiteProps = from(request);
+                if (!defaults.equalsServerFieldsWithHardDefaults(currentWebSiteProps)) {
+                    requestOverridesStatic = false;
+                }
+            } catch (WebSiteException we) {
+                throw new GenericEntityException(we);
             }
+            
         }
 
         boolean requestOverridesStaticHttpPort = requestOverridesStatic;

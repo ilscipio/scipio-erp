@@ -48,8 +48,8 @@ public class CartEventListener implements HttpSessionListener {
         // SCIPIO: dedicated lock for shoppingCart instance; see WebShoppingCart
         session.setAttribute("shoppingCartLock", ShoppingCart.createLockObject());
 
-        // SCIPIO: dedicated lock for product search
-        ProductSearchSession.createSetLockObject(session);
+        // SCIPIO: dedicated lock for product search (NOTE: tiny performance enhancement only, not really needed anymore)
+        ProductSearchSession.createSetSyncObject(session);
     }
 
     @Override

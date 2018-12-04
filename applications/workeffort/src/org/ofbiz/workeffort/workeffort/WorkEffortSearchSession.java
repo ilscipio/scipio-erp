@@ -172,7 +172,7 @@ public class WorkEffortSearchSession {
         if (workEffortSearchOptions == null) {
             workEffortSearchOptions = (WorkEffortSearchOptions) session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_CURRENT_");
             if (workEffortSearchOptions == null) {
-                synchronized (getLockObj(session)) {
+                synchronized (getSyncObject(session)) {
                     workEffortSearchOptions = (WorkEffortSearchOptions) session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_CURRENT_");
                     if (workEffortSearchOptions == null) {
                         workEffortSearchOptions = new WorkEffortSearchOptions();
@@ -208,7 +208,7 @@ public class WorkEffortSearchSession {
         }
         
         public final R run() {
-            synchronized (getLockObj(session)) {
+            synchronized (getSyncObject(session)) {
                 WorkEffortSearchOptions options = WorkEffortSearchOptions.currentOptions.get();
                 boolean topLevel = (options == null);
                 if (topLevel) {
@@ -407,7 +407,7 @@ public class WorkEffortSearchSession {
     public static List<WorkEffortSearchOptions> getSearchOptionsHistoryList(HttpSession session) {
         List<WorkEffortSearchOptions> optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_HISTORY_"));
         if (optionsHistoryList == null) {
-            synchronized (getLockObj(session)) { // SCIPIO
+            synchronized (getSyncObject(session)) { // SCIPIO
                 optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_HISTORY_"));
                 if (optionsHistoryList == null) {
                     optionsHistoryList = Collections.emptyList();
@@ -432,7 +432,7 @@ public class WorkEffortSearchSession {
         WorkEffortSearchOptions workEffortSearchOptions = WorkEffortSearchSession.getWorkEffortSearchOptions(session);
         // if the options have changed since the last search, add it to the beginning of the search options history
         if (workEffortSearchOptions.changed) {
-            synchronized (getLockObj(session)) { // SCIPIO
+            synchronized (getSyncObject(session)) { // SCIPIO
                 List<WorkEffortSearchOptions> optionsHistoryList = WorkEffortSearchSession.getSearchOptionsHistoryList(session);
                 
                 // SCIPIO: Must clone the list
@@ -486,17 +486,17 @@ public class WorkEffortSearchSession {
      * <p>
      * Added 2018-11-27.
      */
-    public static Object getLockObj(HttpSession session) { // SCIPIO
-        Object lockObj = session.getAttribute("_WORK_EFFORT_SEARCH_LOCK_");
+    public static Object getSyncObject(HttpSession session) { // SCIPIO
+        Object lockObj = session.getAttribute("_WORK_EFFORT_SEARCH_SYNC_");
         if (lockObj == null) {
             synchronized (UtilHttp.getSessionSyncObject(session)) {
-                lockObj = session.getAttribute("_WORK_EFFORT_SEARCH_LOCK_");
+                lockObj = session.getAttribute("_WORK_EFFORT_SEARCH_SYNC_");
                 if (lockObj == null) {
                     if (Debug.verboseOn()) {
                         Debug.logVerbose("WorkEffort search session lock object not found in session; creating", module);
                     }
-                    lockObj = createLockObject();
-                    session.setAttribute("_WORK_EFFORT_SEARCH_LOCK_", lockObj);
+                    lockObj = createSyncObject();
+                    session.setAttribute("_WORK_EFFORT_SEARCH_SYNC_", lockObj);
                 }
             }
         }
@@ -504,13 +504,13 @@ public class WorkEffortSearchSession {
     }
 
     @SuppressWarnings("serial")
-    public static Object createLockObject() { // SCIPIO
+    public static Object createSyncObject() { // SCIPIO
         return new java.io.Serializable() {};
     }
 
-    public static Object createSetLockObject(HttpSession session) { // SCIPIO
-        Object lockObj = createLockObject();
-        session.setAttribute("_WORK_EFFORT_SEARCH_LOCK_", lockObj);
+    public static Object createSetSyncObject(HttpSession session) { // SCIPIO
+        Object lockObj = createSyncObject();
+        session.setAttribute("_WORK_EFFORT_SEARCH_SYNC_", lockObj);
         return lockObj;
     }
 }

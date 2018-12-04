@@ -385,7 +385,7 @@ public class ProductSearchSession {
         if (productSearchOptions == null) {
             productSearchOptions = (ProductSearchOptions) session.getAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_");
             if (productSearchOptions == null) {
-                synchronized (ProductSearchSession.getLockObj(session)) { // SCIPIO
+                synchronized (ProductSearchSession.getSyncObject(session)) { // SCIPIO
                     productSearchOptions = (ProductSearchOptions) session.getAttribute("_PRODUCT_SEARCH_OPTIONS_CURRENT_");
                     if (productSearchOptions == null) {
                         productSearchOptions = new ProductSearchOptions();
@@ -437,7 +437,7 @@ public class ProductSearchSession {
         ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
         // if the options have changed since the last search, add it to the beginning of the search options history
         if (productSearchOptions.changed) {
-            synchronized (ProductSearchSession.getLockObj(session)) { // SCIPIO
+            synchronized (ProductSearchSession.getSyncObject(session)) { // SCIPIO
                 List<ProductSearchOptions> optionsHistoryList = getSearchOptionsHistoryList(session);
 
                 // SCIPIO: 2018-11-27: clone and re-store the list
@@ -461,7 +461,7 @@ public class ProductSearchSession {
     public static List<ProductSearchOptions> getSearchOptionsHistoryList(HttpSession session) {
         List<ProductSearchOptions> optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_"));
         if (optionsHistoryList == null) {
-            synchronized (ProductSearchSession.getLockObj(session)) { // SCIPIO
+            synchronized (ProductSearchSession.getSyncObject(session)) { // SCIPIO
                 optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_"));
                 if (optionsHistoryList == null) {
                     optionsHistoryList = Collections.emptyList(); // SCIPIO: enforce unmodifiable on this one
@@ -473,13 +473,13 @@ public class ProductSearchSession {
     }
 
     public static void clearSearchOptionsHistoryList(HttpSession session) {
-        synchronized (ProductSearchSession.getLockObj(session)) { // SCIPIO
+        synchronized (ProductSearchSession.getSyncObject(session)) { // SCIPIO
             session.removeAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_");
         }
     }
 
     public static void setCurrentSearchFromHistory(int index, boolean removeOld, HttpSession session) {
-        synchronized (ProductSearchSession.getLockObj(session)) { // SCIPIO
+        synchronized (ProductSearchSession.getSyncObject(session)) { // SCIPIO
         List<ProductSearchOptions> searchOptionsHistoryList = getSearchOptionsHistoryList(session);
         if (index < searchOptionsHistoryList.size()) {
             ProductSearchOptions productSearchOptions = searchOptionsHistoryList.get(index);
@@ -778,7 +778,7 @@ public class ProductSearchSession {
         }
         
         public final R run() {
-            synchronized (ProductSearchSession.getLockObj(session)) {
+            synchronized (ProductSearchSession.getSyncObject(session)) {
                 ProductSearchOptions options = ProductSearchOptions.currentOptions.get();
                 boolean topLevel = (options == null);
                 if (topLevel) {
@@ -1741,48 +1741,48 @@ public class ProductSearchSession {
     }
     
     /**
-     * SCIPIO: Gets the search session lock object from session.
+     * SCIPIO: Gets the search session sync object from session.
      * <p>
      * NOTE: Also set by {@link org.ofbiz.order.shoppingcart.CartEventListener#sessionCreated(HttpSessionEvent)}.
      * <p>
      * Added 2018-11-27.
      */
-    public static Object getLockObj(HttpServletRequest request) {
-        return getLockObj(request.getSession());
+    public static Object getSyncObject(HttpServletRequest request) {
+        return getSyncObject(request.getSession());
     }
 
     /**
-     * SCIPIO: Gets the search session lock object from session.
+     * SCIPIO: Gets the search session sync object from session.
      * <p>
      * NOTE: Also set by {@link org.ofbiz.order.shoppingcart.CartEventListener#sessionCreated(HttpSessionEvent)}.
      * <p>
      * Added 2018-11-27.
      */
-    public static Object getLockObj(HttpSession session) { // SCIPIO
-        Object lockObj = session.getAttribute("_PRODUCT_SEARCH_LOCK_");
-        if (lockObj == null) {
+    public static Object getSyncObject(HttpSession session) { // SCIPIO
+        Object syncObj = session.getAttribute("_PRODUCT_SEARCH_SYNC_");
+        if (syncObj == null) {
             synchronized (UtilHttp.getSessionSyncObject(session)) {
-                lockObj = session.getAttribute("_PRODUCT_SEARCH_LOCK_");
-                if (lockObj == null) {
+                syncObj = session.getAttribute("_PRODUCT_SEARCH_SYNC_");
+                if (syncObj == null) {
                     if (Debug.verboseOn()) {
-                        Debug.logVerbose("Product search session lock object not found in session; creating", module);
+                        Debug.logVerbose("Product search session sync object not found in session; creating", module);
                     }
-                    lockObj = createLockObject();
-                    session.setAttribute("_PRODUCT_SEARCH_LOCK_", lockObj);
+                    syncObj = createSyncObject();
+                    session.setAttribute("_PRODUCT_SEARCH_SYNC_", syncObj);
                 }
             }
         }
-        return lockObj;
+        return syncObj;
     }
-    
+
     @SuppressWarnings("serial")
-    public static Object createLockObject() { // SCIPIO
+    public static Object createSyncObject() { // SCIPIO
         return new java.io.Serializable() {};
     }
 
-    public static Object createSetLockObject(HttpSession session) { // SCIPIO
-        Object lockObj = createLockObject();
-        session.setAttribute("_PRODUCT_SEARCH_LOCK_", lockObj);
-        return lockObj;
+    public static Object createSetSyncObject(HttpSession session) { // SCIPIO
+        Object syncObj = createSyncObject();
+        session.setAttribute("_PRODUCT_SEARCH_SYNC_", syncObj);
+        return syncObj;
     }
 }

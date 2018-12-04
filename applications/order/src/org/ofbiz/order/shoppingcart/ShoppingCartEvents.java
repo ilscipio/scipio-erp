@@ -1204,17 +1204,33 @@ public class ShoppingCartEvents {
         return getCartObject(request, true, RequestVarScopes.ALL); // SCIPIO: checkRequestFirst, modifyScopesFilter
     }
 
-    /** Main get cart method, uses the locale and currency from the session */
+    /** 
+     * Main get cart method, uses the locale and currency from the session.
+     * <p>
+     * SCIPIO: NOTES:
+     * <ul>
+     * <li>If the cart does not yet exist, it is created and set in both request and session
+     * attributes. If you do not want this, use {@link #getCartObjectIfExists(HttpServletRequest)} instead.
+     * <li>2018-12-03: By default (checkRequestFirst==true), this method checks for existing cart in request attributes
+     * first (in order for cart reads across the request to consistently use the same object); this contrasts
+     * with {@link CartUpdate} sections where the cart is read from session attributes first (to make sure
+     * updates from other threads are read).
+     * <li>2018-12-03: This method automatically transfers the session cart to request attributes if not already set; it NO LONGER
+     * transfers from request attributes to session attributes.
+     * </ul>
+     */
     public static ShoppingCart getCartObject(HttpServletRequest request) {
         return getCartObject(request, true, RequestVarScopes.ALL); // SCIPIO: checkRequestFirst, modifyScopesFilter
     }
 
-    /** SCIPIO: Get cart method only if set, uses the locale and currency from the session. Added 2018-11-29. */
+    /** SCIPIO: Get cart method only if set, uses the locale and currency from the session. Added 2018-11-29.
+     * @see {@link #getCartObject(HttpServletRequest)} */
     public static ShoppingCart getCartObjectIfExists(HttpServletRequest request) {
         return (ShoppingCart) RequestVarScopes.REQUEST_AND_SESSION.getValue(request, "shoppingCart");
     }
 
-    /** SCIPIO: Get cart method only if set, uses the locale and currency from the session. Added 2018-11-30. */
+    /** SCIPIO: Get cart method only if set, uses the locale and currency from the session. Added 2018-11-30.
+     * @see {@link #getCartObject(HttpServletRequest)} */
     public static ShoppingCart getCartObjectIfExists(HttpServletRequest request, boolean checkRequestFirst) { // SCIPIO: specificScopeFirst
         return (ShoppingCart) RequestVarScopes.REQUEST_AND_SESSION.getValue(request, "shoppingCart", checkRequestFirst);
     }

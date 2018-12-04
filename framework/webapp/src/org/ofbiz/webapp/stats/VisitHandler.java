@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -111,7 +112,9 @@ public class VisitHandler {
         if (!UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist.visit", "false")) {
             GenericValue visit = (GenericValue) session.getAttribute("visit");
             if (visit == null) {
-                synchronized (session) {
+                // SCIPIO: 2018-12-03: This is not supported by servlet API and will not work with session facades
+                //synchronized (session) {
+                synchronized (UtilHttp.getSessionSyncObject(session)) {
                     visit = (GenericValue) session.getAttribute("visit");
                     if (visit == null) {
                         Delegator delegator = null;
@@ -211,7 +214,9 @@ public class VisitHandler {
 
             GenericValue visitor = (GenericValue) session.getAttribute("visitor");
             if (visitor == null) {
-                synchronized (session) {
+                // SCIPIO: 2018-12-03: This is not supported by servlet API and will not work with session facades
+                //synchronized (session) {
+                synchronized (UtilHttp.getSessionSyncObject(session)) {
                     visitor = (GenericValue) session.getAttribute("visitor");
                     if (visitor == null) {
 

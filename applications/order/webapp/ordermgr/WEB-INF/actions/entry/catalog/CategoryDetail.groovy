@@ -85,10 +85,8 @@ context.listSize = catResult.listSize;
 LAST_VIEWED_TO_KEEP = 10; // modify this to change the number of last viewed to keep
 // SCIPIO: Thread safety: 2018-11-28: Fixes below make the session attribute immutable and safer.
 // The synchronized block locks on the _previous_ list instance, and then changes the instance.
-// FIXME?: Small chance of lost updates on first request because sync on HttpSession not officially supported,
-// but odds are extremely low
 lastViewedCategories = session.getAttribute("lastViewedCategories");
-synchronized(lastViewedCategories != null ? lastViewedCategories : session) {
+synchronized(lastViewedCategories != null ? lastViewedCategories : UtilHttp.getSessionSyncObject(session)) {
 lastViewedCategories = session.getAttribute("lastViewedCategories"); // SCIPIO: Re-read because other thread changed it
 if (!lastViewedCategories) {
     lastViewedCategories = [];

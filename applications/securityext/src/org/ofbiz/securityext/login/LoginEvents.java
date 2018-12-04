@@ -410,7 +410,9 @@ public class LoginEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String domain = EntityUtilProperties.getPropertyValue("url", "cookie.domain", delegator);
         // first try to get the username from the cookie
-        synchronized (session) {
+        // SCIPIO: 2018-12-03: This is not supported by servlet API and will not work with session facades
+        //synchronized (session) {
+        synchronized (UtilHttp.getSessionSyncObject(session)) {
             // SCIPIO: 2018-11-05: This condition makes little sense, it means this could never save a new user until old cookie expires
             // or session is cleared/logout, but user can trigger this call outside those cases with a form
             //if (UtilValidate.isEmpty(getUsername(request))) {

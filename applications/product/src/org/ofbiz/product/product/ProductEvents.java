@@ -1091,11 +1091,9 @@ public class ProductEvents {
 
         // SCIPIO: Thread safety: 2018-11-28: Fixes below make the session attribute immutable and safer.
         // The synchronized block locks on the _previous_ list instance, and then changes the instance.
-        // FIXME?: Small chance of lost updates on first request because sync on HttpSession not officially supported,
-        // but odds are extremely low
         //List<GenericValue> compareList = getProductCompareList(request);
         List<GenericValue> compareList = getProductCompareListIfExists(request);
-        synchronized (compareList != null ? compareList : request.getSession()) {
+        synchronized (compareList != null ? compareList : UtilHttp.getSessionSyncObject(request)) {
         compareList = getProductCompareListIfExists(request); // SCIPIO: Re-read because other thread changed it
         compareList = (compareList != null) ? new ArrayList<>(compareList) : new ArrayList<>(); // SCIPIO: Make local copy
         boolean alreadyInList = false;
@@ -1145,7 +1143,7 @@ public class ProductEvents {
         // but odds are extremely low
         //List<GenericValue> compareList = getProductCompareList(request);
         List<GenericValue> compareList = getProductCompareListIfExists(request);
-        synchronized (compareList != null ? compareList : request.getSession()) {
+        synchronized (compareList != null ? compareList : UtilHttp.getSessionSyncObject(session)) {
         compareList = getProductCompareListIfExists(request); // SCIPIO: Re-read because other thread changed it
         compareList = (compareList != null) ? new ArrayList<>(compareList) : new ArrayList<>(); // SCIPIO: Make local copy
         Iterator<GenericValue> it = compareList.iterator();

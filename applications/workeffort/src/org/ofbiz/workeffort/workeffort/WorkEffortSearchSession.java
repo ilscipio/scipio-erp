@@ -489,9 +489,16 @@ public class WorkEffortSearchSession {
     public static Object getLockObj(HttpSession session) { // SCIPIO
         Object lockObj = session.getAttribute("_WORK_EFFORT_SEARCH_LOCK_");
         if (lockObj == null) {
-            Debug.logWarning("WorkEffort search session lock object not found in session; creating", module);
-            lockObj = createLockObject();
-            session.setAttribute("_WORK_EFFORT_SEARCH_LOCK_", lockObj);
+            synchronized (UtilHttp.getSessionSyncObject(session)) {
+                lockObj = session.getAttribute("_WORK_EFFORT_SEARCH_LOCK_");
+                if (lockObj == null) {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("WorkEffort search session lock object not found in session; creating", module);
+                    }
+                    lockObj = createLockObject();
+                    session.setAttribute("_WORK_EFFORT_SEARCH_LOCK_", lockObj);
+                }
+            }
         }
         return lockObj;
     }

@@ -34,8 +34,7 @@ context.featureTypes = from("ProductFeatureType").queryList();
 addedFeatureTypes = (HashMap) session.getAttribute("addedFeatureTypes");
 if (addedFeatureTypes == null) {
     // SCIPIO: 2018-11-28: Thread-safety: synchronized block
-    // FIXME?: synchronizing on HttpSession not officially supported, but even without, odds of issues are low
-    synchronized (session) {
+    synchronized (UtilHttp.getSessionSyncObject(session)) {
         addedFeatureTypes = (HashMap) session.getAttribute("addedFeatureTypes");
         if (addedFeatureTypes == null) {
             addedFeatureTypes = [:];

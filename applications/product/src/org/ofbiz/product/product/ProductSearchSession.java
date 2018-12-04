@@ -1761,9 +1761,16 @@ public class ProductSearchSession {
     public static Object getLockObj(HttpSession session) { // SCIPIO
         Object lockObj = session.getAttribute("_PRODUCT_SEARCH_LOCK_");
         if (lockObj == null) {
-            Debug.logWarning("Product search session lock object not found in session; creating", module);
-            lockObj = createLockObject();
-            session.setAttribute("_PRODUCT_SEARCH_LOCK_", lockObj);
+            synchronized (UtilHttp.getSessionSyncObject(session)) {
+                lockObj = session.getAttribute("_PRODUCT_SEARCH_LOCK_");
+                if (lockObj == null) {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Product search session lock object not found in session; creating", module);
+                    }
+                    lockObj = createLockObject();
+                    session.setAttribute("_PRODUCT_SEARCH_LOCK_", lockObj);
+                }
+            }
         }
         return lockObj;
     }

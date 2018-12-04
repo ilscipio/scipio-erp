@@ -32,9 +32,7 @@ context.shipGroupSeqId = shipGroupSeqId;
 itemQuantitiesToReceive = session.getAttribute("purchaseOrderItemQuantitiesToReceive");
 
 // SCIPIO: 2018-11-28: Synchronize on the quantities for thread safety (see also HashMap copy at very end)
-// FIXME?: Very first request (purchaseOrderItemQuantitiesToReceive==null) is subject to lost updates
-// because sync on HttpSession is not really supported, but in practice very unlikely
-synchronized (itemQuantitiesToReceive != null ? itemQuantitiesToReceive : session) {
+synchronized (itemQuantitiesToReceive != null ? itemQuantitiesToReceive : UtilHttp.getSessionSyncObject(session)) {
 
 if (itemQuantitiesToReceive) {
     sessionShipmentId = itemQuantitiesToReceive._shipmentId;

@@ -10,6 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.ofbiz.base.util.UtilHttp;
+
 /**
  * Provides generalized LoginWorker-like externalLoginKey-like
  * access token functionality.
@@ -349,7 +351,7 @@ public abstract class AccessTokenProvider<V> {
                 return token;
             }
         }
-        synchronized(session) { // FIXME: best-effort sync only - servlet API doesn't guarantee - can't work with session replication
+        synchronized (UtilHttp.getSessionSyncObject(session)) {
             token = (AccessToken) session.getAttribute(attrName);
             if (token != null) {
                 if (this.get(token) != null) {
@@ -371,7 +373,7 @@ public abstract class AccessTokenProvider<V> {
      * {@link javax.servlet.http.HttpSessionListener#sessionCreated} implementations.
      */
     public AccessToken createSessionToken(HttpSession session, HttpServletRequest request, String attrName, V initialValue) {
-        synchronized(session) { // FIXME: best-effort sync only - servlet API doesn't guarantee - can't work with session replication
+        synchronized(UtilHttp.getSessionSyncObject(session)) {
             cleanupSessionToken(session, request, attrName);
 
             AccessToken token = newToken();
@@ -385,7 +387,7 @@ public abstract class AccessTokenProvider<V> {
     }
 
     public void cleanupSessionToken(HttpSession session, HttpServletRequest request, String attrName) {
-        synchronized(session) { // FIXME: best-effort sync only - servlet API doesn't guarantee - can't work with session replication
+        synchronized(UtilHttp.getSessionSyncObject(session)) {
             if (request != null) {
                 AccessToken token = (AccessToken) request.getAttribute(attrName);
                 if (token != null) {

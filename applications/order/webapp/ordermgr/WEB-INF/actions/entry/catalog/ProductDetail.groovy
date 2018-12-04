@@ -113,10 +113,8 @@ if (product) {
     LAST_VIEWED_TO_KEEP = 10; // modify this to change the number of last viewed to keep
     // SCIPIO: Thread safety: 2018-11-28: Fixes below make the session attribute immutable and safer.
     // The synchronized block locks on the _previous_ list instance, and then changes the instance.
-    // FIXME?: Small chance of lost updates on first request because sync on HttpSession not officially supported,
-    // but odds are extremely low
     lastViewedProducts = session.getAttribute("lastViewedProducts");
-    synchronized(lastViewedProducts != null ? lastViewedProducts : session) {
+    synchronized(lastViewedProducts != null ? lastViewedProducts : UtilHttp.getSessionSyncObject(session)) {
     lastViewedProducts = session.getAttribute("lastViewedProducts"); // SCIPIO: Re-read because other thread changed it
     if (!lastViewedProducts) {
         lastViewedProducts = [];

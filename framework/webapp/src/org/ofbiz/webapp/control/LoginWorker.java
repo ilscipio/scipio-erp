@@ -141,7 +141,9 @@ public class LoginWorker {
         if (externalKey != null) return externalKey;
 
         HttpSession session = request.getSession();
-        synchronized (session) {
+        // SCIPIO: 2018-12-03: This is not supported by servlet API and will not work with session facades
+        //synchronized (session) {
+        synchronized (UtilHttp.getSessionSyncObject(session)) {
             // if the session has a previous key in place, remove it from the master list
             String sesExtKey = (String) session.getAttribute(EXTERNAL_LOGIN_KEY_ATTR);
 

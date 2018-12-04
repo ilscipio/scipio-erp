@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 
 /**
@@ -119,8 +120,7 @@ public class CartSync implements AutoCloseable, Serializable {
         HttpSession session = request.getSession(true);
         CartSync lock = (CartSync) session.getAttribute("shoppingCartLock");
         if (lock == null) {
-            // NOTE: Synchronizing on session is not officially supported by servlets, but it can't hurt here
-            synchronized(session) {
+            synchronized(UtilHttp.getSessionSyncObject(session)) {
                 lock = (CartSync) session.getAttribute("shoppingCartLock");
                 if (lock == null) {
                     // Check if cart has it but for some reason it's not in session

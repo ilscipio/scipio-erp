@@ -2635,10 +2635,17 @@ public class ShoppingCartEvents {
                             Debug.logError(errorMessage, module);
                             return "error";
                         }
-                        // SCIPIO: FIXME: This request.setAttribute + destroyCart will not work properly
-                        // (it was already strange)
-                        request.setAttribute("shoppingCart", result.get("shoppingCart"));
-                        ShoppingCartEvents.destroyCart(request, response);
+                        // SCIPIO: 2018-12-03: TODO: REVIEW: this stock code no longer works at all because
+                        // destroyCart is now in a CartUpdate section and those sections must always prioritize
+                        // the session variable first (to prevent lost updates from other threads).
+                        // I'm not sure this code even did much useful, but just in case, we can at least
+                        // call clear() on the cart (no sync/update section required because this is not the session cart)
+                        //request.setAttribute("shoppingCart", result.get("shoppingCart"));
+                        //ShoppingCartEvents.destroyCart(request, response);
+                        ShoppingCart cart = (ShoppingCart) result.get("shoppingCart");
+                        if (cart != null) {
+                            cart.clear();
+                        }
                     } catch (GenericServiceException e) {
                         Debug.logError(e, "Failed to execute service appendOrderItem", module);
                         request.setAttribute("_ERROR_MESSAGE_", e.getMessage());

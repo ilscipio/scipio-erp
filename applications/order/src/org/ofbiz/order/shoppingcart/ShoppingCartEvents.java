@@ -1343,7 +1343,7 @@ public class ShoppingCartEvents {
     }
 
     /** SCIPIO: Preliminary setup to prepare cart for request. Added 2018-12-03. */
-    public static String prepareRequestForCart(HttpServletRequest request, HttpServletResponse response) {
+    public static String prepareCartForRequest(HttpServletRequest request, HttpServletResponse response) {
         // Prevent shoppingCart from being cached in view-last cached parameters
         RequestHandler.addNoSaveRequestAttr(request, "shoppingCart");
         return "success";
@@ -1351,7 +1351,7 @@ public class ShoppingCartEvents {
 
     /** Update the cart's UserLogin object if it isn't already set. */
     public static String keepCartUpdated(HttpServletRequest request, HttpServletResponse response) {
-        prepareRequestForCart(request, response); // SCIPIO
+        prepareCartForRequest(request, response); // SCIPIO
 
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession();

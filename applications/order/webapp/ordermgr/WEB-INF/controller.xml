@@ -26,7 +26,7 @@ code package.
     <!-- Events to run on every request before security (chains exempt) -->
     <preprocessor>
         <!-- SCIPIO: Some preparations for ShoppingCart for orderentry -->
-        <event name="prepareRequestForCart" type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="prepareRequestForCart"/>
+        <event name="prepareCartForRequest" type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="prepareCartForRequest"/>
     </preprocessor>
 
     <!-- Events to run on every request after all other processing (chains exempt) -->

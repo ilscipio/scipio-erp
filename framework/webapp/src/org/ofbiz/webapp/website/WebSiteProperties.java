@@ -104,7 +104,7 @@ public final class WebSiteProperties {
                 webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
                 if (webSiteValue == null) {
                     // SCIPIO (12/04/2018): Throwing this new WebSiteException so it can be caught in GlobalDecorator early stages
-                    throw new WebSiteEntityNotFoundException("Scipio: Could not find WebSite", webSiteId);
+                    throw new WebSiteEntityNotFoundException("Scipio: Could not find WebSite '" + webSiteId + "'", webSiteId);
                 }
                 // 2018-09-25: emergency fallback case: this should not happen, but will help both debugging and emergency cases work
                 if (extWebappInfo == null) {

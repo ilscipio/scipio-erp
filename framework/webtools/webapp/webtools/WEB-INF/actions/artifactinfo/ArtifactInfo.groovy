@@ -29,8 +29,8 @@ delegatorName = delegator.getDelegatorName()
 if (delegatorName.contains("default#")) {
     delegatorName = "default";
 }
-useCache = ("N" != parameters.useArtifactCache); // SCIPIO: cache flag
-aif = ArtifactInfoFactory.getArtifactInfoFactory(delegatorName, useCache);
+useReloadCache = !UtilMisc.booleanValueVersatile(parameters.reloadArtifacts, false); // SCIPIO: reload flag
+aif = ArtifactInfoFactory.getArtifactInfoFactory(delegatorName, useReloadCache, useReloadCache ? true : false);
 context.aif = aif;
 artifactInfo = null;
 if ("search".equals(parameters.findType)) {

@@ -5,6 +5,10 @@ code package.
 -->
 <#-- ToDo: Refactor - these artifacts seem like a copy and paste job to me. The only thing changing is really just the title... -->
 
+<@menu type="button">
+    <@menuitem type="link" href=makeOfbizUrl("ArtifactInfo?reloadArtifacts=Y") text=uiLabelMap.CommonReload class="+${styles.action_run_session!} ${styles.action_reload!}"/>
+</@menu>
+
 <#-- SCIPIO: simplified list -->
 <#if recentArtifactInfoList?has_content>
   <@panel title="Recently Viewed Artifacts:">

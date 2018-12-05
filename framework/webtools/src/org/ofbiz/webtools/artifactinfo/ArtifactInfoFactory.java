@@ -122,23 +122,32 @@ public class ArtifactInfoFactory {
     public Map<String, Set<ScreenWidgetArtifactInfo>> allScreenInfosReferringToRequest = new ConcurrentHashMap<String, Set<ScreenWidgetArtifactInfo>>();
     public Map<String, Set<ControllerRequestArtifactInfo>> allRequestInfosReferringToRequest = new ConcurrentHashMap<String, Set<ControllerRequestArtifactInfo>>();
 
-    public static ArtifactInfoFactory getArtifactInfoFactory(String delegatorName, boolean useCache) throws GeneralException { // SCIPIO: added useCache
+    public static ArtifactInfoFactory getArtifactInfoFactory(String delegatorName, boolean useCache, Boolean resetCache) throws GeneralException { // SCIPIO: added useCache
         if (UtilValidate.isEmpty(delegatorName)) {
             delegatorName = "default";
         }
 
-        if (!useCache) {
-            return new ArtifactInfoFactory(delegatorName); // SCIPIO
+        if (!useCache) { // SCIPIO
+            ArtifactInfoFactory aif = new ArtifactInfoFactory(delegatorName);
+            if (Boolean.TRUE.equals(resetCache)) {
+                artifactInfoFactoryCache.put(delegatorName, aif);
+            }
+            return aif;
         }
         ArtifactInfoFactory aif = artifactInfoFactoryCache.get(delegatorName);
         if (aif == null) {
-            aif = artifactInfoFactoryCache.putIfAbsentAndGet(delegatorName, new ArtifactInfoFactory(delegatorName));
+            if (Boolean.TRUE.equals(resetCache)) { // SCIPIO
+                aif = new ArtifactInfoFactory(delegatorName);
+                artifactInfoFactoryCache.put(delegatorName, aif);
+            } else {
+                aif = artifactInfoFactoryCache.putIfAbsentAndGet(delegatorName, new ArtifactInfoFactory(delegatorName));
+            }
         }
         return aif;
     }
 
     public static ArtifactInfoFactory getArtifactInfoFactory(String delegatorName) throws GeneralException {
-        return getArtifactInfoFactory(delegatorName, true);
+        return getArtifactInfoFactory(delegatorName, true, false);
     }
 
     protected ArtifactInfoFactory(String delegatorName) throws GeneralException {

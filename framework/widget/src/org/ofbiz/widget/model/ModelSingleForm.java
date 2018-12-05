@@ -77,10 +77,15 @@ public class ModelSingleForm extends ModelForm {
             } else if (!parentForm.equals(formElement.getAttribute("name"))) {
                 // try to find a form definition in the same file
                 Element rootElement = formElement.getOwnerDocument().getDocumentElement();
-                List<? extends Element> formElements = UtilXml.childElementList(rootElement, "form");
+                // SCIPIO: Forward-compatibility with grid
+                //List<? extends Element> formElements = UtilXml.childElementList(rootElement, "form");
+                List<? extends Element> formElements = UtilXml.childElementList(rootElement);
                 //Uncomment below to add support for abstract forms
                 //formElements.addAll(UtilXml.childElementList(rootElement, "abstract-form"));
                 for (Element parentElement : formElements) {
+                    if (!("grid".equals(parentElement.getTagName()) || "form".equals(parentElement.getTagName()))) { // SCIPIO
+                        continue;
+                    }
                     if (parentElement.getAttribute("name").equals(parentForm)) {
                         parent = FormFactory.createModelForm(parentElement, entityModelReader, dispatchContext, parentResource,
                                 parentForm);

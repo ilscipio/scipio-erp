@@ -29,7 +29,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.w3c.dom.Document;
@@ -61,21 +60,25 @@ public class MenuFactory extends WidgetFactory {
 
         Map<String, ModelMenu> modelMenuMap = menuWebappCache.get(cacheKey);
         if (modelMenuMap == null) {
-            ServletContext servletContext = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
-
-            URL menuFileUrl = servletContext.getResource(resourceName);
-            Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
-            // SCIPIO: New: Save original location as user data in Document
-            if (menuFileDoc != null) {
-                WidgetDocumentInfo.retrieveAlways(menuFileDoc).setResourceLocation(resourceName);
+            // SCIPIO: refactored
+            synchronized (MenuFactory.class) {
+                modelMenuMap = menuWebappCache.get(cacheKey);
+                if (modelMenuMap == null) {
+                    ServletContext servletContext = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
+                    URL menuFileUrl = servletContext.getResource(resourceName);
+                    if (menuFileUrl == null) {
+                        throw new IllegalArgumentException("Could not resolve menu file location [" + resourceName + "] in the webapp [" + webappName + "]");
+                    }
+                    Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
+                    if (menuFileDoc == null) {
+                        throw new IllegalArgumentException("Could not read menu file at location [" + resourceName + "] in the webapp [" + webappName + "]");
+                    }
+                    // SCIPIO: New: Save original location as user data in Document
+                    WidgetDocumentInfo.retrieveAlways(menuFileDoc).setResourceLocation(resourceName);
+                    modelMenuMap = readMenuDocument(menuFileDoc, cacheKey);
+                    menuWebappCache.put(cacheKey, modelMenuMap);
+                }
             }
-            modelMenuMap = readMenuDocument(menuFileDoc, cacheKey);
-            menuWebappCache.putIfAbsent(cacheKey, modelMenuMap);
-            modelMenuMap = menuWebappCache.get(cacheKey);
-        }
-
-        if (UtilValidate.isEmpty(modelMenuMap)) {
-            throw new IllegalArgumentException("Could not find menu file in webapp resource [" + resourceName + "] in the webapp [" + webappName + "]");
         }
 
         ModelMenu modelMenu = modelMenuMap.get(menuName);
@@ -120,27 +123,32 @@ public class MenuFactory extends WidgetFactory {
     public static ModelMenu getMenuFromLocationOrNull(String resourceName, String menuName) throws IOException, SAXException, ParserConfigurationException {
         Map<String, ModelMenu> modelMenuMap = menuLocationCache.get(resourceName);
         if (modelMenuMap == null) {
-            URL menuFileUrl = FlexibleLocation.resolveLocation(resourceName);
-            Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
-            // SCIPIO: New: Save original location as user data in Document
-            if (menuFileDoc != null) {
-                WidgetDocumentInfo.retrieveAlways(menuFileDoc).setResourceLocation(resourceName);
+            // SCIPIO: refactored
+            synchronized (MenuFactory.class) {
+                modelMenuMap = menuLocationCache.get(resourceName);
+                if (modelMenuMap == null) {
+                    URL menuFileUrl = FlexibleLocation.resolveLocation(resourceName);
+                    if (menuFileUrl == null) {
+                        throw new IllegalArgumentException("Could not resolve menu file location [" + resourceName + "]");
+                    }
+                    Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
+                    if (menuFileDoc == null) {
+                        throw new IllegalArgumentException("Could not read menu file at location [" + resourceName + "]");
+                    }
+                    // SCIPIO: New: Save original location as user data in Document
+                    WidgetDocumentInfo.retrieveAlways(menuFileDoc).setResourceLocation(resourceName);
+                    modelMenuMap = readMenuDocument(menuFileDoc, resourceName);
+                    menuLocationCache.put(resourceName, modelMenuMap);
+                }
             }
-            modelMenuMap = readMenuDocument(menuFileDoc, resourceName);
-            menuLocationCache.putIfAbsent(resourceName, modelMenuMap);
-            modelMenuMap = menuLocationCache.get(resourceName);
         }
-
-        if (UtilValidate.isEmpty(modelMenuMap)) {
-            throw new IllegalArgumentException("Could not find menu file in location [" + resourceName + "]");
-        }
-
-        ModelMenu modelMenu = modelMenuMap.get(menuName);
         // SCIPIO: done by non-*OrNull method
+        //ModelMenu modelMenu = modelMenuMap.get(menuName);
         //if (modelMenu == null) {
         //    throw new IllegalArgumentException("Could not find menu with name [" + menuName + "] in location [" + resourceName + "]");
         //}
-        return modelMenu;
+        //return modelMenu;
+        return modelMenuMap.get(menuName);
     }
 
     @Override

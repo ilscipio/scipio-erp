@@ -73,15 +73,26 @@ public class TreeFactory extends WidgetFactory {
             throws IOException, SAXException, ParserConfigurationException {
         Map<String, ModelTree> modelTreeMap = treeLocationCache.get(resourceName);
         if (modelTreeMap == null) {
-            URL treeFileUrl = FlexibleLocation.resolveLocation(resourceName);
-            Document treeFileDoc = UtilXml.readXmlDocument(treeFileUrl, true, true);
-            // SCIPIO: New: Save original location as user data in Document
-            if (treeFileDoc != null) {
-                WidgetDocumentInfo.retrieveAlways(treeFileDoc).setResourceLocation(resourceName);
+            // SCIPIO: refactored
+            synchronized (TreeFactory.class) {
+                modelTreeMap = treeLocationCache.get(resourceName);
+                if (modelTreeMap == null) {
+                    URL treeFileUrl = FlexibleLocation.resolveLocation(resourceName);
+                    if (treeFileUrl == null) {
+                        throw new IllegalArgumentException("Could not resolve tree file location [" + resourceName + "]");
+                    }
+                    Document treeFileDoc = UtilXml.readXmlDocument(treeFileUrl, true, true);
+                    if (treeFileDoc == null) {
+                        throw new IllegalArgumentException("Could not read tree file at location [" + resourceName + "]");
+                    }
+                    // SCIPIO: New: Save original location as user data in Document
+                    WidgetDocumentInfo.retrieveAlways(treeFileDoc).setResourceLocation(resourceName);
+                    modelTreeMap = readTreeDocument(treeFileDoc, delegator, dispatcher, resourceName);
+                    treeLocationCache.put(resourceName, modelTreeMap);
+                }
             }
-            modelTreeMap = readTreeDocument(treeFileDoc, delegator, dispatcher, resourceName);
-            modelTreeMap = treeLocationCache.putIfAbsentAndGet(resourceName, modelTreeMap);
         }
+
         ModelTree modelTree = modelTreeMap.get(treeName);
         // SCIPIO: now done in non-*OrNull method
         //if (modelTree == null) {

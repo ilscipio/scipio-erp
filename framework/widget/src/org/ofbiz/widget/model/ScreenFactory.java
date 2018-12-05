@@ -140,20 +140,21 @@ public class ScreenFactory extends WidgetFactory {
             throws IOException, SAXException, ParserConfigurationException {
         ModelScreens modelScreenMap = screenLocationCache.get(resourceName);
         if (modelScreenMap == null) {
+            // SCIPIO: refactored
             synchronized (ScreenFactory.class) {
                 modelScreenMap = screenLocationCache.get(resourceName);
                 if (modelScreenMap == null) {
                     long startTime = System.currentTimeMillis();
-                    URL screenFileUrl = null;
-                    screenFileUrl = FlexibleLocation.resolveLocation(resourceName);
+                    URL screenFileUrl = FlexibleLocation.resolveLocation(resourceName);
                     if (screenFileUrl == null) {
-                        throw new IllegalArgumentException("Could not resolve location to URL: " + resourceName);
+                        throw new IllegalArgumentException("Could not resolve screen file location [" + resourceName + "]");
                     }
                     Document screenFileDoc = UtilXml.readXmlDocument(screenFileUrl, true, true);
-                    // SCIPIO: New: Save original location as user data in Document
-                    if (screenFileDoc != null) {
-                        WidgetDocumentInfo.retrieveAlways(screenFileDoc).setResourceLocation(resourceName);
+                    if (screenFileDoc == null) { // SCIPIO
+                        throw new IllegalArgumentException("Could not read screen file at location [" + resourceName + "]");
                     }
+                    // SCIPIO: New: Save original location as user data in Document
+                    WidgetDocumentInfo.retrieveAlways(screenFileDoc).setResourceLocation(resourceName);
                     modelScreenMap = readScreenDocument(screenFileDoc, resourceName);
                     screenLocationCache.put(resourceName, modelScreenMap);
                     double totalSeconds = (System.currentTimeMillis() - startTime)/1000.0;
@@ -161,7 +162,6 @@ public class ScreenFactory extends WidgetFactory {
                 }
             }
         }
-
         if (modelScreenMap.isEmpty()) {
             throw new IllegalArgumentException("Could not find screen file with name [" + resourceName + "]");
         }
@@ -172,27 +172,28 @@ public class ScreenFactory extends WidgetFactory {
             throws IOException, SAXException, ParserConfigurationException {
         String webappName = UtilHttp.getApplicationName(request);
         String cacheKey = webappName + "::" + resourceName;
-
-
         ModelScreens modelScreenMap = screenWebappCache.get(cacheKey); // SCIPIO: new: ModelScreens
         if (modelScreenMap == null) {
+            // SCIPIO: refactored
             synchronized (ScreenFactory.class) {
                 modelScreenMap = screenWebappCache.get(cacheKey);
                 if (modelScreenMap == null) {
                     ServletContext servletContext = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
-
                     URL screenFileUrl = servletContext.getResource(resourceName);
-                    Document screenFileDoc = UtilXml.readXmlDocument(screenFileUrl, true, true);
-                    // SCIPIO: New: Save original location as user data in Document
-                    if (screenFileDoc != null) {
-                        WidgetDocumentInfo.retrieveAlways(screenFileDoc).setResourceLocation(resourceName);
+                    if (screenFileUrl == null) {
+                        throw new IllegalArgumentException("Could not resolve screen file location [" + resourceName + "]");
                     }
+                    Document screenFileDoc = UtilXml.readXmlDocument(screenFileUrl, true, true);
+                    if (screenFileDoc == null) {
+                        throw new IllegalArgumentException("Could not read screen file at location [" + resourceName + "] in the webapp [" + webappName + "]");
+                    }
+                    // SCIPIO: New: Save original location as user data in Document
+                    WidgetDocumentInfo.retrieveAlways(screenFileDoc).setResourceLocation(resourceName);
                     modelScreenMap = readScreenDocument(screenFileDoc, resourceName);
                     screenWebappCache.put(cacheKey, modelScreenMap);
                 }
             }
         }
-
         ModelScreen modelScreen = modelScreenMap.get(screenName);
         if (modelScreen == null) {
             throw new IllegalArgumentException("Could not find screen with name [" + screenName + "] in webapp resource [" + resourceName + "] in the webapp [" + webappName + "]");

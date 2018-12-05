@@ -77,8 +77,13 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * Shopping Cart Object
  * <p>
- * SCIPIO: NOTE: 2018-11-22: Events which modify the shopping cart stored in session ("shoppingCart") 
- * must wrap its update code in a {@link CartUpdate} section.
+ * SCIPIO: IMPORTANT: 2018-11-22: Any event or code which modifies the main shopping cart stored in session ("shoppingCart") 
+ * must now wrap its update code in a {@link CartUpdate#updateSection} or {@link CartSync#synchronizedSection} section.
+ * The main instance currently stored in session/request attribute is now considered immutable and can only be updated using
+ * an update section (which creates a modifiable copy that may be committed to replace the main session cart instance).
+ *
+ * @see CartUpdate
+ * @see CartSync
  */
 @SuppressWarnings("serial")
 public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {

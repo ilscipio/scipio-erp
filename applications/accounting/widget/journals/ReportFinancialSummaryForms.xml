@@ -545,7 +545,7 @@ code package.
     <form name="TrialBalanceReport" type="list" list-name="accountBalances"
           odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="accountCode" widget-style="${styles.link_nav_info_id} ${styles.action_find}" title-area-inline-style="width:100px">
-            <hyperlink target="FindAcctgTransEntries" description="${accountCode}" title-area-inline-style="width:100px">
+            <hyperlink target="FindAcctgTransEntries" description="${accountCode}">
                 <parameter param-name="glAccountId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>

@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -94,6 +95,7 @@ public final class UtilXml {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final XStream xstream = createXStream();
+    private static final List<String> logDetailedExcludedClasses = Arrays.asList(UtilXml.class.getName()); // SCIPIO
     private UtilXml () {}
 
     private static XStream createXStream() {
@@ -311,7 +313,7 @@ public final class UtilXml {
 
     public static String writeXmlDocument(Node node) throws java.io.IOException {
         if (node == null) {
-            Debug.logWarning("[UtilXml.writeXmlDocument] Node was null, doing nothing", module);
+            Debug.logWarning("[UtilXml.writeXmlDocument] Node was null, doing nothing" + getLogSuffixDetailed(), module); // SCIPIO: getLogSuffixDetailed
             return null;
         }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -321,11 +323,11 @@ public final class UtilXml {
 
     public static void writeXmlDocument(String filename, Node node) throws FileNotFoundException, IOException {
         if (node == null) {
-            Debug.logWarning("[UtilXml.writeXmlDocument] Node was null, doing nothing", module);
+            Debug.logWarning("[UtilXml.writeXmlDocument] Node was null, doing nothing" + getLogSuffixDetailed(), module); // SCIPIO: getLogSuffixDetailed
             return;
         }
         if (filename == null) {
-            Debug.logWarning("[UtilXml.writeXmlDocument] Filename was null, doing nothing", module);
+            Debug.logWarning("[UtilXml.writeXmlDocument] Filename was null, doing nothing" + getLogSuffixDetailed(), module); // SCIPIO: getLogSuffixDetailed
             return;
         }
         File outFile = new File(filename);
@@ -342,7 +344,7 @@ public final class UtilXml {
 
     public static void writeXmlDocument(OutputStream os, Node node) throws java.io.IOException {
         if (node == null) {
-            Debug.logWarning("[UtilXml.writeXmlDocument] Node was null, doing nothing", module);
+            Debug.logWarning("[UtilXml.writeXmlDocument] Node was null, doing nothing" + getLogSuffixDetailed(), module); // SCIPIO: getLogSuffixDetailed
             return;
         }
         // OutputFormat defaults are: indent on, indent = 4, include XML declaration,
@@ -363,7 +365,7 @@ public final class UtilXml {
     public static Document readXmlDocument(String content, boolean validate)
             throws SAXException, ParserConfigurationException, java.io.IOException {
         if (content == null) {
-            Debug.logWarning("[UtilXml.readXmlDocument] content was null, doing nothing", module);
+            Debug.logWarning("[UtilXml.readXmlDocument] content was null, doing nothing" + getLogSuffixDetailed(), module); // SCIPIO: getLogSuffixDetailed
             return null;
         }
         ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes(UtilIO.getUtf8())); // SCIPIO: UtilIO.getUtf8()
@@ -373,7 +375,7 @@ public final class UtilXml {
     public static Document readXmlDocument(String content, boolean validate, boolean withPosition)
             throws SAXException, ParserConfigurationException, java.io.IOException {
         if (content == null) {
-            Debug.logWarning("[UtilXml.readXmlDocument] content was null, doing nothing", module);
+            Debug.logWarning("[UtilXml.readXmlDocument] content was null, doing nothing" + getLogSuffixDetailed(), module); // SCIPIO: getLogSuffixDetailed
             return null;
         }
         ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes(UtilIO.getUtf8())); // SCIPIO: UtilIO.getUtf8()
@@ -388,7 +390,7 @@ public final class UtilXml {
     public static Document readXmlDocument(URL url, boolean validate)
             throws SAXException, ParserConfigurationException, java.io.IOException {
         if (url == null) {
-            Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing", module);
+            Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing" + getLogSuffixDetailed(), module); // SCIPIO: getLogSuffixDetailed
             return null;
         }
         InputStream is = url.openStream();
@@ -400,7 +402,7 @@ public final class UtilXml {
     public static Document readXmlDocument(URL url, boolean validate, boolean withPosition)
             throws SAXException, ParserConfigurationException, java.io.IOException {
         if (url == null) {
-            Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing", module);
+            Debug.logWarning("[UtilXml.readXmlDocument] URL was null, doing nothing" + getLogSuffixDetailed(), module); // SCIPIO: getLogSuffixDetailed
             return null;
         }
         InputStream is = url.openStream();
@@ -427,7 +429,7 @@ public final class UtilXml {
     public static Document readXmlDocument(InputStream is, boolean validate, String docDescription)
             throws SAXException, ParserConfigurationException, java.io.IOException {
         if (is == null) {
-            Debug.logWarning("[UtilXml.readXmlDocument] InputStream was null, doing nothing", module);
+            Debug.logWarning("[UtilXml.readXmlDocument] InputStream was null, doing nothing" + getLogSuffixDetailed(), module); // SCIPIO: getLogSuffixDetailed
             return null;
         }
 
@@ -474,7 +476,7 @@ public final class UtilXml {
         }
 
         if (is == null) {
-            Debug.logWarning("[UtilXml.readXmlDocument] InputStream was null, doing nothing", module);
+            Debug.logWarning("[UtilXml.readXmlDocument] InputStream was null, doing nothing" + getLogSuffixDetailed(), module); // SCIPIO: getLogSuffixDetailed
             return null;
         }
 
@@ -1746,4 +1748,11 @@ public final class UtilXml {
         }
     }
 
+    /**
+     * SCIPIO: Appends info about the caller to warnings and errors, otherwise they're largely useless.
+     * Added 2018-12-05.
+     */
+    private static String getLogSuffixDetailed() {
+        return " (" + Debug.getCallerShortInfo(logDetailedExcludedClasses) + ")";
+    }
 }

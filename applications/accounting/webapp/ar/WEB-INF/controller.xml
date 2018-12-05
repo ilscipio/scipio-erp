@@ -18,10 +18,11 @@ code package.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
     </request-map>
+    <!-- SCIPIO: view is commented
     <request-map uri="ListReports">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListReports"/>
-    </request-map>
+    </request-map>-->
     <request-map uri="findPayments">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPayments"/>

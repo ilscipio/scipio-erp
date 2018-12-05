@@ -1449,11 +1449,12 @@ code package.
     </request-map>
 
     <!-- Fixed Asset GeoLocation-->
+    <!-- SCIPIO: TODO: REVIEW: view no longer exists...
     <request-map uri="FixedAssetGeoLocation">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FixedAssetGeoLocation"/>
         <response name="error" type="view" value="EditFixedAsset"/>
-    </request-map>
+    </request-map>-->
     
 
     <!--
@@ -1772,10 +1773,11 @@ code package.
     * Reports
     **************
     -->
+    <!-- SCIPIO: TODO: REVIEW: view no longer exists...
     <request-map uri="TransactionReports">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TransactionReports"/>
-    </request-map>
+    </request-map>-->
     <!--
     <request-map uri="FinancialTransactionReport">
         <security https="true" auth="true"/>

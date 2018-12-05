@@ -101,7 +101,9 @@ public class FormFactory extends WidgetFactory {
                 WidgetDocumentInfo.retrieveAlways(formFileDoc).setResourceLocation(resourceName);
             }
             modelForm = createModelForm(formFileDoc, entityModelReader, dispatchContext, resourceName, formName);
-            modelForm = formLocationCache.putIfAbsentAndGet(cacheKey, modelForm);
+            if (modelForm != null) { // SCIPIO
+                modelForm = formLocationCache.putIfAbsentAndGet(cacheKey, modelForm);
+            }
         }
         // SCIPIO: done by non-*OrNull method
         //if (modelForm == null) {
@@ -164,6 +166,9 @@ public class FormFactory extends WidgetFactory {
             rootElement = UtilXml.firstChildElement(rootElement, "forms");
         }
         Element formElement = UtilXml.firstChildElement(rootElement, "form", "name", formName);
+        if (formElement == null) { // SCIPIO
+            return null;
+        }
         return createModelForm(formElement, entityModelReader, dispatchContext, formLocation, formName);
     }
 

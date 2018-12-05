@@ -163,10 +163,10 @@ code package.
                 final String module = "CommonsScreens#GlobalActions";
                 
                 try {
-                    Debug.logInfo("############ BEGIN WEBSITE CHECK #############", module);                    
+                    Debug.logVerbose("############ BEGIN WEBSITE CHECK #############", module);                    
                     WebSiteProperties.from(request);
                     context.webSiteFound = true;
-                    Debug.logInfo("############ END WEBSITE CHECK   #############", module);
+                    Debug.logVerbose("############ END WEBSITE CHECK   #############", module);
                 } catch (WebSiteEntityNotFoundException we) {
                     Debug.logError("############ WEBSITE CHECK FAILED #############", module);
                     context.webSiteFound = false;

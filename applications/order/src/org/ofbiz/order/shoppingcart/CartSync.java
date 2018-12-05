@@ -170,12 +170,12 @@ public class CartSync implements AutoCloseable, Serializable {
         if (isDebug()) {
             return getLogSuffixDetailed();
         } else {
-            return " (thread " + Thread.currentThread().getId() + ")";
+            return "";
         }
     }
 
     String getLogSuffixDetailed() {
-        return " (" + Debug.getCallerShortInfo(excludeClassesLogCaller) + "; thread " + Thread.currentThread().getId() + ")";
+        return " (" + Debug.getCallerShortInfo(excludeClassesLogCaller) + ")";
     }
 
     @Override

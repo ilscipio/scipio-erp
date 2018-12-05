@@ -152,22 +152,22 @@ public abstract class CmsControlUtil {
 
     public static String getReqLogIdStr(HttpServletRequest request) {
         HttpSession session = (request != null) ? request.getSession(false) : null;
-        return (request != null ? "sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)) + "; " : "") + "threadId: " + Thread.currentThread().getId();
+        return (request != null ? "sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)) : "");
     }
 
     public static String getReqLogIdDelimStr(HttpServletRequest request) {
         HttpSession session = (request != null) ? request.getSession(false) : null;
-        return (request != null ? "; sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)): "") + "; threadId: " + Thread.currentThread().getId();
+        return (request != null ? "; sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)): "");
     }
 
     // only use if request is not available
     public static String getReqLogIdStr(HttpSession session) {
-        return "sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)) + "; threadId: " + Thread.currentThread().getId();
+        return "sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session));
     }
 
     // only use if request is not available
     public static String getReqLogIdDelimStr(HttpSession session) {
-        return "; sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)) + "; threadId: " + Thread.currentThread().getId();
+        return "; sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session));
     }
 
     /**

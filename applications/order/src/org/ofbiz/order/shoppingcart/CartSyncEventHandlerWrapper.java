@@ -109,6 +109,6 @@ public class CartSyncEventHandlerWrapper implements EventHandlerWrapper {
     }
 
     private static String getLogSuffix() {
-        return " (thread " + Thread.currentThread().getId() + ")";
+        return "";
     }
 }

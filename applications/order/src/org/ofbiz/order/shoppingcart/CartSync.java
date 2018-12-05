@@ -110,38 +110,56 @@ public class CartSync implements AutoCloseable, Serializable {
         end();
     }
 
-    public static CartSync create() {
-        return new CartSync(new ReentrantLock());
+    /**
+     * SCIPIO: Returns a lock which should be locked whenever modifying the cart.
+     * NOTE: Client code should use {@link #synchronizedSection(HttpServletRequest)} instead.
+      */
+    public static CartSync getCartLockObject(HttpServletRequest request) {
+        return getCartLockObject(request.getSession());
     }
 
-    /** SCIPIO: Returns an object which should be used to lock on whether modifying the cart.
-     * Added 2018-11-20. */
-    protected static CartSync getCartLockObject(HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
+    /**
+     * SCIPIO: Returns a lock which should be locked whenever modifying the cart.
+     * NOTE: Client code should use {@link #synchronizedSection(HttpServletRequest)} instead.
+      */
+    public static CartSync getCartLockObject(HttpSession session) {
         CartSync lock = (CartSync) session.getAttribute("shoppingCartLock");
         if (lock == null) {
             synchronized(UtilHttp.getSessionSyncObject(session)) {
                 lock = (CartSync) session.getAttribute("shoppingCartLock");
                 if (lock == null) {
-                    // Check if cart has it but for some reason it's not in session
-                    ShoppingCart cart = ShoppingCartEvents.getCartObjectIfExists(request);
-                    if (cart != null) {
-                        lock = cart.getLockObject();
-                        request.getSession(true).setAttribute("shoppingCartLock", lock);
-                        Debug.logInfo("shoppingCartLock not found in session; setting to lock object found in cart ("
-                                + lock + ")", module);
-                    } else {
-                        lock = ShoppingCart.createLockObject();
-                        request.getSession(true).setAttribute("shoppingCartLock", lock);
-                        // NOTE: In theory this should be a warning (because lock on session is not officially supported)
-                        // , but it will happen regularly in orderentry
-                        // and extremely unlikely to be a problem
+                    if (ShoppingCart.isDebug()) {
                         Debug.logInfo("shoppingCartLock not found in session; creating", module);
                     }
+                    lock = createSetLockObject(session);
                 }
             }
         }
         return lock;
+    }
+
+    /**
+     * Creates a new CartSync instance with a new ReentrantLock and stores it in session.
+     */
+    public static CartSync createSetLockObject(HttpSession session) {
+        CartSync lock = create();
+        session.setAttribute("shoppingCartLock", lock);
+        return lock;
+    }
+
+    /**
+     * Creates a new CartSync instance with a new ReentrantLock.
+     */
+    public static CartSync create() {
+        return new CartSync(new ReentrantLock());
+    }
+
+    /**
+     * SCIPIO: Create a new lock object for {@link #setLockObject} and the
+     * shoppingCartLock session attribute.
+     */
+    public static CartSync createLockObject() {
+        return CartSync.create();
     }
 
     public boolean isDebug() {

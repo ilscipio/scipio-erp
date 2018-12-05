@@ -216,19 +216,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     protected Map<String, List<GenericValue>> cartSubscriptionItems;
     */
 
-    protected boolean allowMissingShipEstimates; // = false; // SCIPIO: see WebShoppingCart for implementation 
-
-    /**
-     * SCIPIO: An object which can be used for locking across multiple cart instances. 
-     * It is transferred over to new instances by the copy constructor.
-     * <p>
-     * NOTE: This object is expected to be stored as the session attribute "shoppingCartLock".
-     * If you lock on this object returned by {@link #getLockObject()}, then inside the synchronized block you
-     * must re-fetch the ShoppingCart instance in case another thread changed the cart reference.
-     * <p>
-     * Added 2018-11-20.
-     */
-    protected CartSync lockObj = createLockObject();
+    protected boolean allowMissingShipEstimates; // = false; // SCIPIO: see WebShoppingCart for implementation
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
@@ -356,7 +344,6 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             }
             this.cartSubscriptionItems = cartSubscriptionItems;
             */
-            this.lockObj = cart.lockObj; // SCIPIO
         } else {
             // Partial/high-level instance copy (legacy)
             this.delegator = cart.getDelegator();
@@ -6218,35 +6205,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     /**
-     * SCIPIO: Returns an object which can be used for locking across multiple cart modifications. 
-     * It is transferred over to new instances by the copy constructor.
-     * <p>
-     * Added 2018-11-20.
-     */
-    public CartSync getLockObject() {
-        return lockObj;
-    }
-
-    /**
-     * SCIPIO: Sets an object which can be used for locking across multiple cart modifications. 
-     * It is transferred over to new instances by the copy constructor.
-     * Added 2018-11-20.
-     */
-    public void setLockObject(CartSync lock) {
-        this.lockObj = lock;
-    }
-
-    /**
-     * SCIPIO: Create a new lock object for {@link #setLockObject} and the
-     * shoppingCartLock session attribute.
-     */
-    public static CartSync createLockObject() {
-        return CartSync.create();
-    }
-
-    /**
-     * SCIPIO: Returns true if debug logging is on. Roughly same as verbose logging.
-     * NOTE: Some things controlled by this may lower performance when on.
+     * SCIPIO: Returns true if debug logging is on for cart-related processes. Roughly same as verbose logging.
+     * WARN: Some things controlled by this may lower performance when enabled.
      * Added 2018-11-30. 
      */
     public static boolean isDebug() {

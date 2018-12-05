@@ -23,7 +23,6 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -44,7 +43,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 @SuppressWarnings("serial")
 public class WebShoppingCart extends ShoppingCart {
 
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Full constructor.
@@ -71,18 +70,6 @@ public class WebShoppingCart extends ShoppingCart {
         Boolean allowMissingShipEstimates = UtilMisc.booleanValue(request.getServletContext().getAttribute("orderAllowMissingShipEstimates"));
         if (allowMissingShipEstimates != null) {
             this.setAllowMissingShipEstimates(allowMissingShipEstimates);
-        }
-
-        // SCIPIO: If there's an explicit shoppingCartLock, use it
-        // NOTE: Ideally shoppingCartLock should only be set by session listeners (CartEventListener), but
-        // is not present in ordermgr (FIXME?)
-        // WARN: 2018-11-20: The behavior here is subject to change
-        CartSync shoppingCartLock = (CartSync) session.getAttribute("shoppingCartLock");
-        if (shoppingCartLock != null) {
-            this.setLockObject(shoppingCartLock);
-        } else {
-            session.setAttribute("shoppingCartLock", this.getLockObject());
-            Debug.logWarning("No shoppingCartLock found in session; creating", module);
         }
     }
 

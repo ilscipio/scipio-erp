@@ -10831,6 +10831,27 @@
         <value xml:lang="zh-CN">储蓄</value>
         <value xml:lang="zh-TW">儲蓄</value>
     </property>
+    <property key="CommonScipioERP">
+        <value xml:lang="ar">Scipio ERP</value>
+        <value xml:lang="cs">Scipio ERP</value>
+        <value xml:lang="de">Scipio ERP</value>
+        <value xml:lang="en">Scipio ERP</value>
+        <value xml:lang="es">Scipio ERP</value>
+        <value xml:lang="fr">Scipio ERP</value>
+        <value xml:lang="hi-IN">Scipio ERP</value>
+        <value xml:lang="it">Scipio ERP</value>
+        <value xml:lang="ja">Scipio ERP</value>
+        <value xml:lang="nl">Scipio ERP</value>
+        <value xml:lang="pt">Scipio ERP</value>
+        <value xml:lang="pt-BR">Scipio ERP</value>
+        <value xml:lang="ro">Scipio ERP</value>
+        <value xml:lang="ru">Scipio ERP</value>
+        <value xml:lang="th">Scipio ERP</value>
+        <value xml:lang="vi">Scipio ERP</value>
+        <value xml:lang="zh">Scipio ERP</value>
+        <value xml:lang="zh-CN">Scipio ERP</value>
+        <value xml:lang="zh-TW">Scipio ERP</value>
+    </property>
     <property key="CommonSearch">
         <value xml:lang="ar">البحث</value>
         <value xml:lang="cs">Vyhledávání</value>
@@ -12188,8 +12209,8 @@
         <value xml:lang="zh-CN">开所有表</value>
         <value xml:lang="zh-TW">大型檢視</value>
     </property>
-    <property key="CommonSystemNotConfigured">
-        <value xml:lang="en">System Not Configured</value>        
+    <property key="CommonSystemNotProperlyConfigured">
+        <value xml:lang="en">System not properly configured.</value>        
     </property>
     <property key="CommonTally">
         <value xml:lang="ar">مراقب</value>

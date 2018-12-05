@@ -34,8 +34,6 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
-import com.ilscipio.scipio.ce.webapp.base.website.WebSiteException;
-
 /**
  * Web site properties.
  * <p>
@@ -84,7 +82,7 @@ public final class WebSiteProperties {
      * @param request
      * @throws GenericEntityException
      */
-    public static WebSiteProperties from(HttpServletRequest request) throws GenericEntityException, WebSiteException {
+    public static WebSiteProperties from(HttpServletRequest request) throws GenericEntityException, WebSiteEntityNotFoundException {
         Assert.notNull("request", request);
         WebSiteProperties webSiteProps = (WebSiteProperties) request.getAttribute("_WEBSITE_PROPS_");
         if (webSiteProps == null) {
@@ -106,7 +104,7 @@ public final class WebSiteProperties {
                 webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
                 if (webSiteValue == null) {
                     // SCIPIO (12/04/2018): Throwing this new WebSiteException so it can be caught in GlobalDecorator early stages
-                    throw new WebSiteException("Scipio: Could not find WebSite", webSiteId);
+                    throw new WebSiteEntityNotFoundException("Scipio: Could not find WebSite", webSiteId);
                 }
                 // 2018-09-25: emergency fallback case: this should not happen, but will help both debugging and emergency cases work
                 if (extWebappInfo == null) {
@@ -196,7 +194,7 @@ public final class WebSiteProperties {
                 if (!defaults.equalsServerFieldsWithHardDefaults(currentWebSiteProps)) {
                     requestOverridesStatic = false;
                 }
-            } catch (WebSiteException we) {
+            } catch (WebSiteEntityNotFoundException we) {
                 throw new GenericEntityException(we);
             }
             

@@ -1,32 +1,31 @@
-<#if layoutSettings.headerImageUrl??>
-    <#assign headerImageUrl = layoutSettings.headerImageUrl>
-<#elseif layoutSettings.commonHeaderImageUrl??>
-    <#assign headerImageUrl = layoutSettings.commonHeaderImageUrl>
-<#elseif layoutSettings.VT_HDR_IMAGE_URL??>
-    <#assign headerImageUrl = layoutSettings.VT_HDR_IMAGE_URL.get(0)>
-</#if>
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<#assign logo><img src="<@ofbizContentUrl escapeAs='html'><#if headerImageUrl?has_content>${rawString(headerImageUrl)}<#else>/images/scipio/scipio-logo-small.png</#if></@ofbizContentUrl>"/></#assign>
-
+<#assign logo><img src="<@ofbizContentUrl escapeAs='html'>/images/scipio/scipio-logo-small.png</@ofbizContentUrl>"/></#assign>
 
 <@row>
 	<#-- NOTE: login_wrap contains grid size -->
-	<@cell class="${styles.grid_large!}6 ${styles.grid_large!}centered" last=true id="login" style="margin-top: 200px">
-	  <div id="login-box-title" class="${styles.login_header!}">
-	    <@heading level=1>${logo} ${uiLabelMap.CommonSystemNotConfigured!}</@heading>
+	<@cell class="${styles.grid_large!}12 ${styles.grid_large!} ${styles.login_wrap!}" last=true id="login" style="margin-top: 100px">
+	  <div id="system-box-title">
+	    <@heading level=1>${logo} ${uiLabelMap.CommonScipioERP!}</@heading>
 	  </div>
 	
-	  <@section id="system-box-content">
-	    <#if uiLabelMap.WebtoolsForSomethingInteresting?has_content 
-	       && uiLabelMap.WebtoolsForSomethingInteresting != "WebtoolsForSomethingInteresting">
-	      <@alert type="error">
-	        ${uiLabelMap.WebtoolsForSomethingInteresting}
-	      </@alert>
-	    </#if>
+	  <@section id="login-box-content">	    
+	    
 	
 	    <div class="${styles.login_body!}">
-	    	The system is not properly configured. In order to set it up go to...[TODO]
+	    	<p>
+		    	We have detected that there is no WebSite record matching the webSiteId defined as a context-param in web.xml for <strong>${webSiteIdNotFound!""}</strong>. 
+		    	This is due the system not being properly configured. In order to solve this, follow our setup wizard to fullfil all the missing gaps. <br/>
+		    	<a href="/setup/control/main" class="${styles.link_run_session!} ${styles.action_login!}">${uiLabelMap.CommonGoToSetup}</a>
+	    	</p>
+	    	
+	    	<#-- <@ofbizInterWebappUrl uri="main" webSiteId="setup" /> -->
+	    	
+	    	<p>Alternatively you can load our demo data in order to have the system properly setup without requiring any further action.</p>
+	    	
+	    	<p>Check our guide for further information: </p>
+	    	
+	    	[TODO]
 	    </div>
 	
 	  </@section>

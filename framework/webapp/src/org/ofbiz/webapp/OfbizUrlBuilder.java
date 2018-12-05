@@ -37,8 +37,6 @@ import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.xml.sax.SAXException;
 
-import com.ilscipio.scipio.ce.webapp.base.website.WebSiteException;
-
 /**
  * OFBiz URL builder.
  * <p>
@@ -68,13 +66,7 @@ public final class OfbizUrlBuilder {
         Assert.notNull("request", request);
         OfbizUrlBuilder builder = (OfbizUrlBuilder) request.getAttribute("_OFBIZ_URL_BUILDER_");
         if (builder == null) {
-            // SCIPIO (12/04/2018): Wrapping the new WebSiteException into a GenericEntityException for backward compatibility
-            WebSiteProperties webSiteProps = null;
-            try {
-                webSiteProps = WebSiteProperties.from(request);
-            } catch (WebSiteException we) {
-                throw new GenericEntityException(we);
-            }
+            WebSiteProperties webSiteProps = WebSiteProperties.from(request);
             URL url = ConfigXMLReader.getControllerConfigURL(request.getServletContext());
             ControllerConfig config = (url != null) ? ConfigXMLReader.getControllerConfig(url, true) : null; // SCIPIO: 2017-11-18: controller now fully optional (2 change)
             String servletPath = (String) request.getAttribute("_CONTROL_PATH_");

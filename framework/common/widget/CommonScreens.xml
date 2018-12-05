@@ -156,17 +156,22 @@ code package.
             
             <script lang="groovy"><![CDATA[
                 import org.ofbiz.webapp.website.WebSiteProperties
-                import com.ilscipio.scipio.ce.webapp.base.website.WebSiteException
+                import org.ofbiz.webapp.website.WebSiteEntityNotFoundException
                 import org.ofbiz.base.util.Debug;
+                import org.ofbiz.base.util.UtilProperties
+                
+                final String module = "CommonsScreens#GlobalActions";
+                
                 try {
-                    Debug.log("############ BEGIN WEBSITE CHECK #############");                    
+                    Debug.logInfo("############ BEGIN WEBSITE CHECK #############", module);                    
                     WebSiteProperties.from(request);
                     context.webSiteFound = true;
-                    Debug.log("############ END WEBSITE CHECK #############");
-                } catch (WebSiteException we) {
-                    Debug.log("############ WEBSITE CHECK FAILED #############");
+                    Debug.logInfo("############ END WEBSITE CHECK   #############", module);
+                } catch (WebSiteEntityNotFoundException we) {
+                    Debug.logError("############ WEBSITE CHECK FAILED #############", module);
                     context.webSiteFound = false;
                     context.webSiteIdNotFound = we.getWebSiteId();
+                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonUiLabels", "CommonSystemNotProperlyConfigured", locale));
                 }
             ]]></script>
             
@@ -251,11 +256,6 @@ code package.
                         <set field="headAppContainsExpr" value="!$Global-Column-Main, !$Global-Column-Left, !$Global-Column-Right"/>
                     </else>
                 </if>
-                
-                <script lang="groovy"><![CDATA[                    
-                    import org.ofbiz.base.util.Debug;                    
-                    Debug.log("context.webSiteFound ======> " + context.webSiteFound);
-                ]]></script>
             </actions>
             <widgets>
                 <section>

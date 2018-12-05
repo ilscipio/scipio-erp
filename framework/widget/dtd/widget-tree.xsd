@@ -39,7 +39,7 @@ under the License.
     <xs:element name="trees">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="tree"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="tree"/><!-- SCIPIO: Allow none (minOccurs="0") -->
             </xs:sequence>
         </xs:complexType>
     </xs:element>

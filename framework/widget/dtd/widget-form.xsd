@@ -54,7 +54,7 @@ under the License.
   <!-- ================== FORMS ==================== -->
     <xs:element name="forms">
         <xs:complexType>
-            <xs:choice maxOccurs="unbounded">
+            <xs:choice minOccurs="0" maxOccurs="unbounded"><!-- SCIPIO: Allow none (minOccurs="0") -->
                 <xs:element ref="form"/>
                 <xs:element ref="grid"/>
             </xs:choice>

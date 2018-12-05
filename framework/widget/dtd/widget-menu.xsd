@@ -63,7 +63,7 @@ under the License.
     <xs:element name="menus">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="menu"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="menu"/><!-- SCIPIO: Allow none (minOccurs="0") -->
             </xs:sequence>
         </xs:complexType>
     </xs:element>

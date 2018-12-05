@@ -24,7 +24,7 @@ import org.ofbiz.content.content.ContentWorker
 import org.ofbiz.content.data.DataResourceWorker
 import org.ofbiz.webapp.ftl.FreeMarkerViewHandler
 
-userLogin = session.getAttribute("userLogin");
+userLogin = context.userLogin; // SCIPIO: use context login instead: session.getAttribute("userLogin");
 contentAssocDataResourceViewFrom = delegator.makeValue("ContentAssocDataResourceViewFrom");
 
 contentId = context.contentId;

@@ -26,7 +26,7 @@ import org.ofbiz.product.store.*;
 
 cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObject(request); // SCIPIO: Must use accessor, not this: session.getAttribute("shoppingCart");
 currencyUomId = cart.getCurrency();
-userLogin = session.getAttribute("userLogin");
+userLogin = context.userLogin; // SCIPIO: use context login instead: session.getAttribute("userLogin");
 partyId = cart.getPartyId();
 party = from("Party").where("partyId", partyId).cache(true).queryOne();
 productStoreId = ProductStoreWorker.getProductStoreId(request);

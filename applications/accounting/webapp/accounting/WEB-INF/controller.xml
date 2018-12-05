@@ -994,6 +994,7 @@ code package.
     
     
     <!-- Shared Agreement Screens -->
+    <!-- SCIPIO: TODO: REVIEW: the view EditAgreementRoles is no longer defined...
     <request-map uri="EditAgreementRoles">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditAgreementRoles"/>
@@ -1016,6 +1017,7 @@ code package.
         <response name="success" type="view" value="EditAgreementRoles"/>
         <response name="error" type="view" value="EditAgreementRoles"/>
     </request-map>
+    -->
     
     <!-- 
     **************

@@ -171,6 +171,10 @@ code package.
                     Debug.logError("############ WEBSITE CHECK FAILED #############", module);
                     context.webSiteFound = false;
                     context.webSiteIdNotFound = we.getWebSiteId();
+                    scipioBaseUrl = UtilProperties.getPropertyValue("general", "scipioerp.base.url", "");
+                    scipioDevSetupUrl = UtilProperties.getPropertyValue("general", "community/developer/installation-configuration/", "");
+                    context.scipioSetupUrl = scipioBaseUrl + scipioDevSetupUrl;                    
+                    
                     request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonUiLabels", "CommonSystemNotProperlyConfigured", locale));
                 }
             ]]></script>

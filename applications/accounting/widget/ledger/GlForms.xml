@@ -882,7 +882,7 @@ code package.
         <field name="acctgTransEntrySeqId" widget-style="${styles.link_nav_info_id}"><display/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}"><display-entity entity-name="AcctgTransType"/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}"><display-entity entity-name="GlFiscalType"/></field>
-        <field name="glAccountId" title="${uiLabelMap.CommonAccount"><display/></field>
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount}"><display/></field>
         <field name="glAccountDescription" title="${uiLabelMap.CommonDescription}">
             <display description="${accountCode} ${accountName}"/>
         </field>

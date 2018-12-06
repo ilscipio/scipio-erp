@@ -383,7 +383,7 @@
     
     <request-map uri="copyScript">
         <security https="true" auth="true"/>
-        <event type="service" invoke="cmsCopyTemplate"/>
+        <event type="service" invoke="cmsCopyScriptTemplate"/>
         <response name="success" type="request-redirect" value="editScript">
             <redirect-parameter name="scriptTemplateId"/>
         </response>

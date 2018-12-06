@@ -62,7 +62,7 @@
     <request-map uri="copyPage">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsCopyPage" />
-        <response name="success" type="request-redirect" value="editPage">
+        <response name="success" type="request-redirect" value="editPage" save-request="messages">
             <redirect-parameter name="pageId"/>
             <redirect-parameter name="webSiteId"/>
         </response>
@@ -155,7 +155,7 @@
     <request-map uri="copyTemplate">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsCopyPageTemplate"/>
-        <response name="success" type="request-redirect" value="editTemplate">
+        <response name="success" type="request-redirect" value="editTemplate" save-request="messages">
             <redirect-parameter name="pageTemplateId"/>
         </response>
         <response name="error" type="view" value="editTemplate"/>
@@ -279,7 +279,7 @@
     <request-map uri="copyAsset">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsCopyAsset"/>
-        <response name="success" type="request-redirect" value="editAsset">
+        <response name="success" type="request-redirect" value="editAsset" save-request="messages">
             <redirect-parameter name="assetTemplateId"/>
         </response>
         <response name="error" type="view" value="editAsset" />
@@ -384,7 +384,7 @@
     <request-map uri="copyScript">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsCopyScriptTemplate"/>
-        <response name="success" type="request-redirect" value="editScript">
+        <response name="success" type="request-redirect" value="editScript" save-request="messages">
             <redirect-parameter name="scriptTemplateId"/>
         </response>
         <response name="error" type="view" value="editScript" />
@@ -426,7 +426,7 @@
     <request-map uri="updateMedia">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsUpdateMediaFile"/>
-        <response name="success" type="request-redirect" value="editMedia">
+        <response name="success" type="request-redirect" value="editMedia" save-request="messages">
             <redirect-parameter name="contentId"/>
         </response>
         <response name="error" type="view" value="editMedia"/>
@@ -435,7 +435,7 @@
     <request-map uri="deleteMedia">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsDeleteMediaFile"/>
-        <response name="success" type="request-redirect-noparam" value="media"/>
+        <response name="success" type="request-redirect-noparam" value="media" save-request="messages"/>
         <response name="error" type="view" value="editMedia"/>
     </request-map>
     
@@ -443,14 +443,14 @@
         <security https="true" auth="true"/>
         <!-- this service takes way too long, so it must be run async -->
         <event type="service" invoke="cmsRebuildMediaVariants" path="async"/>
-        <response name="success" type="request-redirect-noparam" value="media"/>
+        <response name="success" type="request-redirect-noparam" value="media" save-request="messages"/>
         <response name="error" type="view" value="media"/>
     </request-map>
     
     <request-map uri="rebuildMediaVariants">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsRebuildMediaVariants"/>
-        <response name="success" type="request-redirect" value="editMedia">
+        <response name="success" type="request-redirect" value="editMedia" save-request="messages">
             <redirect-parameter name="contentId"/>
         </response>
         <response name="error" type="view" value="editMedia"/>
@@ -460,14 +460,14 @@
         <security https="true" auth="true"/>
         <!-- this service takes way too long, so it must be run async -->
         <event type="service" invoke="cmsRemoveMediaVariants" path="async"/>
-        <response name="success" type="request-redirect-noparam" value="media"/>
+        <response name="success" type="request-redirect-noparam" value="media" save-request="messages"/>
         <response name="error" type="view" value="media"/>
     </request-map>
     
     <request-map uri="removeMediaVariants">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsRemoveMediaVariants"/>
-        <response name="success" type="request-redirect" value="editMedia">
+        <response name="success" type="request-redirect" value="editMedia" save-request="messages">
             <redirect-parameter name="contentId"/>
         </response>
         <response name="error" type="view" value="editMedia"/>

@@ -250,7 +250,7 @@ code package.
         <permission-service service-name="humanResManagerPermission" main-action="DELETE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
-    <service name="expirePayHistory" engine="simple" default-entity-name="PayHistory" invoke="expire" auth="true">
+    <service name="expirePayHistory" engine="entity-auto" default-entity-name="PayHistory" invoke="expire" auth="true">
         <description>Expire Pay History</description>
         <permission-service service-name="humanResManagerPermission" main-action="UPDATE"/>
         <auto-attributes mode="IN" include="pk" optional="false"/>

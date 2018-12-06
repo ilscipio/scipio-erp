@@ -790,6 +790,7 @@ under the License.
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" ref="redirect-attributes"/><!-- SCIPIO: new -->
                 <xs:element minOccurs="0" maxOccurs="1" ref="redirect-parameters"/><!-- SCIPIO: new -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="redirect-parameter">
                     <xs:annotation>
@@ -995,7 +996,24 @@ under the License.
                     302 (the Java default) is not recommended for SEO reasons, 301 is preferred.
                 </xs:documentation>
             </xs:annotation>
-        </xs:attribute>        
+        </xs:attribute>
+        <xs:attribute name="save-request">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: For redirects only: whether to save request attributes (from event) to pass over to the next request (via session).
+                    Default: "none" for all EXCEPT (currently, 2018-12-06) "all" by default for "request-redirect" and "request-redirect-noparam".
+                    The attributes can be specified, excluded or added to using the "redirect-attributes" child element.
+                    Added 2018-12-06.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="all"/>
+                    <xs:enumeration value="messages"/>
+                    <xs:enumeration value="none"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute> 
     </xs:attributeGroup>
     <xs:element name="redirect-parameter">
         <xs:annotation>
@@ -1092,6 +1110,44 @@ under the License.
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <xs:element name="redirect-attributes">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Controls which request attributes should apply/not-apply for the save-request feature.
+                Generally, if any "include" request-attributes are specified, it turns this filter into a whitelist,
+                whereas if only "exclude", it behaves as a blacklist. The generally overrides the value of 
+                save-request (which is a convenience feature) except for "messages", where "include"
+                specifies additional attributes to save in addition to the messages.
+                NOTE: If you specify redirect-attributes without specifying save-request="...", it will automatically
+                enable save-request (for the specified attributes, or all minus your excludes).
+                Added 2018-12-06.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="request-attribute">
+                    <xs:complexType>
+                        <xs:attribute type="xs:string" name="name" use="required"/>
+                        <xs:attribute name="mode" default="include">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    SCIPIO: If this is set to exclude, the parameter is excluded instead of
+                                    included.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:enumeration value="include"/>
+                                    <xs:enumeration value="exclude"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
     <xs:element name="view-map">
         <xs:annotation>
             <xs:documentation>

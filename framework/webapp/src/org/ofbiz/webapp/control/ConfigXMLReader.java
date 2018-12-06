@@ -60,6 +60,7 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapContext;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.webapp.event.EventUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -2150,6 +2151,7 @@ public class ConfigXMLReader {
         public final Boolean allowViewSave; // SCIPIO: new 2018-06-12: can be set explicit false to prevent recording this view
         private final Type typeEnum; // SCIPIO: new 2018-06-13
         private final ValueExpr valueExpr; // SCIPIO: 2018-11-19: precompiled value expression
+        private final AttributesSpec redirectAttributes; // SCIPIO
         
         /**
          * @deprecated SCIPIO: 2018-11-07: This does nothing useful, all fields are final and should never have been
@@ -2171,6 +2173,7 @@ public class ConfigXMLReader {
             this.allowViewSave = null;
             this.typeEnum = null;
             this.valueExpr = null;
+            this.redirectAttributes = AttributesSpec.NONE;
         }
 
         private RequestResponse(String name, String type, String value, Type typeEnum) { // SCIPIO: 2018-11-07
@@ -2188,6 +2191,7 @@ public class ConfigXMLReader {
             this.allowViewSave = null;
             this.typeEnum = typeEnum;
             this.valueExpr = null;
+            this.redirectAttributes = (typeEnum != null) ? typeEnum.getRedirectAttributesDefault() : AttributesSpec.NONE;
         }
 
         public RequestResponse(Element responseElement) {
@@ -2239,6 +2243,30 @@ public class ConfigXMLReader {
             this.typeEnum = Type.fromName(this.type);
             // SCIPIO: precompiled value expression
             this.valueExpr = ValueExpr.getInstance(this.value);
+            // SCIPIO: redirect-attributes
+            String saveRequestStr = responseElement.getAttribute("save-request");
+            Set<String> includeRequestAttributes = null;
+            Set<String> excludeRequestAttributes = null;
+            for (Element redirectAttributesElement : UtilXml.childElementList(responseElement, "redirect-attributes")) {
+                for (Element requestAttributeElement : UtilXml.childElementList(redirectAttributesElement, "request-attribute")) {
+                    if ("exclude".equals(requestAttributeElement.getAttribute("mode"))) {
+                        if (excludeRequestAttributes == null) {
+                            excludeRequestAttributes = new HashSet<>();
+                        }
+                        excludeRequestAttributes.add(requestAttributeElement.getAttribute("name"));
+                    } else {
+                        if (includeRequestAttributes == null) {
+                            includeRequestAttributes = new HashSet<>();
+                        }
+                        includeRequestAttributes.add(requestAttributeElement.getAttribute("name"));
+                    }
+                }
+            }
+            AttributesSpec spec = this.typeEnum.getRedirectAttributesDefault();
+            if (!saveRequestStr.isEmpty() || includeRequestAttributes != null || excludeRequestAttributes != null) {
+                spec = AttributesSpec.getSpec(saveRequestStr, includeRequestAttributes, excludeRequestAttributes);
+            }
+            this.redirectAttributes = spec;
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
@@ -2299,6 +2327,10 @@ public class ConfigXMLReader {
             return valueExpr;
         }
 
+        public AttributesSpec getRedirectAttributes() { // SCIPIO
+            return redirectAttributes;
+        }
+
         public enum Type { // SCIPIO: 2018-06
             NONE("none"),
             VIEW("view"),
@@ -2311,30 +2343,28 @@ public class ConfigXMLReader {
             URL("url"),
             CROSS_REDIRECT("cross-redirect");
 
-            private static final Map<String, Type> nameMap;
-            static {
-                Map<String, Type> map = new HashMap<>();
-                for(Type type : Type.values()) { map.put(type.getName(), type); }
-                nameMap = map;
-            }
-
             private final String name;
             private final boolean redirectType;
             private final boolean requestType;
             private final boolean viewType;
+            private final AttributesSpec redirectAttributesDefault;
 
             private Type(String name) {
                 this.name = name;
                 this.redirectType = name.contains("redirect") || "url".equals(name);
                 this.requestType = "request".equals(name);
                 this.viewType = name.contains("view");
+                // TODO: REVIEW: In future this might change to default false for all...
+                this.redirectAttributesDefault = name.contains("request-redirect") ? AttributesSpec.ALL : AttributesSpec.NONE;
             }
 
             public static Type fromName(String name) {
-                Type type = nameMap.get(name);
-                if (type == null) throw new IllegalArgumentException("unrecognized"
-                        + " controller request response type: " + name);
-                return type;
+                for(Type value : Type.values()) { 
+                    if (value.getName().equals(name)) {
+                        return value;
+                    }
+                }
+                throw new IllegalArgumentException("unrecognized controller request response type: " + name);
             }
 
             public String getName() {
@@ -2351,6 +2381,73 @@ public class ConfigXMLReader {
 
             public boolean isViewType() {
                 return viewType;
+            }
+            
+            public AttributesSpec getRedirectAttributesDefault() {
+                return redirectAttributesDefault;
+            }
+        }
+
+        public static abstract class AttributesSpec { // SCIPIO
+            public static final AttributesSpec ALL = new AttributesSpec() {
+                @Override public boolean isAll() { return true; }
+                @Override public boolean includeAttribute(String attributeName) { return true; }
+            };
+            public static final AttributesSpec EVENT_MESSAGES = new AttributesSpec() {
+                @Override public boolean includeAttribute(String attributeName) { return EventUtil.getEventErrorMsgAttrNames().contains(attributeName); }
+            };
+            public static final AttributesSpec NONE = new AttributesSpec() {
+                @Override public boolean isNone() { return true; }
+                @Override public boolean includeAttribute(String attributeName) { return false; }
+            };
+
+            static AttributesSpec getSpec(String mode, Set<String> includeAttributes, Set<String> excludeAttributes) {
+                if ("messages".equals(mode)) {
+                    if (includeAttributes == null && excludeAttributes == null) {
+                        return EVENT_MESSAGES;
+                    }
+                    // SPECIAL: here, include messages plus/minus extras
+                    Set<String> includeAttr = new HashSet<>(EventUtil.getEventErrorMsgAttrNames());
+                    if (includeAttributes != null) {
+                        includeAttr.addAll(includeAttributes);
+                    }
+                    if (excludeAttributes != null) {
+                        includeAttr.removeAll(excludeAttributes);
+                    }
+                    if (includeAttr.equals(EventUtil.getEventErrorMsgAttrNames())) { // avoid needless copies
+                        return EVENT_MESSAGES;
+                    }
+                    return new IncludeAttributesSpec(includeAttr);
+                } else if (includeAttributes != null || "none".equals(mode)) {
+                    // whitelist mode
+                    if (includeAttributes != null && !includeAttributes.isEmpty()) {
+                        // none plus extras
+                        return new IncludeAttributesSpec(includeAttributes);
+                    }
+                    return NONE;
+                } else {
+                    if (excludeAttributes != null && !excludeAttributes.isEmpty()) {
+                        // blacklist mode
+                        return new ExcludeAttributesSpec(excludeAttributes);
+                    }
+                    return ALL;
+                }
+            }
+
+            public boolean isNone() { return false; }
+            public boolean isAll() { return false; }
+            public abstract boolean includeAttribute(String attributeName);
+            
+            static class IncludeAttributesSpec extends AttributesSpec {
+                private final Set<String> attributes;
+                IncludeAttributesSpec(Set<String> attributes) { this.attributes = attributes; }
+                @Override public boolean includeAttribute(String attributeName) { return attributes.contains(attributeName); }
+            }
+            
+            static class ExcludeAttributesSpec extends AttributesSpec {
+                private final Set<String> attributes;
+                ExcludeAttributesSpec(Set<String> attributes) { this.attributes = attributes; }
+                @Override public boolean includeAttribute(String attributeName) { return !attributes.contains(attributeName); }
             }
         }
     }

@@ -2621,13 +2621,14 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         public static final String TAG_NAME = "include-portal-page";
         private final FlexibleStringExpander idExdr;
         private final FlexibleStringExpander confModeExdr;
-        private final Boolean usePrivate;
+        private final FlexibleStringExpander usePrivate; // SCIPIO: use flexible: private final Boolean usePrivate;
 
         public PortalPage(ModelScreen modelScreen, Element portalPageElement) {
             super(modelScreen, portalPageElement);
             this.idExdr = FlexibleStringExpander.getInstance(portalPageElement.getAttribute("id"));
             this.confModeExdr = FlexibleStringExpander.getInstance(portalPageElement.getAttribute("conf-mode"));
-            this.usePrivate = !("false".equals(portalPageElement.getAttribute("use-private")));
+            //this.usePrivate = !("false".equals(portalPageElement.getAttribute("use-private")));
+            this.usePrivate = FlexibleStringExpander.getInstance(portalPageElement.getAttribute("use-private"));
         }
 
         private GenericValue getPortalPageValue(Map<String, Object> context) {
@@ -2635,7 +2636,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             String expandedPortalPageId = getId(context);
             GenericValue portalPage = null;
             if (!expandedPortalPageId.isEmpty()) {
-                if (usePrivate) {
+                if (!"false".equals(getUsePrivate(context))) { // SCIPIO: flexible
                     portalPage = PortalPageWorker.getPortalPage(expandedPortalPageId, context);
                 } else {
                     try {
@@ -2796,8 +2797,16 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             return this.confModeExdr.expandString(context);
         }
 
+        public String getUsePrivate(Map<String, Object> context) {
+            // SCIPIO
+            //return Boolean.toString(this.usePrivate);
+            return this.usePrivate.expandString(context);
+        }
+        
         public String getUsePrivate() {
-            return Boolean.toString(this.usePrivate);
+            // SCIPIO
+            //return Boolean.toString(this.usePrivate);
+            return this.usePrivate.getOriginal();
         }
 
         @Override

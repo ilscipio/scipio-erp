@@ -952,12 +952,12 @@ under the License.
     <xs:element name="include-portal-page" substitutionGroup="AllWidgets">
         <xs:complexType>
             <xs:attribute type="xs:string" name="id" />
-            <xs:attribute name="conf-mode" type="xs:boolean" default="false">
+            <xs:attribute name="conf-mode" type="xs:string" default="false"><!-- SCIPIO: Supports flexible: type="xs:boolean" -->
                 <xs:annotation>
                     <xs:documentation>Show the portal in configuration mode.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="use-private" type="xs:boolean" default="true">
+            <xs:attribute name="use-private" type="xs:string" default="true"><!-- SCIPIO: Supports flexible: type="xs:string" -->
                 <xs:annotation>
                     <xs:documentation>If a derived private PortalPage exists for the actual UserLogin than show the private PortalPage instead of the original.</xs:documentation>
                 </xs:annotation>

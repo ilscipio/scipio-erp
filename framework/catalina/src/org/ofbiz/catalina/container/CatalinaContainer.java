@@ -612,6 +612,7 @@ public class CatalinaContainer implements Container {
 
         // SCIPIO: 2018-12-03: We set a special session listener for all webapps to initialize the session sync object
         context.addApplicationLifecycleListener(UtilHttp.SessionSyncEventListener.getInstance());
+        context.addApplicationLifecycleListener(UtilHttp.ServletContextSyncEventListener.getInstance());
 
         return context;
     }

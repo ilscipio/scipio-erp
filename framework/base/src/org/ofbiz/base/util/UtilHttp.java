@@ -46,6 +46,7 @@ import java.util.TimeZone;
 
 import javax.net.ssl.SSLContext;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -83,7 +84,19 @@ public final class UtilHttp {
      * SCIPIO: The name of a session attribute that contains an object to synchronize on for
      * whole-session synchronization. Should be accessed using {@link #getSessionSyncObject(HttpSession)}.
      */
-    public static final String SESSION_SYNC_OBJECT = "scpSyncObj";
+    public static final String SESSION_SYNC_OBJECT = "scpSessSyncObj";
+
+    /**
+     * SCIPIO: The name of a servlet context attribute that contains an object to synchronize on for
+     * whole-session synchronization. Should be accessed using {@link #getServletContextSyncObject(HttpSession)}.
+     */
+    public static final String SERVLETCONTEXT_SYNC_OBJECT = "scpApplSyncObj";
+
+    /**
+     * SCIPIO: The name of a servlet context attribute that contains names of session attributes which
+     * should not be persisted. Should be accessed using {@link #getServletContextSyncObject(HttpSession)}.
+     */
+    public static final String SESSION_NOPERSIST_ATTRLIST = "scpSessAttrNoPersist";
 
     private static final String SESSION_KEY_TIMEZONE = "timeZone";
 
@@ -1717,12 +1730,88 @@ public final class UtilHttp {
         @Override
         public void sessionCreated(HttpSessionEvent se) {
             if (Debug.verboseOn()) {
-                Debug.logInfo("Initialized session sync object", module);
+                Debug.logVerbose("Initialized session sync object", module);
             }
             se.getSession().setAttribute(SESSION_SYNC_OBJECT, createSessionSyncObject());
         }
         @Override
         public void sessionDestroyed(HttpSessionEvent se) {
+        }
+    }
+
+    /**
+     * SCIPIO: Returns an object which can be used for full servlet context synchronization (never null).
+     * <p>
+     * NOTE: This must be used instead of synchronizing directly on the servlet context. It is not supported
+     * by the servlet API to synchronize on the HttpServletContext object itself, and it also prevents
+     * servlet context facades from being used in projects.
+     * <p>
+     * The sync object is normally set on servlet context creation by {@link ServletContextSyncEventListener}
+     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer. 
+     * This method will print a warning if it's missing, because such case can cause a race.
+     * <p>
+     * Added 2018-12-03.
+     */
+    public static Object getServletContextSyncObject(ServletContext context) {
+        Object syncObj = context.getAttribute(SERVLETCONTEXT_SYNC_OBJECT);
+        if (syncObj != null) {
+            return syncObj;
+        }
+        // The sync object should always be there, but if for some reason it got removed, add one...
+        // NOTE: For BEST-EFFORT emergency reasons, we'll lock on HttpServletContext here, but it is likely to do nothing.
+        synchronized(context) {
+            syncObj = context.getAttribute(SERVLETCONTEXT_SYNC_OBJECT);
+            if (syncObj != null) {
+                return null;
+            }
+            syncObj = createServletContextSyncObject();
+            context.setAttribute(SERVLETCONTEXT_SYNC_OBJECT, syncObj);
+            Debug.logWarning("ServletContext synchronization object (" + SERVLETCONTEXT_SYNC_OBJECT 
+                    + ") not found in servlet context attributes; creating", module); // log after to minimize exposure
+        }
+        return syncObj;
+    }
+
+    /**
+     * SCIPIO: Returns an object which can be used for full servlet context synchronization (never null).
+     * <p>
+     * NOTE: This must be used instead of synchronizing directly on the servlet context. It is not supported
+     * by the servlet API to synchronize on the HttpServletContext object itself, and it also prevents
+     * servlet context facades from being used in projects.
+     * <p>
+     * The sync object is normally set on servlet context creation by {@link ServletContextSyncEventListener}
+     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer. 
+     * This method will print a warning if it's missing, because such case can cause a race.
+     * <p>
+     * Added 2018-12-03.
+     */
+    public static Object getServletContextSyncObject(HttpServletRequest request) {
+        return getServletContextSyncObject(request.getServletContext());
+    }
+
+    @SuppressWarnings("serial")
+    public static Object createServletContextSyncObject() { // SCIPIO
+        return new java.io.Serializable(){};
+    }
+
+    /**
+     * SCIPIO: Special listener to initialize the servlet context sync object.
+     * Automatically added to all webapps by CatalinaContainer.
+     * Added 2018-12-03.
+     */
+    public static class ServletContextSyncEventListener implements javax.servlet.ServletContextListener {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+        private static final ServletContextSyncEventListener INSTANCE = new ServletContextSyncEventListener();
+        public static javax.servlet.ServletContextListener getInstance() { return INSTANCE; }
+        @Override
+        public void contextInitialized(ServletContextEvent sce) {
+            if (Debug.infoOn()) { // Log this one as info, because important to know Tomcat in fact picked up this listener
+                Debug.logInfo("Initialized servlet context sync object", module);
+            }
+            sce.getServletContext().setAttribute(SERVLETCONTEXT_SYNC_OBJECT, createServletContextSyncObject());
+        }
+        @Override
+        public void contextDestroyed(ServletContextEvent sce) {
         }
     }
 }

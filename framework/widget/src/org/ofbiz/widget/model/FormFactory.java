@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.location.FlexibleLocation;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -49,7 +50,7 @@ import org.xml.sax.SAXException;
 @SuppressWarnings("serial")
 public class FormFactory extends WidgetFactory {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     // SCIPIO: 2018-12-05: These caches are modified to hold whole file instead of individual ModelForm
     private static final UtilCache<String, Map<String, ModelForm>> formLocationCache = UtilCache.createUtilCache("widget.form.locationResource", 0, 0, false);
     private static final UtilCache<String, Map<String, ModelForm>> formWebappCache = UtilCache.createUtilCache("widget.form.webappResource", 0, 0, false);
@@ -89,13 +90,13 @@ public class FormFactory extends WidgetFactory {
     static class FormInitInfo { // SCIPIO
         private static final ThreadLocal<FormInitInfo> CURRENT = new ThreadLocal<>();
 
-        Map<String, ModelForm> modelFormMap = new HashMap<>();
-        Map<String, ModelGrid> modelGridMap = new HashMap<>();
+        // SCIPIO: GRID DEFINITION FORWARD/BACKWARD COMPATIBILITY: forms and grids accumulate together in one map
+        Map<String, ModelForm> modelMap = new HashMap<>();
         Map<String, Document> docCache = new HashMap<>();
         int nestedLevel = 0;
         int formNestedLevel = 0;
         int gridNestedLevel = 0;
-        
+
         static FormInitInfo get() {
             return CURRENT.get();
         }
@@ -117,6 +118,34 @@ public class FormFactory extends WidgetFactory {
                 formInitInfo.nestedLevel--;
             }
         }
+        
+        ModelForm getForm(String key) {
+            return modelMap.get(key);
+        }
+
+        ModelGrid getGrid(String key) {
+            ModelForm form = getForm(key);
+            if (form instanceof ModelGrid) {
+                return (ModelGrid) form;
+            }
+            return null;
+        }
+
+        void set(String key, ModelForm form) {
+            if (form != null) {
+                ModelForm prevForm = modelMap.get(key);
+                if (prevForm != null && prevForm != form) {
+                    if (prevForm instanceof ModelSingleForm) {
+                        Debug.logWarning("Redefinition of form [" + key + "] during construction; discarding extra instance (" 
+                            + form.getClass().getSimpleName() + ") and keeping previous (" + prevForm.getClass().getSimpleName(), module);
+                        return;
+                    }
+                    Debug.logWarning("Redefinition of form [" + key + "] during construction; using new instance (" 
+                            + form.getClass().getSimpleName() + ") and discarding previous (" + prevForm.getClass().getSimpleName(), module);
+                }
+                modelMap.put(key, form);
+            }
+        }
     }
 
     /**
@@ -132,7 +161,7 @@ public class FormFactory extends WidgetFactory {
             // SCIPIO: refactored
             FormInitInfo formInitInfo = FormInitInfo.get();
             if (formInitInfo != null) {
-                ModelForm modelForm = formInitInfo.modelFormMap.get(resourceName+"#"+formName);
+                ModelForm modelForm = formInitInfo.getForm(resourceName+"#"+formName);
                 if (modelForm != null) {
                     return modelForm;
                 }
@@ -251,7 +280,6 @@ public class FormFactory extends WidgetFactory {
                 return null;
             }
         }
-        
         return createModelForm(formElement, entityModelReader, dispatchContext, formLocation, formName);
     }
 
@@ -263,20 +291,41 @@ public class FormFactory extends WidgetFactory {
         // SCIPIO: refactored for ThreadLocal
         FormInitInfo formInitInfo = FormInitInfo.get();
         ModelForm modelForm;
-        if (formInitInfo != null) {
-            modelForm = formInitInfo.modelFormMap.get(formLocation+"#"+formName);
-            if (modelForm != null) {
-                return modelForm;
-            }
-        }
         String formType = formElement.getAttribute("type");
-        if (formType.isEmpty() || "single".equals(formType) || "upload".equals(formType)) {
+        boolean isGrid = "grid".equals(formElement.getTagName()); // SCIPIO: never initialize as ModelSingleFrom if it's a <grid> element
+        if (!isGrid && (formType.isEmpty() || "single".equals(formType) || "upload".equals(formType))) {
+            if (formInitInfo != null) {
+                modelForm = formInitInfo.getForm(formLocation+"#"+formName);
+                if (modelForm instanceof ModelSingleForm) {
+                    return modelForm;
+                }
+            }
             modelForm = new ModelSingleForm(formElement, formLocation, entityModelReader, dispatchContext);
         } else {
-            modelForm = new ModelGrid(formElement, formLocation, entityModelReader, dispatchContext);
+            if (formInitInfo != null) {
+                modelForm = formInitInfo.getForm(formLocation+"#"+formName);
+                if (modelForm instanceof ModelGrid) {
+                    return modelForm;
+                }
+            }
+            // SCIPIO: reuse ModelGrid instances 
+            // NOTE: very likely it was returned by formInitInfo.getForm already, but it's possible
+            // for the grid cache to have been initialized fully in a second call separately from form cache,
+            // so we have to do a cache lookup first
+            //modelForm = new ModelGrid(formElement, formLocation, entityModelReader, dispatchContext);
+            try {
+                modelForm = GridFactory.getGridFromLocationOrNull(formLocation, formName, entityModelReader, dispatchContext);
+                if (modelForm == null) {
+                    Debug.logWarning("Could not reuse ModelGrid [" + formLocation + "#" + formName + "]; creating new", module);
+                    modelForm = new ModelGrid(formElement, formLocation, entityModelReader, dispatchContext);
+                }
+            } catch (IOException | SAXException | ParserConfigurationException e) {
+                Debug.logError(e, "Could not load ModelGrid [" + formLocation + "#" + formName + "]", module);
+                modelForm = null;
+            }
         }
-        if (formInitInfo != null) {
-            formInitInfo.modelFormMap.put(formLocation+"#"+formName, modelForm);
+        if (formInitInfo != null && modelForm != null) {
+            formInitInfo.set(formLocation+"#"+formName, modelForm);
         }
         return modelForm;
     }

@@ -98,7 +98,7 @@ public class GridFactory extends WidgetFactory {
             // SCIPIO: refactored
             FormInitInfo formInitInfo = FormInitInfo.get();
             if (formInitInfo != null) {
-                ModelGrid modelGrid = formInitInfo.modelGridMap.get(resourceName+"#"+gridName);
+                ModelGrid modelGrid = formInitInfo.getGrid(resourceName+"#"+gridName);
                 if (modelGrid != null) {
                     return modelGrid;
                 }
@@ -222,14 +222,14 @@ public class GridFactory extends WidgetFactory {
         // SCIPIO: refactored for ThreadLocal
         FormInitInfo formInitInfo = FormInitInfo.get();
         if (formInitInfo != null) {
-            ModelGrid modelGrid = formInitInfo.modelGridMap.get(gridLocation+"#"+gridName);
+            ModelGrid modelGrid = formInitInfo.getGrid(gridLocation+"#"+gridName);
             if (modelGrid != null) {
                 return modelGrid;
             }
         }
         ModelGrid modelGrid = new ModelGrid(gridElement, gridLocation, entityModelReader, dispatchContext);
         if (formInitInfo != null) {
-            formInitInfo.modelGridMap.put(gridLocation+"#"+gridName, modelGrid);
+            formInitInfo.set(gridLocation+"#"+gridName, modelGrid);
         }
         return modelGrid;
     }

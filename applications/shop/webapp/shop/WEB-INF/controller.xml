@@ -1534,10 +1534,12 @@ code package.
 
     <!-- ================ SimpleContent Requests ================= -->
 
+    <!-- SCIPIO: TODO: REVIEW: not such view anymore
     <request-map uri="ViewSimpleContent">
         <security auth="false" https="true"/>
         <response name="success" type="view" value="ViewSimpleContent"/>
     </request-map>
+    -->
 
     <!-- ============== One Page Checkout Requests ============== -->
     <request-map uri="onePageCheckout">

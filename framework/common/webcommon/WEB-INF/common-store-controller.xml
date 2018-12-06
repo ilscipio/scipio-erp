@@ -96,13 +96,13 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <!-- SCIPIO: NOTE: invoke="logout" does NOT clear autoLoginUser or its cookies; if you want 
             this request to also clear autoLoginUser, override this with invoke="autoLoginRemove" in your controller -->
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="logout"/>
-        <response name="success" type="request-redirect" value="checkLogin"/>
+        <response name="success" type="request-redirect" value="checkLogin" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
         <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="autoLogout">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="autoLoginRemove"/>
-        <response name="success" type="request-redirect" value="checkLogin"/>
+        <response name="success" type="request-redirect" value="checkLogin" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
         <response name="error" type="view" value="main"/>
     </request-map>
     

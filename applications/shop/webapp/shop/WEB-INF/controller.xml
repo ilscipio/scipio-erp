@@ -81,7 +81,7 @@ code package.
     <request-map uri="setSessionLocale">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
-        <response name="success" type="request-redirect" value="fromSetSessionLocale"/>        
+        <response name="success" type="request-redirect" value="fromSetSessionLocale" save-request="messages"/><!-- SCIPIO: only transfer error messages -->      
         <response name="error" type="view" value="main"/>
     </request-map>
     
@@ -89,7 +89,7 @@ code package.
     <request-map uri="setSessionLocaleProfile">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
-        <response name="success" type="request-redirect-noparam" value="viewprofile"/>
+        <response name="success" type="request-redirect-noparam" value="viewprofile" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
@@ -196,7 +196,7 @@ code package.
         <response name="success" type="view-last" value="showcart" save-last-view="true"/>
         <response name="survey" type="view" value="survey"/>
         <response name="product" type="view" value="product"/>
-        <response name="viewcart" type="request-redirect" value="showcart"/>
+        <response name="viewcart" type="request-redirect" value="showcart" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
         <!-- SCIPIO: If there's an error, currently in most case we want to go back to the previous (product page)...
         <response name="error" type="view" value="showcart"/>-->
         <response name="error" type="view-last" value="showcart"/>
@@ -746,7 +746,7 @@ code package.
         <security https="true" auth="false" />
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="cartNotEmpty"/>
         <response name="success" type="request" value="processordervalidatepayment"/>
-        <response name="error" type="request-redirect-noparam" value="showcart" />
+        <response name="error" type="request-redirect-noparam" value="showcart" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
     </request-map>
     <!-- SCIPIO: add extra check to validate payment methods before order is sent for creation, in case user managed to bypass -->
     <request-map uri="processordervalidatepayment">
@@ -1039,7 +1039,7 @@ code package.
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="processTargetPage"/>
         <!-- SCIPIO: This special response value syntax works thanks to a Scipio enhancement to Ofbiz request handler -->
-        <response name="redirect" type="request-redirect-noparam" value="${requestAttributes.targetPage}"/>
+        <response name="redirect" type="request-redirect-noparam" value="${requestAttributes.targetPage}" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
         <response name="forward" type="request" value="${requestAttributes.targetPage}"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
@@ -1373,7 +1373,7 @@ code package.
     <request-map uri="submitAnonContact">
         <security https="true" auth="false"/>
         <event type="simple" invoke="createAnonContact" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml"/>
-        <response name="success" type="request-redirect" value="main"/>
+        <response name="success" type="request-redirect" value="main" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
         <response name="error" type="request" value="AnonContactus"/>
     </request-map>
 

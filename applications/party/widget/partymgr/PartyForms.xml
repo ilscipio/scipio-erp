@@ -182,6 +182,14 @@ code package.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
+    <form name="PartyLink" type="single" target="setPartyLink"
+        focus-field-name="partyId" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <field position="1" name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field>
+      <field name="submitButton" title="${uiLabelMap.PartyLink}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button" request-confirmation="true" confirmation-message="${uiLabelMap.PartyLinkMessage1}"/></field>
+    </form>
+
+    <!-- SCIPIO: TODO: REVIEW: What is this? -->
     <form name="PartyAction" type="single" target="setPartyAction"
         focus-field-name="partyId" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field position="1" name="partyId"><lookup target-form-name="LookupPartyName"/></field>

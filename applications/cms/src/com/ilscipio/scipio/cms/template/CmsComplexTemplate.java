@@ -39,11 +39,13 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
     }
 
     public static List<CmsAttributeTemplate> copyAttributeTemplates(CmsComplexTemplate template, List<CmsAttributeTemplate> otherAttr, Map<String, Object> copyArgs) {
-        List<CmsAttributeTemplate> attrList = new ArrayList<>(otherAttr.size());
-        for(CmsAttributeTemplate attr : otherAttr) {
-            CmsAttributeTemplate attrCopy = attr.copy(copyArgs);
-            attrCopy.clearTemplate(); // these will be updated on store
-            attrList.add(attrCopy);
+        List<CmsAttributeTemplate> attrList = (otherAttr != null) ? new ArrayList<>(otherAttr.size()) : new ArrayList<>();
+        if (otherAttr != null) {
+            for(CmsAttributeTemplate attr : otherAttr) {
+                CmsAttributeTemplate attrCopy = attr.copy(copyArgs);
+                attrCopy.clearTemplate(); // these will be updated on store
+                attrList.add(attrCopy);
+            }
         }
         return attrList;
     }

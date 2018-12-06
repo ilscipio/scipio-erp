@@ -672,7 +672,7 @@
         <attribute name="srcVersionId" type="String" mode="IN" optional="true"/>-->
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="scriptTemplateId" type="String" mode="IN" optional="false"/>
+        <attribute name="scriptTemplateId" type="String" mode="INOUT" optional="false"/>
     </service>
 
     <service name="cmsUpdateScriptTemplateInfo" engine="java" auth="true"

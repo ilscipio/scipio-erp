@@ -22,11 +22,12 @@ code package.
     <request-map uri="ListReports">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListReports"/>
-    </request-map>-->
+    </request-map>
     <request-map uri="findPayments">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindPayments"/>
     </request-map>
+    -->
     <request-map uri="batchPayments">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BatchPayments"/>

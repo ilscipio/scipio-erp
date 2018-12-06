@@ -2221,4 +2221,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public Map<String, Object> getProperties() {
         return properties;
     }
+    
+    /**
+     * SCIPIO: Returns true if the given field name is in {@link #SYS_RESPONSE_FIELDS}.
+     */
+    public static boolean isSysResponseField(String fieldName) {
+        return SYS_RESPONSE_FIELDS_SET.contains(fieldName);
+    }
 }

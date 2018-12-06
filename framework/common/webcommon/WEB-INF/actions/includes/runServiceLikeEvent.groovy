@@ -216,9 +216,7 @@ if (doExec) {
             String resultKey = rme.getKey();
             Object resultValue = rme.getValue();
     
-            if (resultKey != null && !ModelService.RESPONSE_MESSAGE.equals(resultKey) && !ModelService.ERROR_MESSAGE.equals(resultKey) &&
-                    !ModelService.ERROR_MESSAGE_LIST.equals(resultKey) && !ModelService.ERROR_MESSAGE_MAP.equals(resultKey) &&
-                    !ModelService.SUCCESS_MESSAGE.equals(resultKey) && !ModelService.SUCCESS_MESSAGE_LIST.equals(resultKey)) {
+            if (resultKey != null && !ModelService.isSysResponseField(resultKey)) { // SCIPIO: simplified with isSysResponseField
                 if (updateReqAttr) {
                     request.setAttribute(resultKey, resultValue);
                 }
@@ -230,13 +228,8 @@ if (doExec) {
         
         // DON'T put these in request attributes; they would have been removed by the ScreenRenderer
         servMsgs = [:];
-        servMsgs.put("_ERROR_MESSAGE_LIST_", servRes.get(ModelService.ERROR_MESSAGE_LIST));
-        servMsgs.put("_ERROR_MESSAGE_MAP_", servRes.get(ModelService.ERROR_MESSAGE_MAP));
-        servMsgs.put("_ERROR_MESSAGE_", servRes.get(ModelService.ERROR_MESSAGE));
-    
-        servMsgs.put("_EVENT_MESSAGE_LIST_", servRes.get(ModelService.SUCCESS_MESSAGE_LIST));
-        servMsgs.put("_EVENT_MESSAGE_", servRes.get(ModelService.SUCCESS_MESSAGE));
-        
+        org.ofbiz.webapp.event.EventUtil.setServiceMsgsToEventMsgs(servRes, servMsgs); // SCIPIO: refactored
+
         if (servMsgs._EVENT_MESSAGE_) {
             eventMessageList.add(servMsgs._EVENT_MESSAGE_);
         }

@@ -68,6 +68,7 @@ import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
+import org.ofbiz.webapp.control.ConfigXMLReader.RequestResponse;
 import org.ofbiz.webapp.event.EventFactory;
 import org.ofbiz.webapp.event.EventHandler;
 import org.ofbiz.webapp.event.EventHandlerException;
@@ -777,7 +778,8 @@ public class RequestHandler {
             if(UtilValidate.isNotEmpty(responseStatusCode))
                 statusCodeString = responseStatusCode;
 
-            if ("url".equals(nextRequestResponse.type)) {
+            // SCIPIO: Optimized
+            if (RequestResponse.Type.URL == nextRequestResponse.getTypeEnum()) { //if ("url".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect." + showSessionId(request), module);
                 // SCIPIO: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
@@ -786,7 +788,7 @@ public class RequestHandler {
                 }
                 // SCIPIO: NOTE: Contrary to others, currently leaving this unchanged; full URLs may be completely external, and not sure want to pass them through encodeURL...
                 callRedirect(nextRequestResponseValue, response, request, statusCodeString);
-            } else if ("cross-redirect".equals(nextRequestResponse.type)) {
+            } else if (RequestResponse.Type.CROSS_REDIRECT == nextRequestResponse.getTypeEnum()) { //} else if ("cross-redirect".equals(nextRequestResponse.type)) {
                 // check for a cross-application redirect
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Cross-Application redirect." + showSessionId(request), module);
                 // SCIPIO: Sanity check
@@ -806,7 +808,7 @@ public class RequestHandler {
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
                 callRedirect(targetUrl, response, request, statusCodeString);
-            } else if ("request-redirect".equals(nextRequestResponse.type)) {
+            } else if (RequestResponse.Type.REQUEST_REDIRECT == nextRequestResponse.getTypeEnum()) { //} else if ("request-redirect".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + showSessionId(request), module);
                 // SCIPIO: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
@@ -822,7 +824,7 @@ public class RequestHandler {
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
                 callRedirect(targetUrl, response, request, statusCodeString);
-            } else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
+            } else if (RequestResponse.Type.REQUEST_REDIRECT_NOPARAM == nextRequestResponse.getTypeEnum()) { //} else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + showSessionId(request), module);
                 // SCIPIO: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
@@ -838,7 +840,7 @@ public class RequestHandler {
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
                 callRedirect(targetUrl, response, request, statusCodeString);
-            } else if ("view".equals(nextRequestResponse.type)) {
+            } else if (RequestResponse.Type.VIEW == nextRequestResponse.getTypeEnum()) { //} else if ("view".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
                 // check for an override view, only used if "success" = eventReturn
@@ -849,7 +851,7 @@ public class RequestHandler {
                     throw new RequestHandlerException("Scipio: view name is empty (request map URI: " + requestMap.uri + ")");
                 }
                 renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
-            } else if ("view-last".equals(nextRequestResponse.type)) {
+            } else if (RequestResponse.Type.VIEW_LAST == nextRequestResponse.getTypeEnum()) { //} else if ("view-last".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
                 // check for an override view, only used if "success" = eventReturn
@@ -883,7 +885,7 @@ public class RequestHandler {
                     }
                 }
                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
-            } else if ("view-last-noparam".equals(nextRequestResponse.type)) {
+            } else if (RequestResponse.Type.VIEW_LAST_NOPARAM == nextRequestResponse.getTypeEnum()) { //} else if ("view-last-noparam".equals(nextRequestResponse.type)) {
                  if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
                  // check for an override view, only used if "success" = eventReturn
@@ -903,7 +905,7 @@ public class RequestHandler {
                      viewName = getDefaultViewLastView(viewName, nextRequestResponse, requestMap, controllerConfig, request);
                  }
                  renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
-            } else if ("view-home".equals(nextRequestResponse.type)) {
+            } else if (RequestResponse.Type.VIEW_HOME == nextRequestResponse.getTypeEnum()) { //} else if ("view-home".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
                 // check for an override view, only used if "success" = eventReturn
@@ -924,7 +926,7 @@ public class RequestHandler {
                     }
                 }
                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
-            } else if ("none".equals(nextRequestResponse.type)) {
+            } else if (RequestResponse.Type.NONE == nextRequestResponse.getTypeEnum()) { //} else if ("none".equals(nextRequestResponse.type)) {
                 // no view to render (meaning the return was processed by the event)
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event." + showSessionId(request), module);
             }

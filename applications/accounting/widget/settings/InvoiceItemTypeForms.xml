@@ -11,7 +11,7 @@ code package.
      <form name="ListInvoiceItemType" type="list" target="updateInvoiceItemType" list-name="invoiceItemTypes"
         odd-row-style="alternate-row" paginate-target="editInvoiceItemType" separate-columns="true">
         <actions>
-            <entity-and entity-name="GlAccount" list="glAccounts" />
+            <entity-condition entity-name="GlAccount" list="glAccounts"/>
         </actions>
         <field name="invoiceItemTypeId"><display/></field>
         <field name="description"><display/></field>

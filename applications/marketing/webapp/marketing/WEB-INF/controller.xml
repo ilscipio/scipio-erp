@@ -717,12 +717,15 @@ code package.
     <view-map name="LookupCommEvent" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCommEvent"/>
     <view-map name="LookupContactMech" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupContactMech"/>
 
+    <!-- SCIPIO: LookupUserLoginAndPartyDetails -->
+    <view-map name="LookupUserLoginAndPartyDetails" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupUserLoginAndPartyDetails"/>
+
     <view-map name="TrackingCodeReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#TrackingCodeReport"/>
     <view-map name="MarketingCampaignReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#MarketingCampaignReport"/>
     <view-map name="EmailStatusReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#EmailStatusReport"/>
     <view-map name="PartyStatusReport" type="screen" page="component://marketing/widget/MarketingReportScreens.xml#PartyStatusReport"/>
 
-    <!-- SCIPIO: Request mappings -->
+    <!-- SCIPIO: View mappings -->
     <!-- SCIPIO: The following from duplicated in component://product/webapp/catalog/WEB-INF/controller.xml -->
     <view-map name="FindProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#FindProductPromo"/>
     <view-map name="EditProductPromo" type="screen" page="component://product/widget/catalog/PromoScreens.xml#EditProductPromo"/>
@@ -734,5 +737,6 @@ code package.
     <view-map name="EditProductStorePromos" type="screen" page="component://product/widget/catalog/StoreScreens.xml#EditProductStorePromos"/>
     <view-map name="FindPriceRules" type="screen" page="component://product/widget/catalog/PriceScreens.xml#FindProductPriceRule"/>
     <view-map name="EditProductPriceRules" type="screen" page="component://product/widget/catalog/PriceScreens.xml#EditProductPriceRules"/>
+
 <!-- end of view mappings -->
 </site-conf>

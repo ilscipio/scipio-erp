@@ -386,22 +386,7 @@ public class RequestHandler {
                         throw new RequestHandlerException(errMsg);
                     }
                 } else {
-                    String newUrl;
-                    if (SecureUrlRedirFmt.VALUE.isIncoming()) {
-                        // SCIPIO: 2018-07-18: new http-to-https redirect url format option
-                        newUrl = RequestLinkUtil.rebuildOriginalRequestURL(request, response, UtilHttp.getLocaleExistingSession(request),
-                                true, SecureUrlRedirFmt.VALUE.isStaticHost(), true, true, true);
-                        newUrl = response.encodeURL(newUrl); // for URL rewriting, etc.
-                    } else {
-                        StringBuilder urlBuf = new StringBuilder();
-                        urlBuf.append(request.getPathInfo());
-                        if (request.getQueryString() != null) {
-                            urlBuf.append("?").append(request.getQueryString());
-                        }
-                        // SCIPIO: Always make full URL for redirect so uses host from entities
-                        //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString());
-                        newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
-                    }
+                    String newUrl = getFullIncomingURL(request, response, null); // SCIPIO: refactored
                     // SCIPIO: this is poor
                     //if (newUrl.toUpperCase().startsWith("HTTPS")) {
                     if (RequestLinkUtil.isUrlProtocol(newUrl, "https")) {
@@ -844,6 +829,30 @@ public class RequestHandler {
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
                 callRedirect(targetUrl, response, request, statusCodeString, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
+            } else if (RequestResponse.Type.REQUEST_REDIRECT_LAST == nextRequestResponse.getTypeEnum()) {
+                String lastGetUrl = (String) session.getAttribute("_SCP_LAST_GET_URL_");
+                if (UtilValidate.isNotEmpty(lastGetUrl)) {
+                    if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL." + showSessionId(request), module);
+                    // Perform URL encoding
+                    lastGetUrl = response.encodeURL(lastGetUrl);
+                    callRedirect(lastGetUrl, response, request, statusCodeString, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
+                } else {
+                    // SCIPIO: New type: request-redirect-last
+                    if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL, but there is not last get; going to default: " 
+                            + nextRequestResponseValue.isEmpty() + showSessionId(request), module);
+                    // SCIPIO: Sanity check
+                    if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
+                        Debug.logError("Scipio: Request-redirect-noparam URI is empty (request map URI: " + requestMap.uri + ")", module);
+                        throw new RequestHandlerException("Scipio: Request-redirect-noparam URI is empty (request map URI: " + requestMap.uri + ")");
+                    }
+                    String targetUrl = makeLinkFull(request, response, nextRequestResponseValue);
+                    // SCIPIO: Sanity check
+                    if (targetUrl == null || targetUrl.isEmpty()) {
+                        Debug.logError("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
+                        throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
+                    }
+                    callRedirect(targetUrl, response, request, statusCodeString, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
+                }
             } else if (RequestResponse.Type.VIEW == nextRequestResponse.getTypeEnum()) { //} else if ("view".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
@@ -1260,6 +1269,13 @@ public class RequestHandler {
                 // clear other saved views
                 req.getSession().removeAttribute("_SAVED_VIEW_NAME_");
                 req.getSession().removeAttribute("_SAVED_VIEW_PARAMS_");
+            }
+
+            // SCIPIO: request-redirect-last
+            // FIXME?: may not work when viewAsJson==true
+            if ("get".equalsIgnoreCase(req.getMethod())) {
+                String lastGetUrl = getFullIncomingURL(req, resp, null); // SCIPIO: refactored
+                req.getSession().setAttribute("_SCP_LAST_GET_URL_", lastGetUrl);
             }
         }
 
@@ -2840,5 +2856,27 @@ public class RequestHandler {
         }
         public boolean isIncoming() { return this != OFBIZ_URL; }
         public boolean isStaticHost() { return this == INCOMING_URL_STATICHOST; }
+    }
+
+    private static String getFullIncomingURL(HttpServletRequest request, HttpServletResponse response, Boolean encode) { // SCIPIO
+        String newUrl;
+        if (SecureUrlRedirFmt.VALUE.isIncoming()) {
+            // SCIPIO: 2018-07-18: new http-to-https redirect url format option
+            newUrl = RequestLinkUtil.rebuildOriginalRequestURL(request, response, UtilHttp.getLocaleExistingSession(request),
+                    true, SecureUrlRedirFmt.VALUE.isStaticHost(), true, true, true);
+            if (!Boolean.FALSE.equals(encode)) {
+                newUrl = response.encodeURL(newUrl); // for URL rewriting, etc.
+            }
+        } else {
+            StringBuilder urlBuf = new StringBuilder();
+            urlBuf.append(request.getPathInfo());
+            if (request.getQueryString() != null) {
+                urlBuf.append("?").append(request.getQueryString());
+            }
+            // SCIPIO: Always make full URL for redirect so uses host from entities
+            //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString());
+            newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, null, encode);
+        }
+        return newUrl;
     }
 }

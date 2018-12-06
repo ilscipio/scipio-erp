@@ -2340,8 +2340,17 @@ public class ConfigXMLReader {
             REQUEST("request"),
             REQUEST_REDIRECT("request-redirect"),
             REQUEST_REDIRECT_NOPARAM("request-redirect-noparam"),
+            REQUEST_REDIRECT_LAST("request-redirect-last"),
             URL("url"),
             CROSS_REDIRECT("cross-redirect");
+
+            /**
+             * SCIPIO: Default save-request spec for request-redirect-*.
+             * <p>
+             * TODO: REVIEW: In theory this should be MESSAGES or NONE; ALL was stock default and flawed...
+             * DEV NOTE: don't forget to replace second occurrence below... 
+             */
+            public static final AttributesSpec DEFAULT_REQUEST_REDIRECT_SPEC = AttributesSpec.ALL;
 
             private final String name;
             private final boolean redirectType;
@@ -2355,7 +2364,7 @@ public class ConfigXMLReader {
                 this.requestType = "request".equals(name);
                 this.viewType = name.contains("view");
                 // TODO: REVIEW: In future this might change to default false for all...
-                this.redirectAttributesDefault = name.contains("request-redirect") ? AttributesSpec.ALL : AttributesSpec.NONE;
+                this.redirectAttributesDefault = name.startsWith("request-redirect") ? AttributesSpec.ALL : AttributesSpec.NONE;
             }
 
             public static Type fromName(String name) {

@@ -264,22 +264,8 @@ under the License.
             </xs:simpleType>
         </xs:attribute>
         <xs:attribute name="password" type="xs:string" use="required"/>
-        <xs:attribute name="is-truststore" use="required">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="is-certstore" use="required">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute name="is-truststore" type="xs:boolean" use="required"/>
+        <xs:attribute name="is-certstore" type="xs:boolean" use="required"/>
         <xs:attribute type="xs:string" name="loader" use="required"/>
         <xs:attribute type="xs:string" name="location" use="required"/>
     </xs:attributeGroup>
@@ -334,23 +320,9 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="privileged" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="app-bar-display" default="true">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="enabled" default="true">
+        <xs:attribute name="privileged" type="xs:boolean" default="false"/>
+        <xs:attribute name="app-bar-display" type="xs:boolean" default="true"/>
+        <xs:attribute name="enabled" type="xs:boolean" default="true">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: Toggles whether the webapp gets loaded and enabled.
@@ -358,12 +330,6 @@ under the License.
                     Added 2018-05-22.
                 </xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
         <xs:attribute name="override-mode" default="override-mount-point">
             <xs:annotation>

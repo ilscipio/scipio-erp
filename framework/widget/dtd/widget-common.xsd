@@ -136,14 +136,8 @@ under the License.
                     <xs:documentation>Can have multiple pipe separated values, but don't use spaces.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="display-fail-cond" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="display-fail-cond" type="xs:boolean"
+                          default="false"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="permission-condition-getter">
@@ -175,7 +169,8 @@ under the License.
     </xs:element>
     <xs:element name="if-validate-method" substitutionGroup="AllConditionals">
         <xs:annotation>
-            <xs:documentation>Calls a static Java method that takes a String and returns a boolean.</xs:documentation>
+            <xs:documentation>Calls a static Java method that takes a
+            String and returns a boolean.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:attribute type="xs:string" name="field" use="required" />
@@ -280,33 +275,21 @@ under the License.
         <xs:complexType>
             <xs:attribute type="xs:string" name="field" />
             <xs:attribute type="xs:string" name="value" />
-            <xs:attribute name="verify" default="true">
+            <xs:attribute name="verify" type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>If true, and the test does not pass, the check will additionally 
                         verify the failing expression to make sure it is a valid negative response and
                         print a log error upon failure.
                         Default: true</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="allow-empty" default="true">
+            <xs:attribute name="allow-empty" type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>If true, the field type verification check will accept empty or null as valid.
                         Default: true
                         NOTE: This only affects logging/exception handling. It does not affect whether
                             this condition returns true or false.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -319,33 +302,21 @@ under the License.
         <xs:complexType>
             <xs:attribute type="xs:string" name="field" />
             <xs:attribute type="xs:string" name="value" />
-            <xs:attribute name="verify" default="true">
+            <xs:attribute name="verify" type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>If true, and the test does not pass, the check will additionally 
                         verify the failing expression to make sure it is a valid negative response and
                         print a log error upon failure.
                         Default: true</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="allow-empty" default="true">
+            <xs:attribute name="allow-empty" type="xs:boolean" default="true">
                 <xs:annotation>
                     <xs:documentation>If true, the field type verification check will accept empty or null as valid.
                         Default: true
                         NOTE: This only affects logging/exception handling. It does not affect whether
                             this condition returns true or false.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
         </xs:complexType>
     </xs:element>
@@ -386,14 +357,7 @@ under the License.
             <xs:attribute type="xs:string" name="from-field" />
             <xs:attribute type="xs:string" name="value" />
             <xs:attribute type="xs:string" name="default-value" />
-            <xs:attribute name="global" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="global" type="xs:boolean" default="false"/>
             <xs:attribute name="type">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -457,15 +421,8 @@ under the License.
         <xs:complexType>
             <xs:attribute type="xs:string" name="resource" use="required" />
             <xs:attribute type="xs:string" name="map-name" use="required" />
-            <xs:attribute name="global" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute type="xs:boolean" name="optional" default="false">
+            <xs:attribute name="global" type="xs:boolean" default="false"/>
+            <xs:attribute name="optional" type="xs:boolean" default="false">
                 <xs:annotation>
                     <xs:documentation>
                         SCIPIO: If set to true, missing property-map will not generate an error.
@@ -482,14 +439,7 @@ under the License.
             <xs:attribute type="xs:string" name="property" use="required" />
             <xs:attribute type="xs:string" name="field" use="required" />
             <xs:attribute type="xs:string" name="default" />
-            <xs:attribute name="no-locale" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="no-locale" type="xs:boolean" default="false"/>
             <xs:attribute type="xs:string" name="arg-list-name" />
         </xs:complexType>
     </xs:element>
@@ -611,22 +561,8 @@ under the License.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="use-cache" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="auto-field-map" default="true">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="use-cache" type="xs:boolean" default="false"/>
+            <xs:attribute name="auto-field-map" type="xs:boolean" default="true"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="get-related-one" substitutionGroup="AllActions">
@@ -763,31 +699,10 @@ under the License.
             </xs:attribute>
             <xs:attribute type="xs:string" name="from-field" />
             <xs:attribute type="xs:string" name="value" />
-            <xs:attribute name="ignore-if-null" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="ignore-if-empty" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="ignore-case" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="ignore" default="false">
+            <xs:attribute name="ignore-if-null" type="xs:boolean" default="false"/>
+            <xs:attribute name="ignore-if-empty" type="xs:boolean" default="false"/>
+            <xs:attribute name="ignore-case" type="xs:boolean" default="false"/>
+            <xs:attribute name="ignore" type="xs:boolean" default="false">
                 <xs:annotation>
                     <xs:documentation>
                         Ignore the condition if flag is true.
@@ -865,14 +780,7 @@ under the License.
                     <xs:documentation>The service name used to resolve parameters. If empty, use form defaultServiceName. Flexible string allowed.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="send-if-empty" default="true">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="send-if-empty" type="xs:boolean" default="true"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="auto-parameters-entity">
@@ -894,14 +802,7 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="send-if-empty" default="true">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="send-if-empty" type="xs:boolean" default="true"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="parameter-map">
@@ -993,41 +894,15 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="full-path"><!-- SCIPIO: default removed - default is null: default="false" -->
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true" />
-                    <xs:enumeration value="false" />
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="secure"><!-- SCIPIO: default removed - default is null: default="false" -->
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true" />
-                    <xs:enumeration value="false" />
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="encode"><!-- SCIPIO: default removed - default is null (should be true, not false!): default="false" -->
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true" />
-                    <xs:enumeration value="false" />
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="request-confirmation" default="false">
+        <xs:attribute name="full-path" type="xs:boolean"/><!-- SCIPIO: default removed - default is null: default="false" -->
+        <xs:attribute name="secure" type="xs:boolean"/><!-- SCIPIO: default removed - default is null: default="false" -->
+        <xs:attribute name="encode" type="xs:boolean"/><!-- SCIPIO: default removed - default is null (should be true, not false!): default="false" -->
+        <xs:attribute name="request-confirmation" type="xs:boolean"
+                      default="false">
             <xs:annotation>
                 <xs:documentation>If true then the user is presented with a dialog box, if confirmation-message is empty, use default
                     SCIPIO: TODO: Currently only implemented for certain types of links (hyperlink)</xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true" />
-                    <xs:enumeration value="false" />
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
         <xs:attribute type="xs:string" name="confirmation-message">
             <xs:annotation>
@@ -1100,14 +975,7 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="global" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="global" type="xs:boolean" default="false"/>
             <xs:attribute name="to-scope" default="screen">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">

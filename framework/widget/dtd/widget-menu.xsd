@@ -138,14 +138,8 @@ under the License.
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="default-associated-content-id" />
-            <xs:attribute name="default-hide-if-selected" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="default-hide-if-selected"
+                          type="xs:boolean" default="false"/>
             <xs:attribute type="xs:string" name="menu-width" />
             <xs:attribute type="xs:string" name="default-cell-width" />
             <xs:attribute type="xs:string" name="default-disabled-title-style" />
@@ -309,7 +303,7 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="always-expand-selected-or-ancestor">
+            <xs:attribute name="always-expand-selected-or-ancestor" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: If this is true, then for a whole menu render including its sub-menus,
                         a menu item will always be expanded (condition will always be true) 
@@ -323,12 +317,6 @@ under the License.
                             TODO: revisit implementation (subject to change).
                     </xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="separate-menu-type">
                 <xs:annotation>
@@ -492,17 +480,11 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="include-menu-item-aliases" default="true">
+        <xs:attribute name="include-menu-item-aliases" type="xs:boolean" default="true">
             <xs:annotation>
                 <xs:documentation>SCIPIO: Whether to include menu-item aliases as well.
                     Default: true</xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true" />
-                    <xs:enumeration value="false" />
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
     </xs:complexType>
     <xs:complexType name="menu-actions-include"><!-- SCIPIO: Element name: "include-actions" -->
@@ -620,17 +602,11 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="include-menu-item-aliases" default="true">
+        <xs:attribute name="include-menu-item-aliases" type="xs:boolean" default="true">
             <xs:annotation>
                 <xs:documentation>SCIPIO: Whether to include menu-item aliases as well.
                     Default: true</xs:documentation>
             </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true" />
-                    <xs:enumeration value="false" />
-                </xs:restriction>
-            </xs:simpleType>
         </xs:attribute>
     </xs:complexType>
     <xs:element name="menu-item">
@@ -832,23 +808,8 @@ under the License.
                 </xs:choice>
             </xs:sequence>
             <xs:attribute type="xs:string" name="entity-name" use="required" />
-            <xs:attribute name="use-cache" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="filter-by-date" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                        <xs:enumeration value="by-name" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="use-cache" type="xs:boolean" default="false"/>
+            <xs:attribute name="filter-by-date" type="xs:boolean" default="false"/>
             <xs:attribute type="xs:string" name="list" use="required" />
             <xs:attribute name="result-set-type" default="scroll">
                 <xs:simpleType>
@@ -878,31 +839,9 @@ under the License.
                 </xs:choice>
             </xs:sequence>
             <xs:attribute type="xs:string" name="entity-name" use="required" />
-            <xs:attribute name="use-cache" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="filter-by-date" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                        <xs:enumeration value="by-name" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="distinct" default="false">
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="use-cache" type="xs:boolean" default="false"/>
+            <xs:attribute name="filter-by-date" type="xs:boolean" default="false"/>
+            <xs:attribute name="distinct" type="xs:boolean" default="false"/>
             <xs:attribute type="xs:string" name="delegator-name" />
             <xs:attribute type="xs:string" name="list" use="required" />
             <xs:attribute name="result-set-type" default="scroll">
@@ -1024,7 +963,7 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="share-scope">
+            <xs:attribute name="share-scope" type="xs:boolean">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: If false (default), any actions in the sub-menu will
                         not affect the parent's context. If set to true, the scope is shared.
@@ -1034,12 +973,6 @@ under the License.
                         NOTE: 2016-11-02: The default has been changed to false for 1.14.2 to prevent
                             variable leakage across sub-menus in complex menus.</xs:documentation>
                 </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:token">
-                        <xs:enumeration value="true" />
-                        <xs:enumeration value="false" />
-                    </xs:restriction>
-                </xs:simpleType>
             </xs:attribute>
             <!-- 
             <xs:attribute type="xs:string" name="selected">

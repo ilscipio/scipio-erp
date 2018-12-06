@@ -199,12 +199,16 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
 
     @Override
     public void visit(GetRelated getRelated) throws Exception {
-        infoContext.addEntityName(getRelated.getRelationName());
+        // SCIPIO: This produces false positives - relation name may include a title=""
+        // TODO?: Verify relation names for real (may not be possible)
+        //infoContext.addEntityName(getRelated.getRelationName());
     }
 
     @Override
     public void visit(GetRelatedOne getRelatedOne) throws Exception {
-        infoContext.addEntityName(getRelatedOne.getRelationName());
+        // SCIPIO: This produces false positives - relation name may include a title=""
+        // TODO?: Verify relation names for real (may not be possible)
+        //infoContext.addEntityName(getRelatedOne.getRelationName());
     }
 
     @Override

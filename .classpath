@@ -93,8 +93,8 @@
 	<classpathentry kind="lib" path="framework/base/lib/sshd-core-2.0.0.jar" sourcepath="framework/base/libsrc/sshd-core-2.0.0-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/sshd-sftp-2.0.0.jar" sourcepath="framework/base/libsrc/sshd-sftp-2.0.0-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/thumbnailator-0.4.8.jar" sourcepath="framework/base/libsrc/thumbnailator-0.4.8-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/tika-core-1.18.jar" sourcepath="framework/base/libsrc/tika-core-1.18-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/tika-parsers-1.18.jar" sourcepath="framework/base/libsrc/tika-parsers-1.18-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/tika-core-1.19.1.jar" sourcepath="framework/base/libsrc/tika-core-1.19.1-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/tika-parsers-1.19.1.jar" sourcepath="framework/base/libsrc/tika-parsers-1.19.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-api-8.5.35.jar" sourcepath="framework/base/libsrc/tomcat-api-8.5.35-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-catalina-8.5.35.jar" sourcepath="framework/base/libsrc/tomcat-catalina-8.5.35-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-catalina-ha-8.5.35.jar" sourcepath="framework/base/libsrc/tomcat-catalina-ha-8.5.35-sources.jar"/>

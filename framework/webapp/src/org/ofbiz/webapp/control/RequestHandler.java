@@ -404,7 +404,7 @@ public class RequestHandler {
                     //if (newUrl.toUpperCase().startsWith("HTTPS")) {
                     if (RequestLinkUtil.isUrlProtocol(newUrl, "https")) {
                         // if we are supposed to be secure, redirect secure.
-                        callRedirect(newUrl, response, request, statusCodeString);
+                        callRedirect(newUrl, response, request, statusCodeString, false); // SCIPIO: saveAttrMap=false here
                         return;
                     }
                 }
@@ -705,7 +705,7 @@ public class RequestHandler {
 
                 // SCIPIO: Always make full link early
                 //callRedirect(makeLink(request, response, redirectTarget), response, request, statusCodeString);
-                callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCodeString);
+                callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCodeString, false); // SCIPIO: saveAttrMap=false here
                 return;
             }
         }
@@ -787,7 +787,7 @@ public class RequestHandler {
                     throw new RequestHandlerException("Scipio: Redirect URL is empty (request map URI: " + requestMap.uri + ")");
                 }
                 // SCIPIO: NOTE: Contrary to others, currently leaving this unchanged; full URLs may be completely external, and not sure want to pass them through encodeURL...
-                callRedirect(nextRequestResponseValue, response, request, statusCodeString);
+                callRedirect(nextRequestResponseValue, response, request, statusCodeString, false); // SCIPIO: saveAttrMap=false here
             } else if (RequestResponse.Type.CROSS_REDIRECT == nextRequestResponse.getTypeEnum()) { //} else if ("cross-redirect".equals(nextRequestResponse.type)) {
                 // check for a cross-application redirect
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Cross-Application redirect." + showSessionId(request), module);
@@ -807,7 +807,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
-                callRedirect(targetUrl, response, request, statusCodeString);
+                callRedirect(targetUrl, response, request, statusCodeString, false); // SCIPIO: saveAttrMap=false here
             } else if (RequestResponse.Type.REQUEST_REDIRECT == nextRequestResponse.getTypeEnum()) { //} else if ("request-redirect".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + showSessionId(request), module);
                 // SCIPIO: Sanity check
@@ -823,7 +823,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
-                callRedirect(targetUrl, response, request, statusCodeString);
+                callRedirect(targetUrl, response, request, statusCodeString, true); // SCIPIO: saveAttrMap=true here
             } else if (RequestResponse.Type.REQUEST_REDIRECT_NOPARAM == nextRequestResponse.getTypeEnum()) { //} else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + showSessionId(request), module);
                 // SCIPIO: Sanity check
@@ -839,7 +839,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
-                callRedirect(targetUrl, response, request, statusCodeString);
+                callRedirect(targetUrl, response, request, statusCodeString, true); // SCIPIO: saveAttrMap=true here
             } else if (RequestResponse.Type.VIEW == nextRequestResponse.getTypeEnum()) { //} else if ("view".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
@@ -1139,7 +1139,7 @@ public class RequestHandler {
      * Currently I don't see how this is bad.
      * If need to remove jsessionId from redirects, could uncomment the lines below.
      */
-    private void callRedirect(String url, HttpServletResponse resp, HttpServletRequest req, String statusCodeString) throws RequestHandlerException {
+    private void callRedirect(String url, HttpServletResponse resp, HttpServletRequest req, String statusCodeString, boolean saveAttrMap) throws RequestHandlerException {
         // SCIPIO: Uncomment this to force remove jsessionId from controller redirects...
         //RequestUtil.removeJsessionId(url);
         if (Debug.infoOn()) Debug.logInfo("Sending redirect to: [" + url + "]. " + showSessionId(req), module);
@@ -1148,32 +1148,34 @@ public class RequestHandler {
             Debug.logError("Scipio: Redirect URL is empty", module);
             throw new RequestHandlerException("Scipio: Redirect URL is empty");
         }
-        // set the attributes in the session so we can access it.
-        Enumeration<String> attributeNameEnum = UtilGenerics.cast(req.getAttributeNames());
-        Map<String, Object> reqAttrMap = new HashMap<String, Object>();
+        if (saveAttrMap) { // SCIPIO: not for all redirects!
+            // set the attributes in the session so we can access it.
+            Enumeration<String> attributeNameEnum = UtilGenerics.cast(req.getAttributeNames());
+            Map<String, Object> reqAttrMap = new HashMap<String, Object>();
+            while (attributeNameEnum.hasMoreElements()) {
+                String name = attributeNameEnum.nextElement();
+                Object obj = req.getAttribute(name);
+                if (obj instanceof Serializable) {
+                    reqAttrMap.put(name, obj);
+                }
+            }
+            // SCIPIO: 2018-07-10: Do not include multiPartMap, to prevent storing uploaded files in session;
+            // NOTE: This is a heuristic based on most common usage of multiPartMap - may be tweaked in future.
+            reqAttrMap.remove("multiPartMap");
+            removeNoSaveRequestAttr(req, reqAttrMap); // SCIPIO: Explicit excludes
+            if (reqAttrMap.size() > 0) {
+                reqAttrMap.remove("_REQUEST_HANDLER_");  // RequestHandler is not serializable and must be removed first.  See http://issues.apache.org/jira/browse/OFBIZ-750
+                byte[] reqAttrMapBytes = UtilObject.getBytes(reqAttrMap);
+                if (reqAttrMapBytes != null) {
+                    req.getSession().setAttribute("_REQ_ATTR_MAP_", StringUtil.toHexString(reqAttrMapBytes));
+                }
+            }
+        }
         Integer statusCode;
         try {
             statusCode = Integer.valueOf(statusCodeString);
         } catch (NumberFormatException e) {
             statusCode = 303;
-        }
-        while (attributeNameEnum.hasMoreElements()) {
-            String name = attributeNameEnum.nextElement();
-            Object obj = req.getAttribute(name);
-            if (obj instanceof Serializable) {
-                reqAttrMap.put(name, obj);
-            }
-        }
-        // SCIPIO: 2018-07-10: Do not include multiPartMap, to prevent storing uploaded files in session;
-        // NOTE: This is a heuristic based on most common usage of multiPartMap - may be tweaked in future.
-        reqAttrMap.remove("multiPartMap");
-        removeNoSaveRequestAttr(req, reqAttrMap); // SCIPIO: Explicit excludes
-        if (reqAttrMap.size() > 0) {
-            reqAttrMap.remove("_REQUEST_HANDLER_");  // RequestHandler is not serializable and must be removed first.  See http://issues.apache.org/jira/browse/OFBIZ-750
-            byte[] reqAttrMapBytes = UtilObject.getBytes(reqAttrMap);
-            if (reqAttrMapBytes != null) {
-                req.getSession().setAttribute("_REQ_ATTR_MAP_", StringUtil.toHexString(reqAttrMapBytes));
-            }
         }
 
         // send the redirect

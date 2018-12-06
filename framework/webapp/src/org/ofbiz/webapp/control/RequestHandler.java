@@ -1558,7 +1558,7 @@ public class RequestHandler {
      * @param requestResponse the RequestResponse Object
      * @return return the query string
      */
-    public String makeQueryString(HttpServletRequest request, ConfigXMLReader.RequestResponse requestResponse) {
+    public String makeQueryString(HttpServletRequest request, ConfigXMLReader.RequestResponse requestResponse, Map<String, Object> extraParameters) {
         if (requestResponse == null ||
                 ("auto".equals(requestResponse.includeMode) && requestResponse.redirectParameterMap.size() == 0 && requestResponse.redirectParameterValueMap.size() == 0) ||
                 !"url-params".equals(requestResponse.includeMode) || "all-params".equals(requestResponse.includeMode)) {
@@ -1596,6 +1596,10 @@ public class RequestHandler {
                 urlParams.put(name, value);
             }
 
+            if (extraParameters != null) { // SCIPIO
+                urlParams.putAll(extraParameters);
+            }
+
             String queryString = UtilHttp.urlEncodeArgs(urlParams, false);
             if(UtilValidate.isEmpty(queryString)) {
                 return queryString;
@@ -1623,8 +1627,31 @@ public class RequestHandler {
                 addNameValuePairToQueryString(queryString, name, value);
             }
 
+
+            if (extraParameters != null) { // SCIPIO
+                for (Map.Entry<String, Object> entry: extraParameters.entrySet()) {
+                    String name = entry.getKey();
+                    String value = (entry.getValue() != null) ? entry.getValue().toString() : "";
+
+                    addNameValuePairToQueryString(queryString, name, value);
+                }
+            }
+
             return queryString.toString();
         }
+    }
+
+    /**
+     * Creates a query string based on the redirect parameters for a request response, if specified, or for all request parameters if no redirect parameters are specified.
+     * <p>
+     * SCIPIO: 2017-04-24: ENHANCED (see site-conf.xsd).
+     *
+     * @param request the Http request
+     * @param requestResponse the RequestResponse Object
+     * @return return the query string
+     */
+    public String makeQueryString(HttpServletRequest request, ConfigXMLReader.RequestResponse requestResponse) {
+        return makeQueryString(request, requestResponse, null);
     }
 
     private void addNameValuePairToQueryString(StringBuilder queryString, String name, String value) {
@@ -1642,13 +1669,13 @@ public class RequestHandler {
     }
 
     /**
-     * Builds links with added query string.
+     * Builds links with added query string, with optional extra parameters.
      * <p>
      * SCIPIO: Modified overload to allow boolean flags.
      * SCIPIO: Modified to include query string in makeLink call.
      */
     public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode,
-            ConfigXMLReader.RequestResponse requestResponse) {
+            ConfigXMLReader.RequestResponse requestResponse, Map<String, Object> extraParameters) {
         // SCIPIO: 2017-11-21: include the query string inside the makeLink call
         //String initialLink = this.makeLink(request, response, url, fullPath, secure, encode);
         //String queryString = this.makeQueryString(request, requestResponse);
@@ -1659,17 +1686,44 @@ public class RequestHandler {
     /**
      * Builds links with added query string.
      * <p>
+     * SCIPIO: Modified overload to allow boolean flags.
+     * SCIPIO: Modified to include query string in makeLink call.
+     */
+    public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode,
+            ConfigXMLReader.RequestResponse requestResponse) {
+        return makeLinkWithQueryString(request, response, url, fullPath, secure, encode, requestResponse, null);
+    }
+
+    /**
+     * Builds links with added query string with added query string.
+     * <p>
+     * SCIPIO: Original signature method, now delegates.
+     */
+    public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse, Map<String, Object> extraParameters) {
+        return makeLinkWithQueryString(request, response, url, null, null, null, requestResponse, extraParameters);
+    }
+    
+    /**
+     * Builds links with added query string.
+     * <p>
      * SCIPIO: Original signature method, now delegates.
      */
     public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
-        return makeLinkWithQueryString(request, response, url, null, null, null, requestResponse);
+        return makeLinkWithQueryString(request, response, url, null, null, null, requestResponse, null);
+    }
+
+    /**
+     * SCIPIO: Builds a full-path link (HTTPS as necessary) with added query string, with optional extra parameters.
+     */
+    public String makeLinkFullWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse, Map<String, Object> extraParameters) {
+        return makeLinkWithQueryString(request, response, url, true, null, null, requestResponse, extraParameters);
     }
 
     /**
      * SCIPIO: Builds a full-path link (HTTPS as necessary) with added query string.
      */
     public String makeLinkFullWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, ConfigXMLReader.RequestResponse requestResponse) {
-        return makeLinkWithQueryString(request, response, url, true, null, null, requestResponse);
+        return makeLinkWithQueryString(request, response, url, true, null, null, requestResponse, null);
     }
 
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url) {

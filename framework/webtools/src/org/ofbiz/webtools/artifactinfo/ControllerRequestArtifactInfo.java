@@ -55,7 +55,7 @@ public class ControllerRequestArtifactInfo extends ArtifactInfoBase {
         this.requestInfoMap = aif.getControllerRequestMap(controllerXmlUrl, requestUri);
 
         if (this.requestInfoMap == null) {
-            throw new GeneralException("Controller request with name [" + requestUri + "] is not defined in controller file [" + controllerXmlUrl + "].");
+            throw new GeneralException("Controller request with name [" + requestUri + "] is not defined in controller file [" + controllerXmlUrl + "]."); // SCIPIO: getCallerShortInfo
         }
     }
 
@@ -74,6 +74,9 @@ public class ControllerRequestArtifactInfo extends ArtifactInfoBase {
 
         Map<String, ConfigXMLReader.RequestResponse> requestResponseMap = UtilGenerics.checkMap(this.requestInfoMap.requestResponseMap);
         for (ConfigXMLReader.RequestResponse response: requestResponseMap.values()) {
+            if (response.value != null && response.value.startsWith("${")) { // SCIPIO: Value may be a script; can't evaluate here
+                continue;
+            }
             if ("view".equals(response.type)) {
                 String viewUri = response.value;
                 if (viewUri.startsWith("/")) {
@@ -89,6 +92,9 @@ public class ControllerRequestArtifactInfo extends ArtifactInfoBase {
                 }
             } else if ("request".equals(response.type)) {
                 String otherRequestUri = response.value;
+                if (otherRequestUri == null) { // SCIPIO: check null
+                    continue;
+                }
                 if (otherRequestUri.startsWith("/")) {
                     otherRequestUri = otherRequestUri.substring(1);
                 }

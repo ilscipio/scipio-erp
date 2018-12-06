@@ -306,6 +306,9 @@ public class ArtifactInfoFactory {
         if (requestUri == null) {
             throw new GeneralException("Got a null requestUri for controller: " + controllerXmlUrl);
         }
+        if (requestUri.startsWith("${")) { // SCIPIO: Value may be a script; can't evaluate here
+            return null;
+        }
         ControllerRequestArtifactInfo curInfo = this.allControllerRequestInfos.get(controllerXmlUrl.toExternalForm() + "#" + requestUri);
         if (curInfo == null) {
             curInfo = new ControllerRequestArtifactInfo(controllerXmlUrl, requestUri, this);
@@ -316,6 +319,9 @@ public class ArtifactInfoFactory {
     }
 
     public ControllerViewArtifactInfo getControllerViewArtifactInfo(URL controllerXmlUrl, String viewUri) throws GeneralException {
+        if (viewUri.startsWith("${")) { // SCIPIO: Value may be a script; can't evaluate here
+            return null;
+        }
         ControllerViewArtifactInfo curInfo = this.allControllerViewInfos.get(controllerXmlUrl.toExternalForm() + "#" + viewUri);
         if (curInfo == null) {
             curInfo = new ControllerViewArtifactInfo(controllerXmlUrl, viewUri, this);

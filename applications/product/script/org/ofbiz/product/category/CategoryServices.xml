@@ -1022,6 +1022,25 @@ code package.
             <field-map field-name="productCategoryId" from-field="parameters.productCategoryId"/>
         </entity-and>
         <iterate list="productCategoryMembers" entry="productCategoryMember">
+            <!-- SCIPIO: SalesOrderItemStarSchema may be unavailable - but don't crash -->
+            <script lang="groovy"><![CDATA[
+                entityDefined = false;
+                try {
+                    modelEntity = delegator.getModelReader().getModelEntity("SalesOrderItemStarSchema");
+                    if (modelEntity) {
+                        entityDefined = true;
+                    }
+                } catch(Exception e) {
+                }
+                context.entityDefined = entityDefined;
+            ]]></script>
+            <if>
+                <condition><if-compare field="entityDefined" operator="equals" type="Boolean" value="false"/></condition>
+                <then>
+                    <log level="warning" message="No best-selling products can be returned using 'FindBestSellingProduct' service; entity SalesOrderItemStarSchema does not exist"/>
+                    <return/>
+                </then>
+            </if>
             <entity-condition entity-name="SalesOrderItemStarSchema" list="salesOrderItemStarSchemas" distinct="true">
                 <condition-list combine="and">
                     <condition-expr field-name="productProductId" operator="equals" from-field="productCategoryMember.productId"/>

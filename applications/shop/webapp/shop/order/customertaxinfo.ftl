@@ -4,12 +4,14 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <#if partyTaxAuthInfoAndDetailList??>
+  <#-- SCIPIO: no such request in shop
     <#list partyTaxAuthInfoAndDetailList as partyTaxAuthInfoAndDetail>
         <div>
             <a href="<@ofbizUrl>deleteCustomerTaxAuthInfo?partyId=${partyId}&amp;taxAuthPartyId=${partyTaxAuthInfoAndDetail.taxAuthPartyId}&amp;taxAuthGeoId=${partyTaxAuthInfoAndDetail.taxAuthGeoId}&amp;fromDate=${partyTaxAuthInfoAndDetail.fromDate}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">X</a>
             [${partyTaxAuthInfoAndDetail.geoCode}] ${partyTaxAuthInfoAndDetail.geoName} (${partyTaxAuthInfoAndDetail.groupName!}): ${uiLabelMap.PartyTaxId} [${partyTaxAuthInfoAndDetail.partyTaxId!(uiLabelMap.CommonNA)}], ${uiLabelMap.PartyTaxIsExempt} [${partyTaxAuthInfoAndDetail.isExempt!"N"}]
         </div>
     </#list>
+  -->
     <@field type="select" label=uiLabelMap.PartyTaxAddInfo name="taxAuthPartyGeoIds">
       <option></option>
       <#list taxAuthorityAndDetailList as taxAuthorityAndDetail>

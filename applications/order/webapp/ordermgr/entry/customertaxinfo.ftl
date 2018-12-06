@@ -11,12 +11,14 @@ they may need to be duplicated to:
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -->
 <#if partyTaxAuthInfoAndDetailList??>
+  <#-- SCIPIO: no such request anymore
     <#list partyTaxAuthInfoAndDetailList as partyTaxAuthInfoAndDetail>
         <div>
             <a href="<@ofbizUrl>deleteCustomerTaxAuthInfo?partyId=${partyId}&amp;taxAuthPartyId=${partyTaxAuthInfoAndDetail.taxAuthPartyId}&amp;taxAuthGeoId=${partyTaxAuthInfoAndDetail.taxAuthGeoId}&amp;fromDate=${partyTaxAuthInfoAndDetail.fromDate}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">X</a>
             [${partyTaxAuthInfoAndDetail.geoCode}] ${partyTaxAuthInfoAndDetail.geoName} (${partyTaxAuthInfoAndDetail.groupName!}): ${uiLabelMap.PartyTaxId} [${partyTaxAuthInfoAndDetail.partyTaxId!(uiLabelMap.CommonNA)}], ${uiLabelMap.PartyTaxIsExempt} [${partyTaxAuthInfoAndDetail.isExempt!"N"}]
         </div>
     </#list>
+  -->
     <@field type="select" label=uiLabelMap.PartyTaxAddInfo name="taxAuthPartyGeoIds">
       <option></option>
       <#list taxAuthorityAndDetailList as taxAuthorityAndDetail>

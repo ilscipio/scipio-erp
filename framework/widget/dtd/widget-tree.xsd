@@ -172,7 +172,7 @@ under the License.
     <xs:element name="entity-and">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="field-map" />
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="field-map" /><!-- SCIPIO: 2018-12-05: Support no filter, find all (minOccurs="0") -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="select-field" />
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="order-by" />
             </xs:sequence>

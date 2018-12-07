@@ -373,12 +373,21 @@ public class ArtifactInfoFactory {
             for (Map.Entry<String, EntityArtifactInfo> curEntry: allEntityInfos.entrySet()) {
                 if (curEntry.getKey().toUpperCase().contains(artifactNamePartial.toUpperCase())) {
                     aiBaseSet.add(curEntry.getValue());
+                // SCIPIO: Check location; explicit check needed
+                } else if (curEntry.getValue().getModelEntity().getLocation().toUpperCase().contains(artifactNamePartial.toUpperCase())) {
+                    aiBaseSet.add(curEntry.getValue());
                 }
             }
         }
         if (UtilValidate.isEmpty(type) || "service".equals(type)) {
             for (Map.Entry<String, ServiceArtifactInfo> curEntry: allServiceInfos.entrySet()) {
                 if (curEntry.getKey().toUpperCase().contains(artifactNamePartial.toUpperCase())) {
+                    aiBaseSet.add(curEntry.getValue());
+                // SCIPIO: Check definition location; explicit check needed
+                } else if (curEntry.getValue().getLocation().toUpperCase().contains(artifactNamePartial.toUpperCase())) {
+                    aiBaseSet.add(curEntry.getValue());
+                // SCIPIO: Check implementation location; explicit check needed
+                } else if (curEntry.getValue().getImplementationLocation().toUpperCase().contains(artifactNamePartial.toUpperCase())) {
                     aiBaseSet.add(curEntry.getValue());
                 }
             }

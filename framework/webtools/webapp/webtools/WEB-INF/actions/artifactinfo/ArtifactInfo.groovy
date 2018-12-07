@@ -51,11 +51,15 @@ if ("search".equals(parameters.findType)) {
     }
 }
 
-recentArtifactInfoList = null;
 recentArtifactInfoList = session.getAttribute("recentArtifactInfoList");
-if (!recentArtifactInfoList) {
-    recentArtifactInfoList = [];
-    session.setAttribute("recentArtifactInfoList", recentArtifactInfoList);
+if (recentArtifactInfoList == null) {
+    synchronized (UtilHttp.getSessionSyncObject(request)) { // SCIPIO: Atomicity
+        recentArtifactInfoList = session.getAttribute("recentArtifactInfoList");
+        if (recentArtifactInfoList == null) {
+            recentArtifactInfoList = [];
+            session.setAttribute("recentArtifactInfoList", recentArtifactInfoList);
+        }
+    }
 }
 
 synchronized (recentArtifactInfoList) { // SCIPIO: Thread safety
@@ -65,6 +69,12 @@ synchronized (recentArtifactInfoList) { // SCIPIO: Thread safety
         if (recentArtifactInfoList && recentArtifactInfoList.get(0).equals(artifactInfoMap)) {
             // hmmm, I guess do nothing if it's already there
         } else {
+            // SCIPIO: Remove any existing matching before adding, to keep list from filling with useless duplicates
+            for (def i = recentArtifactInfoList.iterator(); i.hasNext();) {
+                if (Objects.equals(artifactInfoMap, i.next())) {
+                    i.remove();
+                }
+            }
             recentArtifactInfoList.add(0, artifactInfoMap);
         }
     }

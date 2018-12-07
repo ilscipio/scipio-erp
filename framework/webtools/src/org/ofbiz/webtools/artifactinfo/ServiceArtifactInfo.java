@@ -38,6 +38,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilJavaParse;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilPlist;
+import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.SimpleMethod;
@@ -260,6 +261,10 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
         return this.modelService.name;
     }
 
+    public String getLocation() { // SCIPIO
+        return this.modelService.definitionLocation;
+    }
+
     @Override
     public URL getLocationURL() throws MalformedURLException {
         return FlexibleLocation.resolveLocation(this.modelService.definitionLocation, null);
@@ -267,6 +272,19 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
 
     public URL getImplementationLocationURL() throws MalformedURLException {
         return FlexibleLocation.resolveLocation(this.modelService.location, null);
+    }
+
+    public String getImplementationLocation() { // SCIPIO
+        return this.modelService.location;
+    }
+
+    public String getRelativeImplementationLocation() { // SCIPIO
+        try {
+            return UtilURL.getOfbizHomeRelativeLocation(getImplementationLocationURL());
+        } catch (MalformedURLException e) {
+            Debug.logError("getRelativeImplementationLocation: " + e.toString(), module);
+            return null;
+        }
     }
 
     public Set<EntityArtifactInfo> getEntitiesUsedByService() {
@@ -573,5 +591,11 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public String getRelativeLocation() {
+        // SCIPIO: Optimization
+        return getModelService().getRelativeDefinitionLocation();
     }
 }

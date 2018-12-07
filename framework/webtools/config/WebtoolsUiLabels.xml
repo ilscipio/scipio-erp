@@ -1287,6 +1287,10 @@
         <value xml:lang="zh">完成XML文档 (根标签: entity-engine-xml)</value>
         <value xml:lang="zh-TW">完成XML檔 (根標簽: entity-engine-xml)</value>
     </property>
+    <property key="WebtoolsComponentNotFoundOrNotEnabled">
+        <value xml:lang="de">Komponente nicht gefunden oder nicht aktiviert</value>
+        <value xml:lang="en">Component not found or not enabled</value>
+    </property>
     <property key="WebtoolsComponentsLoaded">
         <value xml:lang="de">Komponenten geladen</value>
         <value xml:lang="en">Loaded Components</value>

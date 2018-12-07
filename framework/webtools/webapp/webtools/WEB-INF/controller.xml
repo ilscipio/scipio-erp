@@ -356,6 +356,10 @@ code package.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewComponents"/>
     </request-map>
+    <request-map uri="ViewComponent"><!-- SCIPIO: new (replaces "TestSuiteInfo" request/view) -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewComponent"/>
+    </request-map>
     
     <!-- Ajax Requests -->
     <!-- SCIPIO Dashboard example -->
@@ -807,6 +811,7 @@ code package.
 
     <!-- Artifact Info Views -->
     <view-map name="ViewComponents" page="component://webtools/widget/ArtifactInfoScreens.xml#ViewComponents" type="screen"/>
+    <view-map name="ViewComponent" page="component://webtools/widget/ArtifactInfoScreens.xml#ViewComponent" type="screen"/><!-- SCIPIO: new -->
     <view-map name="TestSuiteInfo" page="component://webtools/widget/ArtifactInfoScreens.xml#TestSuiteInfo" type="screen"/>
     <view-map name="ArtifactInfo" type="screen" page="component://webtools/widget/ArtifactInfoScreens.xml#ArtifactInfo"/>
 

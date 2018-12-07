@@ -2143,6 +2143,36 @@
         <value xml:lang="zh-CN">已完成</value>
         <value xml:lang="zh-TW">已完成</value>
     </property>
+    <property key="CommonComponent">
+        <value xml:lang="de">Komponente</value>
+        <value xml:lang="en">Component</value>
+        <value xml:lang="es">Componente</value>
+        <value xml:lang="fr">Composant</value>
+        <value xml:lang="hi-IN">घटक</value>
+        <value xml:lang="it">Componente</value>
+        <value xml:lang="ja">コンポーネント</value>
+        <value xml:lang="nl">Component</value>
+        <value xml:lang="pt-BR">Componente</value>
+        <value xml:lang="ru">Компонент</value>
+        <value xml:lang="th">ส่วนประกอบ</value>
+        <value xml:lang="zh">组件</value>
+        <value xml:lang="zh-TW">元件</value>
+    </property>
+    <property key="CommonComponents">
+        <value xml:lang="de">Komponenten</value>
+        <value xml:lang="en">Components</value>
+        <value xml:lang="es">Componentes</value>
+        <value xml:lang="fr">Composants</value>
+        <value xml:lang="it">Componenti</value>
+        <value xml:lang="ja">コンポーネント</value>
+        <value xml:lang="nl">Componenten</value>
+        <value xml:lang="ro">Componente</value>
+        <value xml:lang="ru">Компоненты</value>
+        <value xml:lang="th">ส่วนประกอบ</value>
+        <value xml:lang="vi">Thành phần hợp thành</value>
+        <value xml:lang="zh">组件</value>
+        <value xml:lang="zh-TW">元件</value>
+    </property>
     <property key="CommonConfiguration">
         <value xml:lang="ar">ترتيب</value>
         <value xml:lang="cs">Konfigurace</value>
@@ -12349,6 +12379,22 @@
         <value xml:lang="vi">Khôi phục về!</value>
         <value xml:lang="zh">正在回轉</value>
         <value xml:lang="zh-TW">正在回轉</value>
+    </property>
+    <property key="CommonTests">
+        <value xml:lang="ar">يختبر</value>
+        <value xml:lang="de">Testet</value>
+        <value xml:lang="en">Tests</value>
+        <value xml:lang="es">Prueba</value>
+        <value xml:lang="fr">Tests</value>
+        <value xml:lang="it">Testa</value>
+        <value xml:lang="ja">テスト</value>
+        <value xml:lang="pt-BR">Testa</value>
+        <value xml:lang="ro">Testeaza</value>
+        <value xml:lang="ru">Тестирование</value>
+        <value xml:lang="th">ทดสอบ</value>
+        <value xml:lang="vi">Kiểm tra</value>
+        <value xml:lang="zh">测试</value>
+        <value xml:lang="zh-TW">測試</value>
     </property>
     <property key="CommonText">
         <value xml:lang="ar">نص</value>

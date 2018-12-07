@@ -22,30 +22,17 @@
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="ComponentList" type="list" separate-columns="true" title="Component List" list-name="componentList" target=""
         odd-row-style="alternate-row" header-row-style="header-row-2">
-        <row-actions>
-            <!-- SCIPIO -->
-            <script lang="groovy"><![CDATA[
-                relRootLoc = org.ofbiz.base.util.UtilURL.getOfbizHomeRelativeLocationFromFilePath(context.rootLocation) ?: '';
-                if (relRootLoc?.endsWith("/")) {
-                    relRootLoc = relRootLoc[0..-2];
-                }
-                context.relRootLoc = relRootLoc;
-                relWebLoc = org.ofbiz.base.util.UtilURL.getOfbizHomeRelativeLocationFromFilePath(context.location) ?: '';
-                if (relWebLoc?.endsWith("/")) {
-                    relWebLoc = relWebLoc[0..-2];
-                }
-                context.relWebLoc = relWebLoc;
-            ]]></script>
-        </row-actions>
         <field name="compName" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
-            <hyperlink target="TestSuiteInfo?compName=${compName}" description="${compName}"></hyperlink>
+            <hyperlink target="ViewComponent?compName=${compName}" description="${compName}"></hyperlink>
         </field>
-        <!-- SCIPIO: Relative locations -->
-        <field name="rootLocation"><display description="${relRootLoc}"/></field>
+        <field name="rootLocation"><display description="${relRootLoc}"/></field><!-- SCIPIO: Show relative locations -->
         <field name="enabled"><display/></field>
         <field name="webAppName"><display/></field>
-        <field name="contextRoot"><display/></field>
-        <field name="location"><display description="${relWebLoc}"/></field>
+        <field name="contextRoot" use-when="linkCtxRoot"><!-- SCIPIO: Show webapp link -->
+            <hyperlink target-type="inter-app" target="${contextRoot}" description="${contextRoot}" target-window="_blank"/>
+        </field>
+        <field name="contextRoot" use-when="!linkCtxRoot"><display/></field>
+        <field name="location"><display description="${relWebLoc}"/></field><!-- SCIPIO: Show relative locations -->
     </form>
 
     <form name="TestSuiteInfo" type="list" separate-columns="true" title="Component List" list-name="suits" target=""

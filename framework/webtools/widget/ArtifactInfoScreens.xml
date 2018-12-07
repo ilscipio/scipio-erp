@@ -32,7 +32,7 @@ code package.
     <screen name="ViewComponents">
         <section>
             <actions>
-                <set field="titleProperty" value="WebtoolsViewComponents"/>
+                <set field="titleProperty" value="CommonComponents"/><!-- SCIPIO: switched: <set field="titleProperty" value="WebtoolsViewComponents"/>-->
                 <set field="activeSubMenuItem" value="viewents"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/artifactinfo/ComponentList.groovy"/>
                 <set field="viewSize" value="30"/>
@@ -48,21 +48,44 @@ code package.
             </widgets>
         </section>
     </screen>
-    <screen name="TestSuiteInfo">
+    <screen name="ViewComponent"><!-- SCIPIO: NOTE: This used to be "TestSuiteInfo" itself -->
         <section>
             <actions>
-                <set field="titleProperty" value="WebtoolsViewComponents"/>
+                <set field="titleProperty" value="CommonComponent"/><!-- SCIPIO: switched: <set field="titleProperty" value="WebtoolsViewComponents"/>-->
                 <set field="activeSubMenuItem" value="viewents"/>
+                <!-- SCIPIO: presence check -->
+                <script lang="groovy"><![CDATA[
+                    compName = parameters.compName?.toString();
+                    context.compName = compName;
+                    compEnabled = org.ofbiz.base.component.ComponentConfig.isComponentEnabled(compName);
+                    context.compEnabled = compEnabled;
+                ]]></script>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/artifactinfo/TestSuiteInfo.groovy"/>
+                <set field="titleFormat" value="\${finalTitle}: ${compName}"/><!-- SCIPIO -->
             </actions>
             <widgets>
                 <decorator-screen name="CommonArtifactDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="Component: ${parameters.compName}">
-                            <include-form name="TestSuiteInfo" location="component://webtools/widget/ArtifactInfoForms.xml"/>
-                        </screenlet>
+                        <section>
+                            <condition><if-true field="compEnabled"/></condition>
+                            <widgets>
+                                <screenlet title="Test Suites"><!--title="Component: ${parameters.compName}"-->
+                                    <include-form name="TestSuiteInfo" location="component://webtools/widget/ArtifactInfoForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error" text="${uiLabelMap.WebtoolsComponentNotFoundOrNotEnabled}"/>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="TestSuiteInfo">
+        <section>
+            <widgets>
+                <include-screen name="ViewComponent"/><!-- SCIPIO: Backward-compat for TestSuiteInfo -->
             </widgets>
         </section>
     </screen>

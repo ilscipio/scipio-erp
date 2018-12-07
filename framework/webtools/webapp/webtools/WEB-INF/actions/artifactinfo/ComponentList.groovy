@@ -38,6 +38,21 @@ components.each { component ->
          componentMap.webAppName = webApp.getName();
          componentMap.contextRoot = webApp.getContextRoot();
          componentMap.location = webApp.getLocation();
+         // SCIPIO: Relative locations and appBarDisplay
+         def relRootLoc = UtilURL.getOfbizHomeRelativeLocationFromFilePath(componentMap.rootLocation) ?: "";
+         if (relRootLoc?.endsWith("/")) {
+             relRootLoc = relRootLoc[0..-2];
+         }
+         componentMap.relRootLoc = relRootLoc
+         def relWebLoc = UtilURL.getOfbizHomeRelativeLocationFromFilePath(componentMap.location) ?: "";
+         if (relWebLoc?.endsWith("/")) {
+             relWebLoc = relWebLoc[0..-2];
+         }
+         componentMap.relWebLoc = relWebLoc;
+         appBarDisplay = webApp.getAppBarDisplay();
+         componentMap.componentMap = componentMap;
+         componentMap.linkCtxRoot = (componentMap.contextRoot && (appBarDisplay || 
+             (componentMap.compName == "solr" && componentMap.webAppName == "solr")));
          componentList.add(componentMap);
      }
      if (UtilValidate.isEmpty(webApps)) {
@@ -49,6 +64,11 @@ components.each { component ->
          componentMap.webAppName = "";
          componentMap.contextRoot = "";
          componentMap.location = "";
+         // SCIPIO: Relative locations and appBarDisplay
+         componentMap.relRootLoc = "";
+         componentMap.relWebLoc = "";
+         componentMap.appBarDisplay = false;
+         componentMap.linkCtxRoot = false;
      }
 }
 

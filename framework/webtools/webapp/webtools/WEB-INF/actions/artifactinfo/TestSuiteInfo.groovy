@@ -30,6 +30,10 @@ import java.util.List;
 
 
 List testList = [];
+
+// SCIPIO: check if exists
+if (compEnabled) {
+
 for (ComponentConfig.TestSuiteInfo testSuiteInfo: ComponentConfig.getAllTestSuiteInfos(parameters.compName)) {
     String componentName = testSuiteInfo.componentConfig.getComponentName();
     ResourceHandler testSuiteResource = testSuiteInfo.createResourceHandler();
@@ -55,9 +59,8 @@ for (ComponentConfig.TestSuiteInfo testSuiteInfo: ComponentConfig.getAllTestSuit
         Debug.logError(e, errMsg, module);
         throw new IllegalArgumentException(errMsg);
     }
-
-
-
 }
+
+} // compEnabled
 
 context.suits = testList;

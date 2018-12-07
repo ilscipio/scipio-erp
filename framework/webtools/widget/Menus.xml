@@ -249,7 +249,7 @@ code package.
         <menu-item name="artifactInfo" title="${uiLabelMap.WebtoolsArtifactInfo} ${uiLabelMap.CommonSearch} ${uiLabelMap.WebtoolsArtifactInfoTimeToLoad}">
             <link target="ArtifactInfo"/>
         </menu-item>
-        <menu-item name="viewents" title="${uiLabelMap.WebtoolsViewComponents}">
+        <menu-item name="viewents" title="${uiLabelMap.CommonComponents}"><!-- SCIPIO: switched: WebtoolsViewComponents -->
             <link target="ViewComponents"/>
         </menu-item>
     </menu>

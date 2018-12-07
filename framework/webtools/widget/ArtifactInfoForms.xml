@@ -20,20 +20,36 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-        <form name="ComponentList" type="list" separate-columns="true" title="Component List" list-name="componentList" target=""
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+    <form name="ComponentList" type="list" separate-columns="true" title="Component List" list-name="componentList" target=""
+        odd-row-style="alternate-row" header-row-style="header-row-2">
+        <row-actions>
+            <!-- SCIPIO -->
+            <script lang="groovy"><![CDATA[
+                relRootLoc = org.ofbiz.base.util.UtilURL.getOfbizHomeRelativeLocationFromFilePath(context.rootLocation) ?: '';
+                if (relRootLoc?.endsWith("/")) {
+                    relRootLoc = relRootLoc[0..-2];
+                }
+                context.relRootLoc = relRootLoc;
+                relWebLoc = org.ofbiz.base.util.UtilURL.getOfbizHomeRelativeLocationFromFilePath(context.location) ?: '';
+                if (relWebLoc?.endsWith("/")) {
+                    relWebLoc = relWebLoc[0..-2];
+                }
+                context.relWebLoc = relWebLoc;
+            ]]></script>
+        </row-actions>
         <field name="compName" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="TestSuiteInfo?compName=${compName}" description="${compName}"></hyperlink>
         </field>
-        <field name="rootLocation"><display/></field>
+        <!-- SCIPIO: Relative locations -->
+        <field name="rootLocation"><display description="${relRootLoc}"/></field>
         <field name="enabled"><display/></field>
         <field name="webAppName"><display/></field>
         <field name="contextRoot"><display/></field>
-        <field name="location"><display/></field>
+        <field name="location"><display description="${relWebLoc}"/></field>
     </form>
 
     <form name="TestSuiteInfo" type="list" separate-columns="true" title="Component List" list-name="suits" target=""
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2">
         <field name="compName"><hidden value="${parameters.compName}"/></field>
         <field name="suiteName"><display/></field>
         <field name="runSuite" use-when="suiteName!=void" widget-style="${styles.link_run_sys} ${styles.action_begin}">

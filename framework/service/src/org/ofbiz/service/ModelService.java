@@ -252,6 +252,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     protected Map<String, Object> properties = Collections.emptyMap(); 
     
+    String relativeDefinitionLocation; // SCIPIO
+    
     public ModelService() {}
 
     public ModelService(ModelService model) {
@@ -293,6 +295,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         for (ModelParam param: modelParamList) {
             this.addParamClone(param);
         }
+        this.relativeDefinitionLocation = model.relativeDefinitionLocation; // SCIPIO
     }
 
     @Override
@@ -2222,6 +2225,13 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         return properties;
     }
     
+    /**
+     * SCIPIO: Returns the definition location relative to project root.
+     */
+    public String getRelativeDefinitionLocation() {
+        return relativeDefinitionLocation;
+    }
+
     /**
      * SCIPIO: Returns true if the given field name is in {@link #SYS_RESPONSE_FIELDS}.
      */

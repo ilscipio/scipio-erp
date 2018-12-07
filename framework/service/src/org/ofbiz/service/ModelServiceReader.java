@@ -39,6 +39,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilTimer;
+import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -270,6 +271,17 @@ public class ModelServiceReader implements Serializable {
         }
 
         // SCIPIO
+        String loc = service.definitionLocation;
+        if (UtilValidate.isNotEmpty(loc)) {
+            try {
+                loc = UtilURL.getOfbizHomeRelativeLocation(new java.net.URI(loc));
+            } catch (Exception e) {
+                Debug.logError("Could not get service '" + service.name + "' relative definition location: "
+                        + e.toString(), module);
+            }
+        }
+        service.relativeDefinitionLocation = (loc != null) ? loc : "";
+        
         if (service.contextParamList instanceof ArrayList) {
             ((ArrayList<ModelParam>) service.contextParamList).trimToSize();
         }

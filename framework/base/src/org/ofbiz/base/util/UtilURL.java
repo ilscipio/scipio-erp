@@ -20,6 +20,7 @@ package org.ofbiz.base.util;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -165,13 +166,42 @@ public final class UtilURL {
         return fromFilename(newFilename);
     }
 
-    public static String getOfbizHomeRelativeLocation(URL fileUrl) {
+    private static String getOfbizHomeRelativeLocation(String path) { // SCIPIO: String overload + impl moved
         String ofbizHome = System.getProperty("ofbiz.home");
-        String path = fileUrl.getPath();
-        if (path.startsWith(ofbizHome+"/")) { // SCIPIO: Added missing +"/"
-            // note: the +1 is to remove the leading slash
-            path = path.substring(ofbizHome.length()+1);
+        if (path.startsWith(ofbizHome)) {
+            // SCIPIO: Added length check and missing slash comparison
+            if (path.length() == ofbizHome.length()) {
+                return "";
+            } else if (path.charAt(ofbizHome.length()) == '/') {
+                // note: the +1 is to remove the leading slash
+                return path.substring(ofbizHome.length()+1);
+            }
         }
-        return path;
+        // SCIPIO: Is not applicable, return null.
+        //return path;
+        return null;
+    }
+
+    /**
+     * Gets file location (URL) relative to project root.
+     * <p>
+     * SCIPIO: NOTE: 2018-12-06: This method is modified so that it will now return null
+     * if the given fileUrl is not under the project root; this is done for common sense
+     * and for security concerns about the original callers of this method.
+     */
+    public static String getOfbizHomeRelativeLocation(URL fileUrl) {
+        return getOfbizHomeRelativeLocation(fileUrl.getPath()); // SCIPIO: refactored
+    }
+
+    /**
+     * SCIPIO: Gets file location (URI) relative to project root.
+     * <p>
+     * SCIPIO: NOTE: 2018-12-06: This method is modified so that it will now return null
+     * if the given fileUrl is not under the project root; this is done for common sense
+     * and for security concerns about the original callers of this method.
+     */
+    public static String getOfbizHomeRelativeLocation(URI fileUrl) { // SCIPIO: URI overload
+        return getOfbizHomeRelativeLocation(fileUrl.getPath());
+
     }
 }

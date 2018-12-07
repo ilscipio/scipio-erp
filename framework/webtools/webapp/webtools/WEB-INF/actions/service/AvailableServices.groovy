@@ -376,7 +376,9 @@ if (selectedService) {
         curServiceMap.defaultEntityName = defaultEntityName;
         curServiceMap.invoke = invoke;
         curServiceMap.location = location;
-        curServiceMap.definitionLocation = curServiceModel.definitionLocation.replaceFirst("file:/" + System.getProperty("ofbiz.home") + "/", "");
+        // SCIPIO: Unreliable across platforms
+        //curServiceMap.definitionLocation = curServiceModel.definitionLocation.replaceFirst("file:/" + System.getProperty("ofbiz.home") + "/", "");
+        curServiceMap.definitionLocation = curServiceModel.getRelativeDefinitionLocation();
         curServiceMap.requireNewTransaction = requireNewTransaction;
         curServiceMap.export = export;
         curServiceMap.exportBool = exportBool;
@@ -542,20 +544,10 @@ if (!selectedService) {
             }
 
             if (canIncludeService && "definitionLocation".equals(constraintName)) {
-                // SCIPIO: this was completely wrong
+                // SCIPIO: Unreliable across platforms
                 //fullPath = "file:/" + System.getProperty("ofbiz.home") + "/" + constraintVal;
-                if (constraintVal.startsWith("file:")) {
-                    fullPath = constraintVal;
-                } else {
-                    basePath = System.getProperty("ofbiz.home") ?: "";
-                    if (basePath.startsWith("/")) {
-                        basePath = "file:" + basePath;
-                    } else {
-                        basePath = "file:/" + basePath;
-                    }
-                    fullPath = basePath + "/" + constraintVal;
-                }
-                canIncludeService = curServiceModel.definitionLocation.equals(fullPath);
+                //canIncludeService = curServiceModel.definitionLocation.equals(fullPath);
+                canIncludeService = curServiceModel.getRelativeDefinitionLocation().equals(constraintVal);
             }
 
             if (canIncludeService && "alpha".equals(constraintName)) {
@@ -577,7 +569,9 @@ if (!selectedService) {
             curServiceMap.defaultEntityName = defaultEntityName
             curServiceMap.invoke = invoke
             curServiceMap.location = location
-            curServiceMap.definitionLocation = curServiceModel.definitionLocation.replaceFirst("file:/" + System.getProperty("ofbiz.home") + "/", "")
+            // SCIPIO: Unreliable across platforms
+            //curServiceMap.definitionLocation = curServiceModel.definitionLocation.replaceFirst("file:/" + System.getProperty("ofbiz.home") + "/", "")
+            curServiceMap.definitionLocation = curServiceModel.getRelativeDefinitionLocation();
             curServiceMap.requireNewTransaction = requireNewTransaction
             curServiceMap.deprecated = curServiceModel.deprecatedUseInstead
 

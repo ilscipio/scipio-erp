@@ -109,8 +109,7 @@ public class DemoSuiteDataGeneratorUtil {
 						curServiceMap.put("defaultEntityName", defaultEntityName);
 						curServiceMap.put("invoke", invoke);
 						curServiceMap.put("location", location);
-						curServiceMap.put("definitionLocation", curServiceModel.definitionLocation
-								.replaceFirst("file:/" + System.getProperty("ofbiz.home") + "/", ""));
+						curServiceMap.put("definitionLocation", curServiceModel.getRelativeDefinitionLocation());
 						curServiceMap.put("requireNewTransaction", requireNewTransaction);
 
 						servicesList.add(curServiceMap);

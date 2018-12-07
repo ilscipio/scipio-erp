@@ -130,6 +130,9 @@ public class ControllerRequestArtifactInfo extends ArtifactInfoBase {
     @Override
     public String getDisplayName() {
         String location = UtilURL.getOfbizHomeRelativeLocation(this.controllerXmlUrl);
+        if (location == null) { // SCIPIO: Method may return null
+            location = "";
+        }
         if (location.endsWith("/WEB-INF/controller.xml")) {
             location = location.substring(0, location.length() - 23);
         }

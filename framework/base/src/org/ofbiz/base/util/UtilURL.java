@@ -168,7 +168,7 @@ public final class UtilURL {
     public static String getOfbizHomeRelativeLocation(URL fileUrl) {
         String ofbizHome = System.getProperty("ofbiz.home");
         String path = fileUrl.getPath();
-        if (path.startsWith(ofbizHome)) {
+        if (path.startsWith(ofbizHome+"/")) { // SCIPIO: Added missing +"/"
             // note: the +1 is to remove the leading slash
             path = path.substring(ofbizHome.length()+1);
         }

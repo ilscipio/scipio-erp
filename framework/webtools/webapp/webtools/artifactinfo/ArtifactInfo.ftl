@@ -475,5 +475,7 @@ code package.
 </#macro>
 
 <#macro displayArtifactInfoLink type uniqueId displayName>
-<a href="<@ofbizUrl>ArtifactInfo?type=${type}&amp;uniqueId=${rawString(uniqueId)?url('ISO-8859-1')}</@ofbizUrl>">${displayName}</a>
+<#-- SCIPIO: This hardcoded encoding was probably due to stock hadn't configured the default yet...
+<a href="<@ofbizUrl>ArtifactInfo?type=${type}&amp;uniqueId=${uniqueId?url('ISO-8859-1')}</@ofbizUrl>">${displayName}</a>-->
+<a href="<@ofbizUrl>ArtifactInfo?type=${type}&amp;uniqueId=${rawString(uniqueId)?url}</@ofbizUrl>">${displayName}</a>
 </#macro>

@@ -104,8 +104,8 @@ public class ExtWebappInfo implements Serializable {
         try {
             this.fullControlPath = WebAppUtil.getControlServletPath(webappInfo, true);
             if (this.fullControlPath == null) {
-                Debug.logWarning(getLogMsgPrefix()+"Cannot find ControlServlet mapping for website"
-                        + " (this is an error if the website was meant to have a controller)", module);
+                Debug.logInfo(getLogMsgPrefix()+"No ControlServlet mapping for website"
+                        + " (this is only an error if the website was meant to have a controller)", module);
             }
 
             this.controlServletMapping = WebAppUtil.getControlServletOnlyPathFromFull(webappInfo, fullControlPath);

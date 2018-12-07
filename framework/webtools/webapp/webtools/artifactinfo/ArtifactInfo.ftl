@@ -475,5 +475,5 @@ code package.
 </#macro>
 
 <#macro displayArtifactInfoLink type uniqueId displayName>
-<a href="<@ofbizUrl>ArtifactInfo?type=${type}&amp;uniqueId=${uniqueId?url('ISO-8859-1')}</@ofbizUrl>">${displayName}</a>
+<a href="<@ofbizUrl>ArtifactInfo?type=${type}&amp;uniqueId=${rawString(uniqueId)?url('ISO-8859-1')}</@ofbizUrl>">${displayName}</a>
 </#macro>

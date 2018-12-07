@@ -72,6 +72,7 @@ import org.ofbiz.widget.model.AbstractModelAction;
 import org.ofbiz.widget.model.ModelAction;
 import org.ofbiz.widget.model.ModelLocation;
 import org.ofbiz.widget.model.ModelScreen;
+import org.ofbiz.widget.model.ModelWidget;
 import org.ofbiz.widget.model.ScreenFactory;
 import org.xml.sax.SAXException;
 
@@ -593,6 +594,10 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
 
         // SCIPIO: set the request method for easy access. it is UPPERCASE.
         context.put("requestMethod", request.getMethod().toUpperCase());
+        
+        // SCIPIO: Optimization/Security: Always put widgetVerbose in context so that:
+        // 1) easier access 2) it's already a boolean 3) request parameters not consulted by ModelWidget#widgetBoundaryCommentsEnabled (security)
+        ModelWidget.setWidgetBoundaryCommentsEnabledField(context, request);
 
         // SCIPIO: 2017-05-03: some new special request parameters/attributes for potential use by renderers
         WidgetRenderTargetExpr.populateRenderTargetVars(context);

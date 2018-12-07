@@ -21,8 +21,10 @@ package org.ofbiz.widget.model;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.w3c.dom.Element;
 
@@ -39,6 +41,9 @@ public abstract class ModelWidget implements Serializable {
      * set to "widgetVerbose".
      */
     public static final String enableBoundaryCommentsParam = "widgetVerbose";
+
+    // SCIPIO: cached variable
+    private static final boolean widgetVerboseGlobal = "true".equals(UtilProperties.getPropertyValue("widget", "widget.verbose"));
 
     private final String name;
     private final String systemId;
@@ -152,22 +157,89 @@ public abstract class ModelWidget implements Serializable {
      * @param context Optional context Map
      */
     public static boolean widgetBoundaryCommentsEnabled(Map<String, ? extends Object> context) {
-        boolean result = "true".equals(UtilProperties.getPropertyValue("widget", "widget.verbose"));
+        // SCIPIO: cached
+        //boolean result = "true".equals(UtilProperties.getPropertyValue("widget", "widget.verbose"));
+        boolean result = widgetBoundaryCommentsEnabledGlobal(context);
         if (result && context != null) {
-            String str = (String) context.get(enableBoundaryCommentsParam);
+            // SCIPIO: support straight boolean
+            //String str = (String) context.get(enableBoundaryCommentsParam);
+            Object str = context.get(enableBoundaryCommentsParam);
             if (str != null) {
-                result = "true".equals(str);
+                result = UtilMisc.booleanValue(str, false); // SCIPIO: result = "true".equals(str);
             } else {
+                /* SCIPIO: security: Do not do this, because it may read request parameters
                 Map<String, ? extends Object> parameters = UtilGenerics.checkMap(context.get("parameters"));
                 if (parameters != null) {
-                    str = (String) parameters.get(enableBoundaryCommentsParam);
+                    str = parameters.get(enableBoundaryCommentsParam); // SCIPIO: (String) parameters.get(enableBoundaryCommentsParam);
                     if (str != null) {
-                        result = "true".equals(str);
+                        result = UtilMisc.booleanValue(str, false); // SCIPIO: //result = "true".equals(str);
                     }
+                }*/
+                Boolean enabled = widgetBoundaryCommentsEnabledRequestWebapp(context);
+                if (enabled != null) {
+                    result = enabled;
                 }
             }
         }
         return result;
+    }
+
+    /**
+     * SCIPIO: Returns <code>true</code> if widget boundary comments are enabled in the <code>widget.properties</code> 
+     * file (only).
+     */
+    static boolean widgetBoundaryCommentsEnabledGlobal(Map<String, ? extends Object> context) {
+        return widgetVerboseGlobal;
+    }
+
+    /**
+     * SCIPIO: Returns <code>true</code> if widget boundary comments are enabled in request attributes or the webapp.
+     */
+    static Boolean widgetBoundaryCommentsEnabledRequestWebapp(Map<String, ? extends Object> context) {
+        return widgetBoundaryCommentsEnabledRequestWebapp((HttpServletRequest) context.get("request"));
+    }
+    
+    /**
+     * SCIPIO: Returns <code>true</code> if widget boundary comments are enabled in request attributes or the webapp.
+     */
+    static Boolean widgetBoundaryCommentsEnabledRequestWebapp(HttpServletRequest request) {
+        if (request == null) {
+            return null;
+        }
+        Object enableBoundaryComments = request.getAttribute(ModelWidget.enableBoundaryCommentsParam);
+        if (enableBoundaryComments == null) {
+            enableBoundaryComments = request.getServletContext().getAttribute(ModelWidget.enableBoundaryCommentsParam);
+        }
+        return UtilMisc.booleanValue(enableBoundaryComments);
+    }
+
+    /**
+     * SCIPIO: Prepares the widget boundary comments context field. Called by ScreenRenderer.
+     * <p>
+     * NOTE: security: this prevents {@link #widgetBoundaryCommentsEnabled} from ever reading request parameters.
+     * In addition, optimizes access a little.
+     * <p>
+     * Always put widgetVerbose in context so that:
+     * 1) easier access 
+     * 2) it's already a boolean 
+     * 3) request parameters will not be consulted by ModelWidget#widgetBoundaryCommentsEnabled (security, minor).
+     * <p>
+     * Added 2018-12-07.
+     */
+    public static void setWidgetBoundaryCommentsEnabledField(Map<String, Object> context, HttpServletRequest request) {
+        // See #widgetBoundaryCommentsEnabled for default logic
+        Object enableBoundaryComments = false;
+        if (widgetBoundaryCommentsEnabledGlobal(context)) {
+            if (context.get(enableBoundaryCommentsParam) == null) {
+                enableBoundaryComments = widgetBoundaryCommentsEnabledRequestWebapp(request);
+                if (enableBoundaryComments == null) {
+                    enableBoundaryComments = true; 
+                }
+                context.put(ModelWidget.enableBoundaryCommentsParam, enableBoundaryComments); // force
+            }
+        } else {
+            context.put(ModelWidget.enableBoundaryCommentsParam, enableBoundaryComments); // force disable
+        }
     }
 
     /**

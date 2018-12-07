@@ -166,7 +166,18 @@ public final class UtilURL {
         return fromFilename(newFilename);
     }
 
-    private static String getOfbizHomeRelativeLocation(String path) { // SCIPIO: String overload + impl moved
+    /**
+     * Gets file location (URL) relative to project root from an absolute file path.
+     * NOTE: The file path is NOT a URL! This is a convenience method.
+     * <p>
+     * SCIPIO: NOTE: 2018-12-06: This method is modified so that it will now return null
+     * if the given fileUrl is not under the project root; this is done for common sense
+     * and for security concerns about the original callers of this method.
+     */
+    public static String getOfbizHomeRelativeLocationFromFilePath(String path) { // SCIPIO: String overload + impl moved
+        if (path == null) {
+            return null;
+        }
         String ofbizHome = System.getProperty("ofbiz.home");
         if (path.startsWith(ofbizHome)) {
             // SCIPIO: Added length check and missing slash comparison
@@ -190,7 +201,10 @@ public final class UtilURL {
      * and for security concerns about the original callers of this method.
      */
     public static String getOfbizHomeRelativeLocation(URL fileUrl) {
-        return getOfbizHomeRelativeLocation(fileUrl.getPath()); // SCIPIO: refactored
+        if (fileUrl == null) {
+            return null;
+        }
+        return getOfbizHomeRelativeLocationFromFilePath(fileUrl.getPath()); // SCIPIO: refactored
     }
 
     /**
@@ -201,7 +215,10 @@ public final class UtilURL {
      * and for security concerns about the original callers of this method.
      */
     public static String getOfbizHomeRelativeLocation(URI fileUrl) { // SCIPIO: URI overload
-        return getOfbizHomeRelativeLocation(fileUrl.getPath());
+        if (fileUrl == null) {
+            return null;
+        }
+        return getOfbizHomeRelativeLocationFromFilePath(fileUrl.getPath());
 
     }
 }

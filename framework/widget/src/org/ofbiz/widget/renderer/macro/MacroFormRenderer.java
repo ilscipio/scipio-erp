@@ -1638,6 +1638,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
     public void renderFormatListWrapperOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         contextHandler.registerContext(writer, context);
+        this.widgetCommentsEnabled = ModelWidget.widgetBoundaryCommentsEnabled(context); // SCIPIO: Added missing boundary check for grid/list forms
         Map<String, Object> inputFields = UtilGenerics.checkMap(context.get("requestParameters"));
         Map<String, Object> queryStringMap = UtilGenerics.toMap(context.get("queryStringMap"));
         if (UtilValidate.isNotEmpty(queryStringMap)) {

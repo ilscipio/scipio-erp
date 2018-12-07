@@ -78,7 +78,7 @@ code package.
     </service>
 
     <service name="testRemoteSoap" engine="soap" export="true" 
-        location="http://ce.scipioerp.com/admin/control/SOAPService"
+        location="https://ce.scipioerp.com/admin/control/SOAPService"
         invoke="testSoapSimple">
         <attribute name="defaultValue" type="Double" mode="IN" default-value="999.9999"/>
         <attribute name="message" type="String" mode="IN" optional="true"/>

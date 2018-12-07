@@ -13,18 +13,18 @@ code package.
 <#if selectedServiceMap??>
 
   <#if showWsdl?? && showWsdl == true>
-    <@section title="${rawLabel('WebtoolsServiceWSDL')} - ${rawLabel('WebtoolsService')} ${rawString(selectedServiceMap.serviceName)}">
+    <@section title=rawLabel('WebtoolsServiceWSDL')+" - "+rawLabel('WebtoolsService')+" "+rawString(selectedServiceMap.serviceName)>
         <@code type="html">${selectedServiceMap.wsdl}</@code>
         <br />
         <a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
     </@section>
 
   <#else>
-    <@section title="${rawLabel('WebtoolsService')} ${rawString(selectedServiceMap.serviceName)}">
+    <@section title=rawLabel('WebtoolsService')+" "+rawString(selectedServiceMap.serviceName)>
         <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("${url}") text=uiLabelMap.CommonListAll class="+${styles.action_run_sys!} ${styles.action_find!}" />
-          <@menuitem type="link" href=makeOfbizUrl("scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}") text=uiLabelMap.WebtoolsSchedule class="+${styles.action_nav!} ${styles.action_configure!}" />
-          <@menuitem type="link" href=makeOfbizUrl("setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&POOL_NAME=pool&_RUN_SYNC_=Y") text=uiLabelMap.PageTitleRunService class="+${styles.action_nav!} ${styles.action_begin!}" />
+          <@menuitem type="link" href=makeOfbizUrl(url) text=uiLabelMap.CommonListAll class="+${styles.action_run_sys!} ${styles.action_find!}" />
+          <@menuitem type="link" href=makeOfbizUrl("scheduleJob?SERVICE_NAME=${rawString(selectedServiceMap.serviceName)}") text=uiLabelMap.WebtoolsSchedule class="+${styles.action_nav!} ${styles.action_configure!}" />
+          <@menuitem type="link" href=makeOfbizUrl("setSyncServiceParameters?SERVICE_NAME=${rawString(selectedServiceMap.serviceName)}&POOL_NAME=pool&_RUN_SYNC_=Y") text=uiLabelMap.PageTitleRunService class="+${styles.action_nav!} ${styles.action_begin!}" />
         </@menu>
 
         <#if selectedServiceMap.deprecatedUseInstead?has_content>
@@ -72,7 +72,7 @@ code package.
           </@tr>
           <@tr>
             <@td>${uiLabelMap.WebtoolsExportable}</@td>
-            <@td>${selectedServiceMap.export}<#if selectedServiceMap.exportBool == "true">&nbsp;(<a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&amp;show_wsdl=true</@ofbizUrl>" class="+${styles.link_nav!}" >${uiLabelMap.WebtoolsShowShowWSDL}</a>)</#if></@td>
+            <@td>${selectedServiceMap.export}<#if selectedServiceMap.exportBool == "true">&nbsp;(<a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&amp;show_wsdl=true</@ofbizUrl>" class="+${styles.link_nav_inline!}" >WSDL</a>)</#if></@td>
             <@td>${uiLabelMap.WebtoolsLocation}</@td>
             <@td><a href="<@ofbizUrl>${url}?constraint=location@${selectedServiceMap.location}</@ofbizUrl>">${selectedServiceMap.location}</a></@td>
           </@tr>

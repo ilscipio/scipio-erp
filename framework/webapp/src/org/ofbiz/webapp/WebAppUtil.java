@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +51,7 @@ import org.ofbiz.security.SecurityConfigurationException;
 import org.ofbiz.security.SecurityFactory;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.ControlServlet;
+import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.control.ServletUtil;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
@@ -78,8 +78,6 @@ public final class WebAppUtil {
      * SCIPIO: Fast, light homemache cache to optimize WebappInfo lookups by webSiteId.
      */
     private static final Map<String, WebappInfo> webappInfoWebSiteIdCache = new ConcurrentHashMap<String, WebappInfo>();
-
-    private static final Pattern urlQueryDelimPat = Pattern.compile("[?;#&]");
 
     /**
      * Returns the control servlet path. The path consists of the web application's mount-point
@@ -280,7 +278,7 @@ public final class WebAppUtil {
         }
 
         if (stripQuery) {
-            Matcher m = urlQueryDelimPat.matcher(path);
+            Matcher m = RequestLinkUtil.URL_DELIMS_NODIR_PAT.matcher(path);
             if (m.find()) {
                 path = path.substring(0, m.start());
             }

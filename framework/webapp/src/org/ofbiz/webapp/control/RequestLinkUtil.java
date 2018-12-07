@@ -2,10 +2,13 @@ package org.ofbiz.webapp.control;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.FullWebappInfo;
@@ -25,7 +29,7 @@ import org.xml.sax.SAXException;
 /**
  * SCIPIO: Request link utilities.
  */
-public abstract class RequestLinkUtil {
+public final class RequestLinkUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -36,7 +40,19 @@ public abstract class RequestLinkUtil {
     public static final String HTTPS_PROTO_COLON = "https:";
     public static final String HTTPS_PROTO_COLONSLASH = "https://";
 
-    protected RequestLinkUtil() {
+    public static final String URL_DELIMS_STR = "/?;#&";
+    public static final List<Character> URL_DELIMS_LIST = UtilMisc.unmodifiableArrayListCopy(
+            URL_DELIMS_STR.chars().mapToObj(e->(char)e).collect(Collectors.toList()));
+    public static final Set<Character> URL_DELIMS_SET = UtilMisc.unmodifiableHashSetCopy(URL_DELIMS_LIST);
+    public static final Pattern URL_DELIMS_PAT = Pattern.compile("["+URL_DELIMS_STR+"]");
+
+    public static final String URL_DELIMS_NODIR_STR = "?;#&";
+    public static final List<Character> URL_DELIMS_NODIR_LIST = UtilMisc.unmodifiableArrayListCopy(
+            URL_DELIMS_NODIR_STR.chars().mapToObj(e->(char)e).collect(Collectors.toList()));
+    public static final Set<Character> URL_DELIMS_NODIR_SET = UtilMisc.unmodifiableHashSetCopy(URL_DELIMS_NODIR_LIST);
+    public static final Pattern URL_DELIMS_NODIR_PAT = Pattern.compile("["+URL_DELIMS_NODIR_STR+"]");
+
+    private RequestLinkUtil() {
     }
 
     /**
@@ -718,5 +734,13 @@ public abstract class RequestLinkUtil {
         if (url.length() < (protocolLength + 1)) return false;
         if (url.charAt(protocolLength) != ':') return false;
         return protocol.equalsIgnoreCase(url.substring(0, protocolLength)); // substring+equal avoid iterating whole url
+    }
+
+    public static boolean isUrlDelim(char urlChar) {
+        return (URL_DELIMS_STR.indexOf(urlChar) >= 0);
+    }
+
+    public static boolean isUrlDelimNonDir(char urlChar) {
+        return (URL_DELIMS_NODIR_STR.indexOf(urlChar) >= 0);
     }
 }

@@ -83,6 +83,7 @@ for (int entry = 0; entry < componentList.size(); entry++) {
         componentList[entry].compName = "";
         componentList[entry].rootLocation = "";
         componentList[entry].enabled = "";
+        componentList[entry].relRootLoc = ""; // SCIPIO
     }    
     lastComp = compSave;
 }

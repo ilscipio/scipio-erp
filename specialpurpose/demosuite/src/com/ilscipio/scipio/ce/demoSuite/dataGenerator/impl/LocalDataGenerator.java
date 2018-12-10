@@ -360,18 +360,18 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         String currencyUomId = UtilProperties.getProperties("general.properties").getProperty("currency.uom.id.default", "USD");
         for (int acctgTransEntrySeqId = 1; acctgTransEntrySeqId <= acctgTransEntryCount; acctgTransEntrySeqId++) {
             DemoDataTransactionEntry transactionEntry = transaction.new DemoDataTransactionEntry();
-            DynamicViewEntity dve = new DynamicViewEntity();
-            dve.addMemberEntity("GA", "GlAccount");
-            dve.addMemberEntity("GAO", "GlAccountOrganization");
-            dve.addAliasAll("GA", "", null); // no prefix
-            dve.addAlias("GAO", "organizationPartyId");
-            dve.addViewLink("GA", "GAO", Boolean.FALSE, UtilMisc.toList(new ModelKeyMap("glAccountId", "glAccountId")));
-            try {
-                GenericValue glAccount = EntityQuery.use(delegator).from(dve).where("glAccountId", transactionEntry.getGlAccount()).queryOne();
-                transactionEntry.setGlAccountType(glAccount.getString("glAccountTypeId"));
-            } catch (GenericEntityException e) {
-                // Debug.logError(e.getMessage());
-            }
+//            DynamicViewEntity dve = new DynamicViewEntity();
+//            dve.addMemberEntity("GA", "GlAccount");
+//            dve.addMemberEntity("GAO", "GlAccountOrganization");
+//            dve.addAliasAll("GA", "", null); // no prefix
+//            dve.addAlias("GAO", "organizationPartyId");
+//            dve.addViewLink("GA", "GAO", Boolean.FALSE, UtilMisc.toList(new ModelKeyMap("glAccountId", "glAccountId")));
+//            try {
+//                GenericValue glAccount = EntityQuery.use(delegator).from(dve).where("glAccountId", transactionEntry.getGlAccount()).queryOne();
+//                transactionEntry.setGlAccountType(glAccount.getString("glAccountTypeId"));
+//            } catch (GenericEntityException e) {
+//                // Debug.logError(e.getMessage());
+//            }
 
             transactionEntry.setDebitCreditFlag("C");
             if (acctgTransEntrySeqId % 2 == 0) {

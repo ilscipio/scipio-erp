@@ -6,7 +6,7 @@ code package.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/widget-screen.xsd">
 
     <!-- QuantityBreak screens -->
     <screen name="ListQuantityBreaks">
@@ -69,20 +69,40 @@ code package.
                 <set field="titleProperty" value="PageTitleListCarrierShipmentMethods"/>                
                 <set field="activeSubMenuItem" value="ListCarrierShipmentMethods"/>
                 <set field="labelTitleProperty" value="ProductCarrierShipmentMethods"/>
-
+                
                 <entity-condition entity-name="CarrierShipmentMethod" list="carrierShipmentMethods">
                     <order-by field-name="sequenceNumber"/>
                 </entity-condition>
                 <entity-one entity-name="CarrierShipmentMethod" value-field="carrierShipmentMethod" auto-field-map="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCarrierDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonCarrierDecorator" location="${parameters.mainDecoratorLocation}">                
                     <decorator-section name="body">
+                        <include-menu name="CarrierSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                        <!-- <include-menu location="component://product/widget/catalog/ShippingMenu.xml" name=""/> -->
                         <screenlet>
                             <include-form name="ListCarrierShipmentMethods" location="component://product/widget/catalog/ShippingForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleEditCarrierShipmentMethods}">
                             <include-form name="EditCarrierShipmentMethod" location="component://product/widget/catalog/ShippingForms.xml"/>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+       </section>
+    </screen>    
+    <screen name="NewCarrier">
+       <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleNewCarrier"/>                
+                <set field="activeSubMenuItem" value="ListCarrierShipmentMethods"/>
+                <set field="labelTitleProperty" value="ProductNewCarrier"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCarrierDecorator" location="${parameters.mainDecoratorLocation}">                
+                    <decorator-section name="body">                        
+                        <screenlet>
+                            <include-form name="NewCarrier" location="component://product/widget/catalog/ShippingForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

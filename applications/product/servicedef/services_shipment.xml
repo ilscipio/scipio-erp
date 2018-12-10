@@ -6,7 +6,7 @@ code package.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
     <description>Common Application Components Shipment Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
@@ -45,6 +45,14 @@ code package.
             location="component://product/script/org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="deleteShipmentMethodType" auth="true">
         <description>Deletes A ShipmentMethodType</description>
         <auto-attributes entity-name="ShipmentMethodType" include="pk" mode="IN" optional="false"/>
+    </service>    
+    <!-- SCIPIO (12/10/2018): New service for carrier creation -->
+    <service name="createCarrier" engine="group">
+        <description>Create a carrier PartyGroup</description>
+        <group>
+            <invoke name="createPartyGroup" result-to-context="true"/>
+            <invoke name="createPartyRole"/>
+        </group>
     </service>
 
     <service name="createOrderShipmentPlan" engine="simple"

@@ -22472,6 +22472,13 @@
         <value xml:lang="zh">新建联系方式</value>
         <value xml:lang="zh-TW">新的聯絡方式</value>
     </property>
+    <property key="ProductNewCarrier">
+        <value xml:lang="de">neuer Träger</value>
+        <value xml:lang="en">New Carrier</value>
+        <value xml:lang="es">Nuevo Transportista</value>
+        <value xml:lang="fr">Nouveau Transporteur</value>
+        <value xml:lang="it">Nuovo Vettore</value>        
+    </property>
     <property key="ProductNewFacility">
         <value xml:lang="de">Neue Einrichtung</value>
         <value xml:lang="en">New Warehouse</value>

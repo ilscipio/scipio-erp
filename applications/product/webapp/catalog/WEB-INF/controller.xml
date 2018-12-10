@@ -2241,6 +2241,12 @@ code package.
         <response name="success" type="view" value="ListCarrierShipmentMethods"/>
         <response name="error" type="view" value="ListCarrierShipmentMethods"/>
     </request-map>
+    <request-map uri="createCarrier">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCarrier"/>        
+        <response name="success" type="view" value="NewCarrier"/>
+        <response name="error" type="view" value="ListCarrierShipmentMethods"/>
+    </request-map>
 
     <!-- ================ ProductStore Survey Requests ================= -->
     <request-map uri="EditProductStoreSurveys">
@@ -3299,6 +3305,7 @@ code package.
     <view-map name="ListQuantityBreaks" type="screen" page="component://product/widget/catalog/ShippingScreens.xml#ListQuantityBreaks"/>
     <view-map name="ListShipmentMethodTypes" type="screen" page="component://product/widget/catalog/ShippingScreens.xml#ListShipmentMethodTypes"/>
     <view-map name="ListCarrierShipmentMethods" type="screen" page="component://product/widget/catalog/ShippingScreens.xml#ListCarrierShipmentMethods"/>
+    <view-map name="NewCarrier" type="screen" page="component://product/widget/catalog/ShippingScreens.xml#NewCarrier"/>
 
     <!-- SCIPIO: Remove    
     <view-map name="EditProductTag" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductTag"/> -->

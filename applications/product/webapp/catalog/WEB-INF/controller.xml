@@ -2241,10 +2241,15 @@ code package.
         <response name="success" type="view" value="ListCarrierShipmentMethods"/>
         <response name="error" type="view" value="ListCarrierShipmentMethods"/>
     </request-map>
+    <request-map uri="addCarrier">
+        <security https="true" auth="true"/>                
+        <response name="success" type="view" value="NewCarrier"/>
+        <response name="error" type="view" value="ListCarrierShipmentMethods"/>
+    </request-map>
     <request-map uri="createCarrier">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCarrier"/>        
-        <response name="success" type="view" value="NewCarrier"/>
+        <response name="success" type="view" value="ListCarrierShipmentMethods"/>
         <response name="error" type="view" value="ListCarrierShipmentMethods"/>
     </request-map>
 

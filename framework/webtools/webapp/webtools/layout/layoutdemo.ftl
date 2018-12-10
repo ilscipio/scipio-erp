@@ -1919,6 +1919,17 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       <li>${makeOfbizInterWebappUrl("main", shopWebSiteId)}</li>
       <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":shopWebSiteId, "extLoginKey": true})}</li>
       <li>${makeOfbizInterWebappUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":shopWebSiteId, "extLoginKey": true})}</li>
+      
+      <#-- Some edge cases -->
+      <li><@ofbizInterWebappUrl uri="/catalog"/></li>
+      <li><@ofbizInterWebappUrl uri="/catalog/"/></li>
+      <li><@ofbizInterWebappUrl uri="/catalog?awefawf=323"/></li>
+      <li><@ofbizInterWebappUrl uri="/catalog/?awefawef=2343"/></li>
+      
+      <li><@ofbizInterWebappUrl uri="/admin"/></li>
+      <li><@ofbizInterWebappUrl uri="/admin/"/></li>
+      <li><@ofbizInterWebappUrl uri="/admin?awefawf=323"/></li>
+      <li><@ofbizInterWebappUrl uri="/admin/?awefawef=2343"/></li>
     </ul>
   </@section>
   
@@ -1940,6 +1951,22 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       <li><@ofbizUrl absPath=true interWebapp=true controller=true uri="/admin/control/main" /></li>
       <li><@ofbizUrl absPath=true interWebapp=false controller=false uri="/admin/control/main" /></li>
       <li><@ofbizUrl absPath=true interWebapp=true controller=false uri="/admin/control/main" /></li>
+      
+      <#-- Some edge cases -->
+      <li><@ofbizInterWebappUrl uri="/shop" webSiteId=shopWebSiteId absPath=true/></li>
+      <li><@ofbizInterWebappUrl uri="/shop/" webSiteId=shopWebSiteId absPath=true/></li>
+      <li><@ofbizInterWebappUrl uri="/shop?23afe" webSiteId=shopWebSiteId absPath=true/></li>
+      <li><@ofbizInterWebappUrl uri="/shop/?wefwef" webSiteId=shopWebSiteId absPath=true/></li>
+        
+      <li><@ofbizInterWebappUrl uri="" webSiteId=shopWebSiteId controller=false/></li>
+      <li><@ofbizInterWebappUrl uri="/" webSiteId=shopWebSiteId controller=false/></li>
+      <li><@ofbizInterWebappUrl uri="?awefaewf=23awef" webSiteId=shopWebSiteId controller=false/></li>
+      <li><@ofbizInterWebappUrl uri="/?awefafe=234" webSiteId=shopWebSiteId controller=false/></li>
+      
+      <li><@ofbizWebappUrl uri=""/></li>
+      <li><@ofbizWebappUrl uri="/"/></li>
+      <li><@ofbizWebappUrl uri="?awefaewf=23awef"/></li>
+      <li><@ofbizWebappUrl uri="/?awefafe=234"/></li>
     </ul>
   </@section>
   

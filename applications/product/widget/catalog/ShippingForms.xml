@@ -118,8 +118,8 @@
         <field name="sequenceNumber" tooltip="${uiLabelMap.ProductUsedForDisplayOrdering}"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
-    <form name="NewCarrier" type="single"  target="createCarrier" title="" header-row-style="header-row"  
-        extends-resource="component://party/widget/partymgr/PartyForms.xml" extends="EditPartyGroup" >
+    <form name="NewCarrier" type="single"  target="createCarrier" title=""  
+        extends-resource="component://party/widget/partymgr/PartyForms.xml" extends="EditPartyGroup">
         <actions>
             <entity-one value-field="carrierRole" entity-name="RoleType" >
                 <field-map field-name="roleTypeId" value="CARRIER"/>
@@ -127,7 +127,7 @@
         </actions>
         <alt-target use-when="true" target="createCarrier" />
         
-        <field name="roleTypeId" position="1" map-name="carrierRole"><display  also-hidden="true" /></field>
+        <field name="roleTypeId" map-name="carrierRole" ><hidden/></field>
         
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">

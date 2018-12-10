@@ -1999,6 +1999,10 @@ public class RequestHandler {
                         + targetWebappInfo + ": " + e.toString(), module);
                 return null;
             }
+            // SCIPIO: It's technically possible to be missing a slash here, if root webapp is configured
+            if (!(didFullSecure || didFullStandard) && (url.isEmpty() || RequestLinkUtil.isUrlAppendNeedsDirSep(newURL))) {
+                newURL.insert(0, '/');
+            }
         } else {
             // SCIPIO: 2018-07-27: new path prefix (included in builder.buildPathPart above)
             try {
@@ -2025,7 +2029,7 @@ public class RequestHandler {
             }
 
             // now add the actual passed url, but if it doesn't start with a / add one first
-            if (RequestLinkUtil.isUrlAppendNeedsDirSep(url)) { // SCIPIO: improved check: !url.startsWith("/")
+            if (RequestLinkUtil.isFullUrlAppendNeedsDirSep(url, newURL)) { // SCIPIO: improved check: !url.startsWith("/")
                 newURL.append("/");
             }
             newURL.append(url);

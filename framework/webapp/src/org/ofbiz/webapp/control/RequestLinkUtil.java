@@ -747,13 +747,20 @@ public final class RequestLinkUtil {
     /**
      * Returns true if the path would need a dir separator to be prefixed
      * to the path, assuming the prefix did not end with a slash.
+     * <p>
+     * NOTE: This assumes that the URL we're appending to does not end with a slash (caller must ensure).
      */
     public static boolean isUrlAppendNeedsDirSep(CharSequence path) {
         return (path != null) && (path.length() > 0) && !isUrlDelim(path.charAt(0));
     }
 
     /**
-     * Returns true if needs path sep, false if it doesn't, or null if prefix ends with and path starts with path seps already.
+     * Returns true if needs path sep, false if it doesn't, or null if prefix ends with and path starts with path seps already,
+     * or also true if neither prefix nor path appears to contain the starting root slash.
+     * <p>
+     * fullUrl is assumed to be an absolute URL or absolute URL (starting with slash) from server root.
+     * <p>
+     * This overload covers extra case (empty fullUrl) compared to {@link #isUrlAppendNeedsDirSep(CharSequence, CharSequence)}.
      */
     public static Boolean isUrlAppendNeedsDirSep(CharSequence path, CharSequence prefix) {
         if (path == null || path.length() == 0) {
@@ -763,6 +770,30 @@ public final class RequestLinkUtil {
             return !isUrlDelim(path.charAt(0));
         }
         if (prefix.charAt(prefix.length() - 1) == '/') {
+            if (path.charAt(0) == '/') {
+                return null;
+            }
+            return false;
+        }
+        return !isUrlDelim(path.charAt(0));
+    }
+
+    /**
+     * Returns true if needs path sep, false if it doesn't, or null if prefix ends with and path starts with path seps already,
+     * or also true if neither prefix nor path appears to contain the starting root slash.
+     * <p>
+     * fullUrl is assumed to be an absolute URL from protocol or absolute URL (starting with slash) from server root.
+     * <p>
+     * This overload covers extra case (empty fullUrl) compared to {@link #isUrlAppendNeedsDirSep(CharSequence, CharSequence)}.
+     */
+    public static Boolean isFullUrlAppendNeedsDirSep(CharSequence path, CharSequence fullUrl) {
+        if (fullUrl == null || fullUrl.length() == 0) {
+            return (path == null || path.length() == 0 || path.charAt(0) != '/');
+        }
+        if (path == null || path.length() == 0) {
+            return false;
+        }
+        if (fullUrl.charAt(fullUrl.length() - 1) == '/') {
             if (path.charAt(0) == '/') {
                 return null;
             }

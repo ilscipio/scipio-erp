@@ -323,7 +323,7 @@ function submitForm(form, mode, value) {
                     <@td width="1%">
                       <@field type="radio" name="checkOutPaymentId" value="EXT_STRIPE" checked=("EXT_STRIPE" == checkOutPaymentId)/>
                     </@td>
-                    <@td width="50%">${uiLabelMap.AccountingPayWithPayPal}
+                    <@td width="50%">${uiLabelMap.AccountingPayWithStripe}
                     </@td>
                   </@tr>
                   </#if>

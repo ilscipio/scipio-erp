@@ -33,6 +33,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
+import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.xml.sax.SAXException;
@@ -442,43 +443,67 @@ public final class OfbizUrlBuilder {
      *
      * @param buffer
      * @param uri
+     * @param appendDirSep (SCIPIO) If true, leaves a trailing slash if uri null, empty or starts with a param string (before the params); 
+     *                      if null (legacy scipio), same as true except if uri is null, appendDirSep is interpreted as false (next case);
+     *                      if false, slash is not added unless required by the uri
+     * @throws WebAppConfigurationException
+     * @throws IOException
+     */
+    public void buildPathPart(Appendable buffer, String uri, Boolean appendDirSep) throws WebAppConfigurationException, IOException {
+        if (servletPath == null) {
+            throw new IllegalStateException("Servlet path is unknown");
+        }
+        appendPathPart(buffer, uri, appendDirSep,
+                webSiteProps.isWebappPathPrefixUrlBuild() ? webSiteProps.getWebappPathPrefix()+servletPath : servletPath); // SCIPIO
+    }
+
+    /**
+     * Builds a partial URL - including the servlet path and resource, but not the scheme or host.
+     * <p>
+     * SCIPIO: 2018-08-01: If uri is null, this only appends up to the servlet path, with no trailing slash.
+     * If uri is empty string, does the same but appends trailing slash.
+     *
+     * @param buffer
+     * @param uri
      * @throws WebAppConfigurationException
      * @throws IOException
      */
     public void buildPathPart(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
+        buildPathPart(buffer, uri, null);
+    }
+    
+    public void buildPathPartNoPathPrefix(Appendable buffer, String uri, Boolean appendDirSep) throws WebAppConfigurationException, IOException {
         if (servletPath == null) {
             throw new IllegalStateException("Servlet path is unknown");
         }
-        if (webSiteProps.isWebappPathPrefixUrlBuild()) {
-            buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27
-        }
-        if (uri != null) {
-            buffer.append(servletPath);
-            appendPathPart(buffer, uri); // SCIPIO
-        } else {
-            buffer.append(servletPath.endsWith("/") ? servletPath.substring(0, servletPath.length() - 1) : servletPath);
-        }
+        appendPathPart(buffer, uri, appendDirSep, servletPath); // SCIPIO
     }
 
     public void buildPathPartNoPathPrefix(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
-        if (servletPath == null) {
-            throw new IllegalStateException("Servlet path is unknown");
-        }
-        if (uri != null) {
-            buffer.append(servletPath);
-            appendPathPart(buffer, uri); // SCIPIO
-        } else {
-            buffer.append(servletPath.endsWith("/") ? servletPath.substring(0, servletPath.length() - 1) : servletPath);
-        }
+        buildPathPartNoPathPrefix(buffer, uri, null);
     }
-
+    
+    /**
+     * SCIPIO: Builds path part up to servlet path.
+     * Alias for {@link #buildPathPart(Appendable, String, Boolean)}.
+     * Added 2018-08-01.
+     * @param buffer
+     * @param uri
+     * @param appendDirSep (SCIPIO) If true, leaves a trailing slash if uri null, empty or starts with a param string (before the params); 
+     *                      if null (legacy scipio), same as true except if uri is null, appendDirSep is interpreted as false (next case);
+     *                      if false, slash is not added unless required by the uri
+     */
+    public void buildPathPartWithServletPath(Appendable buffer, String uri, Boolean appendDirSep) throws WebAppConfigurationException, IOException {
+        buildPathPart(buffer, uri, appendDirSep);
+    }
+    
     /**
      * SCIPIO: Builds path part up to servlet path.
      * Alias for {@link #buildPathPart(Appendable, String)}.
      * Added 2018-08-01.
      */
     public void buildPathPartWithServletPath(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
-        buildPathPart(buffer, uri);
+        buildPathPart(buffer, uri, null);
     }
 
     /**
@@ -486,7 +511,7 @@ public final class OfbizUrlBuilder {
      * Added 2018-08-01.
      */
     public void buildPathPartWithServletPath(Appendable buffer) throws WebAppConfigurationException, IOException {
-        buildPathPart(buffer, null);
+        buildPathPart(buffer, null, false);
     }
 
     /**
@@ -495,18 +520,26 @@ public final class OfbizUrlBuilder {
      * returns the url, and not some other type of Writer.
      * Added 2018-07-09.
      */
-    private static void appendPathPart(Appendable buffer, String part) throws IOException {
-        if (buffer.toString().endsWith("/")) {
-            if (part.startsWith("/")) {
-                buffer.append(part.substring(1));
-            } else {
-                buffer.append(part);
+    private static void appendPathPart(Appendable buffer, String path, Boolean appendDirSep, String prefix) throws IOException {
+        // Test if adding a slash between (buffer+prefix) and (path) is needed
+        if ((appendDirSep == null && path != null) || Boolean.TRUE.equals(appendDirSep)
+                || (UtilValidate.isNotEmpty(path) && !RequestLinkUtil.isUrlDelimNonDir(path.charAt(0)))) {
+            // Slash required or requested
+            if (path == null) {
+                path = "";
             }
+            buffer.append(prefix);
+            if (!buffer.toString().endsWith("/") && !((UtilValidate.isNotEmpty(path) && path.charAt(0) == '/'))) {
+                buffer.append('/');
+            }
+            buffer.append(path);
         } else {
-            if (!part.startsWith("/")) {
-                buffer.append("/");
+            // No slash required or requested
+            // NOTE: If (appendDirSep==false), path never starts with "/" here (due to isUrlDelimNonDir)
+            buffer.append(prefix.endsWith("/") ? prefix.substring(0, prefix.length() - 1) : prefix);
+            if (path != null) {
+                buffer.append(path);
             }
-            buffer.append(part);
         }
     }
 
@@ -515,20 +548,29 @@ public final class OfbizUrlBuilder {
      * <p>
      * 2018-08-01: If uri is null, this only appends up to the context root, with no trailing slash.
      * If uri is empty string, does the same but appends trailing slash.
+     * @param buffer
+     * @param uri
+     * @param appendDirSep (SCIPIO) If true, leaves a trailing slash if uri null, empty or starts with a param string (before the params); 
+     *                      if null (legacy scipio), same as true except if uri is null, appendDirSep is interpreted as false (next case);
+     *                      if false, slash is not added unless required by the uri (uri is non-empty and starts with a non-separator)
      */
-    public void buildPathPartWithContextPath(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
+    public void buildPathPartWithContextPath(Appendable buffer, String uri, Boolean appendDirSep) throws WebAppConfigurationException, IOException {
         if (contextPath == null) {
             throw new IllegalStateException("Context path is unknown; there may be no webSiteId or webapp available to determine"); // SCIPIO: message
         }
-        if (webSiteProps.isWebappPathPrefixUrlBuild()) {
-            buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27
-        }
-        if (uri != null) {
-            buffer.append(contextPath);
-            appendPathPart(buffer, uri);
-        } else {
-            buffer.append(contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath);
-        }
+        appendPathPart(buffer, uri, appendDirSep,
+                webSiteProps.isWebappPathPrefixUrlBuild() ? webSiteProps.getWebappPathPrefix()+contextPath : contextPath); // SCIPIO
+    }
+
+
+    /**
+     * SCIPIO: Builds a partial URL - including the context path, but not the scheme or host or servlet.
+     * <p>
+     * 2018-08-01: If uri is null, this only appends up to the context root, with no trailing slash.
+     * If uri is empty string, does the same but appends trailing slash.
+     */
+    public void buildPathPartWithContextPath(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
+        buildPathPartWithContextPath(buffer, uri, null);
     }
 
     /**
@@ -536,7 +578,27 @@ public final class OfbizUrlBuilder {
      * Added 2018-08-01.
      */
     public void buildPathPartWithContextPath(Appendable buffer) throws WebAppConfigurationException, IOException {
-        buildPathPartWithContextPath(buffer, null);
+        buildPathPartWithContextPath(buffer, null, false);
+    }
+
+    /**
+     * SCIPIO: Builds a partial URL - including the webapp path prefix, but not the context path.
+     * <p>
+     * WARN: This overload should only be used by very specific implementations,
+     * because it usually makes no sense to append the webappPathPrefix with a contextPath
+     * different than the one from the same target webapp.
+     * <p>
+     * 2018-08-01: If uri is null, this only appends up to the webapp path prefix, with no trailing slash.
+     * If uri is empty string, does the same but appends trailing slash.
+     * @param buffer
+     * @param uri
+     * @param appendDirSep (SCIPIO) If true, leaves a trailing slash if uri null, empty or starts with a param string (before the params); 
+     *                      if null (legacy scipio), same as true except if uri is null, appendDirSep is interpreted as false (next case);
+     *                      if false, slash is not added unless required by the uri
+     */
+    public void buildPathPartWithWebappPathPrefix(Appendable buffer, String uri, Boolean appendDirSep) throws WebAppConfigurationException, IOException {
+        appendPathPart(buffer, uri, appendDirSep,
+                webSiteProps.isWebappPathPrefixUrlBuild() ? webSiteProps.getWebappPathPrefix() : ""); // SCIPIO
     }
 
     /**
@@ -550,14 +612,10 @@ public final class OfbizUrlBuilder {
      * If uri is empty string, does the same but appends trailing slash.
      */
     public void buildPathPartWithWebappPathPrefix(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
-        if (webSiteProps.isWebappPathPrefixUrlBuild()) {
-            buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27
-        }
-        if (uri != null) {
-            appendPathPart(buffer, uri); // SCIPIO
-        }
-    }
+        buildPathPartWithWebappPathPrefix(buffer, uri, null);
 
+    }
+    
     /**
      * SCIPIO: Builds path part up to webapp path prefix, with no trailing slash.
      * <p>
@@ -568,7 +626,7 @@ public final class OfbizUrlBuilder {
      * Added 2018-08-01.
      */
     public void buildPathPartWithWebappPathPrefix(Appendable buffer) throws WebAppConfigurationException, IOException {
-        buildPathPartWithWebappPathPrefix(buffer, null);
+        buildPathPartWithWebappPathPrefix(buffer, null, false);
     }
 
     /**

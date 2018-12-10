@@ -743,4 +743,31 @@ public final class RequestLinkUtil {
     public static boolean isUrlDelimNonDir(char urlChar) {
         return (URL_DELIMS_NODIR_STR.indexOf(urlChar) >= 0);
     }
+
+    /**
+     * Returns true if the path would need a dir separator to be prefixed
+     * to the path, assuming the prefix did not end with a slash.
+     */
+    public static boolean isUrlAppendNeedsDirSep(CharSequence path) {
+        return (path != null) && (path.length() > 0) && !isUrlDelim(path.charAt(0));
+    }
+
+    /**
+     * Returns true if needs path sep, false if it doesn't, or null if prefix ends with and path starts with path seps already.
+     */
+    public static Boolean isUrlAppendNeedsDirSep(CharSequence path, CharSequence prefix) {
+        if (path == null || path.length() == 0) {
+            return false;
+        }
+        if (prefix == null || prefix.length() == 0) {
+            return !isUrlDelim(path.charAt(0));
+        }
+        if (prefix.charAt(prefix.length() - 1) == '/') {
+            if (path.charAt(0) == '/') {
+                return null;
+            }
+            return false;
+        }
+        return !isUrlDelim(path.charAt(0));
+    }
 }

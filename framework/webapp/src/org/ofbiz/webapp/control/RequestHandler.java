@@ -1848,7 +1848,8 @@ public class RequestHandler {
         }
 
         // SCIPIO: Sanity check: null/missing URL
-        if (url == null || url.isEmpty()) {
+        // 2018-12-07: NOTE: Now accepting url.isEmpty(), because may be inter-webapp root webapp request
+        if (url == null) { // || url.isEmpty()
             Debug.logError("makeLink: Received null URL; returning null", module);
             return null;
         }
@@ -1897,6 +1898,11 @@ public class RequestHandler {
 
         // SCIPIO: only lookup if we want to use controller
         if (controller) {
+            if (url.isEmpty()) { // SCIPIO
+                Debug.log(getMakeLinkErrorLogLevel(request, delegator), null,
+                        "makeLink: Cannot build link: empty uri, cannot locate controller request for webapp " + (interWebapp ? targetWebappInfo : currentWebappInfo), module);
+                return null;
+            }
             requestUri = RequestHandler.getRequestUri(url);
 
             if (requestUri != null) {
@@ -1983,9 +1989,9 @@ public class RequestHandler {
                     builder = targetWebappInfo.getOfbizUrlBuilder();
                 }
                 if (controller) {
-                    builder.buildPathPart(newURL, url);
+                    builder.buildPathPart(newURL, url, false); // SCIPIO: appendDirSep=false (avoid unless necessary)
                 } else {
-                    builder.buildPathPartWithContextPath(newURL, url);
+                    builder.buildPathPartWithContextPath(newURL, url, false); // SCIPIO: appendDirSep=false (avoid unless necessary)
                 }
             } catch (Exception e) {
                 // SCIPIO: new case
@@ -2019,7 +2025,7 @@ public class RequestHandler {
             }
 
             // now add the actual passed url, but if it doesn't start with a / add one first
-            if (!url.startsWith("/")) {
+            if (RequestLinkUtil.isUrlAppendNeedsDirSep(url)) { // SCIPIO: improved check: !url.startsWith("/")
                 newURL.append("/");
             }
             newURL.append(url);
@@ -2077,7 +2083,7 @@ public class RequestHandler {
         boolean interWebapp = !targetWebappInfo.equals(currentWebappInfo);
 
         // SCIPIO: Sanity check: null/missing URL
-        if (url == null || url.isEmpty()) {
+        if (url == null) { // Allow empty for root webapp requests: || url.isEmpty()
             Debug.logError("makeLink: Received null URL; returning null", module);
             return null;
         }
@@ -2103,6 +2109,11 @@ public class RequestHandler {
 
         // SCIPIO: only lookup if we want to use controller
         if (controller) {
+            if (url.isEmpty()) { // SCIPIO
+                Debug.log(getMakeLinkErrorLogLevel((HttpServletRequest) context.get("request"), delegator), null,
+                        "makeLink: Cannot build link: empty uri, cannot locate controller request for webapp " + targetWebappInfo, module);
+                return null;
+            }
             requestUri = RequestHandler.getRequestUri(url);
 
             if (requestUri != null) {
@@ -2120,7 +2131,8 @@ public class RequestHandler {
             // There is virtually no case where this is not a coding error we want to catch, and if we don't show an error,
             // then we can't use this as a security check. Likely also to make some template errors clearer.
             if (requestMap == null) {
-                Debug.log(getMakeLinkErrorLogLevel((HttpServletRequest) context.get("request"), delegator), null, "makeLink: Cannot build link: could not locate the expected request '"
+                Debug.log(getMakeLinkErrorLogLevel((HttpServletRequest) context.get("request"), delegator), null,
+                        "makeLink: Cannot build link: could not locate the expected request '"
                         + requestUri + "' in controller config for webapp " + targetWebappInfo, module);
                 return null;
             }
@@ -2506,9 +2518,14 @@ public class RequestHandler {
             } else {
                 if (!absContextPathChecked) {
                     if (!url.startsWith(contextPath)) {
-                        Debug.logError("makeLinkAuto: trying to make a webapp link for webapp " + targetWebappInfo
-                                + " using absolute path url, but context root does not match (uri: " + url + ", context path: " + contextPath + ")", module);
-                        return null;
+                        // We may still have a root request
+                        String ctxPath = contextPath.substring(0, contextPath.length() - 1); // remove '/'
+                        if (!(url.startsWith(ctxPath) && (url.length() == ctxPath.length() 
+                                || RequestLinkUtil.isUrlDelimNonDir(url.charAt(ctxPath.length())) ))) {
+                            Debug.logError("makeLinkAuto: trying to make a webapp link for webapp " + targetWebappInfo
+                                    + " using absolute path url, but context root does not match (uri: " + url + ", context path: " + contextPath + ")", module);
+                            return null;
+                        }
                     }
                     absContextPathChecked = true;
                 }
@@ -2521,7 +2538,18 @@ public class RequestHandler {
             if (controller) {
                 relUrl = url.substring(controlPath.length());
             } else {
-                relUrl = url.substring(contextPath.length());
+                if (url.length() <= (contextPath.length() - 1)) { // Check if no-param root webapp request (NOTE: contextPath ends with slash)
+                    relUrl = "";
+                } else if ((url.charAt(contextPath.length() - 1) == '/')) { // Check for subdir vs root webapp request with params
+                    if (url.length() == contextPath.length() || RequestLinkUtil.isUrlDelimNonDir(url.charAt(contextPath.length()))) {
+                        // root request, preserve the slash
+                        relUrl = url.substring(contextPath.length() - 1);
+                    } else {
+                        relUrl = url.substring(contextPath.length());
+                    }
+                } else {
+                    relUrl = url.substring(contextPath.length() - 1); // if not '/', it's a parameter delimiter
+                }
             }
         } else {
             relUrl = url;

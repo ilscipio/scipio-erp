@@ -1,7 +1,9 @@
 package com.ilscipio.scipio.ce.webapp.filter.urlrewrite.reqwrap;
 
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,7 +17,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
 
     protected final Map<String, Object> attributes = new HashMap<>();
-    protected Set<String> attributeNames = null;
+    protected Set<String> removedAttributeNames = new HashSet<>();
 
     public WrappedHttpServletRequest(HttpServletRequest request) {
         super(request);
@@ -28,19 +30,21 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper {
 
     @Override
     public Enumeration<String> getAttributeNames() {
-        if (attributeNames == null) {
-
-        }
-        return super.getAttributeNames();
+        Set<String> attrNames = new HashSet<>(Collections.list(super.getAttributeNames()));
+        attrNames.addAll(attributes.keySet());
+        attrNames.removeAll(removedAttributeNames);
+        return Collections.enumeration(attrNames);
     }
 
     @Override
     public void setAttribute(String name, Object o) {
         attributes.put(name, o);
+        removedAttributeNames.remove(name);
     }
 
     @Override
     public void removeAttribute(String name) {
         attributes.put(name, null);
+        removedAttributeNames.add(name);
     }
 }

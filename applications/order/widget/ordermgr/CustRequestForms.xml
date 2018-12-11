@@ -736,10 +736,27 @@ code package.
         <field name="saveAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ListCustRequests" type="list" list-name="custRequests" odd-row-style="alternate-row" target="updaterequest"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        <actions>
+            <set field="getProjectTaskExists" type="Boolean" value="true"/>
+            <if><!-- SCIPIO: Added service test, because this is provided by projectmgr addon -->
+                <condition><not><if-service service-name="getProjectTask"/></not></condition>
+                <then>
+                    <set field="getProjectTaskExists" type="Boolean" value="false"/>
+                    <script lang="groovy"><![CDATA[
+                        org.ofbiz.base.util.Debug.logWarning("Cannot get task info for cust request; requires projectmgr addon", "ListCustRequests.groovy");
+                    ]]></script>
+                </then>
+            </if>
+        </actions>
         <row-actions>
-            <service service-name="getProjectTask" result-map="taskResult">
-                <field-map field-name="taskId" from-field="workEffortId"/>
-            </service>
+            <if><!-- SCIPIO: Added service test, because this is provided by projectmgr addon -->
+                <condition><if-true field="getProjectTaskExists"/></condition>
+                <then>
+                    <service service-name="getProjectTask" result-map="taskResult">
+                        <field-map field-name="taskId" from-field="workEffortId"/>
+                    </service>
+                </then>
+            </if>
         </row-actions>
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestName" encode-output="false" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
@@ -762,10 +779,27 @@ code package.
         <field name="actualHours" map-name="taskResult.taskInfo"><display/></field>
     </form>
     <form name="ListMyCustRequests" type="list" list-name="custRequests" odd-row-style="alternate-row" target="updaterequest"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        <actions>
+            <set field="getProjectTaskExists" type="Boolean" value="true"/>
+            <if><!-- SCIPIO: Added service test, because this is provided by projectmgr addon -->
+                <condition><not><if-service service-name="getProjectTask"/></not></condition>
+                <then>
+                    <set field="getProjectTaskExists" type="Boolean" value="false"/>
+                    <script lang="groovy"><![CDATA[
+                        org.ofbiz.base.util.Debug.logWarning("Cannot get task info for cust request; requires projectmgr addon", "ListCustRequests.groovy");
+                    ]]></script>
+                </then>
+            </if>
+        </actions>
         <row-actions>
-            <service service-name="getProjectTask" result-map="taskResult">
-                <field-map field-name="taskId" from-field="workEffortId"/>
-            </service>
+            <if><!-- SCIPIO: Added service test, because this is provided by projectmgr addon -->
+                <condition><if-true field="getProjectTaskExists"/></condition>
+                <then>
+                    <service service-name="getProjectTask" result-map="taskResult">
+                        <field-map field-name="taskId" from-field="workEffortId"/>
+                    </service>
+                </then>
+            </if>
         </row-actions>
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestName" encode-output="false" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">

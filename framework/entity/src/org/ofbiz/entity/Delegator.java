@@ -946,4 +946,12 @@ public interface Delegator {
      * @return boolean true if this delegator uses a Distributed Cache Clear mechanism
      */
     boolean useDistributedCacheClear();
+
+    /**
+     * SCIPIO: Helper method to determine if the entity exists by name in the system.
+     * Never throws exceptions.
+     */
+    default boolean isEntity(String entityName) {
+        return (getModelReader().getModelEntityNoCheck(entityName) != null);
+    }
 }

@@ -442,23 +442,60 @@ code package.
         </section>
     </screen>
     
-    <!-- Potentially remove? -->
+    
     <screen name="CommonOrganizationAccountingReportsDecorator">
         <section>
             <actions>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
-                <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
-                    <field-map field-name="partyId" from-field="organizationPartyId"/>
-                </entity-one>
-                <!-- sidebar additional condition -->
-                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
+                
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.Debug
+                    
+                    Debug.log("organizationPartyId =========> " + organizationPartyId);
+                ]]></script>
+                
+                <if>
+                    <condition><not><if-empty field="organizationPartyId" /></not></condition>
+                    <then>
+                        <service service-name="getPartyAccountingPreferences" result-map="result">
+                        <field-map field-name="organizationPartyId"/>
+                        </service>
+                        
+                        <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
+                        <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+                        
+                        <entity-one entity-name="PartyNameView" value-field="currentOrganization" auto-field-map="false">
+                            <field-map field-name="partyId" from-field="organizationPartyId"/>
+                        </entity-one>
+                        <!-- sidebar additional condition -->
+                        <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.organizationPartyId}"/>
+                    </then>
+                    <else>
+                        <set field="titleProperty" value="AccountingAvailableInternalOrganizations"/>
+                        <set field="labelTitleProperty" value="" />
+                        <entity-condition entity-name="PartyAcctgPreference" list="parties"/>
+                    </else>
+                </if>
+                
+                               
             </actions>
             <widgets>
                 <decorator-screen name="CommonReportsDecorator" location="${parameters.mainDecoratorLocation}"><!-- SCIPIO: obsolete: ${parameters.partyDecoratorLocation} -->
                     <decorator-section name="body">
-                        <include-menu name="OrganizationTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
-                        <decorator-section-include name="body"/>
+                        <section>
+                            <condition>
+                                <not><if-empty field="organizationPartyId" /></not>
+                            </condition>
+                            <widgets>
+                                <include-menu name="OrganizationTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="heading">${uiLabelMap[labelTitleProperty]} Select organization</label>
+                                <platform-specific><html><html-template location="component://accounting/webapp/accounting/reports/SelectOrganization.ftl"></html-template></html></platform-specific>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -1773,11 +1773,10 @@ code package.
     * Reports
     **************
     -->
-    <!-- SCIPIO: TODO: REVIEW: view no longer exists...
     <request-map uri="TransactionReports">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="TransactionReports"/>
-    </request-map>-->
+        <response name="success" type="view" value="TransactionTotals"/>
+    </request-map>
     <!--
     <request-map uri="FinancialTransactionReport">
         <security https="true" auth="true"/>

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -37,6 +38,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.lang.Appender;
 
 /**
@@ -715,6 +717,19 @@ public class StringUtil {
     }
 
     /**
+     * SCIPIO: Returns the given object as a CharSequence as-if if it is one, otherwise returns
+     * the object's {@link Object#toString()} value.
+     * <p>
+     * NOTE: May be used on {@link Appendable} instances that are expected to hold strings.
+     */
+    public static CharSequence asCharSequence(Object str) {
+        if (str instanceof CharSequence) {
+            return (CharSequence) str;
+        }
+        return str.toString();
+    }
+
+    /**
      * SCIPIO: Ensures the string does not pass the given length and returns 
      * the first lengthLimit characters if longer, with extra suffix to 
      * add if passes the length (e.g., "...").
@@ -739,5 +754,72 @@ public class StringUtil {
             return str;
         }
         return str.substring(0, lengthLimit);
+    }
+
+    /**
+     * SCIPIO: Checks if the given string/StringBuilder starts with the given character.
+     */
+    public static boolean startsWith(CharSequence str, char suffix) {
+        return (str.length() > 0) && (str.charAt(0) == suffix);
+    }
+
+    /**
+     * SCIPIO: Checks if the given string/StringBuilder starts with the given prefix.
+     */
+    public static boolean startsWith(CharSequence str, CharSequence prefix) {
+        return StringUtils.startsWith(str, prefix);
+    }
+
+    /**
+     * SCIPIO: Checks if the given String/StringBuilder ends with the given character.
+     */
+    public static boolean endsWith(CharSequence str, char suffix) {
+        return (str.length() > 0) && (str.charAt(str.length() - 1) == suffix);
+    }
+
+    /**
+     * SCIPIO: Checks if the given String/StringBuilder ends with the given suffix.
+     */
+    public static boolean endsWith(CharSequence str, CharSequence suffix) {
+        return StringUtils.endsWith(str, suffix);
+    }
+
+    /**
+     * SCIPIO: Checks if the given object's {@link Object#toString()) value ends with the given character.
+     * CharSequence-optimized.
+     */
+    public static boolean endsWith(Object str, char suffix) {
+        return endsWith(asCharSequence(str), suffix);
+    }
+
+    /**
+     * SCIPIO: Checks if the given object's {@link Object#toString()) value ends with the given suffix.
+     * CharSequence-optimized.
+     */
+    public static boolean endsWith(Object str, CharSequence suffix) {
+        return endsWith(asCharSequence(str), suffix);
+    }
+
+    /**
+     * SCIPIO: Append the string to the buffer after removing the given suffixToRemove from the end of the string if present.
+     * NOTE: Only removes one occurrence of the character.
+     */
+    public static void appendWithoutSuffix(Appendable buffer, CharSequence str, char suffixToRemove) throws IOException {
+        if (endsWith(str, suffixToRemove)) {
+            buffer.append(str, 0, str.length() - 1);
+        } else {
+            buffer.append(str);
+        }
+    }
+
+    /**
+     * SCIPIO: Append the string to the buffer after removing the given suffixToRemove from the end of the string if present.
+     */
+    public static void appendWithoutSuffix(Appendable buffer, CharSequence str, CharSequence suffixToRemove) throws IOException {
+        if (endsWith(str, suffixToRemove)) {
+            buffer.append(str, 0, str.length() - suffixToRemove.length());
+        } else {
+            buffer.append(str);
+        }
     }
 }

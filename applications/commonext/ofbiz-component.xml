@@ -25,13 +25,18 @@ code package.
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     
+    <!-- SCIPIO: DEPRECATED: ofbizsetup webapp is replaced by full dedicated setup component: component://setup/ofbiz-component.xml
+        NOTE: The new setup component may still reuse files from the original component://commonext/... location.
+        Although having a separate component creates issues with finding/splitting/reusing/duplication of legacy files,
+        the original inclusion of ofbizsetup in commonext muddied the component dependencies and was flawed; it really belonged as
+        a separate component due to physical and logical dependendies on the other applications. -->
     <webapp name="ofbizsetup"
         title="Setup"
         server="default-server"
         location="webapp/ofbizsetup"
         base-permission="OFBTOOLS,SETUP"
         mount-point="/ofbizsetup"/>
-    
+
     <webapp name="ordermgr-js"
         title="ordermgr-js"
         server="default-server"

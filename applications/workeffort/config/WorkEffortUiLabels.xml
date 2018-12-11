@@ -3115,7 +3115,7 @@
     </property>
     <property key="WorkEffortInterestingSure">
         <value xml:lang="de">Versuchen Sie es einmal mit Username: "admin"; Passwort "scipio"</value>
-        <value xml:lang="en">Try: Username: "admin" Password "scipio"</value>
+        <value xml:lang="en">Try: Username: "admin"; Password "scipio"</value>
         <value xml:lang="es">Para ingresar, Nombre de usuario: admin, contraseña: scipio</value>
         <value xml:lang="fr">Pour que quelque chose d'intéressant, essayez de vous connecter. Identifiant de connexion : admin / Mot de passe : scipio</value>
         <value xml:lang="it">Assicurati di essere autenticato, prova: Nome Utente;admin; Password scipio</value>

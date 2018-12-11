@@ -19229,8 +19229,8 @@
         <value xml:lang="zh-TW">未來團體/角色清單</value>
     </property>
     <property key="ProductGeneralMessage">
-        <value xml:lang="de">Für etwas Interessantes melden Sie sich an, versuchen Sie Benutzername:admin, Passwort: scipio</value>
-        <value xml:lang="en">For something interesting make sure you are logged in, try username:admin, password: scipio</value>
+        <value xml:lang="de">Für etwas Interessantes melden Sie sich an, versuchen Sie Benutzername: admin, Passwort: scipio</value>
+        <value xml:lang="en">For something interesting, make sure you are logged in; try username: admin, password: scipio</value>
         <value xml:lang="es">Para ver algo interesante asegúrese de estar conectado, pruebe el usuario: admin y la contraseña: scipio</value>
         <value xml:lang="fr">Si vous êtes intéressé, connectez-vous sous l'utilisateur admin, mot de passe: scipio</value>
         <value xml:lang="it">Per qualsiasi interesse devi essere sicuro di essere loggato, provare nome utente:admin, password: scipio</value>

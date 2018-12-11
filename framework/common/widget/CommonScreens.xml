@@ -196,7 +196,9 @@ code package.
             <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" default-value="component://common/webcommon/includes/messages.ftl" global="true"/>
             <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl" global="true"/>
             <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl" global="true"/>
-            <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!-- diseable ofbiz setup by default -->
+            <!-- SCIPIO: This is counter-productive; we use app-bar-display
+            <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!- - disable ofbiz setup by default - ->
+            -->
 
             <!-- Saved the orig "title" and "titleProperty" field JUST IN CASE something needs them; we may overwrite these -->
             <set field="origTitle" from-field="title" />

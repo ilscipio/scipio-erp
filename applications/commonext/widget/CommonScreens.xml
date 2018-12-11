@@ -76,7 +76,9 @@ code package.
                 <if>
                     <condition><if-empty field="PartyAcctgPrefAndGroupList"/></condition>
                     <then>
-                        <set field="layoutSettings.suppressTab" value=""/><!-- enable ofbiz setup -->
+                        <!-- SCIPIO: This is counter-productive; we use app-bar-display
+                        <set field="layoutSettings.suppressTab" value=""/><!- - enable ofbiz setup - ->
+                        -->
                     </then>
                 </if>
             </actions>

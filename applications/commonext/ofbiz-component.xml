@@ -35,7 +35,8 @@ code package.
         server="default-server"
         location="webapp/ofbizsetup"
         base-permission="OFBTOOLS,SETUP"
-        mount-point="/ofbizsetup"/>
+        mount-point="/ofbizsetup"
+        app-bar-display="false"/><!-- SCIPIO: Removed from appbar here, instead of using layoutSettings.suppressTab in decorators -->
 
     <webapp name="ordermgr-js"
         title="ordermgr-js"

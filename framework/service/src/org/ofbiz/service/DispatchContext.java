@@ -274,4 +274,20 @@ public class DispatchContext implements Serializable {
         }
         return serviceMap;
     }
+
+    /**
+     * SCIPIO: Returns true if the given service exists by name.
+     * <p>
+     * May be used to test addon service presence.
+     * <p>
+     * Never throws an exception.
+     */
+    public boolean isService(String serviceName) {
+        try {
+            return getModelService(serviceName) != null;
+        } catch (Exception e) {
+            ; // ignore all exceptions in this case
+            return false;
+        }
+    }
 }

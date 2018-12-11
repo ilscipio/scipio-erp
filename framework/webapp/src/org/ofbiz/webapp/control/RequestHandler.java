@@ -2025,7 +2025,9 @@ public class RequestHandler {
             } else {
                 // SCIPIO: Here we point to any servlet or file in the webapp, so only append context path
                 String contextPath = request.getContextPath();
-                newURL.append(contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath);
+                // SCIPIO: This test is useless; HttpServletRequest.getContextPath() never returns a trailing slash, per servlet API
+                //newURL.append(contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath);
+                newURL.append(contextPath);
             }
 
             // now add the actual passed url, but if it doesn't start with a / add one first

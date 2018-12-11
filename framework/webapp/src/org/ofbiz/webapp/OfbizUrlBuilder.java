@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Assert;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -529,14 +530,14 @@ public final class OfbizUrlBuilder {
                 path = "";
             }
             buffer.append(prefix);
-            if (!buffer.toString().endsWith("/") && !((UtilValidate.isNotEmpty(path) && path.charAt(0) == '/'))) {
+            if (!StringUtil.endsWith(buffer, '/') && !(path != null && StringUtil.startsWith(path, '/'))) {
                 buffer.append('/');
             }
             buffer.append(path);
         } else {
             // No slash required or requested
             // NOTE: If (appendDirSep==false), path never starts with "/" here (due to isUrlDelimNonDir)
-            buffer.append(prefix.endsWith("/") ? prefix.substring(0, prefix.length() - 1) : prefix);
+            StringUtil.appendWithoutSuffix(buffer, prefix, '/');
             if (path != null) {
                 buffer.append(path);
             }
@@ -615,7 +616,7 @@ public final class OfbizUrlBuilder {
         buildPathPartWithWebappPathPrefix(buffer, uri, null);
 
     }
-    
+
     /**
      * SCIPIO: Builds path part up to webapp path prefix, with no trailing slash.
      * <p>

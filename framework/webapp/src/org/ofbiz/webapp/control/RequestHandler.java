@@ -104,6 +104,13 @@ public class RequestHandler {
             "_SCP_VIEW_SAVE_ATTR_EXCL_" // TODO: remove: _SCP_VIEW_SAVE_ATTR_EXCL_ deprecated, likely was not used
             );
 
+    /**
+     * SCIPIO: If true, force a slash after the context root when building links, meaning even
+     * when the path is empty; if false, does not force them and instead respects caller-specified path, 
+     * but then Tomcat may perform unnecessary redirects to add them itself (due to web.xml?).
+     */
+    private static final boolean urlForceContextRootDirSep = true;
+    
     private final String defaultStatusCodeString = UtilProperties.getPropertyValue("requestHandler", "status-code", "301");
     private final ViewFactory viewFactory;
     private final EventFactory eventFactory;
@@ -1991,7 +1998,7 @@ public class RequestHandler {
                 if (controller) {
                     builder.buildPathPart(newURL, url, false); // SCIPIO: appendDirSep=false (avoid unless necessary)
                 } else {
-                    builder.buildPathPartWithContextPath(newURL, url, false); // SCIPIO: appendDirSep=false (avoid unless necessary)
+                    builder.buildPathPartWithContextPath(newURL, url, urlForceContextRootDirSep);
                 }
             } catch (Exception e) {
                 // SCIPIO: new case
@@ -1999,8 +2006,8 @@ public class RequestHandler {
                         + targetWebappInfo + ": " + e.toString(), module);
                 return null;
             }
-            // SCIPIO: It's technically possible to be missing a slash here, if root webapp is configured
-            if (!(didFullSecure || didFullStandard) && (url.isEmpty() || RequestLinkUtil.isUrlAppendNeedsDirSep(newURL))) {
+            // SCIPIO: It's technically possible to be missing a slash here, if a root webapp is configured
+            if (!(didFullSecure || didFullStandard) && (newURL.length() == 0 || RequestLinkUtil.isUrlAppendNeedsDirSep(newURL))) {
                 newURL.insert(0, '/');
             }
         } else {
@@ -2022,18 +2029,33 @@ public class RequestHandler {
                 // create the path to the control servlet
                 String controlPath = (String) request.getAttribute("_CONTROL_PATH_");
                 newURL.append(controlPath);
+
+                if (Boolean.TRUE.equals(RequestLinkUtil.isUrlAppendNeedsDirSep(url, newURL))) { // SCIPIO: improved check: !url.startsWith("/")
+                    newURL.append("/");
+                }
             } else {
                 // SCIPIO: Here we point to any servlet or file in the webapp, so only append context path
                 String contextPath = request.getContextPath();
                 // SCIPIO: This test is useless; HttpServletRequest.getContextPath() never returns a trailing slash, per servlet API
                 //newURL.append(contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath);
                 newURL.append(contextPath);
+
+                if (urlForceContextRootDirSep) {
+                    if (!StringUtil.endsWith(newURL, '/') && !StringUtil.startsWith(url, '/')) {
+                        newURL.append("/");
+                    }
+                } else {
+                    if (Boolean.TRUE.equals(RequestLinkUtil.isUrlAppendNeedsDirSep(url, newURL))) { // SCIPIO: improved check: !url.startsWith("/")
+                        newURL.append("/");
+                    }
+                }
             }
 
             // now add the actual passed url, but if it doesn't start with a / add one first
-            if (RequestLinkUtil.isFullUrlAppendNeedsDirSep(url, newURL)) { // SCIPIO: improved check: !url.startsWith("/")
-                newURL.append("/");
-            }
+            // SCIPIO: Moved above due to special cases
+            //if (Boolean.TRUE.equals(RequestLinkUtil.isFullUrlAppendNeedsDirSep(url, newURL))) { // SCIPIO: improved check: !url.startsWith("/")
+            //    newURL.append("/");
+            //}
             newURL.append(url);
         }
 

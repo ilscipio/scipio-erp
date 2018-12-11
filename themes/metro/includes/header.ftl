@@ -67,7 +67,7 @@ code package.
         <#if layoutSettings.suppressTab?? && display.name == layoutSettings.suppressTab>
           <#-- do not display this component-->
         <#else>
-            <li <#if selected> class="active"</#if>>
+            <li<#if selected> class="active"</#if>>
                 <a href="${thisURL}${rawString(externalKeyParam)}"<#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
             </li>
             <#assign appCount = appCount + 1>
@@ -93,7 +93,7 @@ code package.
               <#assign thisURL = thisApp>
             </#if>
           </#if>
-          <li <#if selected> class="active"</#if>>      
+          <li<#if selected> class="active"</#if>>      
             <a href="${thisURL}${rawString(externalKeyParam)}"<#if selected> class="active"</#if><#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
             <#assign appCount = appCount + 1>
           </li>

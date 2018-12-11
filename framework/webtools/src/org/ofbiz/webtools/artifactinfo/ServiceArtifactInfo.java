@@ -138,7 +138,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
             // the forward reference
             this.entitiesUsedByThisService.add(aif.getEntityArtifactInfo(validEntityName));
             // the reverse reference
-            UtilMisc.addToSortedSetInMap(this, aif.allServiceInfosReferringToEntityName, validEntityName);
+            addToSortedSetInMap(this, aif.allServiceInfosReferringToEntityName, validEntityName); // SCIPIO: switched method
         }
     }
 
@@ -213,7 +213,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
             // the forward reference
             this.servicesCalledByThisService.add(aif.getServiceArtifactInfo(serviceName));
             // the reverse reference
-            UtilMisc.addToSortedSetInMap(this, aif.allServiceInfosReferringToServiceName, serviceName);
+            addToSortedSetInMap(this, aif.allServiceInfosReferringToServiceName, serviceName); // SCIPIO: switched method
         }
     }
 
@@ -225,7 +225,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
             for (ServiceEcaRule ecaRule: ecaRuleList) {
                 this.serviceEcasTriggeredByThisService.add(aif.getServiceEcaArtifactInfo(ecaRule));
                 // the reverse reference
-                UtilMisc.addToSortedSetInMap(this, aif.allServiceInfosReferringToServiceEcaRule, ecaRule);
+                addToSortedSetInMap(this, aif.allServiceInfosReferringToServiceEcaRule, ecaRule); // SCIPIO: switched method
             }
         }
     }

@@ -27,7 +27,6 @@ import java.util.TreeSet;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.webapp.control.ConfigXMLReader;
@@ -68,7 +67,7 @@ public class ControllerRequestArtifactInfo extends ArtifactInfoBase {
             this.serviceCalledByRequestEvent = this.aif.getServiceArtifactInfo(serviceName);
             if (this.serviceCalledByRequestEvent != null) {
                 // add the reverse association
-                UtilMisc.addToSortedSetInMap(this, aif.allRequestInfosReferringToServiceName, this.serviceCalledByRequestEvent.getUniqueId());
+                addToSortedSetInMap(this, aif.allRequestInfosReferringToServiceName, this.serviceCalledByRequestEvent.getUniqueId()); // SCIPIO: switched method
             }
         }
 
@@ -86,7 +85,7 @@ public class ControllerRequestArtifactInfo extends ArtifactInfoBase {
                     ControllerViewArtifactInfo artInfo = this.aif.getControllerViewArtifactInfo(controllerXmlUrl, viewUri);
                     this.viewsThatAreResponsesToThisRequest.add(artInfo);
                     // add the reverse association
-                    UtilMisc.addToSortedSetInMap(this, this.aif.allRequestInfosReferringToView, artInfo.getUniqueId());
+                    addToSortedSetInMap(this, this.aif.allRequestInfosReferringToView, artInfo.getUniqueId()); // SCIPIO: switched method
                 } catch (GeneralException e) {
                     Debug.logWarning(e.toString(), module);
                 }
@@ -101,7 +100,7 @@ public class ControllerRequestArtifactInfo extends ArtifactInfoBase {
                 try {
                     ControllerRequestArtifactInfo artInfo = this.aif.getControllerRequestArtifactInfo(controllerXmlUrl, otherRequestUri);
                     this.requestsThatAreResponsesToThisRequest.add(artInfo);
-                    UtilMisc.addToSortedSetInMap(this, this.aif.allRequestInfosReferringToRequest, artInfo.getUniqueId());
+                    addToSortedSetInMap(this, this.aif.allRequestInfosReferringToRequest, artInfo.getUniqueId()); // SCIPIO: switched method
                 } catch (GeneralException e) {
                     Debug.logWarning(e.toString(), module);
                 }
@@ -109,12 +108,12 @@ public class ControllerRequestArtifactInfo extends ArtifactInfoBase {
                 String otherRequestUri = response.value;
                 ControllerRequestArtifactInfo artInfo = this.aif.getControllerRequestArtifactInfo(controllerXmlUrl, otherRequestUri);
                 this.requestsThatAreResponsesToThisRequest.add(artInfo);
-                UtilMisc.addToSortedSetInMap(this, this.aif.allRequestInfosReferringToRequest, artInfo.getUniqueId());
+                addToSortedSetInMap(this, this.aif.allRequestInfosReferringToRequest, artInfo.getUniqueId()); // SCIPIO: switched method
             } else if ("request-redirect-noparam".equals(response.type)) {
                 String otherRequestUri = response.value;
                 ControllerRequestArtifactInfo artInfo = this.aif.getControllerRequestArtifactInfo(controllerXmlUrl, otherRequestUri);
                 this.requestsThatAreResponsesToThisRequest.add(artInfo);
-                UtilMisc.addToSortedSetInMap(this, this.aif.allRequestInfosReferringToRequest, artInfo.getUniqueId());
+                addToSortedSetInMap(this, this.aif.allRequestInfosReferringToRequest, artInfo.getUniqueId()); // SCIPIO: switched method
             }
         }
     }

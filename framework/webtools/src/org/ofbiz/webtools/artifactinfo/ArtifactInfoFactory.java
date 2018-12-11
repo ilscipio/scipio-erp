@@ -172,7 +172,7 @@ public class ArtifactInfoFactory {
 
     public void prepareAll() throws GeneralException {
         Debug.logInfo("Loading artifact info objects...", module);
-        List<Future<Void>> futures = new ArrayList<Future<Void>>();
+        List<Future<Void>> futures = new ArrayList<>();
         Set<String> entityNames = this.getEntityModelReader().getEntityNames();
         for (String entityName: entityNames) {
             this.getEntityArtifactInfo(entityName);
@@ -186,7 +186,7 @@ public class ArtifactInfoFactory {
 
         Collection<ComponentConfig> componentConfigs = ComponentConfig.getAllComponents();
         ExecutionPool.getAllFutures(futures);
-        futures = new ArrayList<Future<Void>>();
+        futures = new ArrayList<>();
         for (ComponentConfig componentConfig: componentConfigs) {
             futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(prepareTaskForComponentAnalysis(componentConfig)));
         }

@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Supplier;
 
 import org.ofbiz.base.util.collections.MapComparator;
 
@@ -401,6 +402,18 @@ public final class UtilMisc {
         theList.add(element);
     }
 
+    /**
+     * SCIPIO: Adds element to the list in the in map having given key; if no set yet, listSupplier provides a new one.
+     */
+    public static <K, V> void addToListInMap(V element, Map<K, Object> theMap, K listKey, Supplier<List<V>> listSupplier) {
+        List<V> theList = UtilGenerics.checkList(theMap.get(listKey));
+        if (theList == null) {
+            theList = listSupplier.get();
+            theMap.put(listKey, theList);
+        }
+        theList.add(element);
+    }
+    
     public static <K, V> void addToSetInMap(V element, Map<K, Set<V>> theMap, K setKey) {
         Set<V> theSet = UtilGenerics.checkSet(theMap.get(setKey));
         if (theSet == null) {
@@ -419,6 +432,18 @@ public final class UtilMisc {
         theSet.add(element);
     }
 
+    /**
+     * SCIPIO: Adds element to the set in the in map having given key; if no set yet, setSupplier provides a new one.
+     */
+    public static <K, V> void addToSetInMap(V element, Map<K, Set<V>> theMap, K setKey, Supplier<Set<V>> setSupplier) {
+        Set<V> theSet = UtilGenerics.checkSet(theMap.get(setKey));
+        if (theSet == null) {
+            theSet = setSupplier.get();
+            theMap.put(setKey, theSet);
+        }
+        theSet.add(element);
+    }
+    
     /** Converts an <code>Object</code> to a <code>double</code>. Returns
      * zero if conversion is not possible.
      * @param obj Object to convert

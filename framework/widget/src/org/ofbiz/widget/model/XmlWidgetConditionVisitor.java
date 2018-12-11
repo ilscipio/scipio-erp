@@ -23,10 +23,13 @@ import java.util.Collection;
 import org.ofbiz.widget.model.AbstractModelCondition.And;
 import org.ofbiz.widget.model.AbstractModelCondition.IfCompare;
 import org.ofbiz.widget.model.AbstractModelCondition.IfCompareField;
+import org.ofbiz.widget.model.AbstractModelCondition.IfComponent;
 import org.ofbiz.widget.model.AbstractModelCondition.IfEmpty;
+import org.ofbiz.widget.model.AbstractModelCondition.IfEntity;
 import org.ofbiz.widget.model.AbstractModelCondition.IfEntityPermission;
 import org.ofbiz.widget.model.AbstractModelCondition.IfHasPermission;
 import org.ofbiz.widget.model.AbstractModelCondition.IfRegexp;
+import org.ofbiz.widget.model.AbstractModelCondition.IfService;
 import org.ofbiz.widget.model.AbstractModelCondition.IfServicePermission;
 import org.ofbiz.widget.model.AbstractModelCondition.IfValidateMethod;
 import org.ofbiz.widget.model.AbstractModelCondition.Not;
@@ -174,5 +177,26 @@ public class XmlWidgetConditionVisitor extends XmlAbstractWidgetVisitor implemen
         for (ModelCondition subCondition : subConditions) {
             subCondition.accept(this);
         }
+    }
+
+    @Override
+    public void visit(IfComponent ifComponent) throws Exception {
+        writer.append("<if-component");
+        visitAttribute("entity-name", ifComponent.getComponentExdr());
+        writer.append("/>");
+    }
+
+    @Override
+    public void visit(IfEntity ifEntity) throws Exception { // SCIPIO
+        writer.append("<if-entity");
+        visitAttribute("entity-name", ifEntity.getEntityExdr());
+        writer.append("/>");
+    }
+
+    @Override
+    public void visit(IfService ifService) throws Exception { // SCIPIO
+        writer.append("<if-service");
+        visitAttribute("service-name", ifService.getServiceExdr());
+        writer.append("/>");
     }
 }

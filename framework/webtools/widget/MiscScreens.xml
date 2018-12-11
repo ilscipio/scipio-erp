@@ -286,6 +286,123 @@ code package.
                     Debug.logInfo("Some messages returns from testSimpleMethods1: " + testSmOutVar1 + " " + testSmOutVar2, module);
                     Debug.logInfo("--------------------------------------", module);
                 ]]></script>
+                
+                
+                <if>
+                    <condition>
+                        <if-component component-name="webtools"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logInfo("admin component exists", module);
+                        ]]></script>
+                    </then>
+                    <else>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logError("admin component does not exist!", module);
+                        ]]></script>
+                    </else>
+                </if>
+                <if>
+                    <condition>
+                        <if-service service-name="superFakeComponent"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logError("superFakeComponent component exists!", module);
+                        ]]></script>
+                    </then>
+                    <else>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logInfo("superFakeComponent component does not exist", module);
+                        ]]></script>
+                    </else>
+                </if>
+                
+                <if>
+                    <condition>
+                        <if-entity entity-name="WebSite"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logInfo("WebSite entity exists", module);
+                        ]]></script>
+                    </then>
+                    <else>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logError("WebSite entity does not exist!", module);
+                        ]]></script>
+                    </else>
+                </if>
+                <if>
+                    <condition>
+                        <if-entity entity-name="SuperFakeEntity"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logError("SuperFakeEntity entity exists!", module);
+                        ]]></script>
+                    </then>
+                    <else>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logInfo("SuperFakeEntity entity does not exist", module);
+                        ]]></script>
+                    </else>
+                </if>
+                <if>
+                    <condition>
+                        <if-service service-name="createProductStore"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logInfo("createProductStore service exists", module);
+                        ]]></script>
+                    </then>
+                    <else>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logError("createProductStore service does not exist!", module);
+                        ]]></script>
+                    </else>
+                </if>
+                <if>
+                    <condition>
+                        <if-service service-name="superFakeService"/>
+                    </condition>
+                    <then>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logError("superFakeService entity exists!", module);
+                        ]]></script>
+                    </then>
+                    <else>
+                        <script lang="groovy"><![CDATA[
+                            import org.ofbiz.base.util.*;
+                            final module = "InlineDemoScript.groovy";
+                            Debug.logInfo("superFakeService entity does not exist", module);
+                        ]]></script>
+                    </else>
+                </if>
             </actions>
             <widgets>
                 <!-- 

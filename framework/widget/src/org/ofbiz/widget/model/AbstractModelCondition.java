@@ -32,6 +32,7 @@ import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Matcher;
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
@@ -42,6 +43,7 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.collections.ValueAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entityext.permission.EntityPermissionChecker;
 import org.ofbiz.minilang.operation.BaseCompare;
@@ -242,6 +244,12 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
                 return new IfFalse(factory, modelWidget, conditionElement);
             } else if ("if-widget".equals(nodeName)) { // SCIPIO: new
                 return new IfWidget(factory, modelWidget, conditionElement);
+            } else if ("if-component".equals(nodeName)) { // SCIPIO: new
+                return new IfComponent(factory, modelWidget, conditionElement);
+            } else if ("if-entity".equals(nodeName)) { // SCIPIO: new
+                return new IfEntity(factory, modelWidget, conditionElement);
+            } else if ("if-service".equals(nodeName)) { // SCIPIO: new
+                return new IfService(factory, modelWidget, conditionElement);
             } else {
                 throw new IllegalArgumentException("Condition element not supported with name: " + conditionElement.getNodeName());
             }
@@ -720,6 +728,117 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
         }
     }
 
+    /**
+     * SCIPIO: Models the &lt;if-component&gt; element.
+     * 2018-12-11: New element.
+     *
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IfComponent extends AbstractModelCondition {
+        private final FlexibleStringExpander componentExdr;
+
+        private IfComponent(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
+            super(factory, modelWidget, condElement);
+            this.componentExdr = FlexibleStringExpander.getInstance(condElement.getAttribute("component-name"));
+        }
+
+        @Override
+        public void accept(ModelConditionVisitor visitor) throws Exception {
+            visitor.visit(this);
+        }
+
+        @Override
+        public boolean eval(Map<String, Object> context) {
+            String componentName = componentExdr.expandString(context);
+            if (UtilValidate.isNotEmpty(componentName)) {
+                return ComponentConfig.isComponentEnabled(componentName);
+            }
+            return false;
+        }
+
+        public FlexibleStringExpander getComponentExdr() {
+            return componentExdr;
+        }
+    }
+
+    /**
+     * SCIPIO: Models the &lt;if-service&gt; element.
+     * 2018-12-11: New element.
+     *
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IfEntity extends AbstractModelCondition {
+        private final FlexibleStringExpander entityExdr;
+
+        private IfEntity(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
+            super(factory, modelWidget, condElement);
+            this.entityExdr = FlexibleStringExpander.getInstance(condElement.getAttribute("entity-name"));
+        }
+
+        @Override
+        public void accept(ModelConditionVisitor visitor) throws Exception {
+            visitor.visit(this);
+        }
+
+        @Override
+        public boolean eval(Map<String, Object> context) {
+            String entityName = entityExdr.expandString(context);
+            if (UtilValidate.isNotEmpty(entityName)) {
+                Delegator delegator = (Delegator) context.get("delegator");
+                if (delegator == null) {
+                    Debug.logWarning("Cannot test if entity '" + entityName
+                            + "' exists; missing delegator in context", module);
+                    return false;
+                }
+                return delegator.isEntity(entityName);
+            }
+            return false;
+        }
+
+        public FlexibleStringExpander getEntityExdr() {
+            return entityExdr;
+        }
+    }
+
+    /**
+     * SCIPIO: Models the &lt;if-service&gt; element.
+     * 2018-12-11: New element.
+     *
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class IfService extends AbstractModelCondition {
+        private final FlexibleStringExpander serviceExdr;
+
+        private IfService(ModelConditionFactory factory, ModelWidget modelWidget, Element condElement) {
+            super(factory, modelWidget, condElement);
+            this.serviceExdr = FlexibleStringExpander.getInstance(condElement.getAttribute("service-name"));
+        }
+
+        @Override
+        public void accept(ModelConditionVisitor visitor) throws Exception {
+            visitor.visit(this);
+        }
+
+        @Override
+        public boolean eval(Map<String, Object> context) {
+            String serviceName = serviceExdr.expandString(context);
+            if (UtilValidate.isNotEmpty(serviceName)) {
+                LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
+                if (dispatcher == null) {
+                    Debug.logWarning("Cannot test if service '" + serviceName
+                            + "' exists; missing dispatcher in context", module);
+                    return false;
+                }
+                return dispatcher.getDispatchContext().isService(serviceName);
+            }
+            return false;
+        }
+
+        public FlexibleStringExpander getServiceExdr() {
+            return serviceExdr;
+        }
+    }
+    
     /**
      * Models the &lt;if-service-permission&gt; element.
      *

@@ -21,10 +21,13 @@ package org.ofbiz.widget.model;
 import org.ofbiz.widget.model.AbstractModelCondition.And;
 import org.ofbiz.widget.model.AbstractModelCondition.IfCompare;
 import org.ofbiz.widget.model.AbstractModelCondition.IfCompareField;
+import org.ofbiz.widget.model.AbstractModelCondition.IfComponent;
 import org.ofbiz.widget.model.AbstractModelCondition.IfEmpty;
+import org.ofbiz.widget.model.AbstractModelCondition.IfEntity;
 import org.ofbiz.widget.model.AbstractModelCondition.IfEntityPermission;
 import org.ofbiz.widget.model.AbstractModelCondition.IfHasPermission;
 import org.ofbiz.widget.model.AbstractModelCondition.IfRegexp;
+import org.ofbiz.widget.model.AbstractModelCondition.IfService;
 import org.ofbiz.widget.model.AbstractModelCondition.IfServicePermission;
 import org.ofbiz.widget.model.AbstractModelCondition.IfValidateMethod;
 import org.ofbiz.widget.model.AbstractModelCondition.Not;
@@ -66,4 +69,10 @@ public interface ModelConditionVisitor {
     void visit(ModelTreeCondition modelTreeCondition) throws Exception;
 
     void visit(IfEmptySection ifEmptySection) throws Exception;
+
+    void visit(IfComponent ifComponent) throws Exception; // SCIPIO
+
+    void visit(IfEntity ifEntity) throws Exception; // SCIPIO
+
+    void visit(IfService ifService) throws Exception; // SCIPIO
 }

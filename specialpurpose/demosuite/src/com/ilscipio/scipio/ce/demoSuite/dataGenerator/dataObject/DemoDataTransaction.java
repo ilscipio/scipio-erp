@@ -169,7 +169,7 @@ public class DemoDataTransaction implements AbstractDataObject {
             this.amount = amount;
         }
 
-        public String isDebitCreditFlag() {
+        public String getDebitCreditFlag() {
             return debitCreditFlag;
         }
 

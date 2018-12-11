@@ -5,6 +5,7 @@ import org.ofbiz.entity.util.*
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGeneratorProvider
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataTransaction.DemoDataTransactionEntry
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper.DataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGeneratorUtil.DataGeneratorProviders
@@ -28,20 +29,21 @@ public class TransactionData extends DataGeneratorGroovyBaseScript {
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
 
         Map<String, Object> transactionFields = UtilMisc.toMap("acctgTransId", transactionData.getId(), "acctgTransTypeId", transactionData.getType(), "description", transactionData.getDescription(), "transactionDate",
-                transactionData.getDate(), "isPosted", isPosted, "postedDate", postedDate, "glFiscalTypeId", glFiscalTypeId);
+                transactionData.getDate(), "isPosted", transactionData.isPosted(), "postedDate", transactionData.getPostedDate(), "glFiscalTypeId", transactionData.getFiscalType());
         GenericValue acctgTrans = delegator.makeValue("AcctgTrans", transactionFields);
 
-
-        Map<String, Object> fields = UtilMisc.toMap("acctgTransId", transaction.getId(), "acctgTransEntrySeqId", "0000" + acctgTransEntrySeqId, "acctgTransEntryTypeId", "_NA_",
-                "description", "Automatically generated transaction (for demo purposes)", "glAccountId", glAccount.get("glAccountId"), "glAccountTypeId",
-                glAccount.get("glAccountTypeId"), "organizationPartyId", "Company", "reconcileStatusId", "AES_NOT_RECONCILED", "amount", amount, "currencyUomId",
-                currencyUomId, "debitCreditFlag", debitCreditFlag);
-        GenericValue acctgTransEntry = delegator.makeValue("AcctgTransEntry", fields);
-        acctgTransEntries.add(acctgTransEntry);
-
+        acctgTransEntries = [];
+        for (DemoDataTransactionEntry entry in transactionData.getEntries()) {
+            Map<String, Object> fields = UtilMisc.toMap("acctgTransId", transactionData.getId(), "acctgTransEntrySeqId", "0000" + entry.getSequenceId(), "acctgTransEntryTypeId", "_NA_",
+                    "description", "Automatically generated transaction (for demo purposes)", "glAccountId", entry.getGlAccount(), "glAccountTypeId",
+                    entry.getGlAccountType(), "organizationPartyId", entry.getOrgParty(), "reconcileStatusId", "AES_NOT_RECONCILED", "amount", entry.getAmount(), "currencyUomId",
+                    entry.getCurrency(), "debitCreditFlag", entry.getDebitCreditFlag());
+            GenericValue acctgTransEntry = delegator.makeValue("AcctgTransEntry", fields);
+            acctgTransEntries.add(acctgTransEntry);
+        }
 
         toBeStored.add(acctgTrans);
-        toBeStored.addAll(acctgTransEntrys);
+        toBeStored.addAll(acctgTransEntries);
 
         return toBeStored;
     }

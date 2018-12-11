@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -43,7 +44,8 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.LocalDemoDataHelper
  *
  */
 public class LocalDataGenerator extends AbstractDataGenerator {
-
+    private final static String module = LocalDataGenerator.class.getName();
+    
     private final static String LOCAL_DATA_GENERATOR = "local";
 
     private final LocalDemoDataHelper helper;
@@ -349,30 +351,21 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         Delegator delegator = helper.getDelegator();
         Map<String, Object> context = helper.getContext();
         DemoDataTransaction transaction = new DemoDataTransaction();
-
+        
+        
         // Create AcctgTrans
         transaction.setId("GEN_" + delegator.getNextSeqId("demo-acctgTransId"));
         // Create AcctgTransEntry (2,4,6)
         int acctgTransEntryCount = UtilRandom.getRandomEvenInt(2, 6);
+        transaction.setEntries(new ArrayList<DemoDataTransactionEntry>(acctgTransEntryCount));
         // Determine if it is an income or an expense
         int incomeExpense = UtilRandom.getRandomInt(1, 2);
 
         String currencyUomId = UtilProperties.getProperties("general.properties").getProperty("currency.uom.id.default", "USD");
         for (int acctgTransEntrySeqId = 1; acctgTransEntrySeqId <= acctgTransEntryCount; acctgTransEntrySeqId++) {
             DemoDataTransactionEntry transactionEntry = transaction.new DemoDataTransactionEntry();
-//            DynamicViewEntity dve = new DynamicViewEntity();
-//            dve.addMemberEntity("GA", "GlAccount");
-//            dve.addMemberEntity("GAO", "GlAccountOrganization");
-//            dve.addAliasAll("GA", "", null); // no prefix
-//            dve.addAlias("GAO", "organizationPartyId");
-//            dve.addViewLink("GA", "GAO", Boolean.FALSE, UtilMisc.toList(new ModelKeyMap("glAccountId", "glAccountId")));
-//            try {
-//                GenericValue glAccount = EntityQuery.use(delegator).from(dve).where("glAccountId", transactionEntry.getGlAccount()).queryOne();
-//                transactionEntry.setGlAccountType(glAccount.getString("glAccountTypeId"));
-//            } catch (GenericEntityException e) {
-//                // Debug.logError(e.getMessage());
-//            }
-
+            
+            transactionEntry.setSequenceId(String.valueOf(acctgTransEntrySeqId));
             transactionEntry.setDebitCreditFlag("C");
             if (acctgTransEntrySeqId % 2 == 0) {
                 transactionEntry.setDebitCreditFlag("D");
@@ -386,7 +379,23 @@ public class LocalDataGenerator extends AbstractDataGenerator {
                 glAccountClassIdList = glIncomeAccountClassIds.get(keys.get(UtilRandom.random(keys)));
             }
             transactionEntry.setAmount(new BigDecimal(UtilRandom.getRandomInt(10, 10000)));
-            transactionEntry.setGlAccount(glAccountClassIdList.get(UtilRandom.random(glAccountClassIdList)));
+            transactionEntry.setGlAccount(glAccountClassIdList.get(UtilRandom.random(glAccountClassIdList)));            
+            
+            DynamicViewEntity dve = new DynamicViewEntity();
+            dve.addMemberEntity("GA", "GlAccount");
+            dve.addMemberEntity("GAO", "GlAccountOrganization");
+            dve.addAliasAll("GA", "", null); // no prefix
+            dve.addAlias("GAO", "organizationPartyId");
+            dve.addViewLink("GA", "GAO", Boolean.FALSE, UtilMisc.toList(new ModelKeyMap("glAccountId", "glAccountId")));
+            try {
+                GenericValue glAccount = EntityQuery.use(delegator).from(dve).where("glAccountId", transactionEntry.getGlAccount()).queryOne();
+                if (UtilValidate.isNotEmpty(glAccount)) {
+                    transactionEntry.setGlAccountType(glAccount.getString("glAccountTypeId"));
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e.getMessage(), module);
+            }
+            
             transactionEntry.setCurrency(currencyUomId);
             transaction.addEntry(transactionEntry);
         }

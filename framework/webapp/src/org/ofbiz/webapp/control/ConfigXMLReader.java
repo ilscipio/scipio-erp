@@ -321,7 +321,7 @@ public class ConfigXMLReader {
         protected final String owner;
         protected final String securityClass;
         protected final String defaultRequest;
-        protected final String statusCode;
+        protected final Integer statusCodeNumber; // SCIPIO: Now an integer: String statusCode
         // SCIPIO: extended info on includes needed
         //protected List<URL> includes = new ArrayList<URL>();
         protected final List<Include> includes; // = new ArrayList<>();
@@ -358,7 +358,7 @@ public class ConfigXMLReader {
             protected String owner;
             protected String securityClass;
             protected String defaultRequest;
-            protected String statusCode;
+            protected Integer statusCodeNumber; // SCIPIO: Now an integer: String statusCode
             // SCIPIO: extended info on includes needed
             //protected List<URL> includes = new ArrayList<URL>();
             protected List<Include> includes = new ArrayList<>();
@@ -412,7 +412,7 @@ public class ConfigXMLReader {
             this.owner = builder.owner;
             this.securityClass = builder.securityClass;
             this.defaultRequest = builder.defaultRequest;
-            this.statusCode = builder.statusCode;
+            this.statusCodeNumber = builder.statusCodeNumber;
             this.includes = builder.includes;
             this.includesPreLocal = builder.includesPreLocal;
             this.includesPostLocal = builder.includesPostLocal;
@@ -450,7 +450,7 @@ public class ConfigXMLReader {
                 this.owner = srcConfig.getOwner();
                 this.securityClass = srcConfig.getSecurityClass();
                 this.defaultRequest = srcConfig.getDefaultRequest();
-                this.statusCode = srcConfig.getStatusCode();
+                this.statusCodeNumber = srcConfig.getStatusCodeNumber();
                 this.includes = getOptList(srcConfig.includes);
                 this.includesPreLocal = getOptList(srcConfig.includesPreLocal);
                 this.includesPostLocal = getOptList(srcConfig.includesPostLocal);
@@ -475,7 +475,7 @@ public class ConfigXMLReader {
                 this.owner = srcConfig.owner;
                 this.securityClass = srcConfig.securityClass;
                 this.defaultRequest = srcConfig.defaultRequest;
-                this.statusCode = srcConfig.statusCode;
+                this.statusCodeNumber = srcConfig.statusCodeNumber;
                 this.includes = srcConfig.includes;
                 this.includesPreLocal = srcConfig.includesPreLocal;
                 this.includesPostLocal = srcConfig.includesPostLocal;
@@ -1009,35 +1009,41 @@ public class ConfigXMLReader {
         }
 
         public String getStatusCode() throws WebAppConfigurationException {
+            // SCIPIO: now delegating
+            Integer statusCodeNumber = getStatusCodeNumber();
+            return (statusCodeNumber != null) ? statusCodeNumber.toString() : null;
+        }
+
+        public Integer getStatusCodeNumber() throws WebAppConfigurationException { // SCIPIO
             for (Include include : includesPostLocal) {
                 ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String statusCode = controllerConfig.getStatusCode();
-                    String statusCode;
+                    Integer statusCode;
                     if (include.recursive) {
-                        statusCode = controllerConfig.getStatusCode();
+                        statusCode = controllerConfig.getStatusCodeNumber();
                     } else {
-                        statusCode = controllerConfig.statusCode;
+                        statusCode = controllerConfig.statusCodeNumber;
                     }
                     if (statusCode != null) {
                         return statusCode;
                     }
                 }
             }
-            if (statusCode != null) {
-                return statusCode;
+            if (statusCodeNumber != null) {
+                return statusCodeNumber;
             }
             for (Include include : includesPreLocal) {
                 ControllerConfig controllerConfig = getControllerConfig(include);
                 if (controllerConfig != null) {
                     // SCIPIO: support non-recursive
                     //String statusCode = controllerConfig.getStatusCode();
-                    String statusCode;
+                    Integer statusCode;
                     if (include.recursive) {
-                        statusCode = controllerConfig.getStatusCode();
+                        statusCode = controllerConfig.getStatusCodeNumber();
                     } else {
-                        statusCode = controllerConfig.statusCode;
+                        statusCode = controllerConfig.statusCodeNumber;
                     }
                     if (statusCode != null) {
                         return statusCode;
@@ -1268,7 +1274,16 @@ public class ConfigXMLReader {
 
         private void loadGeneralConfig(Element rootElement) {
             this.errorpage = UtilXml.childElementValue(rootElement, "errorpage");
-            this.statusCode = UtilXml.childElementValue(rootElement, "status-code");
+            String statusCode = UtilXml.childElementValue(rootElement, "status-code");
+            Integer statusCodeNumber = null; // SCIPIO: Straight Integer
+            if (UtilValidate.isNotEmpty(statusCode)) {
+                try {
+                    statusCodeNumber = Integer.parseInt(statusCode);
+                } catch(NumberFormatException e) {
+                    Debug.logError("Invalid status-code (" + statusCode + ") for controller", module);
+                }
+            }
+            this.statusCodeNumber = statusCodeNumber;
             Element protectElement = UtilXml.firstChildElement(rootElement, "protect");
             if (protectElement != null) {
                 this.protectView = protectElement.getAttribute("view");
@@ -1688,9 +1703,14 @@ public class ConfigXMLReader {
             return securityClass;
         }
 
+        //@Override
+        //public String getStatusCode() throws WebAppConfigurationException {
+        //    return statusCode;
+        //}
+
         @Override
-        public String getStatusCode() throws WebAppConfigurationException {
-            return statusCode;
+        public Integer getStatusCodeNumber() throws WebAppConfigurationException {
+            return statusCodeNumber;
         }
 
         @Override
@@ -2141,6 +2161,7 @@ public class ConfigXMLReader {
         public final String type;
         public final String value;
         public final String statusCode;
+        private final Integer statusCodeNumber; // SCIPIO: new (pre-parsed)
         public final boolean saveLastView; // = false;
         public final boolean saveCurrentView; // = false;
         public final boolean saveHomeView; // = false;
@@ -2163,6 +2184,7 @@ public class ConfigXMLReader {
             this.type = null;
             this.value = null;
             this.statusCode = null;
+            this.statusCodeNumber = null; // SCIPIO
             this.saveLastView = false;
             this.saveCurrentView = false;
             this.saveHomeView = false;
@@ -2181,6 +2203,7 @@ public class ConfigXMLReader {
             this.type = type;
             this.value = value;
             this.statusCode = null;
+            this.statusCodeNumber = null; // SCIPIO
             this.saveLastView = false;
             this.saveCurrentView = false;
             this.saveHomeView = false;
@@ -2199,6 +2222,15 @@ public class ConfigXMLReader {
             this.type = responseElement.getAttribute("type");
             this.value = responseElement.getAttribute("value");
             this.statusCode = responseElement.getAttribute("status-code");
+            Integer statusCodeNumber = null; // SCIPIO: Straight Integer
+            if (UtilValidate.isNotEmpty(this.statusCode)) {
+                try {
+                    statusCodeNumber = Integer.parseInt(this.statusCode);
+                } catch(NumberFormatException e) {
+                    Debug.logError("Invalid status-code (" + this.statusCode + ") for controller request response '" + this.name + "'", module);
+                }
+            }
+            this.statusCodeNumber = statusCodeNumber;
             this.saveLastView = "true".equals(responseElement.getAttribute("save-last-view"));
             this.saveCurrentView = "true".equals(responseElement.getAttribute("save-current-view"));
             this.saveHomeView = "true".equals(responseElement.getAttribute("save-home-view"));
@@ -2285,6 +2317,10 @@ public class ConfigXMLReader {
 
         public String getStatusCode() {
             return statusCode;
+        }
+
+        public Integer getStatusCodeNumber() { // SCIPIO
+            return statusCodeNumber;
         }
 
         public boolean isSaveLastView() {

@@ -113,7 +113,10 @@ public class RequestHandler {
 
     private static final Set<String> logCallerExcludeClasses = UtilMisc.toSet(RequestHandler.class.getName()); // SCIPIO
 
-    private final String defaultStatusCodeString = UtilProperties.getPropertyValue("requestHandler", "status-code", "301");
+    // SCIPIO: changed status code field to static and keep only number instead
+    //private static final String defaultStatusCodeString = UtilProperties.getPropertyValue("requestHandler", "status-code", "301");
+    private static final Integer defaultStatusCodeNumber = UtilProperties.getPropertyAsInteger("requestHandler", "status-code", 301);
+
     private final ViewFactory viewFactory;
     private final EventFactory eventFactory;
     private final URL controllerConfigURL;
@@ -174,6 +177,9 @@ public class RequestHandler {
 
         // SCIPIO: New (currently true by default)
         this.allowOverrideViewUri = !"false".equalsIgnoreCase(context.getInitParameter("allowOverrideViewUri"));
+        
+        // SCIPIO: Parse status code
+        
     }
 
     public ConfigXMLReader.ControllerConfig getControllerConfig() {
@@ -236,16 +242,20 @@ public class RequestHandler {
         }
 
         Map<String, ConfigXMLReader.RequestMap> requestMapMap = null;
-        String statusCodeString = null;
+        // SCIPIO: Use pre-parsed number
+        //String statusCodeString = null;
+        Integer statusCode = null;
         try {
             requestMapMap = controllerConfig.getRequestMapMap();
-            statusCodeString = controllerConfig.getStatusCode();
+            //statusCodeString = controllerConfig.getStatusCode();
+            statusCode = controllerConfig.getStatusCodeNumber();
         } catch (WebAppConfigurationException e) {
             Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
             throw new RequestHandlerException(e);
         }
-        if (UtilValidate.isEmpty(statusCodeString)) {
-            statusCodeString = defaultStatusCodeString;
+        //if (UtilValidate.isEmpty(statusCodeString)) {
+        if (statusCode == null) {
+            statusCode = defaultStatusCodeNumber;
         }
 
         // workaround if we are in the root webapp
@@ -400,7 +410,7 @@ public class RequestHandler {
                     //if (newUrl.toUpperCase().startsWith("HTTPS")) {
                     if (RequestLinkUtil.isUrlProtocol(newUrl, "https")) {
                         // if we are supposed to be secure, redirect secure.
-                        callRedirect(newUrl, response, request, statusCodeString, AttributesSpec.NONE); // SCIPIO: save-request="none" here
+                        callRedirect(newUrl, response, request, statusCode, AttributesSpec.NONE); // SCIPIO: save-request="none" here
                         return;
                     }
                 }
@@ -703,7 +713,7 @@ public class RequestHandler {
 
                 // SCIPIO: Always make full link early
                 //callRedirect(makeLink(request, response, redirectTarget), response, request, statusCodeString);
-                callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCodeString, AttributesSpec.NONE); // SCIPIO: save-request="none" here
+                callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCode, AttributesSpec.NONE); // SCIPIO: save-request="none" here
                 return;
             }
         }
@@ -772,9 +782,12 @@ public class RequestHandler {
                 throw new RequestHandlerException(e);
             }
 
-            String responseStatusCode  = nextRequestResponse.statusCode;
-            if(UtilValidate.isNotEmpty(responseStatusCode))
-                statusCodeString = responseStatusCode;
+            // SCIPIO: Use straight ints
+            //String responseStatusCode  = nextRequestResponse.statusCode;
+            Integer responseStatusCode = nextRequestResponse.getStatusCodeNumber();
+            if(responseStatusCode != null) {
+                statusCode = responseStatusCode;
+            }
 
             // SCIPIO: Optimized
             if (RequestResponse.Type.URL == nextRequestResponse.getTypeEnum()) { //if ("url".equals(nextRequestResponse.type)) {
@@ -785,7 +798,7 @@ public class RequestHandler {
                     throw new RequestHandlerException("Scipio: Redirect URL is empty (request map URI: " + requestMap.uri + ")");
                 }
                 // SCIPIO: NOTE: Contrary to others, currently leaving this unchanged; full URLs may be completely external, and not sure want to pass them through encodeURL...
-                callRedirect(nextRequestResponseValue, response, request, statusCodeString, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
+                callRedirect(nextRequestResponseValue, response, request, statusCode, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
             } else if (RequestResponse.Type.CROSS_REDIRECT == nextRequestResponse.getTypeEnum()) { //} else if ("cross-redirect".equals(nextRequestResponse.type)) {
                 // check for a cross-application redirect
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Cross-Application redirect." + showSessionId(request), module);
@@ -805,7 +818,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve cross-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
-                callRedirect(targetUrl, response, request, statusCodeString, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
+                callRedirect(targetUrl, response, request, statusCode, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
             } else if (RequestResponse.Type.REQUEST_REDIRECT == nextRequestResponse.getTypeEnum()) { //} else if ("request-redirect".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + showSessionId(request), module);
                 // SCIPIO: Sanity check
@@ -821,7 +834,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
-                callRedirect(targetUrl, response, request, statusCodeString, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
+                callRedirect(targetUrl, response, request, statusCode, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
             } else if (RequestResponse.Type.REQUEST_REDIRECT_NOPARAM == nextRequestResponse.getTypeEnum()) { //} else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + showSessionId(request), module);
                 // SCIPIO: Sanity check
@@ -837,14 +850,14 @@ public class RequestHandler {
                     Debug.logError("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                 }
-                callRedirect(targetUrl, response, request, statusCodeString, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
+                callRedirect(targetUrl, response, request, statusCode, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
             } else if (RequestResponse.Type.REQUEST_REDIRECT_LAST == nextRequestResponse.getTypeEnum()) {
                 String lastGetUrl = (String) session.getAttribute("_SCP_LAST_GET_URL_");
                 if (UtilValidate.isNotEmpty(lastGetUrl)) {
                     if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL." + showSessionId(request), module);
                     // Perform URL encoding
                     lastGetUrl = response.encodeURL(lastGetUrl);
-                    callRedirect(lastGetUrl, response, request, statusCodeString, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
+                    callRedirect(lastGetUrl, response, request, statusCode, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
                 } else {
                     // SCIPIO: New type: request-redirect-last
                     if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect to last Get URL, but there is not last get; going to default: " 
@@ -860,7 +873,7 @@ public class RequestHandler {
                         Debug.logError("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")", module);
                         throw new RequestHandlerException("Scipio: Could not build link for or resolve request-redirect-noparam URI ('" + nextRequestResponseValue + "') (request map URI: " + requestMap.uri + ")");
                     }
-                    callRedirect(targetUrl, response, request, statusCodeString, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
+                    callRedirect(targetUrl, response, request, statusCode, nextRequestResponse.getRedirectAttributes()); // SCIPIO: save-request
                 }
             } else if (RequestResponse.Type.VIEW == nextRequestResponse.getTypeEnum()) { //} else if ("view".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
@@ -1095,7 +1108,14 @@ public class RequestHandler {
 
     /** Returns the default status-code for this request. */
     public String getStatusCode(HttpServletRequest request) {
-        String statusCode = null;
+        // SCIPIO: Now delegating
+        Integer statusCode = getStatusCodeNumber(request);
+        return (statusCode != null) ? statusCode.toString() : null;
+    }
+
+    /** SCIPIO: Returns the default status-code for this request, as a number. */
+    public Integer getStatusCodeNumber(HttpServletRequest request) {
+        Integer statusCode = null;
         try {
             // SCIPIO: 2018-11-08: Handle controller load fail more cleanly
             //statusCode = getControllerConfig().getStatusCode();
@@ -1103,12 +1123,11 @@ public class RequestHandler {
             if (controllerConfig == null) {
                 return null;
             }
-            statusCode = controllerConfig.getStatusCode();
+            statusCode = controllerConfig.getStatusCodeNumber();
         } catch (WebAppConfigurationException e) {
             Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
         }
-        if (UtilValidate.isNotEmpty(statusCode)) return statusCode;
-        return null;
+        return statusCode;
     }
 
     /** Returns the ViewFactory Object. */
@@ -1160,8 +1179,10 @@ public class RequestHandler {
      * of changing encode to true to correct filter hook behavior).
      * Currently I don't see how this is bad.
      * If need to remove jsessionId from redirects, could uncomment the lines below.
+     * <p>
+     * SCIPIO: 2018-12-12: Modified to take Integer statusCode instead of statusCodeString.
      */
-    private void callRedirect(String url, HttpServletResponse resp, HttpServletRequest req, String statusCodeString, AttributesSpec saveAttrMap) throws RequestHandlerException {
+    private void callRedirect(String url, HttpServletResponse resp, HttpServletRequest req, int statusCode, AttributesSpec saveAttrMap) throws RequestHandlerException {
         // SCIPIO: Uncomment this to force remove jsessionId from controller redirects...
         //RequestUtil.removeJsessionId(url);
         if (Debug.infoOn()) Debug.logInfo("Sending redirect to: [" + url + "]." + showSessionId(req), module);
@@ -1195,12 +1216,14 @@ public class RequestHandler {
                 }
             }
         }
+        /* SCIPIO: already int
         Integer statusCode;
         try {
             statusCode = Integer.valueOf(statusCodeString);
         } catch (NumberFormatException e) {
             statusCode = 303;
         }
+        */
 
         // send the redirect
         try {

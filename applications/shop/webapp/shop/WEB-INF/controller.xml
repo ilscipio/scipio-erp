@@ -899,10 +899,11 @@ code package.
         <security https="true" auth="false"/>
         <response name="success" type="view" value="product" save-current-view="true"/>
     </request-map>
+    <!-- SCIPIO: screen detailImage removed
     <request-map uri="detailImage">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="detailImage"/>
-    </request-map>
+    </request-map>-->
     <request-map uri="crosssell">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="product"/>
@@ -1875,7 +1876,7 @@ code package.
     <view-map name="quickadd" type="screen" page="component://shop/widget/CatalogScreens.xml#quickadd"/>
     <view-map name="category" type="screen" page="component://shop/widget/CatalogScreens.xml#category"/>
     <view-map name="product" type="screen" page="component://shop/widget/CatalogScreens.xml#product"/>
-    <view-map name="detailImage" type="screen" page="component://shop/widget/CatalogScreens.xml#detailImage"/>
+    <!--<view-map name="detailImage" type="screen" page="component://shop/widget/CatalogScreens.xml#detailImage"/> - SCIPIO: removed -->
     <view-map name="lastviewedproducts" type="screen" page="component://shop/widget/CatalogScreens.xml#lastviewedproducts"/>
     <view-map name="productReview" type="screen" page="component://shop/widget/CatalogScreens.xml#productreview"/>
 

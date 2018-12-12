@@ -182,7 +182,7 @@
         <response name="success" type="view" value="SetupAccounting"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
-        <!-- Specific request maps for setup accounting tabs -->
+    <!-- Specific request maps for setup accounting tabs -->
     <request-map uri="setupGlAccountsTab">
         <security https="true" auth="true" />        
         <response name="success" type="view" value="SetupGlAccountsTab" allow-view-save="false"/>
@@ -524,15 +524,15 @@
     <view-map name="initialsetup" type="screen" page="component://setup/widget/SetupScreens.xml#InitialSetup"/>
     <view-map name="showMessage" type="screen" page="component://setup/widget/SetupScreens.xml#nopartyAcctgPreference"/>
     
-    <view-map name="ViewFacility" type="screen" page="component://setup/widget/SetupScreens.xml#ViewFacility"/>
+    <!--<view-map name="ViewFacility" type="screen" page="component://setup/widget/SetupScreens.xml#ViewFacility"/> - SCIPIO: Does not exist -->
     <view-map name="EditFacility" type="screen" page="component://setup/widget/SetupScreens.xml#EditFacility"/>
     
-    <view-map name="FindProductStore" type="screen" page="component://setup/widget/SetupScreens.xml#FindProductStore"/>
+    <!--<view-map name="FindProductStore" type="screen" page="component://setup/widget/SetupScreens.xml#FindProductStore"/> - SCIPIO: Does not exist -->
     <view-map name="EditProductStore" type="screen" page="component://setup/widget/SetupScreens.xml#EditProductStore"/>
 
     <view-map name="EntityExportAll" type="screen" page="component://setup/widget/CommonScreens.xml#EntityExportAll"/>
 
-    <view-map name="FindWebSite" page="component://setup/widget/SetupScreens.xml#FindWebSite" type="screen"/>
+    <!--<view-map name="FindWebSite" page="component://setup/widget/SetupScreens.xml#FindWebSite" type="screen"/> - SCIPIO: Does not exist -->
     <view-map name="EditWebSite" page="component://setup/widget/SetupScreens.xml#EditWebSite" type="screen"/>
     
     <view-map name="firstcustomer" type="screen" page="component://setup/widget/ProfileScreens.xml#FirstCustomer"/>

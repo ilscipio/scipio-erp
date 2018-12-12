@@ -36,7 +36,9 @@ under the License.
     </request-map>-->
     <request-map uri="FindPurchaseInvoices">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindPurchaseInvoices"/>
+        <!-- SCIPIO: screen removed
+        <response name="success" type="view" value="FindPurchaseInvoices"/>-->
+        <response name="success" type="view" value="FindApInvoices"/>
     </request-map>
     <request-map uri="FindApInvoices">
         <security https="true" auth="true"/>
@@ -50,7 +52,9 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="createPaymentAndPaymentGroupForInvoices"/>
         <response name="success" type="request" value="PaymentGroupOverview"/>
-        <response name="error" type="view" value="FindPurchaseInvoices"/>
+        <!-- SCIPIO: screen removed
+        <response name="error" type="view" value="FindPurchaseInvoices"/>-->
+        <response name="error" type="view" value="FindApInvoices"/>
     </request-map>
     <request-map uri="findInvoices">
         <security https="true" auth="true"/>
@@ -70,6 +74,7 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindApPayments"/>
     </request-map>
+    <!-- SCIPIO: NewOutgoingPayment screen/view removed
     <request-map uri="newPayment">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="NewOutgoingPayment"/>
@@ -80,6 +85,7 @@ under the License.
         <response name="success" type="view" value="editPayment"/>
         <response name="error" type="view" value="NewOutgoingPayment"/>
     </request-map>
+    -->
     <request-map uri="FindCommissions">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CommissionReport"/>

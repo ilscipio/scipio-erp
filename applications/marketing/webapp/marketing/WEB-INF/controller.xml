@@ -131,6 +131,7 @@ code package.
         <response name="error" type="view" value="FindMarketingCampaign"/>
     </request-map>
 
+    <!-- SCIPIO: removed
     <request-map uri="EditMarketingCampaignRoles">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditMarketingCampaignRoles"/>
@@ -151,6 +152,7 @@ code package.
         <response name="success" type="view" value="ListMarketingCampaignRoles"/>
         <response name="error" type="view" value="ListMarketingCampaignRoles"/>
     </request-map>
+    -->
 
     <!--  SegmentGroup requests -->
     <request-map uri="viewSegmentGroup"><security https="true" auth="true"/><response name="success" type="view" value="viewSegmentGroup"/></request-map>
@@ -677,10 +679,12 @@ code package.
     <view-map name="EditTrackingCodeType" type="screen" page="component://marketing/widget/TrackingCodeScreens.xml#EditTrackingCodeType"/>
     <view-map name="FindTrackingCodeType" type="screen" page="component://marketing/widget/TrackingCodeScreens.xml#ListTrackingCodeType"/>
 
-    <view-map name="FindMarketingCampaign"  type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#ListMarketingCampaign"/>
+    <view-map name="FindMarketingCampaign"  type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#FindMarketingCampaign"/>
     <view-map name="EditMarketingCampaign" type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#EditMarketingCampaign"/>
+    <!-- SCIPIO: removed
     <view-map name="ListMarketingCampaignRoles"  type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#ListMarketingCampaignRoles"/>
     <view-map name="EditMarketingCampaignRoles" type="screen" page="component://marketing/widget/MarketingCampaignScreens.xml#EditMarketingCampaignRoles"/>
+    -->
 
     <view-map name="FindSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#FindSegmentGroup"/>
     <view-map name="viewSegmentGroup" type="screen" page="component://marketing/widget/SegmentScreens.xml#EditSegmentGroup"/>

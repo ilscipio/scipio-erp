@@ -1107,11 +1107,13 @@ code package.
         <response name="success" type="view" value="editInvoiceApplications"/>
         <response name="error" type="view" value="editInvoiceApplications"/>
     </request-map>
+    <!-- SCIPIO: screen "InvoiceStatus" removed
     <request-map uri="invoiceStatus">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="invoiceStatus"/>
     </request-map>
-    
+    -->
+
     <!-- re Invoice Roles -->
     <request-map uri="invoiceRoles">
         <security https="true" auth="true"/>
@@ -3046,7 +3048,7 @@ code package.
     <view-map name="editInvoice" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#EditInvoice"/>
     <view-map name="listInvoiceItems" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#EditInvoiceItems"/>
     <view-map name="editInvoiceTimeEntries" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#EditInvoiceTimeEntries"/>
-    <view-map name="invoiceStatus" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceStatus"/>
+    <!--<view-map name="invoiceStatus" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceStatus"/> - SCIPIO: removed -->
     <view-map name="editInvoiceApplications" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#EditInvoiceApplications"/>
     <view-map name="invoiceRoles" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceRoles"/>
     <!-- SCIPIO: TODO: REVIEW IF NEEDED (came from upstream)

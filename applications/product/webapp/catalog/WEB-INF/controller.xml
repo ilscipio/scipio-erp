@@ -234,6 +234,7 @@ code package.
     </request-map>
 
     <!-- ================ Category ProdCatalog Requests ================= -->
+    <!-- SCIPIO: EditCategoryProdCatalogs screen was removed
     <request-map uri="EditCategoryProdCatalogs">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryProdCatalogs"/>
@@ -256,8 +257,10 @@ code package.
         <response name="success" type="view" value="EditCategoryProdCatalogs"/>
         <response name="error" type="view" value="EditCategoryProdCatalogs"/>
     </request-map>
+    -->
 
     <!-- ================ Category FeatureCat Requests ================= -->
+    <!-- SCIPIO: screen EditCategoryFeatureCats removed
     <request-map uri="EditCategoryFeatureCats">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryFeatureCats"/>
@@ -304,12 +307,14 @@ code package.
         <response name="success" type="view" value="EditCategoryFeatureCats"/>
         <response name="error" type="view" value="EditCategoryFeatureCats"/>
     </request-map>
+    -->
     <request-map uri="CreateProductFeature">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="CreateProductFeature"/>
     </request-map>
 
     <!-- ================ Category Roles Requests ================= -->
+    <!-- SCIPIO: EditCategoryParties screen was removed
     <request-map uri="EditCategoryParties">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryParties"/>
@@ -332,8 +337,10 @@ code package.
         <response name="success" type="view" value="EditCategoryParties"/>
         <response name="error" type="view" value="EditCategoryParties"/>
     </request-map>
+    -->
 
     <!-- ================ Product Category Attribute Requests ================= -->
+    <!-- SCIPIO: EditCategoryAttributes screen was removed
     <request-map uri="EditCategoryAttributes">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryAttributes"/>
@@ -356,8 +363,10 @@ code package.
         <response name="success" type="view" value="EditCategoryAttributes"/>
         <response name="error" type="view" value="EditCategoryAttributes"/>
     </request-map>
+    -->
 
     <!-- ================ Product Category Link Requests ================= -->
+    <!-- SCIPIO: EditProductCategoryLinks screen was removed
     <request-map uri="EditProductCategoryLinks">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductCategoryLinks"/>
@@ -380,6 +389,7 @@ code package.
         <response name="success" type="view" value="EditProductCategoryLinks"/>
         <response name="error" type="view" value="EditProductCategoryLinks"/>
     </request-map>
+    -->
 
     <!-- ================ Product Requests ================= -->
      <request-map uri="FindProduct">
@@ -3173,14 +3183,14 @@ code package.
     <view-map name="FindCategory" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#FindCategory"/>
     <view-map name="EditCategory" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategory"/>
     <view-map name="EditCategoryContent" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryContent"/>
-    <view-map name="EditCategoryAttributes" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryAttributes"/>
+    <!--<view-map name="EditCategoryAttributes" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryAttributes"/> - SCIPIO: removed -->
     <view-map name="EditCategoryContentContent" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryContentContent"/>
     <view-map name="EditCategoryRollup" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryRollup"/>
     <view-map name="EditCategoryProducts" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryProducts"/>
-    <view-map name="EditCategoryProdCatalogs" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryProdCatalogs"/>
-    <view-map name="EditCategoryFeatureCats" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryFeatureCats"/>
-    <view-map name="EditCategoryParties" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryParties"/>
-    <view-map name="EditProductCategoryLinks" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditProductCategoryLinks"/>
+    <!--<view-map name="EditCategoryProdCatalogs" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryProdCatalogs"/> - SCIPIO: removed -->
+    <!--<view-map name="EditCategoryFeatureCats" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryFeatureCats"/> - SCIPIO: removed -->
+    <!--<view-map name="EditCategoryParties" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategoryParties"/> - SCIPIO: removed -->
+    <!--<view-map name="EditProductCategoryLinks" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditProductCategoryLinks"/> - SCIPIO: removed -->
     <view-map name="EditCategorySection" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#EditCategorySection"/>
 
     <view-map name="createProductInCategoryStart" type="screen" page="component://product/widget/catalog/CategoryScreens.xml#createProductInCategoryStart"/>

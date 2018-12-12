@@ -160,7 +160,7 @@ code package.
         </field>
     </form>
     <form name="ListRequestItems" type="list" use-row-submit="true" title="" list-name="custRequestItems"
-        odd-row-style="alternate-row" paginate-target="RequestItems"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" paginate-target="requestitems"><!-- SCIPIO: Fixed wrong request: paginate-target="RequestItems" -->
         <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/>
         <field name="sequenceNum"></field>
         <field name="custRequestId"><hidden/></field>

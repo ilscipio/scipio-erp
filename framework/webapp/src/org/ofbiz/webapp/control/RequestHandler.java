@@ -110,7 +110,9 @@ public class RequestHandler {
      * but then Tomcat may perform unnecessary redirects to add them itself (due to web.xml?).
      */
     private static final boolean urlForceContextRootDirSep = true;
-    
+
+    private static final Set<String> logCallerExcludeClasses = UtilMisc.toSet(RequestHandler.class.getName()); // SCIPIO
+
     private final String defaultStatusCodeString = UtilProperties.getPropertyValue("requestHandler", "status-code", "301");
     private final ViewFactory viewFactory;
     private final EventFactory eventFactory;
@@ -1857,7 +1859,7 @@ public class RequestHandler {
         // SCIPIO: Sanity check: null/missing URL
         // 2018-12-07: NOTE: Now accepting url.isEmpty(), because may be inter-webapp root webapp request
         if (url == null) { // || url.isEmpty()
-            Debug.logError("makeLink: Received null URL; returning null", module);
+            Debug.logError("makeLink: Received null URL; returning null" + getMakeLinkLogSuffix(), module);
             return null;
         }
 
@@ -1871,7 +1873,7 @@ public class RequestHandler {
             requestWebSiteProps = currentWebappInfo.getWebSiteProperties();
         } catch (Exception e) { // SCIPIO: just catch everything: GenericEntityException
             // If the entity engine is throwing exceptions, then there is no point in continuing.
-            Debug.logError("makeLink: Error getting current webapp info from request: " + e.toString(), module);
+            Debug.logError("makeLink: Error getting current webapp info from request: " + e.toString() + getMakeLinkLogSuffix(), module);
             return null;
         }
 
@@ -1881,7 +1883,7 @@ public class RequestHandler {
                 webSiteProps = targetWebappInfo.getWebSiteProperties();
             } catch (Exception e) {
                 Debug.logError("makeLink: Error getting web site properties for webapp "
-                        + targetWebappInfo + ": " + e.toString(), module);
+                        + targetWebappInfo + ": " + e.toString() + getMakeLinkLogSuffix(), module);
                 return null;
             }
         } else {
@@ -1907,7 +1909,8 @@ public class RequestHandler {
         if (controller) {
             if (url.isEmpty()) { // SCIPIO
                 Debug.log(getMakeLinkErrorLogLevel(request, delegator), null,
-                        "makeLink: Cannot build link: empty uri, cannot locate controller request for webapp " + (interWebapp ? targetWebappInfo : currentWebappInfo), module);
+                        "makeLink: Cannot build link: empty uri, cannot locate controller request for webapp " 
+                        + (interWebapp ? targetWebappInfo : currentWebappInfo) + getMakeLinkLogSuffix(), module);
                 return null;
             }
             requestUri = RequestHandler.getRequestUri(url);
@@ -1918,7 +1921,7 @@ public class RequestHandler {
                         requestMap = targetWebappInfo.getControllerConfig().getRequestMapMap().get(requestUri);
                     } catch (Exception e) {
                         Debug.logError("makeLink: Error parsing controller.xml file for webapp "
-                                + targetWebappInfo + ": " + e.toString(), module);
+                                + targetWebappInfo + ": " + e.toString() + getMakeLinkLogSuffix(), module);
                         return null;
                     }
                 } else {
@@ -1927,7 +1930,7 @@ public class RequestHandler {
                         requestMap = currentWebappInfo.getControllerConfig().getRequestMapMap().get(requestUri);
                     } catch (Exception e) {
                         Debug.logError("makeLink: Error parsing controller.xml file for webapp "
-                                + currentWebappInfo + ": " + e.toString(), module);
+                                + currentWebappInfo + ": " + e.toString() + getMakeLinkLogSuffix(), module);
                         return null;
                     }
                 }
@@ -1938,7 +1941,7 @@ public class RequestHandler {
             // then we can't use this as a security check. Likely also to make some template errors clearer.
             if (requestMap == null) {
                 Debug.log(getMakeLinkErrorLogLevel(request, delegator), null, "makeLink: Cannot build link: could not locate the expected request '"
-                        + requestUri + "' in controller config for webapp " + (interWebapp ? targetWebappInfo : currentWebappInfo), module);
+                        + requestUri + "' in controller config for webapp " + (interWebapp ? targetWebappInfo : currentWebappInfo) + getMakeLinkLogSuffix(), module);
                 return null;
             }
         }
@@ -1950,7 +1953,9 @@ public class RequestHandler {
         // We don't need this condition anymore, because it doesn't make sense to require enableHttps to produce full path URLs
         //if (webSiteProps.getEnableHttps() || Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure) || secure == null) {
         {
-            if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("In makeLink requestUri=" + requestUri + getMakeLinkLogSuffix(), module);
+            }
             // SCIPIO: These conditions have been change (see method)
             //if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
             //    didFullSecure = true;
@@ -1984,7 +1989,7 @@ public class RequestHandler {
             } catch (Exception e) {
                 // If we can't read the controller.xml file, then there is no point in continuing.
                 Debug.logError("makeLink: Error building url for webapp "
-                        + (interWebapp ? targetWebappInfo : currentWebappInfo) + ": " + e.toString(), module);
+                        + (interWebapp ? targetWebappInfo : currentWebappInfo) + ": " + e.toString() + getMakeLinkLogSuffix(), module);
                 return null;
             }
         }
@@ -2003,7 +2008,7 @@ public class RequestHandler {
             } catch (Exception e) {
                 // SCIPIO: new case
                 Debug.logError("makeLink: Error building url path part for webapp "
-                        + targetWebappInfo + ": " + e.toString(), module);
+                        + targetWebappInfo + ": " + e.toString() + getMakeLinkLogSuffix(), module);
                 return null;
             }
             // SCIPIO: It's technically possible to be missing a slash here, if a root webapp is configured
@@ -2020,7 +2025,7 @@ public class RequestHandler {
             } catch (Exception e) {
                 // SCIPIO: new case
                 Debug.logError("makeLink: Error building url path part for webapp "
-                        + currentWebappInfo + ": " + e.toString(), module);
+                        + currentWebappInfo + ": " + e.toString() + getMakeLinkLogSuffix(), module);
                 return null;
             }
 
@@ -2070,6 +2075,10 @@ public class RequestHandler {
         return encodedUrl;
     }
 
+    private static String getMakeLinkLogSuffix() { // SCIPIO: better info when logging link errors
+        return " (" + Debug.getCallerShortInfo(logCallerExcludeClasses) + ")";
+    }
+
     public static String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean interWebapp, WebappInfo webappInfo, Boolean controller,
             Boolean fullPath, Boolean secure, Boolean encode) {
         FullWebappInfo targetWebappInfo = null;
@@ -2104,7 +2113,8 @@ public class RequestHandler {
         if (targetWebappInfo == null) {
             targetWebappInfo = currentWebappInfo;
             if (targetWebappInfo == null) {
-                Debug.logError("makeLink: Cannot build URL: No target webapp specified or current webapp info could be determined from context", module);
+                Debug.logError("makeLink: Cannot build URL: No target webapp specified or current webapp info could "
+                        + "be determined from context" + getMakeLinkLogSuffix(), module);
                 return null;
             }
         }
@@ -2112,7 +2122,7 @@ public class RequestHandler {
 
         // SCIPIO: Sanity check: null/missing URL
         if (url == null) { // Allow empty for root webapp requests: || url.isEmpty()
-            Debug.logError("makeLink: Received null URL; returning null", module);
+            Debug.logError("makeLink: Received null URL; returning null" + getMakeLinkLogSuffix(), module);
             return null;
         }
 
@@ -2122,7 +2132,7 @@ public class RequestHandler {
         } catch (Exception e) { // SCIPIO: just catch everything: GenericEntityException
             // If the entity engine is throwing exceptions, then there is no point in continuing.
             Debug.logError("makeLink: Error while getting web site properties for webapp "
-                    + targetWebappInfo + ": " + e.toString(), module);
+                    + targetWebappInfo + ": " + e.toString() + getMakeLinkLogSuffix(), module);
             return null;
         }
 
@@ -2139,7 +2149,8 @@ public class RequestHandler {
         if (controller) {
             if (url.isEmpty()) { // SCIPIO
                 Debug.log(getMakeLinkErrorLogLevel((HttpServletRequest) context.get("request"), delegator), null,
-                        "makeLink: Cannot build link: empty uri, cannot locate controller request for webapp " + targetWebappInfo, module);
+                        "makeLink: Cannot build link: empty uri, cannot locate controller request for webapp " 
+                        + targetWebappInfo + getMakeLinkLogSuffix(), module);
                 return null;
             }
             requestUri = RequestHandler.getRequestUri(url);
@@ -2150,7 +2161,7 @@ public class RequestHandler {
                 } catch (Exception e) {
                     // If we can't read the controller.xml file, then there is no point in continuing.
                     Debug.logError("makeLink: Error while parsing controller.xml file for webapp "
-                            + targetWebappInfo + ": " + e.toString(), module);
+                            + targetWebappInfo + ": " + e.toString() + getMakeLinkLogSuffix(), module);
                     return null;
                 }
             }
@@ -2161,7 +2172,7 @@ public class RequestHandler {
             if (requestMap == null) {
                 Debug.log(getMakeLinkErrorLogLevel((HttpServletRequest) context.get("request"), delegator), null,
                         "makeLink: Cannot build link: could not locate the expected request '"
-                        + requestUri + "' in controller config for webapp " + targetWebappInfo, module);
+                        + requestUri + "' in controller config for webapp " + targetWebappInfo + getMakeLinkLogSuffix(), module);
                 return null;
             }
         }
@@ -2173,7 +2184,9 @@ public class RequestHandler {
         // We don't need this condition anymore, because it doesn't make sense to require enableHttps to produce full path URLs
         //if (webSiteProps.getEnableHttps() || Boolean.TRUE.equals(fullPath) || Boolean.TRUE.equals(secure) || secure == null) {
         {
-            if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("In makeLink requestUri=" + requestUri + getMakeLinkLogSuffix(), module);
+            }
             // SCIPIO: These conditions have been change (see method)
             //if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
             //    didFullSecure = true;
@@ -2198,7 +2211,7 @@ public class RequestHandler {
         } catch (Exception e) {
             // If the entity engine is throwing exceptions, then there is no point in continuing.
             Debug.logError("makeLink: Error while getting URL builder for webapp "
-                    + targetWebappInfo + ": " + e.toString(), module);
+                    + targetWebappInfo + ": " + e.toString() + getMakeLinkLogSuffix(), module);
             return null;
         }
 
@@ -2207,7 +2220,7 @@ public class RequestHandler {
                 builder.buildHostPart(newURL, url, didFullSecure, controller);
             } catch (Exception e) {
                 Debug.logError("makeLink: Error while building url host part for webapp "
-                        + targetWebappInfo + ": " + e.toString(), module);
+                        + targetWebappInfo + ": " + e.toString() + getMakeLinkLogSuffix(), module);
                 return null;
             }
         }
@@ -2221,7 +2234,7 @@ public class RequestHandler {
             }
         } catch (Exception e) {
             Debug.logError("makeLink: Error while building url path part for webapp "
-                    + targetWebappInfo + ": " + e.toString(), module);
+                    + targetWebappInfo + ": " + e.toString() + getMakeLinkLogSuffix(), module);
             return null;
         }
 
@@ -2241,7 +2254,7 @@ public class RequestHandler {
         try {
             currentWebappInfo = FullWebappInfo.fromContext(context);
         } catch (Exception e) {
-            Debug.logError("makeLink: Could not get current webapp info from context: " + e.toString(), module);
+            Debug.logError("makeLink: Could not get current webapp info from context: " + e.toString() + getMakeLinkLogSuffix(), module);
             return null;
         }
         return makeLink(delegator, locale, url, targetWebappInfo, controller, fullPath, secure, encode,
@@ -2331,7 +2344,7 @@ public class RequestHandler {
                                 currentWebappInfo = FullWebappInfo.fromRequest(request);
                             } catch(Exception e) {
                                 Debug.logError("doLinkURLEncode: Error looking up webapp info from request (inter-webapp"
-                                        + " URL-encoding not possible): " + e.toString(), module);
+                                        + " URL-encoding not possible): " + e.toString() + getMakeLinkLogSuffix(), module);
                             }
                         }
                         if (currentWebappInfo != null && currentWebappInfo.useUrlManualInterWebappFilter()) {
@@ -2340,7 +2353,7 @@ public class RequestHandler {
                                 encodedUrl = rewriter.processOutboundUrl(encodedUrl, targetWebappInfo, request, response);
                             } catch (Exception e) {
                                 Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) inter-webapp link for webapp " + targetWebappInfo
-                                        + ": " + e.toString(), module);
+                                        + ": " + e.toString() + getMakeLinkLogSuffix(), module);
                             }
                         }
                     }
@@ -2362,7 +2375,7 @@ public class RequestHandler {
                 .processOutboundUrl(newURL.toString(), targetWebappInfo, context);
         } catch (IOException e) {
             Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) link for webapp " + webappInfo
-                    + ": " + e.toString(), module);
+                    + ": " + e.toString() + getMakeLinkLogSuffix(), module);
             return newURL.toString();
         }
     }
@@ -2459,7 +2472,7 @@ public class RequestHandler {
             try {
                 currentWebappInfo = FullWebappInfo.fromContext(context);
             } catch (Exception e) {
-                Debug.logError("makeLinkAuto: Could not get current webapp info from context: " + e.toString(), module);
+                Debug.logError("makeLinkAuto: Could not get current webapp info from context: " + e.toString() + getMakeLinkLogSuffix(), module);
                 return null;
             }
         }
@@ -2472,7 +2485,7 @@ public class RequestHandler {
                         targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), context);
                     }
                 } catch (Exception e) {
-                    Debug.logError("makeLinkAuto: Could not get webapp for webSiteId '" + webSiteId + "': " + e.toString(), module);
+                    Debug.logError("makeLinkAuto: Could not get webapp for webSiteId '" + webSiteId + "': " + e.toString() + getMakeLinkLogSuffix(), module);
                     return null;
                 }
             } else {
@@ -2485,7 +2498,7 @@ public class RequestHandler {
                         targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromPath(WebAppUtil.getServerId(context), url, true), context);
                     }
                 } catch (Exception e) {
-                    Debug.logError("makeLinkAuto: Could not get webapp from absolute path '" + url + "': " + e.toString(), module);
+                    Debug.logError("makeLinkAuto: Could not get webapp from absolute path '" + url + "': " + e.toString() + getMakeLinkLogSuffix(), module);
                     return null;
                 }
                 absContextPathChecked = true; // since we built the webapp info from the URL, this is guaranteed fine
@@ -2495,7 +2508,7 @@ public class RequestHandler {
                 try {
                     targetWebappInfo = FullWebappInfo.fromRequest(request);
                 } catch (Exception e) {
-                    Debug.logError("makeLinkAuto: Could not get current webapp info from request: " + e.toString(), module);
+                    Debug.logError("makeLinkAuto: Could not get current webapp info from request: " + e.toString() + getMakeLinkLogSuffix(), module);
                     return null;
                 }
             } else {
@@ -2526,7 +2539,7 @@ public class RequestHandler {
             controlPath = targetWebappInfo.getFullControlPath();
             if (controlPath == null) {
                 Debug.logError("makeLinkAuto: Trying to make a controller link"
-                        + " for a webapp (" + targetWebappInfo + ") that has no valid controller", module);
+                        + " for a webapp (" + targetWebappInfo + ") that has no valid controller" + getMakeLinkLogSuffix(), module);
                 return null;
             }
         }
@@ -2538,7 +2551,8 @@ public class RequestHandler {
                 if (!absControlPathChecked) {
                     if (!url.startsWith(controlPath)) {
                         Debug.logError("makeLinkAuto: Trying to make a controller link for webapp " + targetWebappInfo
-                                + " using absolute path url, but prefix does not match (uri: " + url + ", control path: " + controlPath + ")", module);
+                                + " using absolute path url, but prefix does not match (uri: " + url + ", control path: " 
+                                + controlPath + ")" + getMakeLinkLogSuffix(), module);
                         return null;
                     }
                     absControlPathChecked = true;
@@ -2551,7 +2565,8 @@ public class RequestHandler {
                         if (!(url.startsWith(ctxPath) && (url.length() == ctxPath.length() 
                                 || RequestLinkUtil.isUrlDelimNonDir(url.charAt(ctxPath.length())) ))) {
                             Debug.logError("makeLinkAuto: trying to make a webapp link for webapp " + targetWebappInfo
-                                    + " using absolute path url, but context root does not match (uri: " + url + ", context path: " + contextPath + ")", module);
+                                    + " using absolute path url, but context root does not match (uri: " + url 
+                                    + ", context path: " + contextPath + ")" + getMakeLinkLogSuffix(), module);
                             return null;
                         }
                     }

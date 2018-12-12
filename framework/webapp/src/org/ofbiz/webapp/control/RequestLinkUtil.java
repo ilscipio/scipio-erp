@@ -53,6 +53,8 @@ public final class RequestLinkUtil {
     public static final Set<Character> URL_DELIMS_NODIR_SET = UtilMisc.unmodifiableHashSetCopy(URL_DELIMS_NODIR_LIST);
     public static final Pattern URL_DELIMS_NODIR_PAT = Pattern.compile("["+URL_DELIMS_NODIR_STR+"]");
 
+    private static final Set<String> logCallerExcludeClasses = UtilMisc.toSet(RequestLinkUtil.class.getName());
+
     private RequestLinkUtil() {
     }
 
@@ -370,7 +372,7 @@ public final class RequestLinkUtil {
             return buildLinkHostPartAndEncode(delegator, locale, targetWebappInfo, url, fullPath, secure, encode, includeWebappPathPrefix,
                     currentWebappInfo, context);
         } catch(Exception e) {
-            Debug.logError(e, module);
+            Debug.logError("Error building link host part: " + e.toString() + getLogSuffix(), module);
             return null;
         }
     }
@@ -421,7 +423,7 @@ public final class RequestLinkUtil {
         try {
             return buildLinkHostPart(request, locale, webSiteId, secure, includeWebappPathPrefix);
         } catch (Exception e) {
-            Debug.logError(e, "Error building link host part: " + e.getMessage(), module);
+            Debug.logError("Error building link host part: " + e.toString() + getLogSuffix(), module);
             return null; // null may allow default value operators to work in other langs
         }
     }
@@ -470,7 +472,7 @@ public final class RequestLinkUtil {
         try {
             return buildLinkHostPart(delegator, locale, webSiteId, secure, includeWebappPathPrefix, null);
         } catch (Exception e) {
-            Debug.logError(e, "Error building link host part: " + e.getMessage(), module);
+            Debug.logError("Error building link host part: " + e.toString() + getLogSuffix(), module);
             return null; // null may allow default value operators to work in other langs
         }
     }
@@ -582,7 +584,8 @@ public final class RequestLinkUtil {
                 }
             } catch (Exception e) {
                 if (handleErrors) {
-                    Debug.logError(e, "rebuildOriginalRequestURL: Error getting web site properties for http/https port: " + e.getMessage(), module);
+                    Debug.logError("rebuildOriginalRequestURL: Error getting web site properties for http/https port: " 
+                            + e.toString() + getLogSuffix(), module);
                 } else {
                     throw new IllegalStateException("Error getting web site properties for http/https port: " + e.getMessage(), e);
                 }
@@ -606,8 +609,8 @@ public final class RequestLinkUtil {
                     props = webappInfo.getWebSiteProperties();
                 } catch (Exception e) {
                     if (handleErrors) {
-                        Debug.logError(e, "rebuildOriginalRequestURL: Error getting web site properties for host name"
-                                + " (using request.getServerName() instead): " + e.getMessage(), module);
+                        Debug.logError("rebuildOriginalRequestURL: Error getting web site properties for host name"
+                                + " (using request.getServerName() instead): " + e.toString() + getLogSuffix(), module);
                     } else {
                         throw new IllegalStateException("Error getting web site properties for host name: " + e.getMessage(), e);
                     }
@@ -643,7 +646,8 @@ public final class RequestLinkUtil {
                 urlBuilder = webappInfo.getOfbizUrlBuilder();
             } catch (Exception e) {
                 if (handleErrors) {
-                    Debug.logError(e, "rebuildOriginalRequestURL: Error getting url builder for webapp " + webappInfo + ": " + e.getMessage(), module);
+                    Debug.logError("rebuildOriginalRequestURL: Error getting url builder for webapp " + webappInfo 
+                            + ": " + e.toString() + getLogSuffix(), module);
                 } else {
                     throw new IllegalStateException("Error getting url builder webapp " + webappInfo + ": " + e.getMessage(), e);
                 }
@@ -653,7 +657,8 @@ public final class RequestLinkUtil {
                     urlBuilder.buildPathPartWithWebappPathPrefix(url);
                 } catch(Exception e) {
                     if (handleErrors) {
-                        Debug.logError(e, "rebuildOriginalRequestURL: Error building webappPathPrefix for webapp " + webappInfo + ": " + e.getMessage(), module);
+                        Debug.logError("rebuildOriginalRequestURL: Error building webappPathPrefix for webapp " + webappInfo 
+                                + ": " + e.toString() + getLogSuffix(), module);
                     } else {
                         throw new IllegalStateException("Error building webappPathPrefix for webapp " + webappInfo + ": " + e.getMessage(), e);
                     }
@@ -777,5 +782,9 @@ public final class RequestLinkUtil {
             return false;
         }
         return !isUrlDelim(path.charAt(0));
+    }
+
+    private static String getLogSuffix() { // SCIPIO: better info when logging link errors
+        return " (" + Debug.getCallerShortInfo(logCallerExcludeClasses) + ")";
     }
 }

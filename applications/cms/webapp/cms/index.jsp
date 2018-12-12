@@ -1,1 +1,1 @@
-<%response.sendRedirect("control/main");%>
+<%org.ofbiz.webapp.control.RequestHandler.sendControllerUriRedirect(request, response, "main");%>

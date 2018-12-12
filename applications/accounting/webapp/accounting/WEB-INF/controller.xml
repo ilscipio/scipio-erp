@@ -60,7 +60,10 @@ code package.
     <request-map uri="massChangeInvoiceStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="massChangeInvoiceStatus"/>
-        <response name="success" type="view" value="FindPurchaseInvoices"/>
+        <!-- SCIPIO: Does not exist
+        <response name="success" type="view" value="FindPurchaseInvoices"/>-->
+        <!-- SCIPIO: FIXME?: response should depend on whether changing sales or purchase invoices... -->
+        <response name="success" type="view" value="FindApInvoices"/>
     </request-map>
     <request-map uri="cancelCheckRunPayments">
         <security https="true" auth="true"/>

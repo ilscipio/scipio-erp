@@ -101,7 +101,9 @@ under the License.
     <request-map uri="massChangeInvoiceStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="massChangeInvoiceStatus"/>
-        <response name="success" type="view" value="FindPurchaseInvoices"/>
+        <!-- SCIPIO: Screen removed
+        <response name="success" type="view" value="FindPurchaseInvoices"/>-->
+        <response name="success" type="view" value="FindApInvoices"/>
     </request-map>
     <request-map uri="cancelCheckRunPayments">
         <security https="true" auth="true"/>

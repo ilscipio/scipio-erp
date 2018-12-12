@@ -24,6 +24,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -79,6 +80,12 @@ public class OrderReadHelper {
      * SCIPIO: Custom flag used to determine whether only one subscription is allowed per order or not.
      */
     public static final boolean subscriptionSingleOrderItem = UtilProperties.getPropertyAsBoolean("order", "order.item.subscription.singleOrderItem", false);
+    /**
+     * SCIPIO: Sales channels which only fully work with a webSiteId on OrderHeader.
+     * @see #getWebSiteSalesChannelIds
+     */
+    private static final Set<String> webSiteSalesChannelIds = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+            UtilProperties.getPropertyValue("order", "order.webSiteSalesChannelIds").split(","))));
 
     protected GenericValue orderHeader = null;
     protected List<GenericValue> orderItemAndShipGrp = null;
@@ -3259,4 +3266,11 @@ public class OrderReadHelper {
         return getOrderItemAdjustmentsTotal(orderItem, false, true, false);
     }
 
+    /**
+     * SCIPIO: Returns the salesChannelEnumIds of the channels which can be considered "web" channels
+     * or in other words require a webSiteId to work properly.
+     */
+    public static Set<String> getWebSiteSalesChannelIds(Delegator delegator) {
+        return webSiteSalesChannelIds;
+    }
 }

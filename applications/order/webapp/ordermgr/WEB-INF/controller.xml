@@ -470,7 +470,9 @@ code package.
     <request-map uri="setOrderCurrencyAgreementShipDates">
         <description>Handles setting the currency, agreement and shipment dates of an order.</description>
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setOrderCurrencyAgreementShipDates"/>
+        <!-- SCIPIO: Need event dedicated to orderentry for security reasons
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setOrderCurrencyAgreementShipDates"/>-->
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setOrderCurrencyAgreementShipDatesForOrderEntry"/>
         <response name="success" type="request" value="orderentry"/>
         <response name="error" type="request" value="orderagreements"/>
     </request-map>

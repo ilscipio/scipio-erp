@@ -2552,6 +2552,30 @@ public class ShoppingCartEvents {
         return "success";
     }
 
+    /**
+     * SCIPIO: A version of setOrderCurrencyAgreementShipDates only for order entry.
+     */
+    public static String setOrderCurrencyAgreementShipDatesForOrderEntry(HttpServletRequest request, HttpServletResponse response) {
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+            ShoppingCart cart = cartUpdate.getCartForUpdate();
+
+            String result = setOrderCurrencyAgreementShipDates(request, response);
+            if (!"success".equals(result)) {
+                return result;
+            }
+
+            // SCIPIO: Set webSiteId if applicable
+            String cartWebSiteId = request.getParameter("cartWebSiteId");
+            if (cartWebSiteId != null) {
+                // TODO?: Verify website is valid (not a real security concern in backend, for now)
+                cart.setWebSiteId(cartWebSiteId.isEmpty() ? null : cartWebSiteId);
+            }
+
+            cartUpdate.commit(cart); // SCIPIO
+        }
+        return "success";
+    }
+
     public static String getConfigDetailsEvent(HttpServletRequest request, HttpServletResponse response) {
 
         Delegator delegator = (Delegator) request.getAttribute("delegator");

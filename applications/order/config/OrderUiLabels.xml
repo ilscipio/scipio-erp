@@ -4406,6 +4406,14 @@
         <value xml:lang="zh-CN">录入日期</value>
         <value xml:lang="zh-TW">記錄日期</value>
     </property>
+    <property key="OrderEntryWebSiteNoneNoEmails">
+        <value xml:lang="de">Keine - keine E-Mails</value>
+        <value xml:lang="en">None - no emails</value>
+    </property>
+    <property key="OrderEntryWebSiteRequiredForEmails">
+        <value xml:lang="de">Eine Website ist erforderlich, um Benachrichtigungs-E-Mails senden zu können. Bleibt das Feld leer, werden keine E-Mails an den Client gesendet.</value>
+        <value xml:lang="en">A WebSite is required in order to send notification emails; if left empty, no emails will be sent to the client.</value>
+    </property>
     <property key="OrderErrorFacilityHaveNoAdress">
         <value xml:lang="ar">خطأ: المنشأة ليس لها عناوين</value>
         <value xml:lang="de">FEHLER: Das Lager hat keine Adresse</value>

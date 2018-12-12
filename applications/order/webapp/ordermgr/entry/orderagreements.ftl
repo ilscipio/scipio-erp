@@ -54,7 +54,7 @@ code package.
       <@field type="select" label=fieldLabel name="currencyUomId">
           <option value=""></option>
           <#list currencies as currency>
-          <option value="${currency.uomId}" <#if currencyUomId?default('') == currency.uomId>selected="selected"</#if> >${currency.uomId}</option>
+          <option value="${currency.uomId}"<#if (currencyUomId!'') == currency.uomId> selected="selected"</#if>>${currency.uomId}</option>
           </#list>
       </@field>
 
@@ -62,7 +62,7 @@ code package.
       <@field type="select" name="CURRENT_CATALOG_ID" label=uiLabelMap.ProductChooseCatalog>
         <#list catalogCol! as catalogId>
           <#assign thisCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, catalogId)>
-          <option value="${catalogId}" <#if (currentCatalogId!'') == catalogId>selected="selected"</#if> >${thisCatalogName}</option>
+          <option value="${catalogId}"<#if (currentCatalogId!'') == catalogId> selected="selected"</#if>>${thisCatalogName}</option>
         </#list>
       </@field>
     <#else>
@@ -78,6 +78,17 @@ code package.
       <#if cart.getOrderType() == "PURCHASE_ORDER">
         <@field type="datetime" label=uiLabelMap.FormFieldTitle_cancelBackOrderDate name="cancelBackOrderDate" value="" size="25" maxlength="30" id="cancelBackOrderDate1"/>
       </#if>
+
+    <#if webSiteApplies>
+      <@field type="select" label=uiLabelMap.FormFieldTitle_webSiteId name="cartWebSiteId" tooltip=uiLabelMap.OrderEntryWebSiteRequiredForEmails>
+          <option value="">(${uiLabelMap.OrderEntryWebSiteNoneNoEmails})</option>
+        <#list (webSiteList![]) as webSite>
+          <option value="${webSite.webSiteId}"<#if rawString(selectedWebSiteId!'') == rawString(webSite.webSiteId)> selected="selected"</#if>><#rt/>
+            <#if webSite.siteName?has_content>${webSite.siteName} [${webSite.webSiteId}]<#else>${webSite.webSiteId}</#if><#t/>
+            <#if (webSite.isStoreDefault!) == "Y"> (${uiLabelMap.CommonDefault})</#if></option><#lt/>
+        </#list>
+      </@field>
+    </#if>
 
   </@section>
 </form>

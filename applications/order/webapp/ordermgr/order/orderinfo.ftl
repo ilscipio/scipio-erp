@@ -72,7 +72,7 @@ code package.
         <#if orderHeader.salesChannelEnumId?has_content>
           <#assign channel = orderHeader.getRelatedOne("SalesChannelEnumeration", false)>
           <#if channel.get("description",locale)?has_content && channel.get("enumId")!= "UNKNWN_SALES_CHANNEL">
-            (${(channel.get("description",locale))!})
+            (${(channel.get("description",locale))!}<#if orderHeader.webSiteId?has_content> - ${orderHeader.webSiteId}</#if>)
           </#if>
         </#if>
       </@td>

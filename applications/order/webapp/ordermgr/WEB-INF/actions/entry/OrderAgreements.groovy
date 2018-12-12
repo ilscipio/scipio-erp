@@ -20,6 +20,7 @@
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.order.order.*;
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.product.catalog.CatalogWorker;
 
@@ -93,3 +94,43 @@ if (catalogCol) {
 // currencies and shopping cart currency
 context.currencies = from("Uom").where("uomTypeId", "CURRENCY_MEASURE").cache(true).queryList();
 context.currencyUomId = shoppingCart.getCurrency();
+
+// SCIPIO: WebSites for the ProductStore (required for email support)
+productStoreId = shoppingCart.getProductStoreId();
+cartWebSiteId = shoppingCart.getWebSiteId();
+//context.cartWebSiteId = cartWebSiteId;
+webSiteApplies = (shoppingCart.getOrderType() != "PURCHASE_ORDER") && productStoreId;
+context.webSiteApplies = webSiteApplies;
+
+webSiteList = null;
+defaultWebSite = null;
+if (webSiteApplies) {
+    webSiteList = from("WebSite").where("productStoreId", productStoreId).orderBy("siteName", "webSiteId").queryList();
+    defaultWebSiteList = [];
+    otherWebSiteList = [];
+    for(webSite in webSiteList) {
+        if (webSite.isStoreDefault == "Y") {
+            defaultWebSiteList.add(webSite);
+        } else {
+            otherWebSiteList.add(webSite);
+        }
+    }
+    if (defaultWebSiteList) {
+        defaultWebSite = defaultWebSiteList[0];
+        webSiteList = defaultWebSiteList + otherWebSiteList;
+    } else {
+        if (webSiteList) {
+            defaultWebSite = webSiteList[0];
+        }
+    }
+}
+context.webSiteList = webSiteList;
+context.defaultWebSite = defaultWebSite;
+
+if (isError) {
+    context.selectedWebSiteId = parameters.cartWebSiteId;
+} else if (cartWebSiteId) {
+    context.selectedWebSiteId = cartWebSiteId;
+} else if (OrderReadHelper.getWebSiteSalesChannelIds(delegator).contains(shoppingCart.getChannelType())) {
+    context.selectedWebSiteId = defaultWebSite?.webSiteId;
+}

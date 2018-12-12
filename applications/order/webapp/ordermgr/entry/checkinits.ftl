@@ -52,7 +52,7 @@ code package.
             </#if>
             <option value="">${uiLabelMap.OrderNoChannel}</option>
             <#list salesChannels as salesChannel>
-              <option value="${salesChannel.enumId}" <#if (salesChannel.enumId == currentChannel)>selected="selected"</#if>>${salesChannel.get("description",locale)}</option>
+              <option value="${salesChannel.enumId}"<#if (salesChannel.enumId == currentChannel)> selected="selected"</#if>>${salesChannel.get("description",locale)}</option>
             </#list>
         </@field>
         <#if partyId??>

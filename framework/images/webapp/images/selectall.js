@@ -530,6 +530,9 @@ function ajaxAutoCompleter(areaCsvString, showDescription, defaultMinLength, def
                         //if(exception != 'abort') {
                         //    alert("An error occurred while communicating with the server:\n\n\nreason=" + reason + "\n\nexception=" + exception);
                         //}
+                        if (reason != 'abort' && console && console.error) {
+                            console.error("Field lookup: An error occurred while communicating with the server: reason=" + reason + ", exception=" + exception);
+                        }
                     }
                 });
             },

@@ -339,6 +339,9 @@ var Lookup = function(options) {
                 //    alert("An error occurred while communicating with the server:\n\n\nreason=" + reason + "\n\nexception=" + exception);
                 //}
                 //location.reload(true); // SCIPIO: This will not work for any screen loaded after POST
+                if (reason != 'abort' && console && console.error) {
+                    console.error("Field lookup: An error occurred while communicating with the server: reason=" + reason + ", exception=" + exception);
+                }
             }
         });
     }

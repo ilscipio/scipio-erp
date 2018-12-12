@@ -1253,12 +1253,7 @@
     -->
     <menu name="TransactionsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <actions>
-            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
-            <script lang="groovy"><![CDATA[
-                import org.ofbiz.base.util.Debug
-                
-                Debug.log("organizationPartyId =========> " + organizationPartyId);                
-            ]]></script>
+            <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>            
         </actions>
     </menu>
 

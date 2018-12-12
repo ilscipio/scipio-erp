@@ -447,13 +447,6 @@ code package.
         <section>
             <actions>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
-                
-                <script lang="groovy"><![CDATA[
-                    import org.ofbiz.base.util.Debug
-                    
-                    Debug.log("organizationPartyId =========> " + organizationPartyId);
-                ]]></script>
-                
                 <if>
                     <condition><not><if-empty field="organizationPartyId" /></not></condition>
                     <then>

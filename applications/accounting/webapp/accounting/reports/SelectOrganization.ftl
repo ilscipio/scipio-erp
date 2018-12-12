@@ -1,8 +1,20 @@
-<@form method="get" action=makeOfbizUrl("setupOrganization") id="setupOrg-selectOrg-form">    
+<style type="text/css">
+  .acctg-selectOrg-select, .acctg-selectOrg-submit-buttons {
+    display:inline-block;
+  }
+  .acctg-selectOrg-select {
+    margin-right:0.5em;
+  }
+  .acctg-selectOrg-select, .acctg-selectOrg-submit-buttons {
+    vertical-align:top; <#-- firefox align issue hack -->
+  }
+</style>
+
+<@form method="get" action=makeOfbizUrl("TransactionReports") id="acctg-selectOrg-form" name="acctg-selectOrg-form">    
   
-    <@field type="generic" label=uiLabelMap.SetupSelectOrganizationForSetup>
+    <@field type="generic">
         <#-- FIXME: submit doesn't align -->
-        <@field type="select" name="partyId" inline=true style="display:inline-block;">            
+        <@field type="select" name="organizationPartyId" inline=true style="display:inline-block;">            
             <option value="" disabled="disabled"></option>
             <#if parties?has_content>
               <#list parties as partyEntry>
@@ -12,8 +24,10 @@
               </#list>
             </#if>
         </@field>
+        <@menu type="button" id="acctg-selectOrg-submit-buttons" class="+acctg-selectOrg-submit-buttons">
+        	<@menuitem type="link" contentId="acctg-selectOrg-submit" href="javascript:document.forms['acctg-selectOrg-form'].submit();" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_update!}"/>        	
+       	</@menu>
         
-        <@field type="button" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_continue!}"/>
 	</@field>    
 </@form>
   

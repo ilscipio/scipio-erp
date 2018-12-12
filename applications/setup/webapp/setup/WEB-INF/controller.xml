@@ -558,6 +558,7 @@
     <view-map name="SetupAccountingTransactionsTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditAccountingTransactions" />
     <view-map name="SetupJournalTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditJournals" />
     <view-map name="SetupTaxAuthTab" type="screen" page="component://setup/widget/SetupScreens.xml#EditTaxAuthorities" />
+    <view-map name="SetupAccountingTabError" type="screen" page="component://setup/widget/SetupScreens.xml#SetupAccountingTabError" />
 
     <!-- SCIPIO: Special overrides -->
     <view-map name="main" type="screen" page="component://setup/widget/SetupScreens.xml#SetupOrganizationMain"/>

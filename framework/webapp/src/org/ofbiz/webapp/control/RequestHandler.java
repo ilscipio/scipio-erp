@@ -137,7 +137,7 @@ public class RequestHandler {
         }
         return rh;
     }
-
+    
     /**
      * SCIPIO: Gets request handler for the ServletContext associated to current request.
      * Added 2017-05-08.
@@ -1231,6 +1231,7 @@ public class RequestHandler {
             throw new RequestHandlerException(ise.getMessage(), ise);
         }
     }
+
     private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, ControllerConfig controllerConfig, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, boolean viewAsJson, boolean allowViewSave) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
         // SCIPIO: sanity check
         if (view == null || view.isEmpty()) {
@@ -2771,7 +2772,7 @@ public class RequestHandler {
         }
     }
 
-    private String showSessionId(HttpServletRequest request) {
+    private static String showSessionId(HttpServletRequest request) { // SCIPIO: made static
         // SCIPIO: avoid expensive lookup just for log line, not worth it
         //Delegator delegator = (Delegator) request.getAttribute("delegator");
         //EntityUtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y", delegator);
@@ -2987,5 +2988,43 @@ public class RequestHandler {
             newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, null, encode);
         }
         return newUrl;
+    }
+
+    /**
+     * SCIPIO: Public redirect helper method that honors the status codes configured in the current controller
+     * or requestHandler.properties.
+     * <p>
+     * NOTE: The url is NOT sent through URL encoding automatically; caller must do this (through {@link #makeLink} or other)!
+     */
+    public static void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IllegalStateException {
+        Integer statusCode = null;
+        try {
+            //statusCodeString = controllerConfig.getStatusCode();
+            statusCode = getRequestHandler(request).getControllerConfig().getStatusCodeNumber();
+        } catch (Exception e) {
+            Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+        }
+        //if (UtilValidate.isEmpty(statusCodeString)) {
+        if (statusCode == null) {
+            statusCode = defaultStatusCodeNumber;
+        }
+
+        // send the redirect
+        response.setStatus(statusCode);
+        response.setHeader("Location", url);
+        response.setHeader("Connection", "close");
+    }
+
+    /**
+     * SCIPIO: Public redirect helper method that honors the status codes configured in the current controller
+     * or requestHandler.properties.
+     */
+    public static void sendControllerUriRedirect(HttpServletRequest request, HttpServletResponse response, String uri) throws IllegalStateException {
+        String url = makeUrlFull(request, response, uri);
+        if (url != null) {
+            sendRedirect(request, response, url);
+        } else {
+            throw new IllegalStateException("Cannot redirect to controller uri because failed to generate link: " + uri);
+        }
     }
 }

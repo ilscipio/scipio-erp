@@ -19,14 +19,13 @@ code package.
       <input type="hidden" name="hasAgreements" value="N"/>
     </#if>
     
-    <@table type="fields">
       <#if agreements??>     
-      <@field type="select" label=uiLabelMap.OrderSelectAgreement name="agreementId">
+        <@field type="select" label=uiLabelMap.OrderSelectAgreement name="agreementId">
             <option value="">${uiLabelMap.CommonNone}</option>
             <#list agreements as agreement>
             <option value="${agreement.agreementId}">${agreement.agreementId} - ${agreement.description!}</option>
             </#list>
-      </@field>
+        </@field>
       </#if>
       <#if agreementRoles??>
         <@field type="select" label=uiLabelMap.OrderSelectAgreementRoles name="agreementId">
@@ -80,6 +79,5 @@ code package.
         <@field type="datetime" label=uiLabelMap.FormFieldTitle_cancelBackOrderDate name="cancelBackOrderDate" value="" size="25" maxlength="30" id="cancelBackOrderDate1"/>
       </#if>
 
-    </@table>
   </@section>
 </form>

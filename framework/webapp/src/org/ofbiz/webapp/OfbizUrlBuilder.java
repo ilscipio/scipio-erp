@@ -34,6 +34,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
+import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.website.WebSiteProperties;
@@ -71,7 +72,9 @@ public final class OfbizUrlBuilder {
             WebSiteProperties webSiteProps = WebSiteProperties.from(request);
             URL url = ConfigXMLReader.getControllerConfigURL(request.getServletContext());
             ControllerConfig config = (url != null) ? ConfigXMLReader.getControllerConfig(url, true) : null; // SCIPIO: 2017-11-18: controller now fully optional (2 change)
-            String servletPath = (String) request.getAttribute("_CONTROL_PATH_");
+            // SCIPIO: Use more reliable call
+            //String servletPath = (String) request.getAttribute("_CONTROL_PATH_");
+            String servletPath = RequestHandler.getControlPath(request);
             String contextPath = request.getContextPath();
             builder = new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath); // SCIPIO
             request.setAttribute("_OFBIZ_URL_BUILDER_", builder);

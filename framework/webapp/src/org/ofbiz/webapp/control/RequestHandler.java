@@ -2053,8 +2053,8 @@ public class RequestHandler {
             if (controller) {
                 // SCIPIO: This is the original stock case: intra-webapp, controller link
                 // create the path to the control servlet
-                String controlPath = (String) request.getAttribute("_CONTROL_PATH_");
-                newURL.append(controlPath);
+                //String controlPath = (String) request.getAttribute("_CONTROL_PATH_");
+                newURL.append(getControlPath(request));
 
                 if (Boolean.TRUE.equals(RequestLinkUtil.isUrlAppendNeedsDirSep(url, newURL))) { // SCIPIO: improved check: !url.startsWith("/")
                     newURL.append("/");
@@ -2846,6 +2846,19 @@ public class RequestHandler {
         return charset;
     }
 
+    /**
+     * SCIPIO: Returns the _CONTROL_PATH_ request attribute or otherwise tries to determine
+     * it newly, for the current webapp.
+     * <p>
+     * NOTE: Most code should now use this getter instead of accessing _CONTROL_PATH_ directly.
+     * <p>
+     * Added 2018-12-12.
+     */
+    public static String getControlPath(HttpServletRequest request) {
+        String controlPath = (String) request.getAttribute("_CONTROL_PATH_");
+        return (controlPath != null) ? controlPath : request.getContextPath() + getControlServletPath(request);
+    }
+    
     /**
      * SCIPIO: Returns the servlet path for the controller or empty string if it's the catch-all path ("/").
      * (same rules as {@link HttpServletRequest#getServletPath()}).

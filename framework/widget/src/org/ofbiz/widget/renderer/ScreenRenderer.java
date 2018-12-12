@@ -58,6 +58,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.LoginWorker;
+import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.ViewAsJsonUtil;
 import org.ofbiz.webapp.renderer.FtlContextFetcher;
 import org.ofbiz.webapp.renderer.RenderContextFetcher;
@@ -530,7 +531,9 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         context.put("page", new HashMap<String, Object>());
 
         // some information from/about the ControlServlet environment
-        context.put("controlPath", request.getAttribute("_CONTROL_PATH_"));
+        // SCIPIO: Use more reliable call
+        //context.put("controlPath", request.getAttribute("_CONTROL_PATH_"));
+        context.put("controlPath", RequestHandler.getControlPath(request));
         context.put("contextRoot", request.getAttribute("_CONTEXT_ROOT_"));
         context.put("serverRoot", request.getAttribute("_SERVER_ROOT_URL_"));
         context.put("checkLoginUrl", LoginWorker.makeLoginUrl(request));

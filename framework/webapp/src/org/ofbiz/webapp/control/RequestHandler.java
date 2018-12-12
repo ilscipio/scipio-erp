@@ -177,9 +177,6 @@ public class RequestHandler {
 
         // SCIPIO: New (currently true by default)
         this.allowOverrideViewUri = !"false".equalsIgnoreCase(context.getInitParameter("allowOverrideViewUri"));
-        
-        // SCIPIO: Parse status code
-        
     }
 
     public ConfigXMLReader.ControllerConfig getControllerConfig() {

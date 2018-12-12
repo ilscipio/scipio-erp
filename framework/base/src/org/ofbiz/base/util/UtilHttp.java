@@ -1359,28 +1359,25 @@ public final class UtilHttp {
     }
 
     /**
-     * Obtains the session ID from the request, or "unknown" if no session present.
+     * Obtains the session ID from the request, or "[none]" if no session present.
      * <p>
-     * SCIPIO: <strong>WARN:</strong> Despite what is written above (by stock), at time of writing
-     * (2016-05-26), this method will in fact cause new session creation, and may be unsafe to fix directly.
-     * To avoid completely, call {@link #getSessionIdIfSet} instead, which guarantees
-     * no session creation.
+     * SCIPIO: 2018-12-11: This no longer forces session creation and now returns "[none]" instead of "unknown",
+     * which was inaccurate. Note that this was primarily used for log display, and previously this was miscoded
+     * such that it could never actually return "unknown"; therefore, if any code was checking the string "unknown",
+     * it never did anything anyway.
      */
     public static String getSessionId(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        return (session == null ? "unknown" : session.getId());
+        HttpSession session = request.getSession(false); // SCIPIO: use false!
+        return (session == null ? "[none]" : session.getId());
     }
 
     /**
-     * SCIPIO: Obtains the session ID from the request, or "unknown" if no session present.
-     * <p>
-     * <strong>NOTE</strong>: Currently (2016-05-26) This version unlike {@link #getSessionId} ACTUALLY does
-     * what the description says, and will never implicitly create a new session if none
-     * existed. If the above is ever fixed, this one should remain the same.
+     * SCIPIO: Obtains the session ID from the request, or "[none]" if no session present.
+     * @deprecated 2018-12-11: This is now handled by {@link #getSessionId(HttpServletRequest)}.
      */
+    @Deprecated
     public static String getSessionIdIfSet(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        return (session == null ? "unknown" : session.getId());
+        return getSessionId(request);
     }
 
     /**

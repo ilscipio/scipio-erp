@@ -532,7 +532,7 @@ public class RequestHandler {
         if (requestMap.securityAuth) {
             // Invoke the security handler
             // catch exceptions and throw RequestHandlerException if failed.
-            if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: AuthRequired. Running security check. " + showSessionId(request), module);
+            if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: AuthRequired. Running security check." + showSessionId(request), module);
             ConfigXMLReader.Event checkLoginEvent = requestMapMap.get("checkLogin").event;
             String checkLoginReturnString = null;
 
@@ -1164,7 +1164,7 @@ public class RequestHandler {
     private void callRedirect(String url, HttpServletResponse resp, HttpServletRequest req, String statusCodeString, AttributesSpec saveAttrMap) throws RequestHandlerException {
         // SCIPIO: Uncomment this to force remove jsessionId from controller redirects...
         //RequestUtil.removeJsessionId(url);
-        if (Debug.infoOn()) Debug.logInfo("Sending redirect to: [" + url + "]. " + showSessionId(req), module);
+        if (Debug.infoOn()) Debug.logInfo("Sending redirect to: [" + url + "]." + showSessionId(req), module);
         // SCIPIO: sanity check
         if (url == null || url.isEmpty()) {
             Debug.logError("Scipio: Redirect URL is empty", module);
@@ -1235,7 +1235,7 @@ public class RequestHandler {
             servletName = servletName.substring(1);
         }
 
-        if (Debug.infoOn()) Debug.logInfo("Rendering View [" + view + "]. " + showSessionId(req), module);
+        if (Debug.infoOn()) Debug.logInfo("Rendering View [" + view + "]." + showSessionId(req), module);
         if (view.startsWith(servletName + "/")) {
             view = view.substring(servletName.length() + 1);
             if (Debug.infoOn()) Debug.logInfo("a manual control servlet request was received, removing control servlet path resulting in: view=" + view, module);
@@ -2761,6 +2761,24 @@ public class RequestHandler {
         // SCIPIO: needlessly verbose
         //return " hidden sessionId by default.";
         return " sessionId=[hidden]";
+    }
+
+    /**
+     * SCIPIO: Returns the session ID itself, for log display, without space and prefix; 
+     * if no session, returns "[none]"; if hidden, returns "[hidden]".
+     */
+    public static String getSessionIdForLog(HttpServletRequest request) {
+        return getSessionIdForLog(request.getSession(false));
+    }
+    
+    /**
+     * SCIPIO: Returns the session ID itself, for log display, without space and prefix; 
+     * if no session, returns "[none]"; if hidden, returns "[hidden]".
+     * <p>
+     * NOTE: If request is available, prefer using {@link #getSessionIdForLog(HttpServletRequest)} instead.
+     */
+    public static String getSessionIdForLog(HttpSession session) {
+        return showSessionIdInLog ? (session != null ? session.getId() : "[none]") : "[hidden]";
     }
 
     /**

@@ -14,7 +14,6 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilRender.RenderExceptionMode;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.FreeMarkerWorker.OFBizTemplateExceptionHandler;
@@ -182,10 +181,7 @@ public abstract class CmsRenderUtil {
             String tmplIdStr = " [template: " + pageTemplate.getName() + "]";
             sysMsg += tmplIdStr;
             if (pageContext.getRequest() != null) {
-                String logIdStr = CmsControlUtil.getReqLogIdStr(pageContext.getRequest());
-                if (UtilValidate.isNotEmpty(logIdStr)) {
-                    sysMsg += " [" + logIdStr + "]";
-                }
+                sysMsg += " [sessionId: " + CmsControlUtil.getSessionIdForLog(pageContext.getRequest().getSession(false)) + "]";
             }
         }
         return handleDirectiveError(label, t, sysMsg, userMsg, (pageContext != null ? pageContext.isPreview() : false), liveExMode, module);

@@ -440,7 +440,7 @@ public class ServiceEventHandler implements EventHandler {
                     + "(check before if a sub-task for this error does not exist)."
                     + " If you are not sure how to create a Jira issue please have a look before at https://cwiki.apache.org/confluence/display/OFBIZ/OFBiz+Contributors+Best+Practices"
                     + " Thank you in advance for your help.";
-                Debug.logError("=============== " + errMsg + "; In session [" + ControlActivationEventListener.showSessionId(session) + "]; Note that this can be changed using the service.http.parameters.require.encrypted property in the url.properties file", module);
+                Debug.logError("=============== " + errMsg + "; In session " + ControlActivationEventListener.getSessionIdForLog(session) + "; Note that this can be changed using the service.http.parameters.require.encrypted property in the url.properties file", module);
 
                 // the default here is true, so anything but N/n is true
                 boolean requireEncryptedServiceWebParameters = !EntityUtilProperties.propertyValueEqualsIgnoreCase("url", "service.http.parameters.require.encrypted", "N", delegator);

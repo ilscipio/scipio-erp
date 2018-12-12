@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.webapp.control.RequestHandler;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
 import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
@@ -22,7 +22,6 @@ import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
 public abstract class CmsControlUtil {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final boolean showSessionIdInLog = UtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y");
 
     public static final String CMS_NOCACHERESPONSESET_REQATTRNAME = "_CMS_NOCACHERESPONSE_SET_";
     public static final String CMS_NOCACHECMSRENDER_REQATTRNAME = "cmsSetResponseBrowserNoCacheCmsPage";
@@ -150,24 +149,22 @@ public abstract class CmsControlUtil {
         return PathUtil.ensureStartDelim(cmsReqPath);
     }
 
-    public static String getReqLogIdStr(HttpServletRequest request) {
-        HttpSession session = (request != null) ? request.getSession(false) : null;
-        return (request != null ? "sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)) : "");
+    public static String getSessionIdForLog(HttpSession session) {
+        return RequestHandler.getSessionIdForLog(session);
     }
 
+    public static String getSessionIdForLog(HttpServletRequest request) {
+        return RequestHandler.getSessionIdForLog(request);
+    }
+    
     public static String getReqLogIdDelimStr(HttpServletRequest request) {
         HttpSession session = (request != null) ? request.getSession(false) : null;
-        return (request != null ? "; sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)): "");
-    }
-
-    // only use if request is not available
-    public static String getReqLogIdStr(HttpSession session) {
-        return "sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session));
+        return (request != null ? "; sessionId=" + getSessionIdForLog(session) : "");
     }
 
     // only use if request is not available
     public static String getReqLogIdDelimStr(HttpSession session) {
-        return "; sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session));
+        return "; sessionId=" + getSessionIdForLog(session);
     }
 
     /**
@@ -195,13 +192,5 @@ public abstract class CmsControlUtil {
             cmsPageVersionId = null;
         }
         return cmsPageVersionId;
-    }
-
-    public static boolean isShowSessionIdInLog() {
-        return showSessionIdInLog;
-    }
-
-    public static String getSessionIdForLog(HttpSession session) {
-        return showSessionIdInLog ? session.getId() : "[hidden]";
     }
 }

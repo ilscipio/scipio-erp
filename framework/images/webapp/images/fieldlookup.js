@@ -334,7 +334,7 @@ var Lookup = function(options) {
 
             error : function(xhr, reason, exception) {
                 if (exception != 'abort') {
-                    alert("An error occurred while communicating with the server:\n\n\nreason=" + reason + "\n\nexception=" + exception + "\n\ntextStatus=" + xhr.textStatus);
+                    alert("An error occurred while communicating with the server:\n\n\nreason=" + reason + "\n\nexception=" + exception);
                 }
                 //location.reload(true);
             }

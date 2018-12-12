@@ -139,7 +139,7 @@ public class CartUpdate implements AutoCloseable {
         CartUpdateStatus status = currentStatus.get();
         if (status == null) {
             // Top level
-            status = new CartUpdateStatus(1, useSyncSection ? CartSync.getCartLockObject(request) : CartSync.DUMMY, sourceCart,
+            status = new CartUpdateStatus(0, useSyncSection ? CartSync.getCartLockObject(request) : CartSync.DUMMY, sourceCart,
                     ShoppingCartEvents.isCartChanged(request));
         }
         return status;
@@ -155,6 +155,7 @@ public class CartUpdate implements AutoCloseable {
     }
 
     protected void begin() {
+        status.nestedLevel++;
         if (isDebug()) {
             Debug.logInfo("Begin cart update section (depth: " + status.nestedLevel + ")"
                     + getLogSuffix(), module);
@@ -167,8 +168,6 @@ public class CartUpdate implements AutoCloseable {
             currentStatus.set(status);
             // LOCK
             status.cartSync.begin(); // synchronized begin
-        } else {
-            status.nestedLevel++;
         }
 
         this.parentUpdate = status.currentUpdate;
@@ -236,6 +235,7 @@ public class CartUpdate implements AutoCloseable {
         if (committed) {
             // COMMIT
             if (isTopLevel()) {
+                // Set cart in session and request attributes (if allowed by modifyScopesFilter)
                 ShoppingCartEvents.setCartObject(request, status.currentCart, modifyScopesFilter);
 
                 /* 2018-11-30: Do not do this because in 99% of cases we want the code following the cart update
@@ -245,24 +245,23 @@ public class CartUpdate implements AutoCloseable {
                     request.removeAttribute("shoppingCart");
                 }
                 */
-
-                if (isDebug()) {
-                    if (status.cartCopy == status.currentCart) {
-                        Debug.logInfo("End cart update section (depth: " + status.nestedLevel + ") - committed "
-                                + (isTopLevel() ? "to session" : "locally") + getLogSuffix(), module);
-                    } else {
-                        Debug.logInfo("End cart update section (depth: " + status.nestedLevel + ") - foreign cart committed "
-                                + (isTopLevel() ? "to session" : "locally") + getLogSuffix(), module);
-                    }
-                }
             } else {
                 ; // Nothing to do - already set by #commit(ShoppingCart) - simply continue in parent level
-                Debug.logWarning("End cart update section (depth: " + status.nestedLevel  + ") - not committed "
-                        + (isTopLevel() ? "to session" : "locally") + getLogSuffix(), module);
+            }
+            if (isDebug()) {
+                if (status.cartCopy == status.currentCart) {
+                    Debug.logInfo("End cart update section (depth: " + status.nestedLevel + ") - committed "
+                            + (isTopLevel() ? "to session" : "locally") + getLogSuffix(), module);
+                } else {
+                    Debug.logInfo("End cart update section (depth: " + status.nestedLevel + ") - foreign cart committed "
+                            + (isTopLevel() ? "to session" : "locally") + getLogSuffix(), module);
+                }
             }
         } else { // (assuming we made a cart)
             // ROLLBACK - Restore old request attribute cart and leave session alone
             RequestVarScopes.REQUEST.setOrRemoveValue(request, modifyScopesFilter, "shoppingCart", prevRequestCart);
+            Debug.logWarning("End cart update section (depth: " + status.nestedLevel  + ") - not committed "
+                    + (isTopLevel() ? "to session" : "locally") + getLogSuffix(), module);
         }
         if (!isTopLevel()) {
             status.nestedLevel--;

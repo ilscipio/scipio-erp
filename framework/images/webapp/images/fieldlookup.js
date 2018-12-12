@@ -333,10 +333,12 @@ var Lookup = function(options) {
             },
 
             error : function(xhr, reason, exception) {
-                if (exception != 'abort') {
-                    alert("An error occurred while communicating with the server:\n\n\nreason=" + reason + "\n\nexception=" + exception);
-                }
-                //location.reload(true);
+                // SCIPIO: Removed: abort detection is wrong here (would be: reason != 'abort', if that were portable; not reliable either),
+                // and there is little need to show error message for this
+                //if (exception != 'abort') {
+                //    alert("An error occurred while communicating with the server:\n\n\nreason=" + reason + "\n\nexception=" + exception);
+                //}
+                //location.reload(true); // SCIPIO: This will not work for any screen loaded after POST
             }
         });
     }

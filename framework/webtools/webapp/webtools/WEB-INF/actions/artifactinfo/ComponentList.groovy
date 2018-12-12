@@ -36,7 +36,7 @@ components.each { component ->
          componentMap.rootLocation =  component.getRootLocation();
          componentMap.enabled = (component.enabled() == true? "Y" : "N");
          componentMap.webAppName = webApp.getName();
-         componentMap.contextRoot = webApp.getContextRoot();
+         componentMap.contextRoot = webApp.getContextRoot() ?: "/"; // SCIPIO: Root will be empty string, show as "/"
          componentMap.location = webApp.getLocation();
          // SCIPIO: Relative locations and appBarDisplay
          def relRootLoc = UtilURL.getOfbizHomeRelativeLocationFromFilePath(componentMap.rootLocation) ?: "";
@@ -51,8 +51,8 @@ components.each { component ->
          componentMap.relWebLoc = relWebLoc;
          appBarDisplay = webApp.getAppBarDisplay();
          componentMap.componentMap = componentMap;
-         componentMap.linkCtxRoot = (componentMap.contextRoot && (appBarDisplay || 
-             (componentMap.compName == "solr" && componentMap.webAppName == "solr")));
+         componentMap.contextRootLinkUri = (componentMap.contextRoot && (appBarDisplay || 
+             (componentMap.compName == "solr" && componentMap.webAppName == "solr"))) ? componentMap.contextRoot : null;
          componentList.add(componentMap);
      }
      if (UtilValidate.isEmpty(webApps)) {
@@ -68,7 +68,7 @@ components.each { component ->
          componentMap.relRootLoc = "";
          componentMap.relWebLoc = "";
          componentMap.appBarDisplay = false;
-         componentMap.linkCtxRoot = false;
+         componentMap.contextRootLinkUri = null;
      }
 }
 

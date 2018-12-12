@@ -28,10 +28,10 @@
         <field name="rootLocation"><display description="${relRootLoc}"/></field><!-- SCIPIO: Show relative locations -->
         <field name="enabled"><display/></field>
         <field name="webAppName"><display/></field>
-        <field name="contextRoot" use-when="linkCtxRoot"><!-- SCIPIO: Show webapp link -->
-            <hyperlink target-type="inter-app" target="${contextRoot}" description="${contextRoot}" target-window="_blank"/>
+        <field name="contextRoot" use-when="contextRootLinkUri!=null"><!-- SCIPIO: Show webapp link -->
+            <hyperlink target-type="inter-app" target="${contextRootLinkUri}" description="${contextRoot}" target-window="_blank"/>
         </field>
-        <field name="contextRoot" use-when="!linkCtxRoot"><display/></field>
+        <field name="contextRoot" use-when="contextRootLinkUri==null"><display/></field>
         <field name="location"><display description="${relWebLoc}"/></field><!-- SCIPIO: Show relative locations -->
     </form>
 

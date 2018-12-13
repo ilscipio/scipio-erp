@@ -91,11 +91,7 @@ public class LocalDataGenerator extends AbstractDataGenerator {
             UtilMisc.toList("CAL_DECLINED", "CAL_DELEGATED", "CAL_COMPLETED", "CAL_CANCELLED", "CAL_CONFIRMED", "CAL_TENTATIVE"), "ACTIVITY",
             UtilMisc.toList("CAL_DECLINED", "CAL_DELEGATED", "CAL_COMPLETED", "CAL_CANCELLED", "CAL_NEEDS_ACTION", "CAL_SENT"));
 
-    final Map<String, List<String>> fixedAssetAndTypes = UtilMisc.toMap("EQUIPMENT",
-            UtilMisc.toList("DEMO_FORKLIFT_01", "DEMO_FORKLIFT_02", "DEMO_HVAC_01", "DEMO_HVAC_02", "DEMO_PROJECTOR"), "VEHICLE",
-            UtilMisc.toList("DEMO_VEHICLE_01", "DEMO_VEHICLE_02"), "GROUP_EQUIPMENT",
-            UtilMisc.toList("DEMO_BOOK_GROUP", "DEMO_FOOD_GROUP", "DEMO_MACHINE_GROUP", "WORKCENTER_COST"), "PRODUCTION_EQUIPMENT",
-            UtilMisc.toList("DEMO_BOOK", "DEMO_FOOD", "DEMO_MACHINE", "DEMO_PROD_EQUIPMT_1", "DEMO_PROD_EQUIPMT_2"));
+    final List<String> fixedAssetTypes = UtilMisc.toList("EQUIPMENT", "VEHICLE", "GROUP_EQUIPMENT", "PRODUCTION_EQUIPMENT");
 
     final List<String> workEffortPartyAssignmentStatus = UtilMisc.toList("PRTYASGN_ASSIGNED", "PRTYASGN_OFFERED", "PRTYASGN_UNASSIGNED");
     final List<String> workEffortAssetAssignmentStatus = UtilMisc.toList("FA_ASGN_ASSIGNED", "FA_ASGN_DENIED", "FA_ASGN_REQUESTED");
@@ -325,26 +321,22 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         
         workEffort.setCreatedDate(UtilDateTime.nowTimestamp());
 
-        String fixedAssetTypeId;
-        if (workEffort.getType().equals("TASK"))
-            fixedAssetTypeId = "EQUIPMENT";
-        else if (workEffort.getType().equals("PROD_ORDER_TASK"))
-            fixedAssetTypeId = "PRODUCTION_EQUIPMENT";
-        else if (workEffort.getType().equals("EVENT"))
-            fixedAssetTypeId = "GROUP_EQUIPMENT";
-        else if (workEffort.getType().equals("ACTIVITY"))
-            fixedAssetTypeId = "VEHICLE";
-        else
-            fixedAssetTypeId = "VEHICLE";            
-        List<String> fixedAssetAndTypeList = fixedAssetAndTypes.get(fixedAssetTypeId);
-        
+        GenericValue fixedAsset = null;
+        String fixedAssetTypeId = fixedAssetTypes.get(UtilRandom.random(fixedAssetTypes));        
+        try {
+            List<GenericValue> fixedAssets = EntityQuery.use(delegator).from("FixedAsset").where(UtilMisc.toMap("fixedAssetTypeId", fixedAssetTypeId)).queryList();
+            fixedAsset = fixedAssets.get(UtilRandom.random(fixedAssets));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }  
 
-        if (UtilRandom.getRandomBoolean()) {
-            String partyStatusId = workEffortPartyAssignmentStatus.get(UtilRandom.random(workEffortPartyAssignmentStatus));
-            workEffort.setPartyStatus(partyStatusId);
-        } else {
+        if (UtilValidate.isNotEmpty(fixedAsset) && UtilRandom.getRandomBoolean()) {            
             String assetStatusId = workEffortAssetAssignmentStatus.get(UtilRandom.random(workEffortAssetAssignmentStatus));            
             workEffort.setAssetStatus(assetStatusId);
+            workEffort.setFixedAsset(fixedAsset.getString("fixedAssetId"));
+        } else {
+            String partyStatusId = workEffortPartyAssignmentStatus.get(UtilRandom.random(workEffortPartyAssignmentStatus));
+            workEffort.setPartyStatus(partyStatusId);
         }
         return workEffort;
     }

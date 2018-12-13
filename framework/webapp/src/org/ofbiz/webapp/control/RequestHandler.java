@@ -1609,37 +1609,41 @@ public class RequestHandler {
                 ("auto".equals(requestResponse.includeMode) && requestResponse.redirectParameterMap.size() == 0 && requestResponse.redirectParameterValueMap.size() == 0) ||
                 !"url-params".equals(requestResponse.includeMode) || "all-params".equals(requestResponse.includeMode)) {
             Map<String, Object> urlParams;
-            if ("all-params".equals(requestResponse.includeMode)) {
+            if (requestResponse != null && "all-params".equals(requestResponse.includeMode)) {
                 urlParams = UtilHttp.getParameterMap(request, requestResponse.excludeParameterSet, false);
             } else {
                 urlParams = UtilHttp.getUrlOnlyParameterMap(request);
 
-                // SCIPIO: remove excluded
-                if (requestResponse.excludeParameterSet != null) {
-                    for(String name : requestResponse.excludeParameterSet) {
-                        urlParams.remove(name);
+                if (requestResponse != null) {
+                    // SCIPIO: remove excluded
+                    if (requestResponse.excludeParameterSet != null) {
+                        for(String name : requestResponse.excludeParameterSet) {
+                            urlParams.remove(name);
+                        }
                     }
                 }
             }
 
             // SCIPIO: we now support adding extra params
-            for (Map.Entry<String, String> entry: requestResponse.redirectParameterMap.entrySet()) {
-                String name = entry.getKey();
-                String from = entry.getValue();
-
-                Object value = request.getAttribute(from);
-                if (value == null) {
-                    value = request.getParameter(from);
+            if (requestResponse != null) {
+                for (Map.Entry<String, String> entry: requestResponse.redirectParameterMap.entrySet()) {
+                    String name = entry.getKey();
+                    String from = entry.getValue();
+    
+                    Object value = request.getAttribute(from);
+                    if (value == null) {
+                        value = request.getParameter(from);
+                    }
+    
+                    urlParams.put(name, value);
                 }
 
-                urlParams.put(name, value);
-            }
-
-            for (Map.Entry<String, String> entry: requestResponse.redirectParameterValueMap.entrySet()) {
-                String name = entry.getKey();
-                String value = entry.getValue();
-
-                urlParams.put(name, value);
+                for (Map.Entry<String, String> entry: requestResponse.redirectParameterValueMap.entrySet()) {
+                    String name = entry.getKey();
+                    String value = entry.getValue();
+    
+                    urlParams.put(name, value);
+                }
             }
 
             if (extraParameters != null) { // SCIPIO
@@ -3034,6 +3038,23 @@ public class RequestHandler {
      */
     public static void sendControllerUriRedirect(HttpServletRequest request, HttpServletResponse response, String uri) throws IllegalStateException {
         String url = makeUrlFull(request, response, uri);
+        if (url != null) {
+            sendRedirect(request, response, url);
+        } else {
+            throw new IllegalStateException("Cannot redirect to controller uri because failed to generate link: " + uri);
+        }
+    }
+
+    /**
+     * SCIPIO: Public redirect helper method that honors the status codes configured in the current controller
+     * or requestHandler.properties, preserving the incoming query string.
+     * <p>
+     * FIXME: If uri provides any parameters, they may be crushed or duplicated by the incoming ones.
+     */
+    public static void sendControllerUriRedirectWithQueryString(HttpServletRequest request, HttpServletResponse response, String uri) throws IllegalStateException {
+        ServletContext ctx = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
+        RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+        String url = rh.makeLinkFull(request, response, uri + rh.makeQueryString(request, null, null));
         if (url != null) {
             sendRedirect(request, response, url);
         } else {

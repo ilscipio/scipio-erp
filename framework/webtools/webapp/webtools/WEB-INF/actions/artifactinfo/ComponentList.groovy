@@ -58,14 +58,18 @@ components.each { component ->
      if (UtilValidate.isEmpty(webApps)) {
          componentMap = [:];
          componentMap.compName = component.getComponentName();
-         componentMap.rootLocation =  component.getRootLocation();
+         componentMap.rootLocation = component.getRootLocation();
          componentMap.enabled = (component.enabled() == true? "Y" : "N");
          componentList.add(componentMap);
          componentMap.webAppName = "";
          componentMap.contextRoot = "";
          componentMap.location = "";
          // SCIPIO: Relative locations and appBarDisplay
-         componentMap.relRootLoc = "";
+         def relRootLoc = UtilURL.getOfbizHomeRelativeLocationFromFilePath(componentMap.rootLocation) ?: "";
+         if (relRootLoc?.endsWith("/")) {
+             relRootLoc = relRootLoc[0..-2];
+         }
+         componentMap.relRootLoc = relRootLoc
          componentMap.relWebLoc = "";
          componentMap.appBarDisplay = false;
          componentMap.contextRootLinkUri = null;

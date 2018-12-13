@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -45,7 +46,7 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.LocalDemoDataHelper
  */
 public class LocalDataGenerator extends AbstractDataGenerator {
     private final static String module = LocalDataGenerator.class.getName();
-    
+
     private final static String LOCAL_DATA_GENERATOR = "local";
 
     private final LocalDemoDataHelper helper;
@@ -311,38 +312,39 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         workEffort.setId("GEN_" + delegator.getNextSeqId("demo-workEffortId"));
         List<String> workEffortTypeIdsAndStatusKeys = new ArrayList<String>(workEffortTypeIdsAndStatus.keySet());
         workEffort.setType(workEffortTypeIdsAndStatusKeys.get(UtilRandom.random(workEffortTypeIdsAndStatusKeys)));
-        List<String> workEffortTypeIdsAndStatusList = workEffortTypeIdsAndStatus.get(workEffort.getId());
+        List<String> workEffortTypeIdsAndStatusList = workEffortTypeIdsAndStatus.get(workEffort.getType());
         workEffort.setStatus(workEffortTypeIdsAndStatusList.get(UtilRandom.random(workEffortTypeIdsAndStatusList)));
         workEffort.setName("Demo WorkEffort Name " + workEffort.getId());
-        String minDate = UtilRandom.generateRandomDate(context);
+        Timestamp minDate = UtilRandom.generateRandomTimestamp(context);
         if (context.get("minDate") != null)
-            minDate = (String) context.get("minDate");
-        workEffort.setEstimatedStart(UtilRandom.generateRandomTimestamp(UtilDateTime.toDate(minDate), context));
+            minDate = (Timestamp) context.get("minDate");
+        workEffort.setEstimatedStart(minDate);
         workEffort.setEstimatedCompletion(UtilRandom.generateRandomTimestamp(workEffort.getEstimatedStart(), context));
-
-        workEffort.setActualStart(UtilRandom.generateRandomTimestamp(UtilDateTime.toDate(minDate), context));
+        workEffort.setActualStart(minDate);
         workEffort.setActualCompletion(UtilRandom.generateRandomTimestamp(workEffort.getActualStart(), context));
+        
+        workEffort.setCreatedDate(UtilDateTime.nowTimestamp());
+
+        String fixedAssetTypeId;
+        if (workEffort.getType().equals("TASK"))
+            fixedAssetTypeId = "EQUIPMENT";
+        else if (workEffort.getType().equals("PROD_ORDER_TASK"))
+            fixedAssetTypeId = "PRODUCTION_EQUIPMENT";
+        else if (workEffort.getType().equals("EVENT"))
+            fixedAssetTypeId = "GROUP_EQUIPMENT";
+        else if (workEffort.getType().equals("ACTIVITY"))
+            fixedAssetTypeId = "VEHICLE";
+        else
+            fixedAssetTypeId = "VEHICLE";            
+        List<String> fixedAssetAndTypeList = fixedAssetAndTypes.get(fixedAssetTypeId);
+        
 
         if (UtilRandom.getRandomBoolean()) {
-            // String partyStatusId =
-            // workEffortPartyAssignmentStatus.get(UtilRandom.random(workEffortPartyAssignmentStatus));
+            String partyStatusId = workEffortPartyAssignmentStatus.get(UtilRandom.random(workEffortPartyAssignmentStatus));
+            workEffort.setPartyStatus(partyStatusId);
         } else {
-            // String assetStatusId =
-            // workEffortAssetAssignmentStatus.get(UtilRandom.random(workEffortAssetAssignmentStatus));
-            // String fixedAssetTypeId;
-            // if (workEffort.getType().equals("TASK"))
-            // fixedAssetTypeId = "EQUIPMENT";
-            // else if (workEffort.getType().equals("PROD_ORDER_TASK"))
-            // fixedAssetTypeId = "PRODUCTION_EQUIPMENT";
-            // else if (workEffort.getType().equals("EVENT"))
-            // fixedAssetTypeId = "GROUP_EQUIPMENT";
-            // else if (workEffort.getType().equals("ACTIVITY"))
-            // fixedAssetTypeId = "VEHICLE";
-            // else
-            // fixedAssetTypeId = "VEHICLE";
-
-            // workEffort.setAssetStatus(fixedAssetAndTypes.get(UtilRandom.random(new
-            // ArrayList<String>(fixedAssetAndTypes.keySet()))));
+            String assetStatusId = workEffortAssetAssignmentStatus.get(UtilRandom.random(workEffortAssetAssignmentStatus));            
+            workEffort.setAssetStatus(assetStatusId);
         }
         return workEffort;
     }
@@ -351,8 +353,7 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         Delegator delegator = helper.getDelegator();
         Map<String, Object> context = helper.getContext();
         DemoDataTransaction transaction = new DemoDataTransaction();
-        
-        
+
         // Create AcctgTrans
         transaction.setId("GEN_" + delegator.getNextSeqId("demo-acctgTransId"));
         // Create AcctgTransEntry (2,4,6)
@@ -364,7 +365,7 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         String currencyUomId = UtilProperties.getProperties("general.properties").getProperty("currency.uom.id.default", "USD");
         for (int acctgTransEntrySeqId = 1; acctgTransEntrySeqId <= acctgTransEntryCount; acctgTransEntrySeqId++) {
             DemoDataTransactionEntry transactionEntry = transaction.new DemoDataTransactionEntry();
-            
+
             transactionEntry.setSequenceId(String.valueOf(acctgTransEntrySeqId));
             transactionEntry.setDebitCreditFlag("C");
             if (acctgTransEntrySeqId % 2 == 0) {
@@ -379,8 +380,8 @@ public class LocalDataGenerator extends AbstractDataGenerator {
                 glAccountClassIdList = glIncomeAccountClassIds.get(keys.get(UtilRandom.random(keys)));
             }
             transactionEntry.setAmount(new BigDecimal(UtilRandom.getRandomInt(10, 10000)));
-            transactionEntry.setGlAccount(glAccountClassIdList.get(UtilRandom.random(glAccountClassIdList)));            
-            
+            transactionEntry.setGlAccount(glAccountClassIdList.get(UtilRandom.random(glAccountClassIdList)));
+
             DynamicViewEntity dve = new DynamicViewEntity();
             dve.addMemberEntity("GA", "GlAccount");
             dve.addMemberEntity("GAO", "GlAccountOrganization");
@@ -395,7 +396,7 @@ public class LocalDataGenerator extends AbstractDataGenerator {
             } catch (GenericEntityException e) {
                 Debug.logError(e.getMessage(), module);
             }
-            
+
             transactionEntry.setCurrency(currencyUomId);
             transaction.addEntry(transactionEntry);
         }

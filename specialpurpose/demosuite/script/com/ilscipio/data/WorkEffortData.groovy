@@ -36,7 +36,7 @@ public class WorkEffortData extends DataGeneratorGroovyBaseScript {
 
         // If no partyGroupId is passed, pick one randomly
         if (!partyGroupId) {
-            efo.setOffset(UtilRandom.getRandomInt(0, context.totalPartyGroupCount - 1));
+            efo.setOffset(UtilRandom.getRandomInt(0, totalPartyGroupCount - 1));
             //            Debug.log("party group offset ======> " + efo.getOffset());
             partyGroups = from("PartyRole").where("roleTypeId", "INTERNAL_ORGANIZATIO").query(efo);
             if (partyGroups) {
@@ -61,7 +61,7 @@ public class WorkEffortData extends DataGeneratorGroovyBaseScript {
                 workEffortData.getCreatedDate(), "statusId", workEffortData.getPartyStatus());
         toBeStored.add(delegator.makeValue("WorkEffortPartyAssignment", fields));
 
-        fields = UtilMisc.toMap("workEffortId", workEffortData.getId(), "fixedAssetId", workEffortData.getAssetStatus(), "fromDate", workEffortData.getCreatedDate(), "statusId", workEffortData.getStatus());
+        fields = UtilMisc.toMap("workEffortId", workEffortData.getId(), "fixedAssetId", workEffortData.getFixedAsset(), "fromDate", workEffortData.getCreatedDate(), "statusId", workEffortData.getAssetStatus());
         toBeStored.add(delegator.makeValue("WorkEffortFixedAssetAssign", fields));
         return toBeStored;
     }

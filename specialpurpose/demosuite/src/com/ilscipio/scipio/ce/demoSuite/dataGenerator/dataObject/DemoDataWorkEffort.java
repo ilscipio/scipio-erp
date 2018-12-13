@@ -16,7 +16,9 @@ public class DemoDataWorkEffort implements AbstractDataObject {
     private Timestamp actualCompletion;
 
     private String partyStatus;
+    
     private String assetStatus;
+    private String fixedAsset;
 
     public String getId() {
         return id;
@@ -104,6 +106,14 @@ public class DemoDataWorkEffort implements AbstractDataObject {
 
     public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getFixedAsset() {
+        return fixedAsset;
+    }
+
+    public void setFixedAsset(String fixedAsset) {
+        this.fixedAsset = fixedAsset;
     }
 
 }

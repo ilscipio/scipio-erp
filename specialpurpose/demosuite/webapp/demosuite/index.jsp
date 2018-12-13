@@ -1,1 +1,1 @@
-<%org.ofbiz.webapp.control.RequestHandler.sendControllerUriRedirect(request, response, "main");%>
+<%org.ofbiz.webapp.control.RequestHandler.sendControllerUriRedirectWithQueryString(request, response, "main");%>

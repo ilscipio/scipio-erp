@@ -26,7 +26,7 @@ under the License.
                 <xs:element minOccurs="0" ref="vendor"/>
                 <xs:element minOccurs="0" ref="version"/>
                 <xs:element minOccurs="0" ref="created"/>
-                <xs:element maxOccurs="unbounded" ref="service"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="service"/><!-- SCIPIO: minOccurs="0" -->
             </xs:sequence>
         </xs:complexType>
     </xs:element>

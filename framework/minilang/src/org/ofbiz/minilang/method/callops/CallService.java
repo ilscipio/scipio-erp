@@ -311,7 +311,9 @@ public final class CallService extends MethodOperation {
                 }
             } else {
                 ServiceUtil.addErrors(UtilMisc.<String, String> getListFromMap(methodContext.getEnvMap(), this.simpleMethod.getServiceErrorMessageListName()), UtilMisc.<String, String, Object> getMapFromMap(methodContext.getEnvMap(), this.simpleMethod.getServiceErrorMessageMapName()), result);
-                Debug.logError(new Exception(errorMessage), module);
+                // SCIPIO: Also put as the message
+                //Debug.logError(new Exception(errorMessage), module);
+                Debug.logError(new Exception(errorMessage), errorMessage, module);
             }
         }
         String successMessage = ServiceUtil.makeSuccessMessage(result, messagePrefixStr, messageSuffixStr, successPrefixStr, successSuffixStr);

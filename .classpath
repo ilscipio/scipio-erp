@@ -55,7 +55,7 @@
 	<classpathentry kind="lib" path="framework/base/lib/httpcore-4.4.10.jar" sourcepath="framework/base/libsrc/httpcore-4.4.10-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/httpmime-4.5.6.jar" sourcepath="framework/base/libsrc/httpmime-4.5.6-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/ical4j-2.2.0.jar" sourcepath="framework/base/libsrc/ical4j-2.2.0-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/icu4j-61.1.jar" sourcepath="framework/base/libsrc/icu4j-61.1-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/icu4j-63.1.jar" sourcepath="framework/base/libsrc/icu4j-63.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/imgscalr-lib-4.2.jar" sourcepath="framework/base/libsrc/imgscalr-lib-4.2-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/itext-2.1.7.jar" sourcepath="framework/base/libsrc/itext-2.1.7-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/j2eespecs-ref/javax.el-api-3.0.0.jar" sourcepath="framework/base/libsrc/j2eespecs-ref/javax.el-api-3.0.0-sources.jar"/>

@@ -145,7 +145,7 @@
         <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.9.7" conf="base,sources"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.9.7" conf="base,sources"/>
         <dependency org="org.jdom" name="jdom" rev="1.1.3" conf="base,sources"/><!-- TODO: REVIEW: not used in any code; but some libs _might_ have it as optional dependency -->
-        <dependency org="joda-time" name="joda-time" rev="2.9.9" conf="base,sources" />
+        <dependency org="joda-time" name="joda-time" rev="2.10.1" conf="base,sources" />
         <dependency org="org.apache.avalon.framework" name="avalon-framework-impl" rev="4.3.1" conf="base,sources"/>
         <dependency org="org.apache.avalon.framework" name="avalon-framework-api" rev="4.3.1" conf="base,sources"/>
         <dependency org="org.apache.tika" name="tika-core" rev="1.19.1" conf="base,sources"/>

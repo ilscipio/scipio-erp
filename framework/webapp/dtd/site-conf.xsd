@@ -1022,7 +1022,17 @@ under the License.
                     <xs:enumeration value="none"/>
                 </xs:restriction>
             </xs:simpleType>
-        </xs:attribute> 
+        </xs:attribute>
+        <xs:attribute name="connection" default="">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: For redirects only: You can set this to "close" to force a "Connection: close" HTTP header
+                    for performance reasons.
+                    Default: Does not change the header.
+                    Added 2018-12-13.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="redirect-parameter">
         <xs:annotation>

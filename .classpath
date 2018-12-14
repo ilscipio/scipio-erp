@@ -82,7 +82,7 @@
 	<classpathentry kind="lib" path="framework/base/lib/oro-2.0.8.jar" sourcepath="framework/base/libsrc/oro-2.0.8-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/owasp-java-html-sanitizer-20181114.1.jar" sourcepath="framework/base/libsrc/owasp-java-html-sanitizer-20181114.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/pdfbox-2.0.13.jar" sourcepath="framework/base/libsrc/pdfbox-2.0.13-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/poi-3.17.jar" sourcepath="framework/base/libsrc/poi-3.17-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/poi-4.0.1.jar" sourcepath="framework/base/libsrc/poi-4.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/rome-1.12.0.jar" sourcepath="framework/base/libsrc/rome-1.12.0-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/serializer-2.7.2.jar" sourcepath="framework/base/libsrc/serializer-2.7.2-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/shiro-core-1.4.0.jar" sourcepath="framework/base/libsrc/shiro-core-1.4.0-sources.jar"/>

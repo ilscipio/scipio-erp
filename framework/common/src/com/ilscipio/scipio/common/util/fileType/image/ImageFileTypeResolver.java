@@ -151,6 +151,7 @@ public class ImageFileTypeResolver extends FileTypeResolver {
         return manualSupportedMediaTypes;
     }
 
+    @Deprecated
     @Override
     public String adjustMediaTypeManual(String mediaType) {
         return mediaType;

@@ -242,6 +242,7 @@ public class DocumentFileTypeResolver extends FileTypeResolver {
         return manualSupportedMediaTypes;
     }
 
+    @Deprecated
     @Override
     public String adjustMediaTypeManual(String mediaType) {
         return mediaType;

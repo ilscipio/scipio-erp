@@ -252,6 +252,7 @@ public class VideoFileTypeResolver extends FileTypeResolver {
         return manualSupportedMediaTypes;
     }
 
+    @Deprecated
     @Override
     public String adjustMediaTypeManual(String mediaType) {
         if (mediaType.startsWith("audio/")) {

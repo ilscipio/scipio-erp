@@ -21,7 +21,7 @@
 	<classpathentry kind="lib" path="framework/base/lib/commons-codec-1.11.jar" sourcepath="framework/base/libsrc/commons-codec-1.11-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/commons-collections-3.2.2.jar" sourcepath="framework/base/libsrc/commons-collections-3.2.2-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/commons-collections4-4.2.jar" sourcepath="framework/base/libsrc/commons-collections4-4.2-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/commons-compress-1.16.1.jar" sourcepath="framework/base/libsrc/commons-compress-1.16.1-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons-compress-1.18.jar" sourcepath="framework/base/libsrc/commons-compress-1.18-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/commons-csv-1.5.jar" sourcepath="framework/base/libsrc/commons-csv-1.5-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/commons-dbcp2-2.2.0.jar" sourcepath="framework/base/libsrc/commons-dbcp2-2.2.0-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/commons-el-1.0.jar" sourcepath="framework/base/libsrc/commons-el-1.0-sources.jar"/>

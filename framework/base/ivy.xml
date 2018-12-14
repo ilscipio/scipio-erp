@@ -170,7 +170,7 @@
 
         <!-- base testing jars -->
         <dependency org="junit" name="junit" rev="4.12" conf="base,sources"/>
-        <dependency org="org.mockito" name="mockito-core" rev="2.16.0" conf="base,sources"/><!-- added at r41761440 ofbiz trunk 2016-09-19 09:36:32 -->
+        <dependency org="org.mockito" name="mockito-core" rev="2.23.4" conf="base,sources"/><!-- added at r41761440 ofbiz trunk 2016-09-19 09:36:32 -->
         <!-- 2018-03-26: omitting httpunit for now because no current usage and its dependencies create class conflicts; 
             however, may use it or a substitute in future...
         <dependency org="httpunit" name="httpunit" rev="1.7" conf="base,sources">

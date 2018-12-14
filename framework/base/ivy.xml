@@ -306,7 +306,7 @@
         <dependency org="org.apache.axis2" name="axis2-jaxws" rev="1.7.9" conf="base,sources"/>-->
         <dependency org="org.apache.ws.commons.axiom" name="axiom-api" rev="1.2.21" conf="base,sources"/>
         <dependency org="org.apache.ws.commons.axiom" name="axiom-impl" rev="1.2.21" conf="base,sources"/>
-        <dependency org="org.apache.ws.xmlschema" name="xmlschema-core" rev="2.2.3" conf="base,sources"/>
+        <dependency org="org.apache.ws.xmlschema" name="xmlschema-core" rev="2.2.4" conf="base,sources"/>
         <dependency org="wsdl4j" name="wsdl4j" rev="1.6.3" conf="base,sources"/>
 
         <!-- testtools component (framework/testtools/ivy.xml) -->

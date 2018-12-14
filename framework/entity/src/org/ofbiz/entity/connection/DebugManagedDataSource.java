@@ -30,13 +30,12 @@ import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.ofbiz.base.util.Debug;
 
-public class DebugManagedDataSource extends ManagedDataSource<Connection> {
+public class DebugManagedDataSource<C extends Connection> extends ManagedDataSource<C> {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    @SuppressWarnings("unchecked")
-    public DebugManagedDataSource(ObjectPool<? extends Connection> pool, TransactionRegistry transactionRegistry) {
-        super((ObjectPool<Connection>) pool, transactionRegistry);
+    public DebugManagedDataSource(ObjectPool<C> pool, TransactionRegistry transactionRegistry) {
+        super(pool, transactionRegistry);
     }
 
     @Override
@@ -66,6 +65,20 @@ public class DebugManagedDataSource extends ManagedDataSource<Connection> {
             dataSourceInfo.put("poolMinIdle", objectPool.getMinIdle());
         }
         return dataSourceInfo;
+    }
+
+    // Ensures that the close() method does not throw an InterruptedException
+    // to conform to the AutoCloseable interface.
+    // This is fixing what should be down in org.apache.commons.dbcp2.PoolingDataSource.
+    @Override
+    public void close() throws SQLException, RuntimeException {
+        try {
+            super.close();
+        } catch (SQLException | RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            Debug.log(e);
+        }
     }
 
 }

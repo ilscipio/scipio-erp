@@ -248,7 +248,7 @@
         <dependency org="net.coobird" name="thumbnailator" rev="0.4.8" conf="base,media,sources"/>
         <dependency org="com.mortennobel" name="java-image-scaling" rev="0.8.6" conf="base,media,sources"/>
         <dependency org="org.imgscalr" name="imgscalr-lib" rev="4.2" conf="base,media,sources"/>
-        <dependency org="com.twelvemonkeys.common" name="common-image" rev="3.3.2" conf="base,media,sources"/>
+        <dependency org="com.twelvemonkeys.common" name="common-image" rev="3.4.1" conf="base,media,sources"/>
 
         <!--
             OTHER FRAMEWORK COMPONENT DEPENDENCIES

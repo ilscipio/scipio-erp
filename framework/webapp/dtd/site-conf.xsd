@@ -1023,7 +1023,7 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="connection" default="">
+        <xs:attribute name="connection-state" default="">
             <xs:annotation>
                 <xs:documentation>
                     SCIPIO: For redirects only: You can set this to "close" to force a "Connection: close" HTTP header

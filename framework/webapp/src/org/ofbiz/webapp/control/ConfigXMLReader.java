@@ -2173,7 +2173,7 @@ public class ConfigXMLReader {
         private final Type typeEnum; // SCIPIO: new 2018-06-13
         private final ValueExpr valueExpr; // SCIPIO: 2018-11-19: precompiled value expression
         private final AttributesSpec redirectAttributes; // SCIPIO
-        private final String connectionMode; // SCIPIO
+        private final String connectionState; // SCIPIO
         
         /**
          * @deprecated SCIPIO: 2018-11-07: This does nothing useful, all fields are final and should never have been
@@ -2197,7 +2197,7 @@ public class ConfigXMLReader {
             this.typeEnum = null;
             this.valueExpr = null;
             this.redirectAttributes = AttributesSpec.NONE;
-            this.connectionMode = null;
+            this.connectionState = null;
         }
 
         private RequestResponse(String name, String type, String value, Type typeEnum) { // SCIPIO: 2018-11-07
@@ -2217,7 +2217,7 @@ public class ConfigXMLReader {
             this.typeEnum = typeEnum;
             this.valueExpr = null;
             this.redirectAttributes = (typeEnum != null) ? typeEnum.getRedirectAttributesDefault() : AttributesSpec.NONE;
-            this.connectionMode = null;
+            this.connectionState = null;
         }
 
         public RequestResponse(Element responseElement) {
@@ -2302,8 +2302,8 @@ public class ConfigXMLReader {
                 spec = AttributesSpec.getSpec(saveRequestStr, includeRequestAttributes, excludeRequestAttributes);
             }
             this.redirectAttributes = spec;
-            String connectionMode = responseElement.getAttribute("connection");
-            this.connectionMode = connectionMode.isEmpty() ? null : connectionMode;
+            String connectionState = responseElement.getAttribute("connection-state");
+            this.connectionState = connectionState.isEmpty() ? null : connectionState;
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
@@ -2372,8 +2372,8 @@ public class ConfigXMLReader {
             return redirectAttributes;
         }
 
-        public String getConnectionMode() { // SCIPIO
-            return connectionMode;
+        public String getConnectionState() { // SCIPIO
+            return connectionState;
         }
 
         public enum Type { // SCIPIO: 2018-06

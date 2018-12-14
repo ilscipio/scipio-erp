@@ -32,7 +32,7 @@
 	<classpathentry kind="lib" path="framework/base/lib/commons-logging-1.2.jar" sourcepath="framework/base/libsrc/commons-logging-1.2-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/commons-math3-3.6.1.jar" sourcepath="framework/base/libsrc/commons-math3-3.6.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/commons-net-3.6.jar" sourcepath="framework/base/libsrc/commons-net-3.6-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/commons-pool2-2.5.0.jar" sourcepath="framework/base/libsrc/commons-pool2-2.5.0-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/commons-pool2-2.6.0.jar" sourcepath="framework/base/libsrc/commons-pool2-2.6.0-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/commons-validator-1.6.jar" sourcepath="framework/base/libsrc/commons-validator-1.6-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/concurrentlinkedhashmap-lru-1.4.2.jar" sourcepath="framework/base/libsrc/concurrentlinkedhashmap-lru-1.4.2-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/esapi-2.1.0.1.jar" sourcepath="framework/base/libsrc/esapi-2.1.0.1-sources.jar"/>

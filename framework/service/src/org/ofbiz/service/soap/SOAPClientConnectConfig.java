@@ -30,18 +30,7 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.HttpParams;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.TrustManagers;
 import org.ofbiz.base.util.TrustManagers.CertCheckConfig;
@@ -123,8 +112,8 @@ public class SOAPClientConnectConfig {
     protected final String sslProtocol;
 
     protected final X509TrustManager trustManager; // NOTE: shared even when reuseClient==false
-    protected final SchemeRegistry schemeRegistry; // NOTE: shared even when reuseClient==false
-    protected final ClientConnectionManager poolingConnManager; // NOTE: only shared when reuseConnManager==true
+    protected final org.apache.http.conn.scheme.SchemeRegistry schemeRegistry; // NOTE: shared even when reuseClient==false
+    protected final org.apache.http.conn.ClientConnectionManager poolingConnManager; // NOTE: only shared when reuseConnManager==true
     protected final CloseableHttpClient httpClient; // NOTE: only shared when reuseClient==true
 
     // TODO?: does nothing because SOAPClientEngine is written with no "memory" anyway...
@@ -257,7 +246,7 @@ public class SOAPClientConnectConfig {
         //prevHttpClient.set(options.getProperty(HTTPConstants.CACHED_HTTP_CLIENT));
         //prevConnManager.set(options.getProperty(HTTPConstants.MULTITHREAD_HTTP_CONNECTION_MANAGER));
 
-        ClientConnectionManager connManager = getConnectionManager();
+        org.apache.http.conn.ClientConnectionManager connManager = getConnectionManager();
         if (connManager == null) {
             // can do nothing without this
             return false;
@@ -307,7 +296,7 @@ public class SOAPClientConnectConfig {
         return getHttpClient(getConnectionManager());
     }
 
-    public CloseableHttpClient getHttpClient(ClientConnectionManager connManager) {
+    public CloseableHttpClient getHttpClient(org.apache.http.conn.ClientConnectionManager connManager) {
         if (connectCfgMode != ConnectCfgMode.CUSTOM_CLIENT) return null;
         if (reuseClient) return httpClient;
         return makeHttpClient();
@@ -324,7 +313,7 @@ public class SOAPClientConnectConfig {
      * WARN: This all shows deprecation warnings for a reason: the implementation
      * can't be upgraded until axis2 changes theirs. (FIXME)
      */
-    public CloseableHttpClient makeHttpClient(ClientConnectionManager connManager) {
+    public CloseableHttpClient makeHttpClient(org.apache.http.conn.ClientConnectionManager connManager) {
         // SCIPIO: 2018-07-11: TODO: upgrade: we cannot do this the right way yet, because
         // axis 1.7.8 uses AbstractHttpClient as the CACHED_HTTP_CLIENT type,
         // but it is deprecated and the type returned by HttpsClients.custom().build()
@@ -343,22 +332,22 @@ public class SOAPClientConnectConfig {
         //        .setConnectionManager(cm)
         //        .build();
         try {
-            HttpParams clientParams = new BasicHttpParams();
-            clientParams.setParameter(CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
+            org.apache.http.params.HttpParams clientParams = new org.apache.http.params.BasicHttpParams();
+            clientParams.setParameter(org.apache.http.params.CoreProtocolPNames.HTTP_ELEMENT_CHARSET, "UTF-8");
             if (connectTimeout != null) {
-                clientParams.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, connectTimeout);
+                clientParams.setParameter(org.apache.http.params.CoreConnectionPNames.CONNECTION_TIMEOUT, connectTimeout);
             }
             if (socketTimeout != null) {
-                clientParams.setParameter(CoreConnectionPNames.SO_TIMEOUT, socketTimeout);
+                clientParams.setParameter(org.apache.http.params.CoreConnectionPNames.SO_TIMEOUT, socketTimeout);
             }
-            return new DefaultHttpClient(connManager, clientParams);
+            return new org.apache.http.impl.client.DefaultHttpClient(connManager, clientParams);
         } catch(Exception e) {
             Debug.logError(e, "SOAP config: Error creating custom HttpClient: " + e.getMessage(), module);
             return null;
         }
     }
 
-    public ClientConnectionManager getConnectionManager() {
+    public org.apache.http.conn.ClientConnectionManager getConnectionManager() {
         if (reuseConnManager) {
             return poolingConnManager;
         } else {
@@ -366,11 +355,11 @@ public class SOAPClientConnectConfig {
         }
     }
 
-    protected ClientConnectionManager makePoolingConnectionManager(SchemeRegistry schemeRegistry) {
-        // NOTE: axis2 always used PoolingClientConnectionManager even when not reused
-        PoolingClientConnectionManager connManager = new PoolingClientConnectionManager(schemeRegistry);
-        if (maxConnections != null) ((PoolingClientConnectionManager)connManager).setMaxTotal(maxConnections);
-        if (maxConnectionsPerHost != null) ((PoolingClientConnectionManager)connManager).setDefaultMaxPerRoute(maxConnectionsPerHost);
+    protected org.apache.http.conn.ClientConnectionManager makePoolingConnectionManager(org.apache.http.conn.scheme.SchemeRegistry schemeRegistry) {
+        // NOTE: axis2 always used org.apache.http.impl.conn.PoolingClientConnectionManager even when not reused
+        org.apache.http.impl.conn.PoolingClientConnectionManager connManager = new org.apache.http.impl.conn.PoolingClientConnectionManager(schemeRegistry);
+        if (maxConnections != null) ((org.apache.http.impl.conn.PoolingClientConnectionManager)connManager).setMaxTotal(maxConnections);
+        if (maxConnectionsPerHost != null) ((org.apache.http.impl.conn.PoolingClientConnectionManager)connManager).setDefaultMaxPerRoute(maxConnectionsPerHost);
         return connManager;
     }
 
@@ -394,32 +383,32 @@ public class SOAPClientConnectConfig {
         }
     }
 
-    public SchemeRegistry getSchemeRegistry() {
+    public org.apache.http.conn.scheme.SchemeRegistry getSchemeRegistry() {
         return schemeRegistry;
     }
 
-    protected SchemeRegistry makeSchemeRegistry(X509TrustManager trustManager) {
-        SSLSocketFactory sf;
+    protected org.apache.http.conn.scheme.SchemeRegistry makeSchemeRegistry(X509TrustManager trustManager) {
+        org.apache.http.conn.ssl.SSLSocketFactory sf;
         if (certCheckCfgMode.isCustom()) {
             try {
 
                 SSLContext context = SSLContext.getInstance(sslProtocol); // "SSL", "TLS"
                 context.init(null, new TrustManager[] { trustManager }, new SecureRandom());
-                sf = new SSLSocketFactory(context);
+                sf = new org.apache.http.conn.ssl.SSLSocketFactory(context);
             } catch (Exception e) {
                 Debug.logError(e, "Could not create SSL context for SOAP axis2 client engine - trusted certs will fail! Using stock axis2 cert trust setup...", module);
-                sf = SSLSocketFactory.getSocketFactory();
+                sf = org.apache.http.conn.ssl.SSLSocketFactory.getSocketFactory();
             }
         } else {
             // stock axis2 1.7.8 behavior
-            sf = SSLSocketFactory.getSocketFactory();
+            sf = org.apache.http.conn.ssl.SSLSocketFactory.getSocketFactory();
         }
 
-        SchemeRegistry schemeRegistry = new SchemeRegistry();
+        org.apache.http.conn.scheme.SchemeRegistry schemeRegistry = new org.apache.http.conn.scheme.SchemeRegistry();
         schemeRegistry.register(
-                new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+                new org.apache.http.conn.scheme.Scheme("http", 80, org.apache.http.conn.scheme.PlainSocketFactory.getSocketFactory()));
         schemeRegistry.register(
-                new Scheme("https", 443, sf));
+                new org.apache.http.conn.scheme.Scheme("https", 443, sf));
         return schemeRegistry;
     }
 
@@ -428,9 +417,9 @@ public class SOAPClientConnectConfig {
         private DisabledSOAPClientConnectConfig() { super(); }
 
         @Override public boolean configureSOAPHttpClient(ServiceClient client, Options options) { return false; }
-        @Override public CloseableHttpClient makeHttpClient(ClientConnectionManager connManager) { return null; }
-        @Override protected ClientConnectionManager makePoolingConnectionManager(SchemeRegistry schemeRegistry) { return null; }
+        @Override public CloseableHttpClient makeHttpClient(org.apache.http.conn.ClientConnectionManager connManager) { return null; }
+        @Override protected org.apache.http.conn.ClientConnectionManager makePoolingConnectionManager(org.apache.http.conn.scheme.SchemeRegistry schemeRegistry) { return null; }
         @Override protected X509TrustManager makeTrustManager(CertCheckConfig certCheckConfig, boolean log) { return null; }
-        @Override protected SchemeRegistry makeSchemeRegistry(X509TrustManager trustManager) { return null; }
+        @Override protected org.apache.http.conn.scheme.SchemeRegistry makeSchemeRegistry(X509TrustManager trustManager) { return null; }
     }
 }

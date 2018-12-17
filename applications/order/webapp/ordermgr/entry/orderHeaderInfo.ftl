@@ -44,7 +44,7 @@ code package.
             <@tr>
                 <@td class="${styles.grid_large!}3">${uiLabelMap.Party}</@td>
                 <@td>
-                  <a href="${customerDetailLink}${partyId}${externalKeyParam!}" target="partymgr" class="${styles.link_nav_info_id!}">${partyId}</a>
+                  <a href="${customerDetailLink}${partyId}${rawString(externalKeyParam!)}" target="partymgr" class="${styles.link_nav_info_id!}">${partyId}</a>
                   <#if partyMap.person??>
                     ${partyMap.person.firstName!}&nbsp;${partyMap.person.lastName!}
                   </#if>

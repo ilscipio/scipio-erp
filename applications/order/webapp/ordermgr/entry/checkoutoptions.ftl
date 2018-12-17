@@ -241,7 +241,7 @@ function submitForm(form, mode, value) {
                       </#list>
                       </b>
                       </div>
-                      <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<#if customerDetailLink??>${customerDetailLink}${shoppingCart.getPartyId()}" target="partymgr"
+                      <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<#if customerDetailLink??>${customerDetailLink}${shoppingCart.getPartyId()}${rawString(externalKeyParam!)}" target="partymgr"
                         <#else><@ofbizUrl>viewprofile?DONE_PAGE=quickcheckout</@ofbizUrl>"</#if> class="${styles.link_nav!}">${uiLabelMap.PartyProfile}</a>.</div>
                       <br />
                       <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>

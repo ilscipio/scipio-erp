@@ -332,7 +332,7 @@ code package.
               </@field>
             <#else>
               <@tr>
-                <@td colspan="4" nowrap="nowrap">${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId?default('_NA_')}" class="${styles.link_nav_info_id!}">${partyId?default('[null]')}</a></@td>
+                <@td colspan="4" nowrap="nowrap">${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId!('_NA_')}${rawString(externalKeyParam!)}" class="${styles.link_nav_info_id!}">${partyId?default('[null]')}</a></@td>
               </@tr>
               <@field type="input" label=uiLabelMap.OrderOrderId tooltip=uiLabelMap.OrderReturnLoadItems name="orderId" size="20" maxlength="20" />
             </#if>

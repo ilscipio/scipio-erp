@@ -200,10 +200,10 @@
         <dependency org="commons-validator" name="commons-validator" rev="1.6" conf="base,commons,sources"/>
 
         <!-- j2eespecs jars -->
-        <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.1_spec" rev="1.0.2" conf="base,j2eespecs,sources"/><!-- WARN: conflict with javax.activation#activation -->
+        <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.1_spec" rev="1.1" conf="base,j2eespecs,sources"/><!-- WARN: conflict with javax.activation#activation -->
         <dependency org="org.apache.geronimo.specs" name="geronimo-j2ee-connector_1.6_spec" rev="1.0" conf="base,j2eespecs,sources"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxr_1.0_spec" rev="1.0" conf="base,j2eespecs,sources"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxrpc_1.1_spec" rev="1.0" conf="base,j2eespecs,sources"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxr_1.0_spec" rev="2.1" conf="base,j2eespecs,sources"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxrpc_1.1_spec" rev="2.1" conf="base,j2eespecs,sources"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-jms_1.1_spec" rev="1.1.1" conf="base,j2eespecs,sources"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-jta_1.1_spec" rev="1.1.1" conf="base,j2eespecs,sources"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-saaj_1.3_spec" rev="1.1" conf="base,j2eespecs,sources"/>

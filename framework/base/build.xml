@@ -127,6 +127,9 @@ code package.
                 <!-- badly named qrcode artifacts -->
                 <regexpmapper from="^(.*?/)?com.google.zxing/([^/]+\.jar)$" to="\1zxing-\2" handledirsep="true"/>
 
+                <!-- badly named twelvemonkeys artifacts -->
+                <regexpmapper from="^(.*?/)?com.twelvemonkeys.common/([^/]+\.jar)$" to="\1twelvemonkeys-\2" handledirsep="true"/>
+
                 <!-- for rest, strip organization folder -->
                 <regexpmapper from="^(.*?/)?[^/]+/([^/]+)$" to="\1\2" handledirsep="true"/>
                 <identitymapper/><!-- NOTE: this should never match anymore -->
@@ -155,6 +158,9 @@ code package.
                         <!-- badly named qrcode artifacts -->
                         <regexpmapper from="^(.*?/)?com.google.zxing/([^/]+\.jar)$" to="\1zxing-\2" handledirsep="true"/>
                         <regexpmapper from="^(.*?/)?com.github.kenglxn.qrgen/([^/]+\.jar)$" to="\1qrgen-\2" handledirsep="true"/>
+
+                        <!-- badly named twelvemonkeys artifacts -->
+                        <regexpmapper from="^(.*?/)?com.twelvemonkeys.common/([^/]+\.jar)$" to="\1twelvemonkeys-\2" handledirsep="true"/>
 
                         <!-- for rest, strip organization folder -->
                         <regexpmapper from="^(.*?/)?[^/]+/([^/]+)$" to="\1\2" handledirsep="true"/>

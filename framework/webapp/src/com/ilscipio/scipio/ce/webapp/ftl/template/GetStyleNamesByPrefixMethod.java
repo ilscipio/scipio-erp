@@ -20,7 +20,7 @@ package com.ilscipio.scipio.ce.webapp.ftl.template;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 

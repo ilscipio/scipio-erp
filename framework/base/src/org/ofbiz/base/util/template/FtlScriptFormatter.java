@@ -2,7 +2,7 @@ package org.ofbiz.base.util.template;
 
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * SCIPIO: Freemarker script value formatter.

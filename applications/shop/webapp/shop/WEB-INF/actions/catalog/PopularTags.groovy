@@ -26,7 +26,6 @@ import org.ofbiz.entity.transaction.*
 import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.string.*;
 import org.ofbiz.content.content.*;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.ofbiz.entity.util.EntityUtilProperties;
 
 int minFontSize = Integer.parseInt(EntityUtilProperties.getPropertyValue("shop", "tagcloud.min.fontsize", delegator) ?: "8");

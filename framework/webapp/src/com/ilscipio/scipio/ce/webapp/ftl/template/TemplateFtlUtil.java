@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
@@ -486,7 +486,7 @@ public abstract class TemplateFtlUtil {
                 //} catch (IOException e) {
                 //    Debug.logError("Scipio: progress success action value has invalid format in " + progressSuccessAction, module);
                 //}
-                String localRequestName = StringEscapeUtils.unescapeHtml(target);
+                String localRequestName = StringEscapeUtils.unescapeHtml4(target);
                 localRequestName = UtilHttp.encodeAmpersands(localRequestName);
                 if (request != null && response != null) {
                     // FIXME: this does not support inter-webapp links or any new parameters

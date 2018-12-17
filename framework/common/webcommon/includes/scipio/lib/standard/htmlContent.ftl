@@ -1398,6 +1398,10 @@ Gets chart number of datasets.
 ************
 Chart data entry.
 
+NOTE: {{{value}}} and {{{value2}}} should be passed as numbers, NOT as strings. For backward-compatibility
+reasons, if you pass a string, it will be printed out in javascript without enclosing quotes (it is assumed
+to be a Javascript-valid number), which may not be secure or portable, depending on the data sources!
+
   * Related *
     @chart
 -->

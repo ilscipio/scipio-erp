@@ -178,6 +178,7 @@
                 libs (javolution, xml-apis) and was not shipped with ofbiz 14/15 - ->
             <exclude module="jtidy"/>
         </dependency>-->
+        <dependency org="org.jsoup" name="jsoup" rev="1.11.3" conf="base,sources"/><!-- security: CVE-2015-6748 (transitive dep) -->
 
         <!-- commons jars -->
         <!-- NOTE: these should generally be updated together (some deps between them and historical compat issues) -->

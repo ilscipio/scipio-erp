@@ -64,7 +64,10 @@ code package.
             </else>
         </if-not-empty>
         <if-not-empty field="lookupPKMap.partyId">
-            <find-by-primary-key entity-name="PartyRole" map="lookupPKMap" value-field="lookedUpValue" use-cache="true"/>
+            <!-- SCIPIO: Despite lower performance, we must disable cache lookup because in some circumstance the
+                entity cache causes unexpected issues; furthermore it may cause needless errors in distributed systems
+            <find-by-primary-key entity-name="PartyRole" map="lookupPKMap" value-field="lookedUpValue" use-cache="true"/>-->
+            <find-by-primary-key entity-name="PartyRole" map="lookupPKMap" value-field="lookedUpValue" use-cache="false"/>
             <if-empty field="lookedUpValue">
                 <make-value entity-name="PartyRole" value-field="partyRole" map="lookupPKMap"/>
                 <create-value value-field="partyRole"/>

@@ -449,7 +449,12 @@ public abstract class ContentImageServices {
                 imagePropXmlPath = ContentImageWorker.getContentImagePropertiesPath();
             }
             try {
-                imgPropCfg = ImageVariantConfig.fromImagePropertiesXml(imagePropXmlPath, locale);
+                // SCIPIO (17/12/2018): 
+                if (context.containsKey("imageVariantConfig")) {
+                    imgPropCfg = (ImageVariantConfig) context.get("imageVariantConfig");
+                } else {
+                    imgPropCfg = ImageVariantConfig.fromImagePropertiesXml(imagePropXmlPath, locale);
+                }
             } catch(Exception e) {
                 Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPath + " : " + e.getMessage(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPath + " : " + e.getMessage());

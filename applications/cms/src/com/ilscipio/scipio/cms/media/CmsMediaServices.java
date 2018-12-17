@@ -2,6 +2,7 @@ package com.ilscipio.scipio.cms.media;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -27,6 +28,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.FindServices;
+import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -301,6 +303,73 @@ public abstract class CmsMediaServices {
 
         // result.put("organizationPartyId", null);
 
+        return result;
+    }
+    
+    /**
+     * Uploads a media file
+     *
+     * @param dctx
+     * @param context
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static Map<String, Object> cmsUploadMediaFileImageCustomVariantSizes(DispatchContext dctx, Map<String, Object> context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        try {
+            String customVariantSizeMethod = (String) context.get("customVariantSizeMethod");
+            ImageVariantConfig imageVariantConfig = null;
+            if (customVariantSizeMethod.equals("customVariantSizesImgProp")) {
+                if (context.containsKey("customVariantSizesImgProp")) {
+                    imageVariantConfig = ImageVariantConfig.fromImagePropertiesXml((String) context.get("customVariantSizesImgProp"));
+                } else {
+                    Debug.logWarning("Custom image dimension properties file not found.", module);
+                }
+            } else if (customVariantSizeMethod.equals("customVariantSizesPreset")) {
+                if (context.containsKey("customVariantSizesPreset")) {
+                    Map<String, Map<String, String>> imgPropsMap = UtilMisc.newMap();
+                    String presetId = (String) context.get("customVariantSizesPreset");
+                    List<GenericValue> imageSizes = EntityQuery.use(delegator).from("ImageSize").where(UtilMisc.toMap("presetId", presetId)).cache(false).queryList();
+                    GenericValue imagePreset = EntityQuery.use(delegator).from("ImagePreset").where(UtilMisc.toMap("presetId", presetId)).queryOne(); 
+                    for (GenericValue imageSize : imageSizes) {
+                        GenericValue imageSizeDimension = imageSize.getRelatedOne("ImageSizeDimension", false);
+                        imgPropsMap = UtilMisc.toMap(imageSizeDimension.getString("sizeName"), UtilMisc.toMap(imageSizeDimension.getString(""), imageSizeDimension.getString("")));
+                    }
+                    imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap(imagePreset.getString("presetName"), "", "", imgPropsMap);
+                } else {
+                    Debug.logWarning("Cusomt image size dimension preset not found.", module);
+                }
+            } else if (customVariantSizeMethod.equals("customVariantSizesForm")) {
+                if (context.containsKey("variantSizeName") && context.containsKey("variantSizeWidth") && context.containsKey("variantSizeHeight")) {
+                    List<String> variantSizeNames = (List<String>) context.get("variantSizeName");
+                    List<String> variantSizeWidth = (List<String>) context.get("variantSizeWidth");
+                    List<String> variantSizeHeight = (List<String>) context.get("variantSizeHeight");
+                    if (variantSizeNames.size() == variantSizeWidth.size() && variantSizeNames.size() == variantSizeHeight.size()) {
+                        Map<String, Map<String, String>> imgPropsMap = UtilMisc.newMap();
+                        for (int i = 0; i <= variantSizeNames.size(); i++) {
+                            imgPropsMap = UtilMisc.toMap(variantSizeNames.get(i), UtilMisc.toMap(variantSizeWidth.get(i), variantSizeHeight.get(i)));
+                        }
+                        imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap("CustomDimension", "", "", imgPropsMap);
+                    }
+                } else {
+                    Debug.logWarning("Custom image size dimensions not found.", module);
+                }
+            }
+            if (UtilValidate.isNotEmpty(imageVariantConfig)) {
+                context.put("imageVariantConfig", imageVariantConfig);
+            }
+            result = dispatcher.runSync("cmsUploadMediaFile", context);
+        } catch (GenericServiceException e) {
+            result = ServiceUtil.returnError(e.getMessageList());
+        } catch (IOException e) {
+            result = ServiceUtil.returnError(e.getMessage());
+        } catch (GenericEntityException e) {
+            result = ServiceUtil.returnError(e.getMessage());
+        }
+        
         return result;
     }
 

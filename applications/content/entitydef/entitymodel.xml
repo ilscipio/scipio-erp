@@ -1333,7 +1333,7 @@ code package.
         <field name="sizeName" type="name"></field>
         <field name="dimensionWidth" type="numeric"></field>        
         <field name="dimensionHeight" type="numeric"></field>        
-        <prim-key field="sizeId"/>        
+        <prim-key field="sizeId"/>
     </entity>  
 
   <!-- ========================================================= -->

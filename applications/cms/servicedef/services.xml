@@ -737,11 +737,7 @@
     <!-- ========================================================= -->
     <!-- Media services -->
     <!-- ========================================================= -->
-
-    <service name="cmsUploadMediaFile" engine="java"
-        location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="uploadMediaFile" auth="true" transaction-timeout="7200">
-        <description>Imports and processes a media file and stores it in the database. Autodetects content-type, defaulting to Binary.</description>
-        <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
+    <service name="cmsUploadMediaFileInterface" engine="interface">
         <attribute mode="IN" name="uploadedFile" type="java.nio.ByteBuffer" optional="false"/>
         <attribute mode="IN" name="contentName" type="String" optional="false"/>
         <attribute mode="IN" name="dataResourceTypeId" type="String" optional="false"/>
@@ -752,11 +748,34 @@
         <attribute mode="IN" name="localeString" type="String" optional="true"/>
         <attribute mode="IN" name="isPublic" type="Boolean" optional="true"/>
         <attribute mode="IN" name="autoVariants" type="Boolean" optional="true"/>
+
+        <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>
         <attribute mode="OUT" name="contentId" type="String" optional="true"/>
         <attribute mode="OUT" name="dataResourceId" type="String" optional="true"/>
         <attribute mode="OUT" name="dataResourceTypeId" type="String" optional="true"/>
-      <!--   <attribute mode="OUT" name="organizationPartyId" type="String" optional="false"/> -->
+        <!--   <attribute mode="OUT" name="organizationPartyId" type="String" optional="false"/> -->
     </service>
+
+    <service name="cmsUploadMediaFile" engine="java"
+        location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="uploadMediaFile" auth="true" transaction-timeout="7200">
+        <description>Imports and processes a media file and stores it in the database. Autodetects content-type, defaulting to Binary.</description>
+        <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
+        <implements service="cmsUploadMediaFileInterface"/>
+    </service>
+    
+    <service name="cmsUploadMediaFileImageCustomVariantSizes" engine="java"
+        location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="uploadMediaFileImageCustomVariantSizes" auth="true" transaction-timeout="7200">
+        <description>Imports and processes a image media file using custom variant sizes.</description>
+        <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
+        <implements service="cmsUploadMediaFileInterface"/>
+        <attribute mode="IN" name="customVariantSizeMethod" type="String" optional="false"/>
+        <attribute mode="IN" name="customVariantSizesImgProps" type="String" optional="true"/>
+        <attribute mode="IN" name="customVariantSizesPreset" type="String" optional="true"/>
+        <attribute mode="IN" name="variantSizeName" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeWidth" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeHeight" type="List" optional="true"/>
+    </service>
+    
     <service name="cmsUpdateMediaFile" engine="java"
         location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="updateMediaFile" auth="true" transaction-timeout="7200">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
@@ -788,6 +807,8 @@
         <attribute name="createdDate" mode="IN" type="Timestamp" optional="true">
             <description>Optional createdDate for Content and DataResource</description>
         </attribute>
+        <!-- SCIPIO (17/12/2018): -->
+        <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>
     </service>
     <service name="cmsRemoveMediaVariants" engine="java"
         location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="removeMediaVariants" auth="true" transaction-timeout="14400">

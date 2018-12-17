@@ -58,16 +58,16 @@
 
 
 <#macro customVariantSizeForm>
- 	<@fields type="default-manual">                                	 
+ 	<@fields type="default-manual" label=uiLabelMap.CmsMediaCustomSizeVariantsFromForm>                                	 
       <@row>
-        <@cell columns=4>									          
-          <@field type="input" inline=true name="sizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true value="" />
-        </@cell>
-        <@cell columns=4>									          
-          <@field type="text" inline=true name="sizeWidth" labelArea=true label=uiLabelMap.ImageCustomVariantSizeWidth value="" />
+        <@cell columns=4>
+          <@field type="input" inline=true name="variantSizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true value="" />
         </@cell>
         <@cell columns=4>
-          <@field type="text" inline=true name="sizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight value="" />
+          <@field type="text" inline=true name="variantSizeWidth" labelArea=true label=uiLabelMap.ImageCustomVariantSizeWidth value="" />
+        </@cell>
+        <@cell columns=4>
+          <@field type="text" inline=true name="variantSizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight value="" />
         </@cell>
       </@row>
       <div class="cmsmedia-customvariantsize-add-cnt"><a href="javascript:void(0);" class="cmsmedia-customvariantsize-add">[+]</a></div>
@@ -159,29 +159,28 @@
                                 checked=(parameters.customVariantSizes?? && ("true" == parameters.customVariantSizes))/>
                             
                             <div class="cmsmedia-customvariantsize-area" style="display:none;">
-                            	<@section id="customvariantsizearea">
+                            	<@section id="customvariantsizearea" title=uiLabelMap.CmsMediaCustomSizeVariantsMethod>
                             		<#assign items = [
-								        {"value":"cmsmedia-customvariantsize-imgProps", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromImgPropFile}
-								        {"value":"cmsmedia-customvariantsize-preset", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromPreset}
-								        {"value":"cmsmedia-customvariantsize-form", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromForm}
+								        {"value":"customVariantSizesImgProps", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromImgPropFile}
+								        {"value":"customVariantSizesPreset", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromPreset}
+								        {"value":"customVariantSizesForm", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromForm}
 								      ]>
-								      <@field type="radio" name="cmsmedia-customvariantsize-method" label=uiLabelMap.CmsMediaChooseCustomSizeVariantsMethod items=items currentValue="cmsmedia-customvariantsize-imgProps"/>
+								      <@field type="radio" name="customVariantSizeMethod" label=uiLabelMap.CmsMediaChooseCustomSizeVariantsMethod items=items currentValue="cmsmedia-customvariantsize-imgProps"/>
 								      
-								      <div class="cmsmedia-customvariantsize-method cmsmedia-customvariantsize-imgProps">
-								      	<@field type="text" label=CmsMediaCustomSizeVariantsImgPropFile />
+								      <div class="cmsmedia-customvariantsize-method customVariantSizesImgProps">
+								      	<@field type="text" name="customVariantSizesImgProps" label=uiLabelMap.CmsMediaCustomSizeVariantsFromImgPropFile />
 								      </div>
-								      <div class="cmsmedia-customvariantsize-method cmsmedia-customvariantsize-preset" style="display:none;">
-								      	<@field type="select" label=CmsMediaCustomSizeVariantsSelectPreset>
+								      <div class="cmsmedia-customvariantsize-method customVariantSizesPreset" style="display:none;">
+								      	<@field type="select" name="customVariantSizesPreset" label=uiLabelMap.CmsMediaCustomSizeVariantsFromPreset>
 								      		<option name="">--</option>
 								      		<#list imageSizePresets as imageSizePreset>
 								      			<option name="${imageSizePreset.presetId}">${imageSizePreset.presetName}</option>
 								      		</#list>
 								      	</@field>								      	
 								      </div>
-								      <div class="cmsmedia-customvariantsize-method cmsmedia-customvariantsize-form" style="display:none;">
+								      <div class="cmsmedia-customvariantsize-method customVariantSizesForm" style="display:none;">
                             		  	<@customVariantSizeForm />
                             		  </div>
-                            		  
                             	</@section>
                             </div>
                           </div>
@@ -200,12 +199,13 @@
                                 dataResourceTypeIdElem.change(function() { changeTypeElem(this); });
                                 
                                 jQuery('#customVariantSizes').click(function() { 
-                                	var isChecked = jQuery(this).is(':checked');
-                                	console.log("isChecked ====> " + isChecked);
+                                	var isChecked = jQuery(this).is(':checked');                                	
                                 	if (isChecked === true) {
                                 		jQuery('.cmsmedia-customvariantsize-area').show();
+                                		jQuery('#mediaForm').attr('action', '<@ofbizUrl>createMediaImageCustomSizes</@ofbizUrl>');
                                 	} else {
                                 		jQuery('.cmsmedia-customvariantsize-area').hide();
+                                		jQuery('#mediaForm').attr('action', '<@ofbizUrl>${formAction}</@ofbizUrl>');
                                 	}
                                 });
                                 
@@ -213,19 +213,16 @@
                                 	<#assign customVariantSizeForm><@customVariantSizeForm /></#assign>
                                 	var customVariantSizeForm = '${escapeVal(customVariantSizeForm, 'js')}';
                                 	jQuery('.cmsmedia-customvariantsize-area').find('.cmsmedia-customvariantsize-add-cnt').remove();
-                                	jQuery('.cmsmedia-customvariantsize-area > div > div > div > div:first').append(customVariantSizeForm);
+                                	jQuery('.cmsmedia-customvariantsize-area .customVariantSizesForm').append(customVariantSizeForm);
                                 	jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
                                 };
                                 jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
                                 
-                                var customVariantSizeMethodElem = jQuery('#mediaForm input[name=cmsmedia-customvariantsize-method]');
-                                jQuery(customVariantSizeMethodElem).click(function() {
-                                	console.log('customVariantSizeMethodElem value =====> ' + $(this).val());
+                                var customVariantSizeMethodElem = jQuery('#mediaForm input[name=customVariantSizeMethod]');
+                                jQuery(customVariantSizeMethodElem).click(function() {                                	
                                 	jQuery('.cmsmedia-customvariantsize-method').hide();
                                 	jQuery('.' + $(this).val()).show();
                                 });
-                                
-                                
                             });
                           </@script>
                         </#if>

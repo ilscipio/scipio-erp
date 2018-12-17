@@ -56,6 +56,24 @@
     </#if>
 </#macro>
 
+
+<#macro customVariantSizeForm>
+ 	<@fields type="default-manual">                                	 
+      <@row>
+        <@cell columns=4>									          
+          <@field type="input" inline=true name="sizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true value="" />
+        </@cell>
+        <@cell columns=4>									          
+          <@field type="text" inline=true name="sizeWidth" labelArea=true label=uiLabelMap.ImageCustomVariantSizeWidth value="" />
+        </@cell>
+        <@cell columns=4>
+          <@field type="text" inline=true name="sizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight value="" />
+        </@cell>
+      </@row>
+      <div class="img-customvariantsize-add-cnt"><a href="javascript:void(0);" class="img-customvariantsize-add" onClick="">[+]</a></div>
+ 	</@fields>
+</#macro>
+
 <@section id="mediaWrapper">
 
     <@section id=formAction menuContent=menuContent>  
@@ -136,7 +154,15 @@
                             </@field>
                           <div class="cmsmedia-autoresize-area" style="<#if imageSelected>display:block;<#else>display:none;</#if>">
                             <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCreateAutoResizedImageVariants name="autoVariants" tooltip=uiLabelMap.CmsMediaAutoResizeDesc
-                                checked=(!parameters.autoVariants?? || ("true" == parameters.autoVariants))/>  
+                                checked=(!parameters.autoVariants?? || ("true" == parameters.autoVariants))/>
+                            <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCreateCustomSizeVariants name="customVariantSizes" id="customVariantSizes" tooltip=uiLabelMap.CmsMediaCustomVariantSizesDesc
+                                checked=(parameters.customVariantSizes?? && ("true" == parameters.customVariantSizes))/>
+                            
+                            <div class="cmsmedia-customvariantsize-area" style="display:none;">
+                            	<@section>
+                            		<@customVariantSizeForm />
+                            	</@section>
+                            </div>
                           </div>
                           <@script>
                             jQuery(document).ready(function() {
@@ -151,6 +177,22 @@
                                 };
                                 changeTypeElem(dataResourceTypeIdElem);
                                 dataResourceTypeIdElem.change(function() { changeTypeElem(this); });
+                                
+                                jQuery('#customVariantSizes').click(function() { 
+                                	var isChecked = jQuery(this).is(':checked');
+                                	console.log("isChecked ====> " + isChecked);
+                                	if (isChecked === true) {
+                                		jQuery('.cmsmedia-customvariantsize-area').show();
+                                	} else {
+                                		jQuery('.cmsmedia-customvariantsize-area').hide();
+                                	}
+                                });
+                                
+                                jQuery('.img-customvariantsize-add').click(function() {
+                                	<#assign customVariantSizeForm><@customVariantSizeForm /></#assign>
+                                	var customVariantSizeForm = '${escapeVal(customVariantSizeForm, 'js')}';
+                                	jQuery('.cmsmedia-customvariantsize-area').remove('.img-customvariantsize-add-cnt').append(customVariantSizeForm);
+                                });
                             });
                           </@script>
                         </#if>

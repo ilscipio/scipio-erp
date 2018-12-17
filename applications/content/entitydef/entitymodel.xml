@@ -1300,6 +1300,41 @@ code package.
         <key-map field-name="documentTypeId"/>
       </relation>
     </entity>
+    
+  <!-- ========================================================= -->
+  <!-- com.ilscipio.scipio.image -->
+  <!-- ========================================================= -->  
+    <entity entity-name="ImageSizePreset" package-name="com.ilscipio.scipio.image"
+        title="Image sizes preset" author="Ilscipio GmbH" version="1.0">
+        <field name="presetId" type="id-ne"></field>
+        <field name="presetName" type="name"></field>
+        <prim-key field="presetId" />
+    </entity>
+    
+    <entity entity-name="ImageSize" package-name="com.ilscipio.scipio.image"
+        title="Image size dimension preset" author="Ilscipio GmbH" version="1.0">
+        <field name="presetId" type="id-ne"></field>
+        <field name="sizeId" type="id-ne"></field>
+        
+        <prim-key field="presetId" />
+        <prim-key field="sizeId"/>
+        
+        <relation type="one" fk-name="IS_PRESET" rel-entity-name="ImageSizePreset">
+            <key-map field-name="presetId"/>
+        </relation>
+        <relation type="one" fk-name="IS_DIMENSION" rel-entity-name="ImageSizeDimension">
+            <key-map field-name="sizeId"/>
+        </relation>        
+    </entity>   
+     
+    <entity entity-name="ImageSizeDimension" package-name="com.ilscipio.scipio.image"
+        title="Image dimensions" author="Ilscipio GmbH" version="1.0">
+        <field name="sizeId" type="id-ne"></field>
+        <field name="sizeName" type="name"></field>
+        <field name="dimensionWidth" type="numeric"></field>        
+        <field name="dimensionHeight" type="numeric"></field>        
+        <prim-key field="sizeId"/>        
+    </entity>  
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.content.preference -->

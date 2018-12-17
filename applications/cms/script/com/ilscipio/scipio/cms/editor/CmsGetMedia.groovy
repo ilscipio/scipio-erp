@@ -38,6 +38,10 @@ if (parameters.contentId) { // needless?: && parameters.dataResourceTypeId && co
         context.cmsErrorHandler.addContextReadError(context, "Exception while getting media: " + e.getMessage()); // TODO: localize
     }
 }
+
+imageSizePresets = EntityQuery.use(delegator).from("ImageSizePreset").cache(true).queryList();
+
+context.imageSizePresets = imageSizePresets;
 context.media = media;
 context.fileSizeAttr = fileSizeAttr;
 context.variantList = variantList;

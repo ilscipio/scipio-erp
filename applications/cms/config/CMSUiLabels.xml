@@ -904,4 +904,35 @@
         <value xml:lang="de">Mit Drag and Drop können Sie bestehende Seiten dem Menü hinzufügen.</value>
         <value xml:lang="en">Use drag and drop to add existing pages to the menu.</value>
     </property>
+    
+    
+    <property key="CmsMediaUseCustomSizeVariantsMethod">        
+        <value xml:lang="en">Use custom size variant method</value>
+    </property>
+    <property key="CmsMediaChooseCustomSizeVariantsMethod">        
+        <value xml:lang="en">Select method</value>
+    </property>
+    <property key="CmsMediaCustomSizeVariantsFromImgPropFile">        
+        <value xml:lang="en">Image properties file (XML)</value>
+    </property>
+    <property key="CmsMediaCustomSizeVariantsFromPreset">        
+        <value xml:lang="en">Dimension preset</value>
+    </property>
+    <property key="CmsMediaCustomSizeVariantsFromForm">        
+        <value xml:lang="en">Dimension form</value>
+    </property>
+    <property key="ImageCustomVariantSizeName">        
+        <value xml:lang="en">Size name</value>
+    </property>    
+    <property key="ImageCustomVariantSizeWidth">        
+        <value xml:lang="en">Width</value>
+    </property>
+    <property key="ImageCustomVariantSizeHeight">        
+        <value xml:lang="en">Height</value>
+    </property>
+    
+    
+    
+    
+    
 </resource>

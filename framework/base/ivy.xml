@@ -197,6 +197,7 @@
         <dependency org="org.apache.commons" name="commons-math3" rev="3.6.1" conf="base,commons,sources"/>
         <dependency org="commons-net" name="commons-net" rev="3.6" conf="base,commons,sources"/>
         <dependency org="org.apache.commons" name="commons-pool2" rev="2.6.0" conf="base,commons,sources"/>
+        <dependency org="org.apache.commons" name="commons-text" rev="1.6" conf="base,commons,sources"/>
         <dependency org="commons-validator" name="commons-validator" rev="1.6" conf="base,commons,sources"/>
 
         <!-- j2eespecs jars -->

@@ -101,7 +101,8 @@ public class RequestHandler {
      */
     private static final List<String> defaultNoSaveRequestAttributes = UtilMisc.unmodifiableArrayList(
             "_SCP_NOSAVEREQATTR_", "_ALLOW_VIEW_SAVE_",
-            "_SCP_VIEW_SAVE_ATTR_EXCL_" // TODO: remove: _SCP_VIEW_SAVE_ATTR_EXCL_ deprecated, likely was not used
+            "_SCP_VIEW_SAVE_ATTR_EXCL_", // TODO: remove: _SCP_VIEW_SAVE_ATTR_EXCL_ deprecated, likely was not used
+            "ftlServletContext", "_REQUEST_HANDLER_"
             );
 
     /**

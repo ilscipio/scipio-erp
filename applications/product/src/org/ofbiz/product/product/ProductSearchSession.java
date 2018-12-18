@@ -1179,26 +1179,9 @@ public class ProductSearchSession {
         }
         boolean ascending = !"N".equals(sortAscending);
         if (sortOrder != null) {
-            if ("SortKeywordRelevancy".equals(sortOrder) || "SKR".equals(sortOrder)) {
-                searchSetSortOrderCore(new ProductSearch.SortKeywordRelevancy(), session);
-            } else if (sortOrder.startsWith("SortProductField:")) {
-                String fieldName = sortOrder.substring("SortProductField:".length());
-                searchSetSortOrderCore(new ProductSearch.SortProductField(fieldName, ascending), session);
-            } else if (sortOrder.startsWith("SPF:")) {
-                String fieldName = sortOrder.substring("SPF:".length());
-                searchSetSortOrderCore(new ProductSearch.SortProductField(fieldName, ascending), session);
-            } else if (sortOrder.startsWith("SortProductPrice:")) {
-                String priceTypeId = sortOrder.substring("SortProductPrice:".length());
-                searchSetSortOrderCore(new ProductSearch.SortProductPrice(priceTypeId, ascending), session);
-            } else if (sortOrder.startsWith("SPP:")) {
-                String priceTypeId = sortOrder.substring("SPP:".length());
-                searchSetSortOrderCore(new ProductSearch.SortProductPrice(priceTypeId, ascending), session);
-            } else if (sortOrder.startsWith("SortProductFeature:")) {
-                String featureId = sortOrder.substring("SortProductFeature:".length());
-                searchSetSortOrderCore(new ProductSearch.SortProductFeature(featureId, ascending), session);
-            } else if (sortOrder.startsWith("SPFT:")) {
-                String priceTypeId = sortOrder.substring("SPFT:".length());
-                searchSetSortOrderCore(new ProductSearch.SortProductPrice(priceTypeId, ascending), session);
+            ProductSearch.ResultSortOrder resultSortOrder = parseSortOrder(sortOrder, ascending);
+            if (resultSortOrder != null) {
+                searchSetSortOrderCore(resultSortOrder, session); // SCIPIO: refactored
             }
         }
 
@@ -1213,6 +1196,34 @@ public class ProductSearchSession {
         productSearchOptions.setPaging((String) parameters.get("PAGING"));
     }
 
+    /**
+     * SCIPIO: Refactored from {@link #processSearchParameters(Map, HttpServletRequest)}.
+     */
+    public static ProductSearch.ResultSortOrder parseSortOrder(String sortOrder, boolean ascending) {
+        if ("SortKeywordRelevancy".equals(sortOrder) || "SKR".equals(sortOrder)) {
+            return new ProductSearch.SortKeywordRelevancy();
+        } else if (sortOrder.startsWith("SortProductField:")) {
+            String fieldName = sortOrder.substring("SortProductField:".length());
+            return new ProductSearch.SortProductField(fieldName, ascending);
+        } else if (sortOrder.startsWith("SPF:")) {
+            String fieldName = sortOrder.substring("SPF:".length());
+            return new ProductSearch.SortProductField(fieldName, ascending);
+        } else if (sortOrder.startsWith("SortProductPrice:")) {
+            String priceTypeId = sortOrder.substring("SortProductPrice:".length());
+            return new ProductSearch.SortProductPrice(priceTypeId, ascending);
+        } else if (sortOrder.startsWith("SPP:")) {
+            String priceTypeId = sortOrder.substring("SPP:".length());
+            return new ProductSearch.SortProductPrice(priceTypeId, ascending);
+        } else if (sortOrder.startsWith("SortProductFeature:")) {
+            String featureId = sortOrder.substring("SortProductFeature:".length());
+            return new ProductSearch.SortProductFeature(featureId, ascending);
+        } else if (sortOrder.startsWith("SPFT:")) {
+            String priceTypeId = sortOrder.substring("SPFT:".length());
+            return new ProductSearch.SortProductPrice(priceTypeId, ascending);
+        }
+        return null;
+    }
+    
     @SuppressWarnings("unchecked")
     public static Map<String, Object> getProductSearchResult(HttpServletRequest request, Delegator delegator, String prodCatalogId) {
 

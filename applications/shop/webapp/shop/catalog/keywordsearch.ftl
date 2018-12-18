@@ -53,7 +53,7 @@ code package.
     </@cell>
     <@cell columns=4 medium=4 class="+${styles.text_right!}">
         <#-- NOTE: @productSortOrderSelectXxx macros defined in catalogcommon.ftl -->
-        <form method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style="display:none;" id="kwssort-form"">
+        <form method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>" style="display:none;" id="kwssort-form">
             <#-- WARN: TODO: REIMPLEMENT: using clearSearch=N relies on session; this works for single tab,
                 but frustrates polyvalent web users; ideally should do it parameter-based (requires revisit advancedsearch at same time) -->
             <@field type="hidden" name="clearSearch" value="N"/>

@@ -231,11 +231,15 @@ public abstract class CmsMediaServices {
                         dataResource.put("createdDate", createdDate);
                         if (dataResourceTypeId.equals(FileTypeResolver.IMAGE_TYPE)) { // 2017-08-11: pre-read width & height, for future queries
                             try {
-                                BufferedImage bugImg = ImageIO.read(new ByteArrayInputStream(byteBuffer.array()));
-                                dataResource.put("scpWidth", (long) bugImg.getWidth());
-                                dataResource.put("scpHeight", (long) bugImg.getHeight());
+                                BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(byteBuffer.array()));
+                                if (bufImg == null) { // SCIPIO: may be null
+                                    Debug.logError(logPrefix+"Error uploading media file: Could not read/parse image file type to determine dimensions", module);
+                                    return ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels", "ScaleImage.unable_to_parse", locale));
+                                }
+                                dataResource.put("scpWidth", (long) bufImg.getWidth());
+                                dataResource.put("scpHeight", (long) bufImg.getHeight());
                             } catch(Exception e) {
-                                Debug.logError(e, logPrefix+"Error uploading media file: Could not read/parse image file: " + e.getMessage(), module);
+                                Debug.logError(e, logPrefix+"Error uploading media file: Could not read/parse image file type to determine dimensions: " + e.getMessage(), module);
                                 return ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels", "ScaleImage.unable_to_parse", locale) + ": " + e.getMessage());
                             }
                         }

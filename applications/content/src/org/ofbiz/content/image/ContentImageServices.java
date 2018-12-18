@@ -496,10 +496,14 @@ public abstract class ContentImageServices {
             InputStream stream = (InputStream) streamResult.get("stream");
             try {
                 bufImg = ImageIO.read(stream);
+                if (bufImg == null) { // SCIPIO: may be null
+                    Debug.logError(logPrefix+"Could not read/parse image file type to determine dimensions" + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")", module);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")");
+                }
             } catch(Exception e) {
-                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")", module);
+                Debug.logError(logPrefix+"Could not read/parse image file type to determine dimensions" + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + "): " + e.toString(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")");
-            }   finally {
+            } finally {
                 stream.close();
             }
 

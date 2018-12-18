@@ -1463,10 +1463,10 @@
         <value xml:lang="zh">无法创建目标目录</value>
         <value xml:lang="zh-TW">無法新建目標目錄</value>
     </property>
-    <property key="ScaleImage.unable_to_parse">
-        <value xml:lang="de">Kann nicht parsen</value>
-        <value xml:lang="en">Unable to parse</value>
-        <value xml:lang="fr">Impossible d'analyser</value>
+    <property key="ScaleImage.unable_to_parse"><!-- SCIPIO: Enhanced message -->
+        <value xml:lang="de">Bild kann nicht analysiert werden (nicht unterstützter Dateityp? Beschädigte Datei?)</value>
+        <value xml:lang="en">Unable to parse image (Unsupported file type? Corrupted file?)</value>
+        <value xml:lang="fr">Impossible d'analyser l'image (type de fichier non pris en charge? Fichier corrompu?)</value>
         <value xml:lang="ja">解析できません</value>
         <value xml:lang="zh">无法解析</value>
         <value xml:lang="zh-TW">無法解析</value>

@@ -554,15 +554,16 @@ public abstract class ContentImageServices {
                 try {
                     fileExtValues = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", mimeTypeId).queryList();
                     if (UtilValidate.isEmpty(fileExtValues)) {
-
+                        Debug.logError(logPrefix+"can't determine output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId + ")", module);
+                        return ServiceUtil.returnError("can't determine output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId + ")");
                     }
                     targetFmtExt = fileExtValues.get(0).getString("fileExtensionId");
                     if (fileExtValues.size() > 1) {
                         Debug.logWarning(logPrefix+"multiple FileExtension found for mimeTypeId '" + mimeTypeId + "'; using first: '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
                     }
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, logPrefix+"can't determine output format from DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage(), module);
-                    return ServiceUtil.returnError(e.getMessage());
+                    Debug.logError(e, logPrefix+"can't determine output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage(), module);
+                    return ServiceUtil.returnError("can't determine output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage());
                 }
             } else {
                 try {
@@ -574,7 +575,7 @@ public abstract class ContentImageServices {
                     mimeTypeId = fileExt.getString("mimeTypeId");
                 } catch (GenericEntityException e) {
                     Debug.logError(e, logPrefix+"can't determine output format from DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage(), module);
-                    return ServiceUtil.returnError(e.getMessage());
+                    return ServiceUtil.returnError("can't determine output format from DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage());
                 }
             }
 

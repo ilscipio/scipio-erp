@@ -859,9 +859,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 supplierProduct = productSuppliers.get(0);
             }
         } catch (GenericServiceException e) {
-            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetSuppliersForProductError", locale) + e.getMessage(), module);
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetSuppliersForProductError", Debug.getLogLocale()) + e.getMessage(), module); // SCIPIO: log locale
         } catch (Exception e) {
-            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetSuppliersForProductError", locale) + e.getMessage(), module);
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetSuppliersForProductError", Debug.getLogLocale()) + e.getMessage(), module); // SCIPIO: log locale
         }
         return supplierProduct;
     }
@@ -1536,7 +1536,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 String checkResult = ProductPromoWorker.checkCanUsePromoCode(promoCode, partyId, this.getDelegator(), locale);
                 if (checkResult != null) {
                     promoCodeIter.remove();
-                    Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderOnUserChangePromoCodeWasRemovedBecause", UtilMisc.toMap("checkResult",checkResult), locale), module);
+                    Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderOnUserChangePromoCodeWasRemovedBecause", UtilMisc.toMap("checkResult",checkResult), Debug.getLogLocale()), module); // SCIPIO: log locale
                 }
             }
 
@@ -4726,10 +4726,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 GenericValue productStore = this.getDelegator().findOne("ProductStore", UtilMisc.toMap("productStoreId", this.getProductStoreId()), true);
                 facilityId = productStore.getString("inventoryFacilityId");
             } catch (GenericEntityException gee) {
-                Debug.logError(UtilProperties.getMessage(resource_error,"OrderProblemGettingProductStoreRecords", locale) + gee.getMessage(), module);
+                Debug.logError(UtilProperties.getMessage(resource_error,"OrderProblemGettingProductStoreRecords", Debug.getLogLocale()) + gee.getMessage(), module); // SCIPIO: log locale
                 return;
             } catch (Exception e) {
-                Debug.logError(UtilProperties.getMessage(resource_error,"OrderProblemGettingProductStoreRecords", locale) + e.getMessage(), module);
+                Debug.logError(UtilProperties.getMessage(resource_error,"OrderProblemGettingProductStoreRecords", Debug.getLogLocale()) + e.getMessage(), module); // SCIPIO: log locale
                 return;
             }
         }
@@ -4795,9 +4795,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                         }
 
                     } catch (GenericServiceException gee) {
-                        Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetInventoryAvailableByFacilityError", locale) + gee.getMessage(), module);
+                        Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetInventoryAvailableByFacilityError", Debug.getLogLocale()) + gee.getMessage(), module); // SCIPIO: log locale
                     } catch (Exception e) {
-                        Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetInventoryAvailableByFacilityError", locale) + e.getMessage(), module);
+                        Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetInventoryAvailableByFacilityError", Debug.getLogLocale()) + e.getMessage(), module); // SCIPIO: log locale
                     }
                 } else {
 
@@ -4827,7 +4827,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                         supplierPartyId = supplierProduct.getString("partyId");
                     }
                 } catch (GenericServiceException e) {
-                    Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetSuppliersForProductError", locale) + e.getMessage(), module);
+                    Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderRunServiceGetSuppliersForProductError", Debug.getLogLocale()) + e.getMessage(), module); // SCIPIO: log locale
                 }
 
                 // Leave the items untouched if we couldn't find a supplier

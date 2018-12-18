@@ -1191,7 +1191,7 @@ public class InvoiceServices {
                     UtilMisc.toMap("shipmentId", shipmentId), locale));
         }
         if (shipment == null) {
-            Debug.logError(UtilProperties.getMessage(resource, "AccountingShipmentNotFound", locale), module);
+            Debug.logError(UtilProperties.getMessage(resource, "AccountingShipmentNotFound", Debug.getLogLocale()), module); // SCIPIO: log locale
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingShipmentNotFound", locale));
         }
 
@@ -1780,7 +1780,7 @@ public class InvoiceServices {
                     }
                 }
             } else {
-                Debug.logInfo(UtilProperties.getMessage(resource, "AccountingIgnoringAdditionalShipCharges", UtilMisc.toMap("productStoreId", orh.getProductStoreId()), locale), module);
+                Debug.logInfo(UtilProperties.getMessage(resource, "AccountingIgnoringAdditionalShipCharges", UtilMisc.toMap("productStoreId", orh.getProductStoreId()), Debug.getLogLocale()), module); // SCIPIO: log locale
             }
 
             String invoiceId = null;
@@ -2816,7 +2816,7 @@ public class InvoiceServices {
                 if (currencyUomId != null && invoice.get("currencyUomId") != null &&
                         !currencyUomId.equals(invoice.getString("currencyUomId"))) {
                     Debug.logInfo(UtilProperties.getMessage(resource, "AccountingInvoicePaymentCurrencyProblem",
-                            UtilMisc.toMap("invoiceCurrency", invoice.getString("currencyUomId"), "paymentCurrency", payment.getString("currencyUomId")),locale), module);
+                            UtilMisc.toMap("invoiceCurrency", invoice.getString("currencyUomId"), "paymentCurrency", payment.getString("currencyUomId")), Debug.getLogLocale()), module); // SCIPIO: log locale
                     Debug.logInfo("will try to apply payment on the actualCurrency amount on payment", module);
 
                     if (payment.get("actualCurrencyAmount") == null || payment.get("actualCurrencyUomId") == null) {

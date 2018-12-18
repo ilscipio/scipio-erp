@@ -750,7 +750,7 @@ public class CheckOutHelper {
         try {
             party = EntityQuery.use(delegator).from("Party").where("partyId", partyId).queryOne();
         } catch (GenericEntityException e) {
-            Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsGettingPartyRecord", cart.getLocale()), module);
+            Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsGettingPartyRecord", Debug.getLogLocale()), module); // SCIPIO: log locale
         }
 
         // create order contact mechs for the email address(s)
@@ -794,7 +794,7 @@ public class CheckOutHelper {
                 this.delegator.storeAll(toBeStored);
             } catch (GenericEntityException e) {
                 // not a fatal error; so just print a message
-                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsStoringOrderEmailContactInformation", cart.getLocale()), module);
+                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsStoringOrderEmailContactInformation", Debug.getLogLocale()), module); // SCIPIO: log locale
             }
         }
 

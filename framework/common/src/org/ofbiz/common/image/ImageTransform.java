@@ -92,18 +92,18 @@ public class ImageTransform {
         try {
             bufImg = ImageIO.read(new File(fileLocation));
             if (bufImg == null) { // SCIPIO: may be null
-                Debug.logError(UtilProperties.getMessage(resource, "ImageTransform.unable_to_read_image", Locale.ENGLISH) + " : " + fileLocation, module);
+                Debug.logError(UtilProperties.getMessage(resource, "ImageTransform.unable_to_read_image", Debug.getLogLocale()) + " : " + fileLocation, module);
                 result.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resource, "ImageTransform.unable_to_read_image", locale) + " : " + fileLocation);
                 return result;
             }
         } catch (IllegalArgumentException e) {
             String errMsg = UtilProperties.getMessage(resource, "ImageTransform.input_is_null", locale) + " : " + fileLocation + " ; " + e.toString();
-            Debug.logError(UtilProperties.getMessage(resource, "ImageTransform.input_is_null", Locale.ENGLISH) + " : " + fileLocation + " ; " + e.toString(), module); // SCIPIO: ENGLISH
+            Debug.logError(UtilProperties.getMessage(resource, "ImageTransform.input_is_null", Debug.getLogLocale()) + " : " + fileLocation + " ; " + e.toString(), module); // SCIPIO: ENGLISH
             result.put(ModelService.ERROR_MESSAGE, errMsg);
             return result;
         } catch (IOException e) {
             String errMsg = UtilProperties.getMessage(resource, "ImageTransform.error_occurs_during_reading", locale) + " : " + fileLocation + " ; " + e.toString();
-            Debug.logError(errMsg, UtilProperties.getMessage(resource, "ImageTransform.error_occurs_during_reading", Locale.ENGLISH) + " : " + fileLocation + " ; " + e.toString()); // SCIPIO: ENGLISH
+            Debug.logError(errMsg, UtilProperties.getMessage(resource, "ImageTransform.error_occurs_during_reading", Debug.getLogLocale()) + " : " + fileLocation + " ; " + e.toString()); // SCIPIO: ENGLISH
             result.put(ModelService.ERROR_MESSAGE, errMsg);
             return result;
         }

@@ -1491,7 +1491,7 @@ public class OrderServices {
         LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Boolean forceAll = (Boolean) context.get("forceAll");
-        Locale locale = (Locale) context.get("locale");
+        //Locale locale = (Locale) context.get("locale");
         if (forceAll == null) {
             forceAll = Boolean.FALSE;
         }
@@ -1522,7 +1522,7 @@ public class OrderServices {
                     if (resetResult != null && ServiceUtil.isError(resetResult)) {
                         Debug.logWarning(UtilProperties.getMessage(resource_error,
                                 "OrderErrorCannotResetOrderTotals",
-                                UtilMisc.toMap("orderId",orderId,"resetResult",ServiceUtil.getErrorMessage(resetResult)), locale), module);
+                                UtilMisc.toMap("orderId",orderId,"resetResult",ServiceUtil.getErrorMessage(resetResult)), Debug.getLogLocale()), module); // SCIPIO: log locale
                     } else {
                         Debug.logInfo("No orders found for reset processing", module);
                     }
@@ -2022,7 +2022,7 @@ public class OrderServices {
             }
         } else {
             Debug.logWarning(UtilProperties.getMessage(resource_error,
-                    "OrderReceivedNullForOrderItemRecordsOrderId", UtilMisc.toMap("orderId",orderId),locale), module);
+                    "OrderReceivedNullForOrderItemRecordsOrderId", UtilMisc.toMap("orderId",orderId), Debug.getLogLocale()), module); // SCIPIO: log locale
         }
 
         return ServiceUtil.returnSuccess();
@@ -2327,7 +2327,7 @@ public class OrderServices {
 
                     if (statusChange == null) {
                         Debug.logWarning(UtilProperties.getMessage(resource_error,
-                                "OrderItemStatusNotChangedIsNotAValidChange", UtilMisc.toMap("orderStatusId",orderItem.getString("statusId"),"statusId",statusId), locale), module);
+                                "OrderItemStatusNotChangedIsNotAValidChange", UtilMisc.toMap("orderStatusId",orderItem.getString("statusId"),"statusId",statusId), Debug.getLogLocale()), module); // SCIPIO: log locale
                         continue;
                     }
                 } catch (GenericEntityException e) {
@@ -2406,7 +2406,7 @@ public class OrderServices {
 
             if (orderHeader.getString("statusId").equals(statusId)) {
                 Debug.logWarning(UtilProperties.getMessage(resource_error,
-                        "OrderTriedToSetOrderStatusWithTheSameStatusIdforOrderWithId", UtilMisc.toMap("statusId",statusId,"orderId",orderId),locale),module);
+                        "OrderTriedToSetOrderStatusWithTheSameStatusIdforOrderWithId", UtilMisc.toMap("statusId",statusId,"orderId",orderId), Debug.getLogLocale()), module); // SCIPIO: log locale
                 return successResult;
             }
             try {

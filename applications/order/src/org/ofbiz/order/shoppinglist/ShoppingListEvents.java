@@ -146,7 +146,7 @@ public class ShoppingListEvents {
             try {
                 cartIdInt = Integer.valueOf(item2);
             } catch (Exception e) {
-                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderIllegalCharacterInSelectedItemField", cart.getLocale()), module);
+                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderIllegalCharacterInSelectedItemField", Debug.getLogLocale()), module); // SCIPIO: log locale
             }
             if (cartIdInt != null) {
                 ShoppingCartItem item = cart.findCartItem(cartIdInt);
@@ -299,12 +299,12 @@ public class ShoppingListEvents {
                 errMsg = UtilProperties.getMessage(resource_error,"shoppinglistevents.added_product_to_cart", messageMap, cart.getLocale());
                 eventMessage.append(errMsg).append("\n");
             } catch (CartItemModifyException e) {
-                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsAddingItemFromListToCart", cart.getLocale()));
+                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsAddingItemFromListToCart", Debug.getLogLocale())); // SCIPIO: log locale
                 Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("productId", productId);
                 errMsg = UtilProperties.getMessage(resource_error,"shoppinglistevents.problem_adding_product_to_cart", messageMap, cart.getLocale());
                 eventMessage.append(errMsg).append("\n");
             } catch (ItemNotFoundException e) {
-                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProductNotFound", cart.getLocale()));
+                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProductNotFound", Debug.getLogLocale())); // SCIPIO: log locale
                 Map<String, Object> messageMap = UtilMisc.<String, Object>toMap("productId", productId);
                 errMsg = UtilProperties.getMessage(resource_error,"shoppinglistevents.problem_adding_product_to_cart", messageMap, cart.getLocale());
                 eventMessage.append(errMsg).append("\n");

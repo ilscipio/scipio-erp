@@ -1249,7 +1249,7 @@ public class ContactMechServices {
                     } else {
                         Map<String, Object> labelArgs = UtilMisc.toMap("contactMechPurposeTypeId", contactMechPurposeTypeId, "entityId", entityId,
                                 "oldContactMechId", oldOtherContactPurpose.getString("contactMechId"), "newContactMechId", contactMechId);
-                        Debug.logError(logPrefix+UtilProperties.getMessage(resourceError, "contactmechservices.purpose_already_exists_different_contact_mech", labelArgs, Locale.ENGLISH), module);
+                        Debug.logError(logPrefix+UtilProperties.getMessage(resourceError, "contactmechservices.purpose_already_exists_different_contact_mech", labelArgs, Debug.getLogLocale()), module); // SCIPIO: log locale
                         return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, "contactmechservices.purpose_already_exists_different_contact_mech", labelArgs, (Locale) context.get("locale")));
                     }
                 }

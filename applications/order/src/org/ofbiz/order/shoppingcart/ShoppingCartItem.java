@@ -1314,7 +1314,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                 try {
                     ShoppingListEvents.fillAutoSaveList(cart, dispatcher);
                 } catch (GeneralException e) {
-                    Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderUnableToStoreAutoSaveCart", locale));
+                    Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderUnableToStoreAutoSaveCart", Debug.getLogLocale())); // SCIPIO: log locale
                 }
             }
         }
@@ -1712,7 +1712,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             try {
                 return Timestamp.valueOf(ddDate);
             } catch (IllegalArgumentException e) {
-                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemGettingItemDesiredDeliveryDateFor", UtilMisc.toMap("productId",this.getProductId()), locale));
+                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemGettingItemDesiredDeliveryDateFor", UtilMisc.toMap("productId",this.getProductId()), Debug.getLogLocale())); // SCIPIO: log locale
                 return null;
             }
         }
@@ -1812,7 +1812,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             try {
                 orderItemType = this.getDelegator().findOne("OrderItemType", UtilMisc.toMap("orderItemTypeId", this.getItemType()), true);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsGettingOrderItemTypeFor", UtilMisc.toMap("orderItemTypeId",this.getItemType()), locale));
+                Debug.logWarning(e, UtilProperties.getMessage(resource_error,"OrderProblemsGettingOrderItemTypeFor", UtilMisc.toMap("orderItemTypeId",this.getItemType()), Debug.getLogLocale())); // SCIPIO: log locale
             }
         }
         if (orderItemType != null) {

@@ -480,7 +480,7 @@ public class ICalConverter {
             }
         } catch (GeneralException e) {
             String errMsg = UtilProperties.getMessage("WorkEffortUiLabels", "WorkeffortErrorWhileCreatingServiceMapForService", UtilMisc.toMap("serviceName", serviceName), locale);
-            Debug.logError(e, UtilProperties.getMessage("WorkEffortUiLabels", "WorkeffortErrorWhileCreatingServiceMapForService", UtilMisc.toMap("serviceName", serviceName), Locale.ENGLISH), module); // SCIPIO: Fixed locale for log
+            Debug.logError(e, UtilProperties.getMessage("WorkEffortUiLabels", "WorkeffortErrorWhileCreatingServiceMapForService", UtilMisc.toMap("serviceName", serviceName), Debug.getLogLocale()), module); // SCIPIO: Fixed locale for log
             return ServiceUtil.returnError(errMsg + e);
         }
         if (context.get("userLogin") != null) {
@@ -495,7 +495,7 @@ public class ICalConverter {
             return result;
         } catch (GenericServiceException e) {
             String errMsg = UtilProperties.getMessage("WorkEffortUiLabels", "WorkeffortErrorWhileInvokingService", UtilMisc.toMap("serviceName", serviceName), locale);
-            Debug.logError(e, UtilProperties.getMessage("WorkEffortUiLabels", "WorkeffortErrorWhileInvokingService", UtilMisc.toMap("serviceName", serviceName), Locale.ENGLISH), module); // SCIPIO: Fixed locale for log
+            Debug.logError(e, UtilProperties.getMessage("WorkEffortUiLabels", "WorkeffortErrorWhileInvokingService", UtilMisc.toMap("serviceName", serviceName), Debug.getLogLocale()), module); // SCIPIO: Fixed locale for log
             return ServiceUtil.returnError(errMsg + e);
         }
     }

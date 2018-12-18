@@ -75,7 +75,7 @@ public abstract class ContentImageServices {
 
     // SCIPIO: FIXME?: don't really want this dependency, but not major issue
     private static final String resourceProduct = "ProductErrorUiLabels";
-    private static final Locale LOG_LANG = Locale.ENGLISH; // always EN
+    private static final Locale LOG_LANG = Debug.getLogLocale();
 
     protected ContentImageServices() {
     }

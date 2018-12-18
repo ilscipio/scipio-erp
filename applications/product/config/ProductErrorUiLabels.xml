@@ -1425,7 +1425,7 @@
     </property>
     <property key="ScaleImage.error_occurs_during_writing">
         <value xml:lang="de">Während des Schreibens ist ein Fehler aufgetreten</value>
-        <value xml:lang="en">An error occured during writing</value>
+        <value xml:lang="en">An error occurred during writing</value>
         <value xml:lang="fr">Une erreur est survenue lors de l'écriture</value>
         <value xml:lang="ja">書き込み中にエラーが発生しました</value>
         <value xml:lang="zh">写的过程中发生一个错误</value>
@@ -1471,10 +1471,10 @@
         <value xml:lang="zh">无法解析</value>
         <value xml:lang="zh-TW">無法解析</value>
     </property>
-    <property key="ScaleImage.unable_to_scale_original_image">
-        <value xml:lang="de">Kann das Originalbild nicht skalieren</value>
-        <value xml:lang="en">Unable to scale original image</value>
-        <value xml:lang="fr">Impossible de redimensionner l'image originale</value>
+    <property key="ScaleImage.unable_to_scale_original_image"><!-- SCIPIO: Enhanced message -->
+        <value xml:lang="de">Kann das Originalbild nicht skalieren (nicht unterstützter Dateityp? Beschädigte Datei?)</value>
+        <value xml:lang="en">Unable to scale original image (Unsupported file type? Corrupted file?)</value>
+        <value xml:lang="fr">Impossible de redimensionner l'image originale (type de fichier non pris en charge? Fichier corrompu?)</value>
         <value xml:lang="ja">元の画像をスケール変更できません</value>
         <value xml:lang="zh">无法缩放原始图像</value>
         <value xml:lang="zh-TW">無法縮放原始圖像</value>

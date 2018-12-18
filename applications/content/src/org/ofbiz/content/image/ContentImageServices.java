@@ -307,10 +307,11 @@ public abstract class ContentImageServices {
                         }
 
                         // write new image
-                        String newFileLocExt = newFileLocation + "." + imgExtension;
+                        String targetFileType = imgExtension;
+                        String newFileLocExt = newFileLocation + "." + targetFileType;
                         String newFileFullLoc = imageServerPath + "/" + newFileLocExt;
                         try {
-                            ImageIO.write(bufNewImg, imgExtension, new File(newFileFullLoc));
+                            ImageIO.write(bufNewImg, targetFileType, new File(newFileFullLoc));
                             scaledImageCount++;
                         } catch (IllegalArgumentException e) {
                             Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", LOG_LANG) + ": " + e.getMessage(), module);

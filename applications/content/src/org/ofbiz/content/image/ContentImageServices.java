@@ -553,13 +553,21 @@ public abstract class ContentImageServices {
                 List<GenericValue> fileExtValues = new LinkedList<GenericValue>();
                 try {
                     fileExtValues = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", mimeTypeId).queryList();
-                    if (UtilValidate.isEmpty(fileExtValues)) {
-                        Debug.logError(logPrefix+"can't determine output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId + ")", module);
-                        return ServiceUtil.returnError("can't determine output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId + ")");
-                    }
-                    targetFmtExt = fileExtValues.get(0).getString("fileExtensionId");
-                    if (fileExtValues.size() > 1) {
-                        Debug.logWarning(logPrefix+"multiple FileExtension found for mimeTypeId '" + mimeTypeId + "'; using first: '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
+                    if (UtilValidate.isNotEmpty(fileExtValues)) {
+                        targetFmtExt = fileExtValues.get(0).getString("fileExtensionId");
+                        if (fileExtValues.size() > 1) {
+                            Debug.logWarning(logPrefix+"multiple FileExtension found for mimeTypeId '" + mimeTypeId + "'; using first: '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
+                        }
+                    } else {
+                        targetFmtExt = EntityUtilProperties.getPropertyValue("content", "image.thumb.fileType.default", "jpg", delegator);
+                        Debug.logWarning(logPrefix+"can't determine thumbnail output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId 
+                                + "); unknown?; using system default: " + targetFmtExt, module);
+                        GenericValue fileExt = EntityQuery.use(delegator).from("FileExtension").where("fileExtensionId", targetFmtExt).queryOne();
+                        if (UtilValidate.isEmpty(fileExt)) {
+                            Debug.logError(logPrefix+"can't determine thumbnail output format from file type '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
+                            return ServiceUtil.returnError("can't determine thumbnail output format from file type '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")");
+                        }
+                        mimeTypeId = fileExt.getString("mimeTypeId");
                     }
                 } catch (GenericEntityException e) {
                     Debug.logError(e, logPrefix+"can't determine output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage(), module);

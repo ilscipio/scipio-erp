@@ -26,11 +26,13 @@ code package.
     </path>
 
     <target name="stubs" depends="classes">
+        <!-- SCIPIO: 2018-12: Static stubs are deprecated since java 8; they are created dynamically by 
+            java.rmi.server.UnicastRemoteObject
         <rmic base="${build.dir}/classes" classname="org.ofbiz.service.rmi.RemoteDispatcherImpl">
             <classpath>
                 <path refid="local.class.path"/>
             </classpath>
-        </rmic>
+        </rmic>-->
     </target>
 
     <target name="main-jar" depends="stubs">

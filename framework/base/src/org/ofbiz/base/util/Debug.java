@@ -1030,7 +1030,18 @@ public final class Debug {
     }
 
     /**
-     * SCIPIO: Returns the log locale, always English.
+     * SCIPIO: Returns the log locale. This is always {@link Locale#ENGLISH}.
+     * <p>
+     * NOTE: This should be used in Debug.logXxx calls which use UtilProperties.getMessage to prepare log-destined messages;
+     * i.e. call UtilProperties.getMessage once with context locale to format a message for caller, and then call
+     * UtilProperties.getMessage a second time with the log locale to print to the log. e.g.:
+     * <pre>
+     * {@code    Debug.logError("Something happened: " + UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", Debug.getLogLocale()), module);
+     *    return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", (Locale) context.get("locale"));
+     * }
+     * </pre>
+     * <p>
+     * Added 2018-12-18.
      */
     public static Locale getLogLocale() {
         return LOG_LOCALE;

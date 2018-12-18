@@ -48,6 +48,11 @@ public final class Debug {
     public static final int ERROR = 6;
     public static final int FATAL = 7;
 
+    /**
+     * SCIPIO: The locale of the log entries. This is always {@link Locale#ENGLISH}.
+     */
+    public static final Locale LOG_LOCALE = Locale.ENGLISH;
+
     private static final String[] levelProps = {"", "print.verbose", "print.timing", "print.info", "print.important", "print.warning", "print.error", "print.fatal"};
     private static final Level[] levelObjs = {Level.OFF, Level.DEBUG, Level.TRACE, Level.INFO, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL};
 
@@ -1022,5 +1027,12 @@ public final class Debug {
         }
         return callerInfo.getClassName().substring(callerInfo.getClassName().lastIndexOf('.') + 1) 
                 + "." + callerInfo.getMethodName() + "@" + callerInfo.getLineNumber();
+    }
+
+    /**
+     * SCIPIO: Returns the log locale, always English. Same as {@link #LOG_LOCALE}.
+     */
+    public static Locale getLogLocale() {
+        return LOG_LOCALE;
     }
 }

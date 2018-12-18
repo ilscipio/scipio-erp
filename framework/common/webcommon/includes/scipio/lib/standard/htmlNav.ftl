@@ -1600,9 +1600,13 @@ functionality.
   <#elseif secondDlg.content?? && (secondDlg.always)!false>
     <#if !listItemsOnly>
       <div class="${styles.grid_row!}">
-      <#if firstDlg.content?? && (secondDlg.always)!false>
-        <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
-        <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">&nbsp;</div>
+      <#if firstDlg.content??>
+        <#if (secondDlg.always)!false>
+          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
+          <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">&nbsp;</div>
+        <#else>
+          <div class="${styles.grid_large!}${12 - secondDlgSize} ${styles.grid_cell!}">&nbsp;</div>
+        </#if>
       <#elseif alwaysShowCount>
         <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}">${escapeVal(countMsg, 'htmlmarkup')}</div>
         <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">&nbsp;</div>
@@ -1616,9 +1620,13 @@ functionality.
   <#elseif paginateToggle>
     <#if !listItemsOnly>
       <div class="${styles.grid_row!}">
-      <#if firstDlg.content?? && (secondDlg.always)!false>
-        <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
-        <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">&nbsp;</div>
+      <#if firstDlg.content??>
+        <#if (secondDlg.always)!false>
+          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
+          <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">&nbsp;</div>
+        <#else>
+          <div class="${styles.grid_large!}${12 - secondDlgSize} ${styles.grid_cell!}">&nbsp;</div>
+        </#if>
       <#elseif alwaysShowCount>
         <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}">${escapeVal(countMsg, 'htmlmarkup')}</div>
         <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">&nbsp;</div>
@@ -1644,8 +1652,8 @@ functionality.
         </div>
       </div>
     </#if>
-  <#elseif firstDlg.content?? && (firstDlg.always)!false>
-      <#if !listItemsOnly>
+  <#elseif firstDlg.content??>
+      <#if (firstDlg.always)!false && !listItemsOnly>
         <div class="${styles.grid_row!}">
           <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
         </div>

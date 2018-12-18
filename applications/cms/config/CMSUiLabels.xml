@@ -906,14 +906,14 @@
     </property>
     
     
-    <property key="CmsMediaUseCustomSizeVariantsMethod">        
-        <value xml:lang="en">Use custom size variant method</value>
+    <property key="CmsMediaUseCustomSizeVariantsSource">        
+        <value xml:lang="en">Use custom size variant source</value>
     </property>
-    <property key="CmsMediaCustomSizeVariantsMethod">        
-        <value xml:lang="en">Custom size variant method</value>
+    <property key="CmsMediaCustomSizeVariantsSource">        
+        <value xml:lang="en">Custom size variant source</value>
     </property>
-    <property key="CmsMediaChooseCustomSizeVariantsMethod">        
-        <value xml:lang="en">Select method</value>
+    <property key="CmsMediaChooseCustomSizeVariantsSource">        
+        <value xml:lang="en">Select source</value>
     </property>
     <property key="CmsMediaCustomSizeVariantsFromImgPropFile">        
         <value xml:lang="en">Image properties file (XML)</value>
@@ -933,9 +933,10 @@
     <property key="ImageCustomVariantSizeHeight">        
         <value xml:lang="en">Height</value>
     </property>
-    
-    
-    
-    
-    
+    <property key="CmsMediaCustomSizeVariantsPresetName">        
+        <value xml:lang="en">Preset name</value>
+    </property>
+    <property key="CmsMediaCustomSizeVariantsSaveAsPreset">        
+        <value xml:lang="en">Save as Preset</value>
+    </property>
 </resource>

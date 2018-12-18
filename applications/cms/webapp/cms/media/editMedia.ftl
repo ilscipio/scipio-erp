@@ -58,20 +58,31 @@
 
 
 <#macro customVariantSizeForm>
- 	<@fields type="default-manual" label=uiLabelMap.CmsMediaCustomSizeVariantsFromForm>                                	 
+     <@fields type="default-manual" label=uiLabelMap.CmsMediaCustomSizeVariantsFromForm>
       <@row>
         <@cell columns=4>
-          <@field type="input" inline=true name="variantSizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true value="" />
+          <@field type="input" inline=true name="variantSizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true required=true value="" />
         </@cell>
         <@cell columns=4>
-          <@field type="text" inline=true name="variantSizeWidth" labelArea=true label=uiLabelMap.ImageCustomVariantSizeWidth value="" />
+          <@field type="text" inline=true name="variantSizeWidth" labelArea=true label=uiLabelMap.ImageCustomVariantSizeWidth required=true value="" />
         </@cell>
         <@cell columns=4>
-          <@field type="text" inline=true name="variantSizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight value="" />
+          <@field type="text" inline=true name="variantSizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight required=true value="" />
         </@cell>
       </@row>
-      <div class="cmsmedia-customvariantsize-add-cnt"><a href="javascript:void(0);" class="cmsmedia-customvariantsize-add">[+]</a></div>
- 	</@fields>
+      <@row class="+cmsmedia-customvariantsize-add-cnt">
+          <@cell columns=4>
+              <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCustomSizeVariantsSaveAsPreset name="saveAsPreset" id="saveAsPreset"
+                                checked=(parameters.saveAsPreset?? && ("true" == parameters.saveAsPreset))/>
+          </@cell>
+          <@cell columns=4 id="cmsmedia-customvariantsize-preset-name" style="display:none;">
+              <@field type="text" labelArea=true label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
+          </@cell>
+          <@cell columns=4>
+              <a href="javascript:void(0);" class="cmsmedia-customvariantsize-add">[+]</a>
+          </@cell>
+      </@row>
+     </@fields>
 </#macro>
 
 <@section id="mediaWrapper">
@@ -82,7 +93,7 @@
       <@editMediaScripts/>
       
         <@row>
-            <@cell id="mediaUpload" columns=6>
+            <@cell id="mediaUpload" columns=8>
                 <@section title=sectionTitle>
                     <form method="post"<#if !media?has_content> enctype="multipart/form-data"</#if> action="<@ofbizUrl>${formAction}</@ofbizUrl>" name="mediaForm" id="mediaForm">                                                       
                         <#if parameters.contentName?has_content>
@@ -97,10 +108,10 @@
                         </#if>
                         <@field type="text" name="contentName" label=uiLabelMap.CommonName value=contentName required=true />
                         <#if media?has_content>
-                            <#if media.dataResourceTypeId == "IMAGE_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.CommonImage></#if>                                   
-                            <#if media.dataResourceTypeId == "VIDEO_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.ContentResourceVideo></#if>                                    
-                            <#if media.dataResourceTypeId == "AUDIO_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.ContentResourceAudio></#if>                                    
-                            <#if media.dataResourceTypeId == "DOCUMENT_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.CommonDocument></#if>          
+                            <#if media.dataResourceTypeId == "IMAGE_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.CommonImage></#if>
+                            <#if media.dataResourceTypeId == "VIDEO_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.ContentResourceVideo></#if>
+                            <#if media.dataResourceTypeId == "AUDIO_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.ContentResourceAudio></#if>
+                            <#if media.dataResourceTypeId == "DOCUMENT_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.CommonDocument></#if>
                             <@field type="hidden" name="contentId" value=media.contentId />
                             <@field type="hidden" name="dataResourceTypeId" value=media.dataResourceTypeId />
                             <#assign mediaUrl=makeOfbizWebappUrl({"uri": "/media?contentId=" + rawString(media.contentId!"")}) />
@@ -112,7 +123,7 @@
                             <@field type="display" label=uiLabelMap.CmsMediaOriginalName value=(media.objectInfo!"") />                            
 
                             <#if fileSizeAttr?has_content>
-                                <#assign fileSize = Static["com.ilscipio.scipio.common.util.fileType.FileTypeUtil"].formatFileSize(fileSizeAttr.attrValue, dispatcher, locale) />                                							
+                                <#assign fileSize = Static["com.ilscipio.scipio.common.util.fileType.FileTypeUtil"].formatFileSize(fileSizeAttr.attrValue, dispatcher, locale) />                                                            
                                 <@field type="display" label=uiLabelMap.CommonSize value=fileSize />
                             </#if>
                             <@field type="display" label=uiLabelMap.FormFieldTitle_createdDate value=media.createdDate valueType="date" />
@@ -155,35 +166,35 @@
                           <div class="cmsmedia-autoresize-area" style="<#if imageSelected>display:block;<#else>display:none;</#if>">
                             <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCreateAutoResizedImageVariants name="autoVariants" tooltip=uiLabelMap.CmsMediaAutoResizeDesc
                                 checked=(!parameters.autoVariants?? || ("true" == parameters.autoVariants))/>
-                            <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaUseCustomSizeVariantsMethod name="customVariantSizes" id="customVariantSizes" tooltip=uiLabelMap.CmsMediaUseCustomSizeVariantsMethodDesc
+                            <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaUseCustomSizeVariantsSource name="customVariantSizes" id="customVariantSizes" tooltip=uiLabelMap.CmsMediaUseCustomSizeVariantsSourceDesc
                                 checked=(parameters.customVariantSizes?? && ("true" == parameters.customVariantSizes))/>
-                            
-                            <div class="cmsmedia-customvariantsize-area" style="display:none;">
-                            	<@section id="customvariantsizearea" title=uiLabelMap.CmsMediaCustomSizeVariantsMethod>
-                            		<#assign items = [
-								        {"value":"customVariantSizesImgProps", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromImgPropFile}
-								        {"value":"customVariantSizesPreset", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromPreset}
-								        {"value":"customVariantSizesForm", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromForm}
-								      ]>
-								      <@field type="radio" name="customVariantSizeMethod" label=uiLabelMap.CmsMediaChooseCustomSizeVariantsMethod items=items currentValue="customVariantSizesImgProps"/>
-								      
-								      <div class="cmsmedia-customvariantsize-method customVariantSizesImgProps">
-								      	<@field type="text" name="customVariantSizesImgProps" label=uiLabelMap.CmsMediaCustomSizeVariantsFromImgPropFile />
-								      </div>
-								      <div class="cmsmedia-customvariantsize-method customVariantSizesPreset" style="display:none;">
-								      	<@field type="select" name="customVariantSizesPreset" label=uiLabelMap.CmsMediaCustomSizeVariantsFromPreset>
-								      		<option name="">--</option>
-								      		<#list imageSizePresets as imageSizePreset>
-								      			<option name="${imageSizePreset.presetId}">${imageSizePreset.presetName}</option>
-								      		</#list>
-								      	</@field>								      	
-								      </div>
-								      <div class="cmsmedia-customvariantsize-method customVariantSizesForm" style="display:none;">
-                            		  	<@customVariantSizeForm />
-                            		  </div>
-                            	</@section>
-                            </div>
-                          </div>
+                            <@row class="cmsmedia-customvariantsize-area" style="display:none;">
+                                <@cell columns=10 class="+${styles.grid_large_offset}2">
+                                    <@section id="customvariantsizearea" title=uiLabelMap.CmsMediaCustomSizeVariantsSource>
+                                        <#assign items = [
+                                            {"value":"customVariantSizesImgProps", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromImgPropFile}
+                                            {"value":"customVariantSizesPreset", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromPreset}
+                                            {"value":"customVariantSizesForm", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromForm}
+                                          ]>
+                                          <@field type="radio" name="customVariantSizeMethod" label=uiLabelMap.CmsMediaChooseCustomSizeVariantsSource items=items currentValue="customVariantSizesImgProps"/>
+                                          
+                                          <div class="cmsmedia-customvariantsize-method customVariantSizesImgProps">
+                                              <@field type="text" name="customVariantSizesImgProps" label=uiLabelMap.CmsMediaCustomSizeVariantsFromImgPropFile />
+                                          </div>
+                                          <div class="cmsmedia-customvariantsize-method customVariantSizesPreset" style="display:none;">
+                                              <@field type="select" name="customVariantSizesPreset" label=uiLabelMap.CmsMediaCustomSizeVariantsFromPreset>
+                                                  <option name="">--</option>
+                                                  <#list imageSizePresets as imageSizePreset>
+                                                      <option value="${imageSizePreset.presetId}">${imageSizePreset.presetName}</option>
+                                                  </#list>
+                                              </@field>
+                                          </div>
+                                          <div class="cmsmedia-customvariantsize-method customVariantSizesForm" style="display:none;">
+                                              <@customVariantSizeForm />
+                                          </div>
+                                    </@section>
+                                </@cell>
+                          </@row>
                           <@script>
                             jQuery(document).ready(function() {
                                 var dataResourceTypeIdElem = jQuery('#mediaForm select[name=dataResourceTypeId]');
@@ -199,30 +210,42 @@
                                 dataResourceTypeIdElem.change(function() { changeTypeElem(this); });
                                 
                                 jQuery('#customVariantSizes').click(function() { 
-                                	var isChecked = jQuery(this).is(':checked');                                	
-                                	if (isChecked === true) {
-                                		jQuery('.cmsmedia-customvariantsize-area').show();
-                                		jQuery('#mediaForm').attr('action', '<@ofbizUrl>createMediaImageCustomSizes</@ofbizUrl>');
-                                	} else {
-                                		jQuery('.cmsmedia-customvariantsize-area').hide();
-                                		jQuery('#mediaForm').attr('action', '<@ofbizUrl>${formAction}</@ofbizUrl>');
-                                	}
+                                    var isChecked = jQuery(this).is(':checked');
+                                    if (isChecked === true) {
+                                        jQuery('.cmsmedia-customvariantsize-area').show();
+                                        jQuery('#mediaForm').attr('action', '<@ofbizUrl>createMediaImageCustomSizes</@ofbizUrl>');
+                                    } else {
+                                        jQuery('.cmsmedia-customvariantsize-area').hide();
+                                        jQuery('#mediaForm').attr('action', '<@ofbizUrl>${formAction}</@ofbizUrl>');
+                                    }
                                 });
                                 
                                 var addCustomVariantSize = function() {
-                                	<#assign customVariantSizeForm><@customVariantSizeForm /></#assign>
-                                	var customVariantSizeForm = '${escapeVal(customVariantSizeForm, 'js')}';
-                                	jQuery('.cmsmedia-customvariantsize-area').find('.cmsmedia-customvariantsize-add-cnt').remove();
-                                	jQuery('.cmsmedia-customvariantsize-area .customVariantSizesForm').append(customVariantSizeForm);
-                                	jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
+                                    <#assign customVariantSizeForm><@customVariantSizeForm /></#assign>
+                                    var customVariantSizeForm = '${escapeVal(customVariantSizeForm, 'js')}';
+                                    jQuery('.cmsmedia-customvariantsize-area').find('.cmsmedia-customvariantsize-add-cnt').remove();
+                                    jQuery('.cmsmedia-customvariantsize-area .customVariantSizesForm').append(customVariantSizeForm);
+                                    jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
+                                    jQuery('#saveAsPreset').click(saveAsPreset);
                                 };
                                 jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
-                                
+
                                 var customVariantSizeMethodElem = jQuery('#mediaForm input[name=customVariantSizeMethod]');
-                                jQuery(customVariantSizeMethodElem).click(function() {                                	
-                                	jQuery('.cmsmedia-customvariantsize-method').hide();
-                                	jQuery('.' + $(this).val()).show();
+                                jQuery(customVariantSizeMethodElem).click(function() {
+                                    jQuery('.cmsmedia-customvariantsize-method').hide();
+                                    jQuery('.' + $(this).val()).show();
                                 });
+
+                                var saveAsPreset = function() {
+                                    var isChecked = jQuery(this).is(':checked');
+                                    if (isChecked === true) {
+                                        jQuery('#cmsmedia-customvariantsize-preset-name').show();
+                                    } else {
+                                        jQuery('#cmsmedia-customvariantsize-preset-name').hide();
+                                    }
+                                };
+                                jQuery('#saveAsPreset').click(saveAsPreset);
+
                             });
                           </@script>
                         </#if>
@@ -249,7 +272,7 @@
                 </@section>    
             </@cell>
             <#if media?has_content>
-                <@cell id="mediaPreview" columns=6>                    
+                <@cell id="mediaPreview" columns=4>
                     <@section title=uiLabelMap.CmsMediaPreview>
                         <#assign dataFile = makeOfbizWebappUrl({"uri": "/media?contentId=" + rawString(media.contentId)})!>
                         <#if media.dataResourceTypeId == "IMAGE_OBJECT">

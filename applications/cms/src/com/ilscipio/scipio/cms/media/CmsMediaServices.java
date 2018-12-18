@@ -307,7 +307,7 @@ public abstract class CmsMediaServices {
     }
     
     /**
-     * Uploads a media file
+     * Uploads a media file using custom variant sizes
      *
      * @param dctx
      * @param context
@@ -333,10 +333,11 @@ public abstract class CmsMediaServices {
                     Map<String, Map<String, String>> imgPropsMap = UtilMisc.newMap();
                     String presetId = (String) context.get("customVariantSizesPreset");
                     List<GenericValue> imageSizes = EntityQuery.use(delegator).from("ImageSize").where(UtilMisc.toMap("presetId", presetId)).cache(false).queryList();
-                    GenericValue imagePreset = EntityQuery.use(delegator).from("ImagePreset").where(UtilMisc.toMap("presetId", presetId)).queryOne(); 
+                    GenericValue imagePreset = EntityQuery.use(delegator).from("ImageSizePreset").where(UtilMisc.toMap("presetId", presetId)).queryOne(); 
                     for (GenericValue imageSize : imageSizes) {
                         GenericValue imageSizeDimension = imageSize.getRelatedOne("ImageSizeDimension", false);
-                        imgPropsMap = UtilMisc.toMap(imageSizeDimension.getString("sizeName"), UtilMisc.toMap(imageSizeDimension.getString(""), imageSizeDimension.getString("")));
+                        imgPropsMap.put(imageSizeDimension.getString("sizeName"),
+                                UtilMisc.toMap("width", imageSizeDimension.getString("dimensionWidth"), "height", imageSizeDimension.getString("dimensionHeight")));
                     }
                     imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap(imagePreset.getString("presetName"), "", "", imgPropsMap);
                 } else {
@@ -350,9 +351,26 @@ public abstract class CmsMediaServices {
                     if (variantSizeNames.size() == variantSizeWidth.size() && variantSizeNames.size() == variantSizeHeight.size()) {
                         Map<String, Map<String, String>> imgPropsMap = UtilMisc.newMap();
                         for (int i = 0; i < variantSizeNames.size(); i++) {
-                            imgPropsMap = UtilMisc.toMap(variantSizeNames.get(i), UtilMisc.toMap("width", variantSizeWidth.get(i), "height", variantSizeHeight.get(i)));
+                            imgPropsMap.put(variantSizeNames.get(i), UtilMisc.toMap("width", variantSizeWidth.get(i), "height", variantSizeHeight.get(i)));
                         }
                         imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap("CustomDimension", "", "", imgPropsMap);
+                        if (context.containsKey("saveAsPreset") && ((boolean) context.get("saveAsPreset"))) {
+                            String presetName = (context.containsKey("presetName")) ? (String) context.get("presetName") : "Preset " + UtilDateTime.nowDateString();
+                            List<GenericValue> toStore = UtilMisc.newList();
+                            GenericValue imageSizePreset = delegator.makeValidValue("ImageSizePreset",
+                                    UtilMisc.toMap("presetId", delegator.getNextSeqId("ImageSizePreset"), "presetName", presetName));
+                            toStore.add(imageSizePreset);
+                            for (String sizeName : imgPropsMap.keySet()) {
+                                Map<String, String> sizes = imgPropsMap.get(sizeName);
+                                GenericValue imageSizeDimension = delegator.makeValidValue("ImageSizeDimension",
+                                        UtilMisc.toMap("sizeId", delegator.getNextSeqId("ImageSizeDimension"), "sizeName", sizeName, "dimensionWidth",
+                                                Long.parseLong(sizes.get("width")), "dimensionHeight", Long.parseLong(sizes.get("height"))));
+                                toStore.add(imageSizeDimension);
+                                toStore.add(delegator.makeValidValue("ImageSize",
+                                        UtilMisc.toMap("presetId", imageSizePreset.get("presetId"), "sizeId", imageSizeDimension.get("sizeId"))));                                
+                            }
+                            delegator.storeAll(toStore);
+                        }
                     }
                 } else {
                     Debug.logWarning("Custom image size dimensions not found.", module);

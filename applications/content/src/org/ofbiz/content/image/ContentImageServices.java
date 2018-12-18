@@ -559,7 +559,7 @@ public abstract class ContentImageServices {
                             Debug.logWarning(logPrefix+"multiple FileExtension found for mimeTypeId '" + mimeTypeId + "'; using first: '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
                         }
                     } else {
-                        targetFmtExt = EntityUtilProperties.getPropertyValue("content", "image.thumb.fileType.default", "jpg", delegator);
+                        targetFmtExt = EntityUtilProperties.getPropertyValue("content", "image.thumbs.fileType.default", "jpg", delegator);
                         Debug.logWarning(logPrefix+"can't determine thumbnail output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId 
                                 + "); unknown?; using system default: " + targetFmtExt, module);
                         GenericValue fileExt = EntityQuery.use(delegator).from("FileExtension").where("fileExtensionId", targetFmtExt).queryOne();

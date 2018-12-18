@@ -41,7 +41,7 @@ public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteD
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static boolean exportAll = false;
 
-    protected LocalDispatcher dispatcher = null;
+    protected final LocalDispatcher dispatcher; // SCIPIO: Made final for thread safety
 
     public RemoteDispatcherImpl(LocalDispatcher dispatcher, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
         super(0, csf, ssf);

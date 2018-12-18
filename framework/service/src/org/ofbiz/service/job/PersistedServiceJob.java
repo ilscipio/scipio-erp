@@ -149,7 +149,10 @@ public class PersistedServiceJob extends GenericServiceJob {
         TemporalExpression expr = null;
         RecurrenceInfo recurrence = getRecurrenceInfo();
         if (recurrence != null) {
-            Debug.logWarning("Persisted Job [" + getJobId() + "] references a RecurrenceInfo, recommend using TemporalExpression instead", module);
+            // SCIPIO: In all likelihood we will never deprecate the old RecurrenceInfo code, and we have stock seed/demo
+            // data using it, so this should not be a warning for us.
+            //Debug.logWarning("Persisted Job [" + getJobId() + "] references a RecurrenceInfo, recommend using TemporalExpression instead", module);
+            Debug.logInfo("Persisted Job [" + getJobId() + "] references a RecurrenceInfo (recommend using TemporalExpression instead)", module);
             currentRecurrenceCount = recurrence.getCurrentCount();
             expr = RecurrenceInfo.toTemporalExpression(recurrence);
         }

@@ -39,7 +39,10 @@ import org.ofbiz.service.ModelService;
 public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteDispatcher {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static boolean exportAll = false;
+
+    // SCIPIO: Make thread-safe; and see no reason this should be static
+    //private static boolean exportAll = false;
+    private final boolean exportAll;
 
     protected final LocalDispatcher dispatcher; // SCIPIO: Made final for thread safety
 

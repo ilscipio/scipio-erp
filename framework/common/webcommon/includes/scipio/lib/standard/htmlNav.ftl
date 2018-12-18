@@ -1458,6 +1458,9 @@ functionality.
      </#if>
   </#if>
 
+  <#if firstDlg.always??><#-- 2018-12-18: Explicit first dialog setting overrides alwaysShowCount setting, since takes its place -->
+    <#local alwaysShowCount = firstDlg.always>
+  </#if>
   <#if !alwaysShowCount?has_content>
     <#-- don't force count message by default -->
     <#local alwaysShowCount = styles.pagination_alwaysshowcount!false>

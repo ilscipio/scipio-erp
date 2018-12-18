@@ -1644,7 +1644,7 @@ functionality.
         </div>
       </div>
     </#if>
-  <#elseif firstDlg.content?? && (secondDlg.always)!false>
+  <#elseif firstDlg.content?? && (firstDlg.always)!false>
       <#if !listItemsOnly>
         <div class="${styles.grid_row!}">
           <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>

@@ -160,7 +160,12 @@
         <attribute name="scalingOptions" mode="IN" type="Map" optional="true">
             <description>Scaling options, notably the entry: scalerName (algorithm or library name)</description>
         </attribute>
-    
+
+        <!-- IMAGE VARIANT CONFIG 
+             SCIPIO (18/12/2018): Passing custom image variant config, for custom image sizes
+        -->
+        <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>
+
         <!-- OUTPUT -->
         <attribute name="imageContentIdMap" mode="OUT" type="Map" optional="true">
             <description>Map of size types to image record contentIds</description>

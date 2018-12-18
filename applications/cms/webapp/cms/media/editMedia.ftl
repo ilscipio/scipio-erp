@@ -165,7 +165,7 @@
 								        {"value":"customVariantSizesPreset", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromPreset}
 								        {"value":"customVariantSizesForm", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromForm}
 								      ]>
-								      <@field type="radio" name="customVariantSizeMethod" label=uiLabelMap.CmsMediaChooseCustomSizeVariantsMethod items=items currentValue="cmsmedia-customvariantsize-imgProps"/>
+								      <@field type="radio" name="customVariantSizeMethod" label=uiLabelMap.CmsMediaChooseCustomSizeVariantsMethod items=items currentValue="customVariantSizesImgProps"/>
 								      
 								      <div class="cmsmedia-customvariantsize-method customVariantSizesImgProps">
 								      	<@field type="text" name="customVariantSizesImgProps" label=uiLabelMap.CmsMediaCustomSizeVariantsFromImgPropFile />

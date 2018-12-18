@@ -422,7 +422,14 @@
         <response name="success" type="view" value="editMedia"/>
         <response name="error" type="view" value="editMedia"/>
     </request-map>
-    
+
+    <request-map uri="createMediaImageCustomSizes">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsUploadMediaFileImageCustomVariantSizes"/>
+        <response name="success" type="view" value="editMedia"/>
+        <response name="error" type="view" value="editMedia"/>
+    </request-map>
+
     <request-map uri="updateMedia">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsUpdateMediaFile"/>

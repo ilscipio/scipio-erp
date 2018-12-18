@@ -314,7 +314,7 @@ public abstract class CmsMediaServices {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static Map<String, Object> cmsUploadMediaFileImageCustomVariantSizes(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> uploadMediaFileImageCustomVariantSizes(DispatchContext dctx, Map<String, Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         
@@ -349,8 +349,8 @@ public abstract class CmsMediaServices {
                     List<String> variantSizeHeight = (List<String>) context.get("variantSizeHeight");
                     if (variantSizeNames.size() == variantSizeWidth.size() && variantSizeNames.size() == variantSizeHeight.size()) {
                         Map<String, Map<String, String>> imgPropsMap = UtilMisc.newMap();
-                        for (int i = 0; i <= variantSizeNames.size(); i++) {
-                            imgPropsMap = UtilMisc.toMap(variantSizeNames.get(i), UtilMisc.toMap(variantSizeWidth.get(i), variantSizeHeight.get(i)));
+                        for (int i = 0; i < variantSizeNames.size(); i++) {
+                            imgPropsMap = UtilMisc.toMap(variantSizeNames.get(i), UtilMisc.toMap("width", variantSizeWidth.get(i), "height", variantSizeHeight.get(i)));
                         }
                         imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap("CustomDimension", "", "", imgPropsMap);
                     }

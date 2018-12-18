@@ -1069,7 +1069,12 @@ functionality.
                               they support #getTextLabelFromExpr syntax (NOTE: the macro pagLabels arg
                               does not support that syntax, not needed there).
                               Supported keys: first, previous, page, next, last, viewSize, on, off
-                              
+   firstDlg                 = Definition for dialog to use in place of the "count" left-hand dialog
+                              This is a map with the entries:
+                                {"content":[directive to render], "args":[args to pass to directive",
+                                 always:[if true, show even if results not paged], "size":[grid size, default markup default: 2]}
+   secondDlg                = Definition for dialog to use in place of the "toggle" right-hand dialog
+
   * History *
     Enhanced for 1.14.4 (added pagLabels).
 -->
@@ -1081,7 +1086,7 @@ functionality.
   "viewSizeSelection":"", "position":"", 
   "viewIndexString":"", "viewSizeString":"", "paginateToggleString":"", 
   "paramDelim":"", "paramPrefix":"",
-  "previousViewSize":"", "paginateOffViewSize":"",
+  "previousViewSize":"", "paginateOffViewSize":"", "firstDlg":{}, "secondDlg":{},
   "pagLabels":{}, "passArgs":{}
 }>
 <#macro paginate args={} inlineArgs...>
@@ -1256,11 +1261,11 @@ functionality.
     <#-- NOTE: javaScriptEnabled is a context var -->
     <#-- DEV NOTE: make sure all @paginate_core calls same (DO NOT use #local capture; risks duplicate IDs) -->
     <#if mode == "single">
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position=position passArgs=passArgs/>
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout firstDlg=firstDlg secondDlg=secondDlg position=position passArgs=passArgs/>
     <#else>
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position="top" passArgs=passArgs/>
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout firstDlg=firstDlg secondDlg=secondDlg position="top" passArgs=passArgs/>
         <#nested>
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position="bottom" passArgs=passArgs/>
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout firstDlg=firstDlg secondDlg=secondDlg position="bottom" passArgs=passArgs/>
     </#if>
   </#if>
 </#macro>
@@ -1290,7 +1295,7 @@ functionality.
   "enabled":true, "forcePost":false, "viewIndexFirst":0, "listItemsOnly":false, "paginateToggle":false, "paginateOn":true, "ajaxPaginateOnUrl":"", 
   "paginateOnUrl":"", "paginateOnClass":"", "paginateOnLabel":"", "ajaxPaginateOffUrl":"", "paginateOffUrl":"", "paginateOffClass":"", 
   "paginateOffLabel":"", "noResultsMode":"default", "layout":"", "position":"", 
-  "viewSizeSelection":"", "passArgs":{}
+  "viewSizeSelection":"", "firstDlg":{}, "secondDlg":{}, "passArgs":{}
 }>
 <#macro paginate_core args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.paginate_core_defaultArgs)>
@@ -1332,7 +1337,6 @@ functionality.
   <#-- NOTE: possible that data was paginated even if enabled false, but don't bother right now. 
       seems pagination is hardcoded into a lot of ofbiz (so may be paginated even if form widget had paginate off). -->  
   <#if enabled>
-  
     <#if viewSizeSelection>
       <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
       <#local minPageSize = availPageSizes?first>
@@ -1397,11 +1401,9 @@ functionality.
     <#if !selectUrl?contains("_VIEWINDEXVALUE_")>
       <#local selectUrl = selectUrl + "_VIEWINDEXVALUE_">
     </#if>
-
     <#if alwaysShowCount?is_boolean && alwaysShowCount == true>
       <#local showCount = true>
     </#if>
-
     <@paginate_markup paginateClass=paginateClass paginateFirstClass=paginateFirstClass viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxEnabled=ajaxEnabled javaScriptEnabled=javaScriptEnabled ajaxFirstUrl=ajaxFirstUrl firstUrl=firstUrl 
       paginateFirstLabel=paginateFirstLabel paginatePreviousClass=paginatePreviousClass ajaxPreviousUrl=ajaxPreviousUrl previousUrl=previousUrl paginatePreviousLabel=paginatePreviousLabel 
       pageLabel=pageLabel ajaxSelectUrl=ajaxSelectUrl selectUrl=selectUrl ajaxSelectSizeUrl=ajaxSelectSizeUrl selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg=lowCountMsg
@@ -1410,8 +1412,7 @@ functionality.
       forcePost=forcePost viewIndexFirst=viewIndexFirst listItemsOnly=listItemsOnly paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl=ajaxPaginateOnUrl 
       paginateOnUrl=paginateOnUrl paginateOnClass=paginateOnClass paginateOnLabel=paginateOnLabel ajaxPaginateOffUrl=ajaxPaginateOffUrl paginateOffUrl=paginateOffUrl paginateOffClass=paginateOffClass 
       paginateOffLabel=paginateOffLabel
-      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage viewSizeSelection=viewSizeSelection position=position origArgs=origArgs passArgs=passArgs/>
-
+      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage viewSizeSelection=viewSizeSelection position=position firstDlg=firstDlg secondDlg=secondDlg origArgs=origArgs passArgs=passArgs/>
   </#if>
 </#macro>
 
@@ -1425,7 +1426,7 @@ functionality.
     forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false paginateOn=true ajaxPaginateOnUrl="" 
     paginateOnUrl="" paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffClass="" 
     paginateOffLabel=""
-    availPageSizes=[] minPageSize=1 viewIndexLast=1 multiPage=true viewSizeSelection=false position="" origArgs={} passArgs={} catchArgs...>
+    availPageSizes=[] minPageSize=1 viewIndexLast=1 multiPage=true viewSizeSelection=false position="" firstDlg={} secondDlg={} origArgs={} passArgs={} catchArgs...>
     
   <#local paginateClass = addClassArg(paginateClass, styles.pagination_wrap!)> 
   <#local paginateClass = addClassArgDefault(paginateClass, "nav-pager")>  
@@ -1482,6 +1483,9 @@ functionality.
     <#local countMsg = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", countMsgLabel, messageMap, locale)!"">
   </#if>
 
+  <#local firstDlgSize = (firstDlg.size)!2>
+  <#local secondDlgSize = (secondDlg.size)!2>
+
   <#-- NOTE: (listSize > minPageSize) implies (listSize > 0); some cases this gets called with listSize zero -->
   <#if paginateOn && (listSize > minPageSize)>
     
@@ -1490,9 +1494,12 @@ functionality.
     
       <#if !listItemsOnly>
         <div class="${styles.grid_row!}">
-
-          <div class="${styles.grid_large!}2 ${styles.grid_cell!}"><#if showCount>${escapeVal(countMsg, 'htmlmarkup')}</#if></div>
-          <div class="${styles.grid_large!}8 ${styles.grid_cell!}">
+        <#if firstDlg.content??>
+          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
+        <#else>
+          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!}"><#if showCount>${escapeVal(countMsg, 'htmlmarkup')}</#if></div>
+        </#if>
+          <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">
             <div<@compiledClassAttribStr class=paginateClass />>
               <ul class="${styles.pagination_list!}">
       </#if>
@@ -1532,11 +1539,15 @@ functionality.
                 <li class="${styles.pagination_item!} ${escapeVal(compileClassArg(paginateNextClass), 'html')}<#if (highIndex < listSize)>"><a ${actionStr}>${escapeVal(paginateNextLabel, 'htmlmarkup')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapeVal(paginateNextLabel, 'htmlmarkup')}</span></#if></li>
                 <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${escapeFullUrl(ajaxLastUrl, 'js-html')}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(lastUrl, 'js-html')}')"</#if><#else>href="${escapeFullUrl(lastUrl, 'html')}"</#if></#local>
                 <li class="${styles.pagination_item!} ${escapeVal(compileClassArg(paginateLastClass), 'html')}<#if (highIndex < listSize)>"><a ${actionStr}>${escapeVal(paginateLastLabel, 'htmlmarkup')}</a><#else> ${styles.pagination_item_disabled!}"><span>${escapeVal(paginateLastLabel, 'htmlmarkup')}</span></#if></li>         
-  
+
       <#if !listItemsOnly>  
               </ul>
             </div>
           </div>
+          <div class="${styles.grid_large!}${secondDlgSize} ${styles.grid_cell!}">
+          <#if secondDlg.content??>
+            <@contentArgRender content=secondDlg.content args=secondDlg.args!/>
+          <#else>
           <#if paginateToggle>
             <#local paginateToggleContent>
               <#-- NOTE: duplicated below -->
@@ -1545,7 +1556,6 @@ functionality.
               <span<@compiledClassAttribStr class=paginateOffClass />><a ${actionStr}>${escapeVal(paginateOffLabel, 'htmlmarkup')}</a></span>       
             </#local>    
           </#if>
-          <div class="${styles.grid_large!}2 ${styles.grid_cell!}">
             <#if javaScriptEnabled>
               <#if viewSizeSelection>
                 <#local actionStr>onchange="<#if ajaxEnabled>ajaxUpdateAreas('${escapeFullUrl(ajaxSelectSizeUrl, 'js-html')}')<#else><#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${escapeFullUrl(selectSizeUrl, 'js-html')}')</#if>"</#local>
@@ -1583,20 +1593,39 @@ functionality.
                     </div>
                 </div>
             </#if>
+          </#if>
           </div>
         </div>
       </#if>
+  <#elseif secondDlg.content?? && (secondDlg.always)!false>
+    <#if !listItemsOnly>
+      <div class="${styles.grid_row!}">
+      <#if firstDlg.content?? && (secondDlg.always)!false>
+        <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
+        <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">&nbsp;</div>
+      <#elseif alwaysShowCount>
+        <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}">${escapeVal(countMsg, 'htmlmarkup')}</div>
+        <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">&nbsp;</div>
+      <#else>
+        <div class="${styles.grid_large!}${12 - secondDlgSize} ${styles.grid_cell!}">&nbsp;</div>
+      </#if>
+        <div class="${styles.grid_large!}${secondDlgSize} ${styles.grid_cell!}">
+          <@contentArgRender content=secondDlg.content args=secondDlg.args!/>
+        </div>
+    </#if>
   <#elseif paginateToggle>
     <#if !listItemsOnly>
       <div class="${styles.grid_row!}">
-      <#if alwaysShowCount>
-        <div class="${styles.grid_large!}2 ${styles.grid_cell!} ${styles.grid_end!}">${escapeVal(countMsg, 'htmlmarkup')}</div>
-        <div class="${styles.grid_large!}8 ${styles.grid_cell!}">&nbsp;</div>
-        <div class="${styles.grid_large!}2 ${styles.grid_cell!}">
+      <#if firstDlg.content?? && (secondDlg.always)!false>
+        <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
+        <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">&nbsp;</div>
+      <#elseif alwaysShowCount>
+        <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}">${escapeVal(countMsg, 'htmlmarkup')}</div>
+        <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">&nbsp;</div>
       <#else>
-        <div class="${styles.grid_large!}10 ${styles.grid_cell!}">&nbsp;</div>
-        <div class="${styles.grid_large!}2 ${styles.grid_cell!}">
+        <div class="${styles.grid_large!}${12 - secondDlgSize} ${styles.grid_cell!}">&nbsp;</div>
       </#if>
+        <div class="${styles.grid_large!}${secondDlgSize} ${styles.grid_cell!}">
           <div<@compiledClassAttribStr class=paginateClass />>
             <ul class="${styles.pagination_list!}">
     </#if>
@@ -1615,6 +1644,12 @@ functionality.
         </div>
       </div>
     </#if>
+  <#elseif firstDlg.content?? && (secondDlg.always)!false>
+      <#if !listItemsOnly>
+        <div class="${styles.grid_row!}">
+          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
+        </div>
+      </#if>
   <#elseif alwaysShowCount>
       <#if !listItemsOnly>
         <div class="${styles.grid_row!}">

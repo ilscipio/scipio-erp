@@ -23,8 +23,7 @@ public abstract class CmsControlUtil {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static final String CMS_NOCACHERESPONSESET_REQATTRNAME = "_CMS_NOCACHERESPONSE_SET_";
-    public static final String CMS_NOCACHECMSRENDER_REQATTRNAME = "cmsSetResponseBrowserNoCacheCmsPage";
+    //public static final String CMS_NOCACHERESPONSESET_REQATTRNAME = "_CMS_NOCACHERESPONSE_SET_";
 
     private CmsControlUtil() {
     }
@@ -41,7 +40,8 @@ public abstract class CmsControlUtil {
         // Always set, even if multiple times; don't think there's an issue with it and overrides anything else
         //if (!Boolean.TRUE.equals((Boolean) request.getAttribute(CMS_NOCACHERESPONSESET_REQATTRNAME))) {
         UtilHttp.setResponseBrowserProxyNoCache(response);
-        request.setAttribute(CMS_NOCACHERESPONSESET_REQATTRNAME, Boolean.TRUE);
+        // DEV NOTE: If ever uncomment this, must be careful so it is excluded from session through RequestHandler
+        //request.setAttribute(CMS_NOCACHERESPONSESET_REQATTRNAME, Boolean.TRUE);
         //}
     }
 

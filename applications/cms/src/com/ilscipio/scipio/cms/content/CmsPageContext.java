@@ -19,6 +19,7 @@ import org.ofbiz.webapp.control.LoginWorker;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.cms.CmsException;
+import com.ilscipio.scipio.cms.control.CmsControlState;
 import com.ilscipio.scipio.cms.template.CmsRenderUtil;
 import com.ilscipio.scipio.cms.template.RendererType;
 
@@ -294,4 +295,7 @@ public class CmsPageContext {
         return party;
     }
 
+    public CmsControlState getControlState() {
+        return CmsControlState.fromRequest(request);
+    }
 }

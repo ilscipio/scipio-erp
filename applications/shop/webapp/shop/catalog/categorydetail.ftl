@@ -29,7 +29,7 @@ code package.
     <#if productCategory?? && solrProducts?has_content>
         <@paginate mode="content" layout="both" viewSize=(viewSize!1) viewIndex=(viewIndex!0) listSize=(listSize!0)
             firstDlg={"size":3, "always":true}
-            secondDlg={"content":catDetailSortSelect, "size":3, "always":true, "layout":"top"}
+            lastDlg={"content":catDetailSortSelect, "size":3, "always":true, "layout":"top"}
             paramStr="sortOrder=${escapeVal(sortOrderEff, 'url')}&sortAscending=${sortAscendingEff}">
             <@grid columns=4>
                 <#list solrProducts as solrProduct>

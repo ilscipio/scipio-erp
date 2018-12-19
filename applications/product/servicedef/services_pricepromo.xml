@@ -13,7 +13,7 @@ code package.
 
     <!-- Product Price Services -->
     <service name="calculateProductPrice" engine="java"
-                location="org.ofbiz.product.price.PriceServices" invoke="calculateProductPrice" auth="false" use-transaction="false">
+                location="org.ofbiz.product.price.PriceServices" invoke="calculateProductPrice" auth="false" use-transaction="false" log="quiet"><!-- SCIPIO: quiet -->
         <description>Calculate a Product's Price from ProductPriceRules</description>
         <attribute name="product" type="org.ofbiz.entity.GenericValue" mode="IN" optional="false"/>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="true"/>

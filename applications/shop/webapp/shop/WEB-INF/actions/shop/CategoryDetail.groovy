@@ -75,13 +75,15 @@ try {
     currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 
     // SCIPIO: sorting
-    sortOrderDef = context.sortOrderDef != null? context.sortOrderDef : "SortKeywordRelevancy";
+    // NOTE: We exploit "SortKeywordRelevancy" as a "none" value
+    sortOrderDef = context.sortOrderDef != null ? context.sortOrderDef : "";
     context.sortOrderDef = sortOrderDef;
     sortAscendingDef = context.sortAscendingDef != null ? context.sortAscendingDef : true;
     context.sortAscendingDef = sortAscendingDef;
     resultSortOrder = null;
-    if (parameters.sortOrder) {
-        resultSortOrder = org.ofbiz.product.product.ProductSearchSession.parseSortOrder(parameters.sortOrder?.toString(), !"N".equals(parameters.sortAscending));
+    if (parameters.sortOrder != null) {
+        resultSortOrder = org.ofbiz.product.product.ProductSearchSession.parseSortOrder(
+            parameters.sortOrder?.toString() ?: "SortKeywordRelevancy", !"N".equals(parameters.sortAscending));
         if (resultSortOrder != null && (session.getAttribute("scpProdSortOrder") == null || "Y" == parameters.sortChg)) {
             session.setAttribute("scpProdSortOrder", resultSortOrder); // NOTE: no thread safety required (not important)
         }
@@ -96,7 +98,8 @@ try {
     sortAscending = null;
     if (resultSortOrder != null) {
         sortOrder = resultSortOrder.getOrderName();
-        if (sortOrder && !sortOrder.startsWith("Sort")) sortOrder = "Sort" + sortOrder;
+        if ("KeywordRelevancy" == sortOrder) sortOrder = "";
+        else if (sortOrder && !sortOrder.startsWith("Sort")) sortOrder = "Sort" + sortOrder;
         sortAscending = resultSortOrder.isAscending();
 
         catArgs.sortBy = SolrProductUtil.getSearchSortByExpr(resultSortOrder, catArgs.priceSortField, productStore, delegator, locale)

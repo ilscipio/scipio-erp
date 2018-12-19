@@ -21,12 +21,15 @@
  * should not contain order component's specific code.
  */
 
+import static org.junit.Assert.assertArrayEquals
+
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.service.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.category.CategoryContentWrapper;
 import org.ofbiz.product.category.CategoryWorker;
+import org.ofbiz.product.product.ProductSearch.SortKeywordRelevancy;
 import org.ofbiz.product.store.ProductStoreWorker;
 import com.ilscipio.scipio.solr.*;
 
@@ -45,6 +48,9 @@ nowTimestamp = context.nowTimestamp ?: UtilDateTime.nowTimestamp();
 productStore = context.productStore ?: ProductStoreWorker.getProductStore(request);
 
 try {
+    catArgs = context.catArgs ? new HashMap(context.catArgs) : new HashMap();
+    catArgs.priceSortField = catArgs.priceSortField ?: "exists"; // "min", "exists", "exact"
+    
     productCategoryId = context.productCategoryId;
     viewSize = context.viewSize;
     viewIndex = context.viewIndex;
@@ -68,13 +74,47 @@ try {
     context.productCategoryId = productCategoryId;
     currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 
-    catArgs = context.catArgs ? new HashMap(context.catArgs) : new HashMap();
+    // SCIPIO: sorting
+    sortOrderDef = context.sortOrderDef != null? context.sortOrderDef : "SortKeywordRelevancy";
+    context.sortOrderDef = sortOrderDef;
+    sortAscendingDef = context.sortAscendingDef != null ? context.sortAscendingDef : true;
+    context.sortAscendingDef = sortAscendingDef;
+    resultSortOrder = null;
+    if (parameters.sortOrder) {
+        resultSortOrder = org.ofbiz.product.product.ProductSearchSession.parseSortOrder(parameters.sortOrder?.toString(), !"N".equals(parameters.sortAscending));
+        if (resultSortOrder != null && (session.getAttribute("scpProdSortOrder") == null || "Y" == parameters.sortChg)) {
+            session.setAttribute("scpProdSortOrder", resultSortOrder); // NOTE: no thread safety required (not important)
+        }
+    } else {
+        resultSortOrder = session.getAttribute("scpProdSortOrder"); // NOTE: no thread safety required (not important)
+        if (resultSortOrder == null) {
+            // check to see if can get a default from KeywordSearch.groovy options from session
+            resultSortOrder = org.ofbiz.product.product.ProductSearchSession.getProductSearchOptionsIfExist(request)?.getResultSortOrder();
+        }
+    }
+    sortOrder = null;
+    sortAscending = null;
+    if (resultSortOrder != null) {
+        sortOrder = resultSortOrder.getOrderName();
+        if (sortOrder && !sortOrder.startsWith("Sort")) sortOrder = "Sort" + sortOrder;
+        sortAscending = resultSortOrder.isAscending();
+
+        catArgs.sortBy = SolrProductUtil.getSearchSortByExpr(resultSortOrder, catArgs.priceSortField, productStore, delegator, locale)
+        catArgs.sortByReverse = (catArgs.sortBy) ? !resultSortOrder.isAscending() : null;
+        catArgs.searchSortOrderString = (catArgs.sortBy || resultSortOrder instanceof SortKeywordRelevancy) ? resultSortOrder.prettyPrintSortOrder(false, locale) : null;
+    }
+    context.sortOrder = sortOrder;
+    context.sortAscending = sortAscending;
+    context.sortOrderEff = (sortOrder != null) ? sortOrder : sortOrderDef;
+    context.sortAscendingEff = ((sortAscending != null) ? sortAscending : sortAscendingDef) ? "Y" : "N";
+    
     catArgs.queryFilters = catArgs.queryFilters ? new ArrayList(catArgs.queryFilters) : new ArrayList();
 
     // get the product category & members
     result = dispatcher.runSync("solrProductsSearch",
         [productStore:productStore, productCategoryId:productCategoryId, queryFilters: catArgs.queryFilters, useDefaultFilters:catArgs.useDefaultFilters,
-         filterTimestamp:nowTimestamp, viewSize:viewSize, viewIndex:viewIndex, locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone],
+         filterTimestamp:nowTimestamp, viewSize:viewSize, viewIndex:viewIndex, sortBy: catArgs.sortBy, sortByReverse: catArgs.sortByReverse,
+         locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone],
         -1, true); // SEPARATE TRANSACTION so error doesn't crash screen
     if (!ServiceUtil.isSuccess(result)) {
         throw new Exception("Error in solrProductsSearch: " + ServiceUtil.getErrorMessage(result));
@@ -129,11 +169,12 @@ try {
     context.viewSize = result.viewSize;
     context.listSize = result.listSize;
     
-    if (!currIndex)
+    if (!currIndex) {
         context.currIndex = 1;
-    else
+    } else {
         context.currIndex = Integer.parseInt(currIndex).intValue();
-    
+    }
+
     // set the content path prefix
     contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
     context.put("contentPathPrefix", contentPathPrefix);
@@ -145,5 +186,6 @@ try {
     */
     
 } catch(Exception e) {
-    Debug.logError(e, e.getMessage(), module);
+    Debug.logError("Solr: Error searching products in category: " + e.toString(), module);
 }
+

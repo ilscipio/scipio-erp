@@ -1072,7 +1072,8 @@ functionality.
    firstDlg                 = Definition for dialog to use in place of the "count" left-hand dialog
                               This is a map with the entries:
                                 {"content":[directive to render], "args":[args to pass to directive",
-                                 always:[if true, show even if results not paged], "size":[grid size, default markup default: 2]}
+                                 "always":[if true, show even if results not paged], "size":[grid size, default markup default: 2],
+                                 "layout":[both|top|bottom, default: both]}
    secondDlg                = Definition for dialog to use in place of the "toggle" right-hand dialog
 
   * History *
@@ -1332,8 +1333,18 @@ functionality.
     <#elseif layout == "bottom" && position != "bottom">
       <#local enabled = false>
     </#if>
+    <#if (firstDlg.layout!) == "top" && position != "top">
+      <#local firstDlg = {}>
+    <#elseif (firstDlg.layout!) == "bottom" && position != "bottom">
+      <#local firstDlg = {}>
+    </#if>
+    <#if (secondDlg.layout!) == "top" && position != "top">
+      <#local secondDlg = {}>
+    <#elseif (secondDlg.layout!) == "bottom" && position != "bottom">
+      <#local secondDlg = {}>
+    </#if>
   </#if>
-  
+
   <#-- NOTE: possible that data was paginated even if enabled false, but don't bother right now. 
       seems pagination is hardcoded into a lot of ofbiz (so may be paginated even if form widget had paginate off). -->  
   <#if enabled>

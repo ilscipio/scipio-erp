@@ -1071,8 +1071,8 @@ functionality.
                               Supported keys: first, previous, page, next, last, viewSize, on, off
    firstDlg                 = Definition for dialog to use in place of the "count" left-hand dialog
                               This is a map with the entries:
-                                {"content":[directive to render], "args":[args to pass to directive",
-                                 "always":[if true, show even if results not paged], "size":[grid size, default markup default: 2],
+                                {"content":[directive to render], "args":[hash of args to pass to directive],
+                                 "always":[boolean; if true, show even if results not paged], "size":[grid size, default markup default: 2],
                                  "layout":[both|top|bottom, default: both]}
    secondDlg                = Definition for dialog to use in place of the "toggle" right-hand dialog
 
@@ -1415,6 +1415,8 @@ functionality.
     <#if alwaysShowCount?is_boolean && alwaysShowCount == true>
       <#local showCount = true>
     </#if>
+    <#local firstDlgArgs = (firstDlg.args!{}) + {"position":position}>
+    <#local secondDlgArgs = (secondDlg.args!{}) + {"position":position}>
     <@paginate_markup paginateClass=paginateClass paginateFirstClass=paginateFirstClass viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxEnabled=ajaxEnabled javaScriptEnabled=javaScriptEnabled ajaxFirstUrl=ajaxFirstUrl firstUrl=firstUrl 
       paginateFirstLabel=paginateFirstLabel paginatePreviousClass=paginatePreviousClass ajaxPreviousUrl=ajaxPreviousUrl previousUrl=previousUrl paginatePreviousLabel=paginatePreviousLabel 
       pageLabel=pageLabel ajaxSelectUrl=ajaxSelectUrl selectUrl=selectUrl ajaxSelectSizeUrl=ajaxSelectSizeUrl selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg=lowCountMsg
@@ -1423,7 +1425,8 @@ functionality.
       forcePost=forcePost viewIndexFirst=viewIndexFirst listItemsOnly=listItemsOnly paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl=ajaxPaginateOnUrl 
       paginateOnUrl=paginateOnUrl paginateOnClass=paginateOnClass paginateOnLabel=paginateOnLabel ajaxPaginateOffUrl=ajaxPaginateOffUrl paginateOffUrl=paginateOffUrl paginateOffClass=paginateOffClass 
       paginateOffLabel=paginateOffLabel
-      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage viewSizeSelection=viewSizeSelection position=position firstDlg=firstDlg secondDlg=secondDlg origArgs=origArgs passArgs=passArgs/>
+      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage viewSizeSelection=viewSizeSelection position=position 
+      firstDlg=firstDlg firstDlgArgs=firstDlgArgs secondDlg=secondDlg secondDlgArgs=secondDlgArgs origArgs=origArgs passArgs=passArgs/>
   </#if>
 </#macro>
 
@@ -1437,7 +1440,7 @@ functionality.
     forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false paginateOn=true ajaxPaginateOnUrl="" 
     paginateOnUrl="" paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffClass="" 
     paginateOffLabel=""
-    availPageSizes=[] minPageSize=1 viewIndexLast=1 multiPage=true viewSizeSelection=false position="" firstDlg={} secondDlg={} origArgs={} passArgs={} catchArgs...>
+    availPageSizes=[] minPageSize=1 viewIndexLast=1 multiPage=true viewSizeSelection=false position="" firstDlg={} firstDlgArgs={} secondDlg={} secondDlgArgs={} origArgs={} passArgs={} catchArgs...>
     
   <#local paginateClass = addClassArg(paginateClass, styles.pagination_wrap!)> 
   <#local paginateClass = addClassArgDefault(paginateClass, "nav-pager")>  
@@ -1509,7 +1512,7 @@ functionality.
       <#if !listItemsOnly>
         <div class="${styles.grid_row!}">
         <#if firstDlg.content??>
-          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
+          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!}"><@contentArgRender content=firstDlg.content args=firstDlgArgs/></div>
         <#else>
           <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!}"><#if showCount>${escapeVal(countMsg, 'htmlmarkup')}</#if></div>
         </#if>
@@ -1560,7 +1563,7 @@ functionality.
           </div>
           <div class="${styles.grid_large!}${secondDlgSize} ${styles.grid_cell!}">
           <#if secondDlg.content??>
-            <@contentArgRender content=secondDlg.content args=secondDlg.args!/>
+            <@contentArgRender content=secondDlg.content args=secondDlgArgs/>
           <#else>
           <#if paginateToggle>
             <#local paginateToggleContent>
@@ -1616,7 +1619,7 @@ functionality.
       <div class="${styles.grid_row!}">
       <#if firstDlg.content??>
         <#if (secondDlg.always)!false>
-          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
+          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlgArgs/></div>
           <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">&nbsp;</div>
         <#else>
           <div class="${styles.grid_large!}${12 - secondDlgSize} ${styles.grid_cell!}">&nbsp;</div>
@@ -1628,7 +1631,7 @@ functionality.
         <div class="${styles.grid_large!}${12 - secondDlgSize} ${styles.grid_cell!}">&nbsp;</div>
       </#if>
         <div class="${styles.grid_large!}${secondDlgSize} ${styles.grid_cell!}">
-          <@contentArgRender content=secondDlg.content args=secondDlg.args!/>
+          <@contentArgRender content=secondDlg.content args=secondDlgArgs/>
         </div>
     </#if>
   <#elseif paginateToggle>
@@ -1636,7 +1639,7 @@ functionality.
       <div class="${styles.grid_row!}">
       <#if firstDlg.content??>
         <#if (secondDlg.always)!false>
-          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
+          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlgArgs/></div>
           <div class="${styles.grid_large!}${12 - secondDlgSize - firstDlgSize} ${styles.grid_cell!}">&nbsp;</div>
         <#else>
           <div class="${styles.grid_large!}${12 - secondDlgSize} ${styles.grid_cell!}">&nbsp;</div>
@@ -1669,7 +1672,7 @@ functionality.
   <#elseif firstDlg.content??>
       <#if (firstDlg.always)!false && !listItemsOnly>
         <div class="${styles.grid_row!}">
-          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlg.args!/></div>
+          <div class="${styles.grid_large!}${firstDlgSize} ${styles.grid_cell!} ${styles.grid_end!}"><@contentArgRender content=firstDlg.content args=firstDlgArgs/></div>
         </div>
       </#if>
   <#elseif alwaysShowCount>

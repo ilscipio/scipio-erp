@@ -675,5 +675,68 @@ Common CMS editor macros and utilities
     </@field>
 </#macro>
 
+<#macro customVariantSizeForm showSaveAsPreset=false>
+     <@fields type="default-manual" label=uiLabelMap.CmsMediaCustomSizeVariantsFromForm>
+      <@row>
+        <@cell columns=4>
+          <@field type="input" inline=true name="variantSizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true required=true value="" />
+        </@cell>
+        <@cell columns=4>
+          <@field type="text" inline=true name="variantSizeWidth" labelArea=true label=uiLabelMap.ImageCustomVariantSizeWidth required=true value="" />
+        </@cell>
+        <@cell columns=4>
+          <@field type="text" inline=true name="variantSizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight required=true value="" />
+        </@cell>
+      </@row>
+      <@row class="+cmsmedia-customvariantsize-add-cnt">
+          <#if showSaveAsPreset>
+          <@cell columns=4>
+              <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCustomSizeVariantsSaveAsPreset name="saveAsPreset" id="saveAsPreset"
+                                checked=(parameters.saveAsPreset?? && ("true" == parameters.saveAsPreset))/>
+          </@cell>
+          <@cell columns=4 id="cmsmedia-customvariantsize-preset-name" style="display:none;">
+              <@field type="text" labelArea=true label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
+          </@cell>
+        <#else>
+            <@cell columns=8></@cell>
+        </#if>
+        <@cell columns=4>
+            <a href="javascript:void(0);" class="cmsmedia-customvariantsize-add">[+]</a>
+        </@cell>
+      </@row>
+     </@fields>
+</#macro>
 
+<#macro commonCustomVariantSizeScript saveAsPreset=false formId="" formAction="">
+    <@script>
+		<#if saveAsPreset>
+         var saveAsPreset = function() {
+            var isChecked = jQuery(this).is(':checked');
+            if (isChecked === true) {
+                jQuery('#cmsmedia-customvariantsize-preset-name').show();
+            } else {
+                jQuery('#cmsmedia-customvariantsize-preset-name').hide();
+            }
+         };
+         jQuery('#saveAsPreset').click(saveAsPreset);
+        </#if>
 
+        var addCustomVariantSize = function() {
+            <#assign customVariantSizeForm><@customVariantSizeForm showSaveAsPreset=saveAsPreset /></#assign>
+            var customVariantSizeForm = '${escapeVal(customVariantSizeForm, 'js')}';
+            jQuery('.cmsmedia-customvariantsize-area').find('.cmsmedia-customvariantsize-add-cnt').remove();
+            jQuery('.cmsmedia-customvariantsize-area .customVariantSizesForm').append(customVariantSizeForm);
+            jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
+            <#if saveAsPreset>
+                jQuery('#saveAsPreset').click(saveAsPreset);
+            </#if>
+        };
+        jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
+
+        var customVariantSizeMethodElem = jQuery('#mediaForm input[name=customVariantSizeMethod]');
+        jQuery(customVariantSizeMethodElem).click(function() {
+            jQuery('.cmsmedia-customvariantsize-method').hide();
+            jQuery('.' + $(this).val()).show();
+        });
+    </@script>
+</#macro>

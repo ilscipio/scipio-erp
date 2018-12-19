@@ -933,10 +933,19 @@
     <property key="ImageCustomVariantSizeHeight">        
         <value xml:lang="en">Height</value>
     </property>
+    <property key="CmsMediaCustomSizeVariantsPresetId">        
+        <value xml:lang="en">Preset Id</value>
+    </property>
     <property key="CmsMediaCustomSizeVariantsPresetName">        
-        <value xml:lang="en">Preset name</value>
+        <value xml:lang="en">Preset Name</value>
     </property>
     <property key="CmsMediaCustomSizeVariantsSaveAsPreset">        
         <value xml:lang="en">Save as Preset</value>
+    </property>
+    <property key="CmsCustomImageSizePresets">        
+        <value xml:lang="en">Custom Image Size Presets</value>
+    </property>
+    <property key="CmsCreateCustomImageSizePreset">        
+        <value xml:lang="en">Create Custom Image Size Preset</value>
     </property>
 </resource>

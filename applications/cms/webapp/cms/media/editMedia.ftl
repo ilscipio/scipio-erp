@@ -56,35 +56,6 @@
     </#if>
 </#macro>
 
-
-<#macro customVariantSizeForm>
-     <@fields type="default-manual" label=uiLabelMap.CmsMediaCustomSizeVariantsFromForm>
-      <@row>
-        <@cell columns=4>
-          <@field type="input" inline=true name="variantSizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true required=true value="" />
-        </@cell>
-        <@cell columns=4>
-          <@field type="text" inline=true name="variantSizeWidth" labelArea=true label=uiLabelMap.ImageCustomVariantSizeWidth required=true value="" />
-        </@cell>
-        <@cell columns=4>
-          <@field type="text" inline=true name="variantSizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight required=true value="" />
-        </@cell>
-      </@row>
-      <@row class="+cmsmedia-customvariantsize-add-cnt">
-          <@cell columns=4>
-              <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCustomSizeVariantsSaveAsPreset name="saveAsPreset" id="saveAsPreset"
-                                checked=(parameters.saveAsPreset?? && ("true" == parameters.saveAsPreset))/>
-          </@cell>
-          <@cell columns=4 id="cmsmedia-customvariantsize-preset-name" style="display:none;">
-              <@field type="text" labelArea=true label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
-          </@cell>
-          <@cell columns=4>
-              <a href="javascript:void(0);" class="cmsmedia-customvariantsize-add">[+]</a>
-          </@cell>
-      </@row>
-     </@fields>
-</#macro>
-
 <@section id="mediaWrapper">
 
     <@section id=formAction menuContent=menuContent>  
@@ -190,7 +161,7 @@
                                               </@field>
                                           </div>
                                           <div class="cmsmedia-customvariantsize-method customVariantSizesForm" style="display:none;">
-                                              <@customVariantSizeForm />
+                                              <@customVariantSizeForm showSaveAsPreset=true/>
                                           </div>
                                     </@section>
                                 </@cell>
@@ -210,46 +181,21 @@
                                 dataResourceTypeIdElem.change(function() { changeTypeElem(this); });
                                 
                                 jQuery('#customVariantSizes').click(function() { 
-                                    var isChecked = jQuery(this).is(':checked');
-                                    if (isChecked === true) {
-                                        jQuery('.cmsmedia-customvariantsize-area').show();
-                                        jQuery('#mediaForm').attr('action', '<@ofbizUrl>createMediaImageCustomSizes</@ofbizUrl>');
-                                    } else {
-                                        jQuery('.cmsmedia-customvariantsize-area').hide();
-                                        jQuery('#mediaForm').attr('action', '<@ofbizUrl>${formAction}</@ofbizUrl>');
-                                    }
-                                });
+								    var isChecked = jQuery(this).is(':checked');
+								    if (isChecked === true) {
+								        jQuery('.cmsmedia-customvariantsize-area').show();
+								        jQuery('#mediaForm').attr('action', '<@ofbizUrl>createMediaImageCustomSizes</@ofbizUrl>');
+								    } else {
+								        jQuery('.cmsmedia-customvariantsize-area').hide();
+								        jQuery('#mediaForm').attr('action', '<@ofbizUrl>${formAction}</@ofbizUrl>');
+								    }
+								});
                                 
-                                var addCustomVariantSize = function() {
-                                    <#assign customVariantSizeForm><@customVariantSizeForm /></#assign>
-                                    var customVariantSizeForm = '${escapeVal(customVariantSizeForm, 'js')}';
-                                    jQuery('.cmsmedia-customvariantsize-area').find('.cmsmedia-customvariantsize-add-cnt').remove();
-                                    jQuery('.cmsmedia-customvariantsize-area .customVariantSizesForm').append(customVariantSizeForm);
-                                    jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
-                                    jQuery('#saveAsPreset').click(saveAsPreset);
-                                };
-                                jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
-
-                                var customVariantSizeMethodElem = jQuery('#mediaForm input[name=customVariantSizeMethod]');
-                                jQuery(customVariantSizeMethodElem).click(function() {
-                                    jQuery('.cmsmedia-customvariantsize-method').hide();
-                                    jQuery('.' + $(this).val()).show();
-                                });
-
-                                var saveAsPreset = function() {
-                                    var isChecked = jQuery(this).is(':checked');
-                                    if (isChecked === true) {
-                                        jQuery('#cmsmedia-customvariantsize-preset-name').show();
-                                    } else {
-                                        jQuery('#cmsmedia-customvariantsize-preset-name').hide();
-                                    }
-                                };
-                                jQuery('#saveAsPreset').click(saveAsPreset);
-
                             });
                           </@script>
+                          <@commonCustomVariantSizeScript saveAsPreset=true/>
                         </#if>
-                        <#if !media?has_content>                       
+                        <#if !media?has_content>
                             <@field type="file" name="uploadedFile" label=uiLabelMap.CommonMedia required=true />
                             <@field type="submitarea">
                                 <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_create!}" />

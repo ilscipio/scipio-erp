@@ -437,55 +437,9 @@ try {
         
         ResultSortOrder sortOrder = kwsParams.getResultSortOrder();
         if (!kwsArgs.sortBy && sortOrder != null) {
-            if (sortOrder instanceof SortProductPrice) {
-                SortProductPrice so = (SortProductPrice) sortOrder;
-                kwsArgs.sortBy = SolrProductUtil.getProductSolrPriceFieldNameFromEntityPriceType(so.getProductPriceTypeId(), 
-                    locale, "Keyword search: ");
-                if (kwsArgs.sortBy != "defaultPrice") {
-                    // SPECIAL price search fallback - allows listPrice search to still work reasonably for products that don't have listPrice
-                    // TODO?: REVIEW: query would be faster without function, but unclear if want to create
-                    // a physical sortPrice or sortListPrice in the solr product schema
-                    // the solr sortBy doesn't support sorting on the extra returnFields, apparently - at least not in this version
-                    //kwsArgs.searchReturnFields = (kwsArgs.searchReturnFields ?: "*") + 
-                    //    ",sortPrice=if(exists(" + kwsArgs.sortBy + ")," + kwsArgs.sortBy + ",defaultPrice)";
-                    //kwsArgs.sortBy = "sortPrice";
-                    if (kwsArgs.priceSortField == "min") {
-                        kwsArgs.sortBy = "if(exists(" + kwsArgs.sortBy + "),min(" + kwsArgs.sortBy + "," + "defaultPrice),defaultPrice)";
-                    } else if (kwsArgs.priceSortField == "exists") {
-                        kwsArgs.sortBy = "if(exists(" + kwsArgs.sortBy + ")," + kwsArgs.sortBy + ",defaultPrice)";
-                    } else { // if (kwsArgs.priceSortField == "exact") {
-                        //kwsArgs.sortBy = kwsArgs.sortBy; // redundant
-                    }
-                }
-                kwsArgs.sortByReverse = !so.isAscending();
-                kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, locale);
-            } else if (sortOrder instanceof SortProductFeature) {
-                // TODO?
-                //SortProductFeature so = (SortProductFeature) sortOrder;
-            } else if (sortOrder instanceof SortKeywordRelevancy) {
-                SortKeywordRelevancy so = (SortKeywordRelevancy) sortOrder;
-                kwsArgs.sortBy = null;
-                kwsArgs.sortByReverse = null;
-                //kwsArgs.sortByReverse = !so.isAscending();
-                kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, locale);
-            } else if (sortOrder instanceof SortProductField) {
-                SortProductField so = (SortProductField) sortOrder;
-                // DEV NOTE: if you don't use this method, solr queries may crash on extra locales
-                simpleLocale = SolrLocaleUtil.getCompatibleLocaleValidOrProductStoreDefault(locale, productStore);
-                kwsArgs.sortBy = SolrProductUtil.getProductSolrFieldNameFromEntity(so.getFieldName(), simpleLocale) ?: so.getFieldName();
-                if (kwsArgs.sortBy) {
-                    kwsArgs.sortBy = SolrProductUtil.getProductSolrSortFieldNameFromSolr(kwsArgs.sortBy, simpleLocale) ?: kwsArgs.sortBy;
-                    kwsArgs.sortBy = SolrProductUtil.makeProductSolrSortFieldExpr(
-                            kwsArgs.sortBy, 
-                            SolrLocaleUtil.getCompatibleLocaleValid(locale, productStore),
-                            SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore)
-                        ) ?: kwsArgs.sortBy;
-                }
-                kwsArgs.sortByReverse = !so.isAscending();
-                kwsArgs.searchSortOrderString = so.prettyPrintSortOrder(false, locale);
-            } else {
-                Debug.logWarning("Solr: Keyword search: unrecognized sort order method: " + sortOrder.getClass().getName(), module);
-            }
+            kwsArgs.sortBy = SolrProductUtil.getSearchSortByExpr(sortOrder, kwsArgs.priceSortField, productStore, delegator, locale)
+            kwsArgs.sortByReverse = (kwsArgs.sortBy) ? !sortOrder.isAscending() : null;
+            kwsArgs.searchSortOrderString = (kwsArgs.sortBy || sortOrder instanceof SortKeywordRelevancy) ? sortOrder.prettyPrintSortOrder(false, locale) : null;
         }
     }
     if (!kwsArgs.searchCatalogs) kwsArgs.searchCatalogs = [CatalogWorker.getCurrentCatalogId(request)];

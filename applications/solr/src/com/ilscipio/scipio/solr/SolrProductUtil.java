@@ -42,6 +42,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
+import org.ofbiz.product.product.ProductSearch;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
@@ -1082,5 +1083,59 @@ public abstract class SolrProductUtil {
         } else {
             return "inStock:[1 TO *]";
         }
+    }
+    
+    public static String getSearchSortByExpr(ProductSearch.ResultSortOrder sortOrder, String priceSortField, GenericValue productStore, Delegator delegator, Locale locale) {
+        String sortBy = null;
+        if (sortOrder instanceof ProductSearch.SortProductPrice) {
+            ProductSearch.SortProductPrice so = (ProductSearch.SortProductPrice) sortOrder;
+            sortBy = SolrProductUtil.getProductSolrPriceFieldNameFromEntityPriceType(so.getProductPriceTypeId(), 
+                locale, "Keyword search: ");
+            if (!"defaultPrice".equals(sortBy)) {
+                // SPECIAL price search fallback - allows listPrice search to still work reasonably for products that don't have listPrice
+                // TODO?: REVIEW: query would be faster without function, but unclear if want to create
+                // a physical sortPrice or sortListPrice in the solr product schema
+                // the solr sortBy doesn't support sorting on the extra returnFields, apparently - at least not in this version
+                //kwsArgs.searchReturnFields = (kwsArgs.searchReturnFields ?: "*") + 
+                //    ",sortPrice=if(exists(" + kwsArgs.sortBy + ")," + kwsArgs.sortBy + ",defaultPrice)";
+                //kwsArgs.sortBy = "sortPrice";
+                if ("min".equals(priceSortField)) {
+                    sortBy = "if(exists(" + sortBy + "),min(" + sortBy + "," + "defaultPrice),defaultPrice)";
+                } else if ("exists".equals(priceSortField)) {
+                    sortBy = "if(exists(" + sortBy + ")," + sortBy + ",defaultPrice)";
+                } else { // if ("exact".equals(priceSortField)) {
+                    //sortBy = sortBy; // redundant
+                }
+            }
+        //} else if (sortOrder instanceof ProductSearch.SortProductFeature) {
+            // TODO?
+            //ProductSearch.SortProductFeature so = (ProductSearch.SortProductFeature) sortOrder;
+        } else if (sortOrder instanceof ProductSearch.SortKeywordRelevancy) {
+            //ProductSearch.SortKeywordRelevancy so = (ProductSearch.SortKeywordRelevancy) sortOrder;
+            //sortBy = null;
+        } else if (sortOrder instanceof ProductSearch.SortProductField) {
+            ProductSearch.SortProductField so = (ProductSearch.SortProductField) sortOrder;
+            // DEV NOTE: if you don't use this method, solr queries may crash on extra locales
+            Locale simpleLocale = SolrLocaleUtil.getCompatibleLocaleValidOrProductStoreDefault(locale, productStore);
+            sortBy = SolrProductUtil.getProductSolrFieldNameFromEntity(so.getFieldName(), simpleLocale);
+            if (UtilValidate.isEmpty(sortBy)) {
+                sortBy = so.getFieldName();
+            }
+            if (UtilValidate.isNotEmpty(sortBy)) {
+                String newSortBy = SolrProductUtil.getProductSolrSortFieldNameFromSolr(sortBy, simpleLocale);
+                if (UtilValidate.isNotEmpty(newSortBy)) {
+                    sortBy = newSortBy;
+                }
+                newSortBy = SolrProductUtil.makeProductSolrSortFieldExpr(
+                        sortBy, 
+                        SolrLocaleUtil.getCompatibleLocaleValid(locale, productStore),
+                        SolrLocaleUtil.getCompatibleProductStoreLocaleValid(productStore)
+                    );
+                if (UtilValidate.isNotEmpty(newSortBy)) {
+                    sortBy = newSortBy;
+                }
+            }
+        }
+        return sortBy;
     }
 }

@@ -826,6 +826,7 @@
                 <set field="setupStep" value="catalog"/>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
                 <set field="catalogData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+                <set field="storeData" from-field="setupStepStates.store.stepData"/>
 
                 <!-- not appropriate
                 <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>-->
@@ -908,20 +909,18 @@
                             </html>
                         </platform-specific>
                     </decorator-section>
-                    <!-- redundant
                     <decorator-section name="extra-body">
                         <section>
                             <condition>
                                 <if-has-permission permission="CATALOG" action="_CREATE"/>
                             </condition>
                             <widgets>
-                                <screenlet>
-                                    <include-screen name="ListCatalogs"/>
-                                </screenlet>
+                                <platform-specific>
+                                    <html><html-template location="component://setup/webapp/setup/catalog/CatalogExtraLinks.ftl"/></html>
+                                </platform-specific>
                             </widgets>
                         </section>
                     </decorator-section>
-                    -->
                 </decorator-screen>
             </widgets>
         </section>

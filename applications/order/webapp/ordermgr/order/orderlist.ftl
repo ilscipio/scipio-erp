@@ -67,6 +67,7 @@ code package.
         <@table type="data-list" autoAltRows=true>
           <@thead>
           <@tr>
+            <#assign tableHeaderFields="7"/>
             <@th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
             <@th width="15%">${uiLabelMap.CommonDate}</@th>
             <#--<@th width="10%">${uiLabelMap.OrderOrderName}</@th>-->
@@ -78,6 +79,7 @@ code package.
             <#if state.hasFilter('filterInventoryProblems') || state.hasFilter('filterAuthProblems') || state.hasFilter('filterPOsOpenPastTheirETA') || state.hasFilter('filterPOsWithRejectedItems') || state.hasFilter('filterPartiallyReceivedPOs')>
                 <@th width="10%">${uiLabelMap.CommonStatus}</@th>
                 <@th width="5%">${uiLabelMap.CommonFilter}</@th>
+                <#assign tableHeaderFields="8"/>
             <#else>
                 <@th width="15%">${uiLabelMap.CommonStatus}</@th>
             </#if>
@@ -125,19 +127,19 @@ code package.
               <#if state.hasFilter('filterInventoryProblems') || state.hasFilter('filterAuthProblems') || state.hasFilter('filterPOsOpenPastTheirETA') || state.hasFilter('filterPOsWithRejectedItems') || state.hasFilter('filterPartiallyReceivedPOs')>
               <@td>
                   <#if filterInventoryProblems.contains(orderHeader.orderId)>
-                    Inv 
+                    Inv
                   </#if>
                   <#if filterAuthProblems.contains(orderHeader.orderId)>
-                    Aut 
+                    Aut
                   </#if>
                   <#if filterPOsOpenPastTheirETA.contains(orderHeader.orderId)>
-                    ETA 
+                    ETA
                   </#if>
                   <#if filterPOsWithRejectedItems.contains(orderHeader.orderId)>
-                    Rej 
+                    Rej
                   </#if>
                   <#if filterPartiallyReceivedPOs.contains(orderHeader.orderId)>
-                    Part 
+                    Part
                   </#if>
               </@td>
               <#else>
@@ -145,7 +147,7 @@ code package.
             </@tr>
           </#list>
           <#if !orderHeaderList?has_content>
-            <@tr type="meta"><@td colspan="9"><@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderFound}</@commonMsg></@td></@tr>
+            <@tr type="meta"><@td colspan=tableHeaderFields!"7"><@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderFound}</@commonMsg></@td></@tr>
           </#if>
         </@table>
       </@paginate>

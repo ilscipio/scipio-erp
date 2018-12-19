@@ -48,6 +48,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.model.ModelFieldType;
+import org.ofbiz.service.ModelService.LogLevel;
 import org.ofbiz.service.group.GroupModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -182,10 +183,19 @@ public class ModelServiceReader implements Serializable {
         service.defaultEntityName = UtilXml.checkEmpty(serviceElement.getAttribute("default-entity-name")).intern();
         service.fromLoader = isFromURL ? readerURL.toExternalForm() : handler.getLoaderName();
 
+        // SCIPIO: log level
+        LogLevel logLevel = LogLevel.fromName(serviceElement.getAttribute("log"), null);
+        if (logLevel == null) {
+            logLevel = "true".equalsIgnoreCase(serviceElement.getAttribute("debug")) ? LogLevel.DEBUG : LogLevel.NORMAL;
+        }
+        service.logLevel = logLevel;
+
         // these default to true; if anything but true, make false
         service.auth = "true".equalsIgnoreCase(serviceElement.getAttribute("auth"));
         service.export = "true".equalsIgnoreCase(serviceElement.getAttribute("export"));
-        service.debug = "true".equalsIgnoreCase(serviceElement.getAttribute("debug"));
+        // SCIPIO: Enhanced above
+        //service.debug = "true".equalsIgnoreCase(serviceElement.getAttribute("debug"));
+        service.debug = logLevel.isDebug();
 
         // these defaults to false; if anything but false, make it true
         service.validate = !"false".equalsIgnoreCase(serviceElement.getAttribute("validate"));
@@ -281,7 +291,7 @@ public class ModelServiceReader implements Serializable {
             }
         }
         service.relativeDefinitionLocation = (loc != null) ? loc : "";
-        
+
         if (service.contextParamList instanceof ArrayList) {
             ((ArrayList<ModelParam>) service.contextParamList).trimToSize();
         }

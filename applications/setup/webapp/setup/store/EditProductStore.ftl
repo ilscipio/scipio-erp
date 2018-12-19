@@ -254,7 +254,7 @@
     <#assign defaultParams = {
         "visualThemeSetId": defaultVisualThemeSetId!,
         "visualThemeSelectorScript": defaultVisualThemeSelectorScript!,
-        "webSiteId": defaultWebSiteId!,
+        "webSiteId": defaultSetupWebSiteId!,
         "isStoreDefault": "Y"
     }>
     <#assign paramMaps = getWizardFormFieldValueMaps({

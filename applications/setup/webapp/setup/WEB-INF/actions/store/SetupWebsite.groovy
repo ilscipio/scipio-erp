@@ -32,12 +32,12 @@ context.webSiteId = websiteData.webSiteId;
 context.webSiteList = websiteData.webSiteList;
 context.webSiteCount = websiteData.webSiteCount;
 
-defaultWebSiteId = null;
-if (!delegator.findOne("WebSite", [webSiteId:defaultInitialWebSiteId], false)) {
-    defaultWebSiteId = defaultInitialWebSiteId;
+defaultSetupWebSiteId = null;
+if (defaultInitialWebSiteId && !delegator.findOne("WebSite", [webSiteId:defaultInitialWebSiteId], false)) {
+    defaultSetupWebSiteId = defaultInitialWebSiteId;
 }
 
-context.defaultWebSiteId = defaultWebSiteId;
+context.defaultSetupWebSiteId = defaultSetupWebSiteId;
 context.defaultInitialWebSiteId = defaultInitialWebSiteId;
 
 context.defaultVisualThemeSetId = UtilProperties.getPropertyValue("scipiosetup", "website.visualThemeSetId", "ECOMMERCE");

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
@@ -36,7 +37,7 @@ public abstract class SolrCategoryUtil {
      */
     static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId, boolean useCache) {
         List<GenericValue> catalogs = getProdCatalogCategoryByCategoryId(delegator, productCategoryId, useCache);
-        return getStringFieldList(catalogs, "prodCatalogId");
+        return UtilMisc.getMapValuesForKeyOrNewList(catalogs, "prodCatalogId");
     }
 
     static List<String> getCatalogIdsByCategoryId(Delegator delegator, String productCategoryId) {
@@ -44,7 +45,7 @@ public abstract class SolrCategoryUtil {
     }
 
     static List<GenericValue> getProdCatalogCategoryByCategoryId(Delegator delegator, String productCategoryId, boolean useCache) {
-        List<GenericValue> catalogs = null;
+        List<GenericValue> catalogs;
         try {
             catalogs = EntityQuery.use(delegator).from("ProdCatalogCategory").where("productCategoryId", productCategoryId)
                     .filterByDate().orderBy("sequenceNum").cache(useCache).queryList();
@@ -59,31 +60,19 @@ public abstract class SolrCategoryUtil {
         Map<String, List<String>> map = new HashMap<>();
         if (categoryIds == null) return map;
         for(String categoryId : categoryIds) {
-            map.put(categoryId, getStringFieldList(getProdCatalogCategoryByCategoryId(delegator, categoryId, useCache), "prodCatalogId"));
+            map.put(categoryId, UtilMisc.getMapValuesForKeyOrNewList(getProdCatalogCategoryByCategoryId(delegator, categoryId, useCache), "prodCatalogId"));
         }
         return map;
     }
 
-    // FIXME: doesn't belong in solr
+    @Deprecated
     static List<String> getStringFieldList(List<GenericValue> values, String fieldName) {
-        List<String> fieldList;
-        if (UtilValidate.isNotEmpty(values)) {
-            fieldList = new ArrayList<>(values.size());
-            for (GenericValue c : values) {
-                fieldList.add(c.getString(fieldName));
-            }
-        } else {
-            fieldList = new ArrayList<>();
-        }
-        return fieldList;
+        return UtilMisc.getMapValuesForKeyOrNewList(values, fieldName);
     }
 
+    @Deprecated
     static void addAllStringFieldList(Collection<String> out, List<GenericValue> values, String fieldName) {
-        if (values != null) {
-            for (GenericValue c : values) {
-                out.add(c.getString(fieldName));
-            }
-        }
+        UtilMisc.getMapValuesForKey(values, fieldName, out);
     }
 
     /**

@@ -488,7 +488,7 @@ public abstract class SolrProductUtil {
                 Set<String> catCheckedProductIds = new HashSet<>();
                 // don't requery ProductCategoryMember for these already checked (productId and its virtual(s))
                 catCheckedProductIds.add(productId);
-                catCheckedProductIds.addAll(SolrCategoryUtil.getStringFieldList(productVariantAssocs, "productId"));
+                catCheckedProductIds.addAll(UtilMisc.getMapValuesForKey(productVariantAssocs, "productId"));
                 getProductCategoryIdsAggressive(relatedCategoryIds, relatedProductIds, catCheckedProductIds, dctx, productId, productVariantAssocs, productAssocFromList, productAssocToList,
                         false, useCache); // NOTE: firstFoundOnly==false
                 getCategoryTrails(relatedTrails, dctx, relatedCategoryIds, useCache);
@@ -497,7 +497,7 @@ public abstract class SolrProductUtil {
                 productStores.addAll(SolrCategoryUtil.getProductStoresFromCatalogIds(delegator, relatedCatalogs, useCache));
             }
 
-            List<String> productStoreIdList = SolrCategoryUtil.getStringFieldList(productStores, "productStoreId");
+            List<String> productStoreIdList = UtilMisc.getMapValuesForKeyOrNewList(productStores, "productStoreId");
             dispatchContext.put("productStore", productStoreIdList);
 
             if (productStores.isEmpty()) {
@@ -653,14 +653,14 @@ public abstract class SolrProductUtil {
             boolean useCache) throws GenericEntityException {
         List<GenericValue> categories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember").where("productId", productId)
                 .filterByDate().cache(useCache).queryList();
-        SolrCategoryUtil.addAllStringFieldList(productCategoryIds, categories, "productCategoryId");
+        UtilMisc.getMapValuesForKey(categories, "productCategoryId", productCategoryIds);
 
         if (UtilValidate.isNotEmpty(productVariantAssocs)) {
             for(GenericValue productVariantAssoc : productVariantAssocs) {
                 String virtualProductId = productVariantAssoc.getString("productId");
                 List<GenericValue> virtualCategories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
                         .where("productId", virtualProductId).filterByDate().cache(useCache).queryList();
-                SolrCategoryUtil.addAllStringFieldList(productCategoryIds, virtualCategories, "productCategoryId");
+                UtilMisc.getMapValuesForKey(virtualCategories, "productCategoryId", productCategoryIds);
             }
         }
     }
@@ -687,7 +687,7 @@ public abstract class SolrProductUtil {
             List<GenericValue> categories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember").where("productId", productId)
                     .filterByDate().cache(useCache).queryList();
             if (!categories.isEmpty()) {
-                SolrCategoryUtil.addAllStringFieldList(productCategoryIds, categories, "productCategoryId");
+                UtilMisc.getMapValuesForKey(categories, "productCategoryId", productCategoryIds);
                 if (firstFoundOnly) {
                     return;
                 }

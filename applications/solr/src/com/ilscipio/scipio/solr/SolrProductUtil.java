@@ -458,22 +458,26 @@ public abstract class SolrProductUtil {
             // Trying to set a correctand trail
             Collection<String> trails = new LinkedHashSet<String>();
             getCategoryTrails(trails, dctx, productCategoryIds, useCache);
-            dispatchContext.put("category", new ArrayList<>(trails));
 
             // Get the catalogs that have associated the categories
             Collection<String> catalogs = new LinkedHashSet<>();
             getCatalogIdsFromCategoryTrails(catalogs, dctx, trails, useCache);
-            dispatchContext.put("catalog", new ArrayList<>(catalogs));
 
-            List<GenericValue> productStores = Collections.emptyList();
+            List<GenericValue> productStores;
             if (!catalogs.isEmpty()) {
                 productStores = SolrCategoryUtil.getProductStoresFromCatalogIds(delegator, catalogs, useCache);
+            } else {
+                productStores = new ArrayList<>();
             }
-            
+
             Collection<String> relatedCategoryIds = null;
             Collection<String> relatedTrails = null;
             Collection<String> relatedCatalogs = null;
-            if (productStores.isEmpty()) {
+            // TODO: REVIEW: If we could not determine catalog of store directly, usually due to config, alternative package
+            // or other complex products, search product assoc to try to determine (slow)
+            // NOTE: We do NOT subscribe the product to any specific categories in this case...
+            // Leaving that up to the entities
+            if (catalogs.isEmpty() || productStores.isEmpty()) {
                 // SPECIAL: If we could not determine a product store, look up any related products
                 // TODO: REVIEW: For now we do NOT set categories or catalog from this; store is most basic
                 relatedCategoryIds = new LinkedHashSet<>();
@@ -489,12 +493,13 @@ public abstract class SolrProductUtil {
                         false, useCache); // NOTE: firstFoundOnly==false
                 getCategoryTrails(relatedTrails, dctx, relatedCategoryIds, useCache);
                 getCatalogIdsFromCategoryTrails(relatedCatalogs, dctx, relatedTrails, useCache);
-                if (!relatedCatalogs.isEmpty()) {
-                    productStores = SolrCategoryUtil.getProductStoresFromCatalogIds(delegator, relatedCatalogs, useCache);
-                }
+                catalogs.addAll(relatedCatalogs);
+                productStores.addAll(SolrCategoryUtil.getProductStoresFromCatalogIds(delegator, relatedCatalogs, useCache));
             }
+
             List<String> productStoreIdList = SolrCategoryUtil.getStringFieldList(productStores, "productStoreId");
             dispatchContext.put("productStore", productStoreIdList);
+
             if (productStores.isEmpty()) {
                 Debug.logInfo("Solr: Cannot determine store for product '" + productId + "'", module);
             } else {
@@ -507,6 +512,10 @@ public abstract class SolrProductUtil {
                 }
             }
 
+            dispatchContext.put("category", new ArrayList<>(trails));
+            dispatchContext.put("catalog", new ArrayList<>(catalogs));
+
+            
             // MAIN STORE SELECTION AND LOCALE LOOKUP
             // NOTE: we skip the isContentReference warning if there's both a forced locale and forced currency.
             GenericValue productStore = ProductStoreWorker.getContentReferenceStoreOrFirst(productStores,

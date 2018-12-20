@@ -300,7 +300,7 @@ public class ModelReader implements Serializable {
                         }
                     }
                     if (!tempViewEntityList.isEmpty()) {
-                        StringBuilder sb = new StringBuilder("View entities reference non-existant members:\n");
+                        StringBuilder sb = new StringBuilder("View entities reference non-existent members:\n");
                         Set<String> allViews = new HashSet<>();
                         for (ModelViewEntity curViewEntity : tempViewEntityList) {
                             allViews.add(curViewEntity.getEntityName());

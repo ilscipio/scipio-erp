@@ -770,6 +770,18 @@ code package.
             <key-map field-name="productId"/>
         </relation>
     </entity>
+    <!-- SCIPIO -->
+    <view-entity entity-name="ProductConfigAndConfigProduct"
+            package-name="org.ofbiz.product.config"
+            title="Product Config and Product Config Product">
+        <member-entity entity-alias="PC" entity-name="ProductConfig"/>
+        <member-entity entity-alias="PCP" entity-name="ProductConfigProduct"/>
+        <alias-all entity-alias="PC"/>
+        <alias-all entity-alias="PCP" prefix="config"/>
+        <view-link entity-alias="PC" rel-entity-alias="PCP">
+            <key-map field-name="configItemId"/>
+        </view-link>
+    </view-entity>
     <entity entity-name="ProductConfigConfig"
             package-name="org.ofbiz.product.config"
             title="Existing Product Configurations">

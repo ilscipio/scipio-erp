@@ -181,15 +181,15 @@
                                 dataResourceTypeIdElem.change(function() { changeTypeElem(this); });
                                 
                                 jQuery('#customVariantSizes').click(function() { 
-								    var isChecked = jQuery(this).is(':checked');
-								    if (isChecked === true) {
-								        jQuery('.cmsmedia-customvariantsize-area').show();
-								        jQuery('#mediaForm').attr('action', '<@ofbizUrl>createMediaImageCustomSizes</@ofbizUrl>');
-								    } else {
-								        jQuery('.cmsmedia-customvariantsize-area').hide();
-								        jQuery('#mediaForm').attr('action', '<@ofbizUrl>${formAction}</@ofbizUrl>');
-								    }
-								});
+                                    var isChecked = jQuery(this).is(':checked');
+                                    if (isChecked === true) {
+                                        jQuery('.cmsmedia-customvariantsize-area').show();
+                                        jQuery('#mediaForm').attr('action', '<@ofbizUrl>createMediaImageCustomSizes</@ofbizUrl>');
+                                    } else {
+                                        jQuery('.cmsmedia-customvariantsize-area').hide();
+                                        jQuery('#mediaForm').attr('action', '<@ofbizUrl>${formAction}</@ofbizUrl>');
+                                    }
+                                });
                                 
                             });
                           </@script>

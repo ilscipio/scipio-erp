@@ -722,11 +722,12 @@ Common CMS editor macros and utilities
         </#if>
 
         var addCustomVariantSize = function() {
+        	console.log("cmsmedia-customvariantsize-add clicked")
             <#assign customVariantSizeForm><@customVariantSizeForm showSaveAsPreset=saveAsPreset /></#assign>
             var customVariantSizeForm = '${escapeVal(customVariantSizeForm, 'js')}';
             jQuery('.cmsmedia-customvariantsize-area').find('.cmsmedia-customvariantsize-add-cnt').remove();
             jQuery('.cmsmedia-customvariantsize-area .customVariantSizesForm').append(customVariantSizeForm);
-            jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
+            //jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
             <#if saveAsPreset>
                 jQuery('#saveAsPreset').click(saveAsPreset);
             </#if>

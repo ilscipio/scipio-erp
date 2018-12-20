@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -439,8 +440,16 @@ public abstract class SolrProductUtil {
             // solrProductAttributes service interface and in the future may replace it entirely.
             Map<String, Object> fields = getGenSolrDocFieldsMap(dispatchContext);
 
+            // Get all product assoc
+            List<GenericValue> productAssocFromList = EntityQuery.use(delegator).from("ProductAssoc").where("productId", productId).filterByDate().cache(useCache).queryList();
+            List<GenericValue> productAssocToList = EntityQuery.use(delegator).from("ProductAssoc").where("productIdTo", productId).filterByDate().cache(useCache).queryList();
+
             // 2017-09: if variant, must also get virtual's categories
-            List<GenericValue> productVariantAssocs = ProductWorker.getVariantVirtualAssocs(product, useCache);
+            //List<GenericValue> productVariantAssocs = ProductWorker.getVariantVirtualAssocs(product, useCache);
+            List<GenericValue> productVariantAssocs = null;
+            if ("Y".equals(product.getString("isVariant"))) { // 2018-12-20: reuse productAssocTo
+                productVariantAssocs = EntityUtil.filterByAnd(productAssocToList, UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
+            }
 
             // 2017-09: do EARLY cat lookup so that we can find out a ProductStore
             Set<String> productCategoryIds = new LinkedHashSet<>();
@@ -456,18 +465,46 @@ public abstract class SolrProductUtil {
             getCatalogIdsFromCategoryTrails(catalogs, dctx, trails, useCache);
             dispatchContext.put("catalog", new ArrayList<>(catalogs));
 
-            List<GenericValue> productStores;
-            if (catalogs.isEmpty()) {
-                // TODO: REVIEW: we can't have this as a warning because many small component product currently won't associate to any store this way
-                if (productCategoryIds.isEmpty()) {
-                    Debug.logInfo("Solr: No categories for product '" + productId + "'; can't determine product store", module);
-                } else {
-                    Debug.logInfo("Solr: No catalogs for product '" + productId + "'; can't determine product store", module);
-                }
-                productStores = new ArrayList<>();
-            } else {
+            List<GenericValue> productStores = Collections.emptyList();
+            if (!catalogs.isEmpty()) {
                 productStores = SolrCategoryUtil.getProductStoresFromCatalogIds(delegator, catalogs, useCache);
-                dispatchContext.put("productStore", SolrCategoryUtil.getStringFieldList(productStores, "productStoreId"));
+            }
+            
+            Collection<String> relatedCategoryIds = null;
+            Collection<String> relatedTrails = null;
+            Collection<String> relatedCatalogs = null;
+            if (productStores.isEmpty()) {
+                // SPECIAL: If we could not determine a product store, look up any related products
+                // TODO: REVIEW: For now we do NOT set categories or catalog from this; store is most basic
+                relatedCategoryIds = new LinkedHashSet<>();
+                relatedTrails = new LinkedHashSet<>();
+                relatedCatalogs = new LinkedHashSet<>();
+                // Self and virtuals are covered above
+                Collection<String> relatedProductIds = new LinkedHashSet<>();
+                Set<String> catCheckedProductIds = new HashSet<>();
+                // don't requery ProductCategoryMember for these already checked (productId and its virtual(s))
+                catCheckedProductIds.add(productId);
+                catCheckedProductIds.addAll(SolrCategoryUtil.getStringFieldList(productVariantAssocs, "productId"));
+                getProductCategoryIdsAggressive(relatedCategoryIds, relatedProductIds, catCheckedProductIds, dctx, productId, productVariantAssocs, productAssocFromList, productAssocToList,
+                        false, useCache); // NOTE: firstFoundOnly==false
+                getCategoryTrails(relatedTrails, dctx, relatedCategoryIds, useCache);
+                getCatalogIdsFromCategoryTrails(relatedCatalogs, dctx, relatedTrails, useCache);
+                if (!relatedCatalogs.isEmpty()) {
+                    productStores = SolrCategoryUtil.getProductStoresFromCatalogIds(delegator, relatedCatalogs, useCache);
+                }
+            }
+            List<String> productStoreIdList = SolrCategoryUtil.getStringFieldList(productStores, "productStoreId");
+            dispatchContext.put("productStore", productStoreIdList);
+            if (productStores.isEmpty()) {
+                Debug.logInfo("Solr: Cannot determine store for product '" + productId + "'", module);
+            } else {
+                if (SolrUtil.verboseOn()) {
+                    if (relatedCatalogs != null) {
+                        Debug.logInfo("Solr: Determined store(s) for product '" + productId + "' indirectly (" + productStoreIdList + ")", module);
+                    } else {
+                        Debug.logInfo("Solr: Determined store(s) for product '" + productId + "' directly (" + productStoreIdList + ")", module);
+                    }
+                }
             }
 
             // MAIN STORE SELECTION AND LOCALE LOOKUP
@@ -495,21 +532,26 @@ public abstract class SolrProductUtil {
 
             dispatchContext.put("productId", productId);
             // if (product.get("sku") != null) dispatchContext.put("sku", product.get("sku"));
-            if (product.get("internalName") != null)
+            if (product.get("internalName") != null) {
                 dispatchContext.put("internalName", product.get("internalName"));
-            if (product.get("productTypeId") != null)
+            }
+            if (product.get("productTypeId") != null) {
                 dispatchContext.put("productTypeId", product.get("productTypeId"));
+            }
             // GenericValue manu = product.getRelatedOneCache("Manufacturer");
             // if (product.get("manu") != null) dispatchContext.put("manu", "");
             String smallImage = (String) product.get("smallImageUrl");
-            if (smallImage != null)
+            if (smallImage != null) {
                 dispatchContext.put("smallImage", smallImage);
+            }
             String mediumImage = (String) product.get("mediumImageUrl");
-            if (mediumImage != null)
+            if (mediumImage != null) {
                 dispatchContext.put("mediumImage", mediumImage);
+            }
             String largeImage = (String) product.get("largeImageUrl");
-            if (largeImage != null)
+            if (largeImage != null) {
                 dispatchContext.put("largeImage", largeImage);
+            }
 
             // if(product.get("weight") != null) dispatchContext.put("weight", "");
 
@@ -610,6 +652,76 @@ public abstract class SolrProductUtil {
                 List<GenericValue> virtualCategories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
                         .where("productId", virtualProductId).filterByDate().cache(useCache).queryList();
                 SolrCategoryUtil.addAllStringFieldList(productCategoryIds, virtualCategories, "productCategoryId");
+            }
+        }
+    }
+
+    /**
+     * Aggressively collects ProductCategoryMember from specified product or any related product. Slow and should only be used (for now)
+     * in the cases where getProductCategoryIds returns nothing.
+     * NOTE: The categoryIds returned do NOT necessarily indicate the product belongs to them; it is mainly used
+     * to determine the productStoreIds for the product.
+     * NOTE: This re-runs the check on "this" product and its virtual; use {@link #getProductCategoryIdsAggressiveNoSelfOrVirtual} to skip that.
+     */
+    protected static void getProductCategoryIdsAggressive(Collection<String> productCategoryIds, Collection<String> productIds, Set<String> productsCatChecked, DispatchContext dctx, String productId, Collection<GenericValue> productVariantAssocs,
+            List<GenericValue> productAssocFromList, List<GenericValue> productAssocToList, boolean firstFoundOnly, boolean useCache) throws GenericEntityException {
+        if (productIds.contains(productId)) { // NOTE: This prevents both endless loops in edge cases as well as a few needless duplicate queries
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Solr: Product assoc loop detected/product already visited: '" + productId + "'", module);
+            }
+            return;
+        }
+        productIds.add(productId);
+
+        if (!productsCatChecked.contains(productId)) { // this check prevents needless re-queries (better than nothing)
+            productsCatChecked.add(productId);
+            List<GenericValue> categories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember").where("productId", productId)
+                    .filterByDate().cache(useCache).queryList();
+            if (!categories.isEmpty()) {
+                SolrCategoryUtil.addAllStringFieldList(productCategoryIds, categories, "productCategoryId");
+                if (firstFoundOnly) {
+                    return;
+                }
+            }
+        }
+
+        if (productVariantAssocs == null) {
+            productVariantAssocs = EntityQuery.use(dctx.getDelegator()).from("ProductAssoc").select("productId")
+                .where("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT").filterByDate().cache(useCache).queryList();
+        }
+        for(GenericValue productVariantAssoc : productVariantAssocs) {
+            String virtualProductId = productVariantAssoc.getString("productId");
+            /* go deep
+            List<GenericValue> virtualCategories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
+                    .where("productId", virtualProductId).filterByDate().cache(useCache).queryList();
+            if (!virtualCategories.isEmpty()) {
+                SolrCategoryUtil.addAllStringFieldList(productCategoryIds, virtualCategories, "productCategoryId");
+                if (firstFoundOnly) {
+                    return;
+                }
+            }*/
+            getProductCategoryIdsAggressive(productCategoryIds, productIds, productsCatChecked, dctx, virtualProductId, null, null, null, firstFoundOnly, useCache);
+            if (firstFoundOnly && !productCategoryIds.isEmpty()) {
+                return;
+            }
+        }
+        List<GenericValue> altPkgAssocs = (productAssocFromList != null) ? 
+                EntityUtil.filterByAnd(productAssocFromList, UtilMisc.toMap("productAssocTypeId", "ALTERNATIVE_PACKAGE")) :
+                EntityQuery.use(dctx.getDelegator()).from("ProductAssoc").select("productIdTo").where("productId", productId, "productAssocTypeId", "ALTERNATIVE_PACKAGE").filterByDate().cache(useCache).queryList();
+        for(GenericValue altPkgAssoc : altPkgAssocs) {
+            String productIdTo = altPkgAssoc.getString("productIdTo");
+            getProductCategoryIdsAggressive(productCategoryIds, productIds, productsCatChecked, dctx, productIdTo, null, null, null, firstFoundOnly, useCache);
+            if (firstFoundOnly && !productCategoryIds.isEmpty()) {
+                return;
+            }
+        }
+        List<GenericValue> configProductList = EntityQuery.use(dctx.getDelegator()).from("ProductConfigAndConfigProduct")
+                .select("productId").where("configProductId", productId).cache(useCache).queryList();
+        for(GenericValue configProduct : configProductList) {
+            String parentProductId = configProduct.getString("productId");
+            getProductCategoryIdsAggressive(productCategoryIds, productIds, productsCatChecked, dctx, parentProductId, null, null, null, firstFoundOnly, useCache);
+            if (firstFoundOnly && !productCategoryIds.isEmpty()) {
+                return;
             }
         }
     }

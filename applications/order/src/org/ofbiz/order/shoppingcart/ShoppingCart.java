@@ -6210,11 +6210,11 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     /**
-     * SCIPIO: Returns true if debug logging is on for cart-related processes. Roughly same as verbose logging.
+     * SCIPIO: Returns true if verbose logging is on for cart-related processes. Roughly same as verbose logging.
      * WARN: Some things controlled by this may lower performance when enabled.
      * Added 2018-11-30. 
      */
-    public static boolean isDebug() {
+    public static boolean verboseOn() {
         return (ShoppingCart.DEBUG || Debug.verboseOn());
     }
 }

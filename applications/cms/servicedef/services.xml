@@ -852,6 +852,13 @@
         <attribute mode="IN" name="presetName" type="String" optional="true"/>
     </service>
 
+    <service name="cmsUpdateCustomImageSizePreset" default-entity-name="ImageSizePreset" engine="entity-auto" invoke="update" auth="true">
+        <description>Updates custom image media presets.</description>
+        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+
     <!-- ========================================================= -->
     <!-- Control/request data services -->
     <!-- ========================================================= -->

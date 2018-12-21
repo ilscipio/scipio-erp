@@ -9,15 +9,15 @@
                     <@modal id="modal_new_image_size_preset" label=uiLabelMap.CmsCreateCustomImageSizePreset linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                         <@heading>${uiLabelMap.CmsCreateCustomImageSizePreset}</@heading>
                         <div class="cmsmedia-customvariantsize-area">
-	                        <form method="post" action="<@ofbizUrl>createCustomImageSizePreset</@ofbizUrl>" name="customVariantSizesForm">
-	                        	<@field type="text" label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
-	                        	<hr/>
-	                        	<div class="cmsmedia-customvariantsize-method customVariantSizesForm">
-	                            	<@customVariantSizeForm />
-	                            </div>
-	                            <@td><@field type="submit" value=uiLabelMap.CommonCreate class="${styles.link_run_sys!} ${styles.action_create!}" /></@td>
-	                            <@commonCustomVariantSizeScript/>
-	                        </form>
+                            <form method="post" action="<@ofbizUrl>createCustomImageSizePreset</@ofbizUrl>" name="customVariantSizesForm">
+                                <@field type="text" label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
+                                <hr/>
+                                <div class="cmsmedia-customvariantsize-method customVariantSizesForm">
+                                    <@customVariantSizeForm />
+                                </div>
+                                <@td><@field type="submit" value=uiLabelMap.CommonCreate class="${styles.link_run_sys!} ${styles.action_create!}" /></@td>
+                                <@commonCustomVariantSizeScript/>
+                            </form>
                         </div>
                     </@modal>
                 </@menuitem>
@@ -37,7 +37,7 @@
                     <@table type="data-list" autoAltRows=true>
                         <@thead>
                             <@tr class="header-row">
-                            	<@th>${uiLabelMap.CmsMediaCustomSizeVariantsPresetId}</@th>
+                                <@th>${uiLabelMap.CmsMediaCustomSizeVariantsPresetId}</@th>
                                 <@th>${uiLabelMap.CmsMediaCustomSizeVariantsPresetName}</@th>
                                 <@th>${uiLabelMap.CommonUpdate}</@th>
                             </@tr>
@@ -46,7 +46,12 @@
                             <@tr>
                                 <@td>${preset.presetId}</@td>
                                 <@td><@field type="text" name="presetName" value=preset.presetName! required=true /></@td>
-                                <@td><@field type="submit" value=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" /></@td>
+                                <@td>
+                                    <form id="ImageSizePreset_${preset_index}" name="ImageSizePreset_${preset_index}" method="post" action="<@ofbizUrl>updateCustomImageSizePreset</@ofbizUrl>">
+                                        <input name="presetId" type="hidden" value="${preset.presetId}"/>
+                                        <@field type="submit" value=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
+                                    </form>
+                                </@td>
                             </@tr>
                         </#list>
                     </@table>

@@ -173,7 +173,8 @@ code package.
                                 <#else>
                                   <#assign remainingQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)) - shippedQuantity?double)>
                                 </#if>
-                                <@modal id="${productId}_q" label=orderItem.quantity?default(0)?string.number>    
+                                <#assign effTotalQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)))>
+                                <@modal id="${productId}_q" label=effTotalQuantity?string.number><#-- SCIPIO: inappropriate, includes cancelled: (orderItem.quantity!0)?string.number -->
                                             <@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
                                                 <@tr valign="top">
                                                     

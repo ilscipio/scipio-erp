@@ -29,7 +29,7 @@ code package.
             </#if>
           </@tr>
           </@thead>
-          <#list orderItems! as orderItem>
+          <#list (orderItems!) as orderItem>
             <#assign itemType = orderItem.getRelatedOne("OrderItemType", false)!>
             <@tr>
               <#if orderItem.productId?? && orderItem.productId == "_?_">
@@ -44,7 +44,8 @@ code package.
                       <b>${(itemType.description)!}</b> : ${orderItem.itemDescription!}
                     </#if>
                   </@td>
-                <@td class="${styles.text_right!}" valign="top">${orderItem.quantity?string.number}</@td>
+                <#assign effTotalQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)))><#-- SCIPIO -->
+                <@td class="${styles.text_right!}" valign="top">${effTotalQuantity?string.number}</@td><#-- SCIPIO: inappropriate, includes cancelled: orderItem.quantity?string.number -->
                 <@td class="${styles.text_right!}" valign="top"><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/></@td>
                 <@td class="${styles.text_right!}" valign="top"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/></@td>
                 <@td class="${styles.text_right!}" valign="top"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemSubTotal(orderItem) isoCode=currencyUomId/></@td>

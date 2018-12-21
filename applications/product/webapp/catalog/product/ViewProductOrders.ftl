@@ -52,7 +52,8 @@ code package.
               <@td>${orderItem.orderItemSeqId}</@td>
               <@td>${order.orderDate}</@td>
               <@td>${orderItem.unitPrice}</@td>
-              <@td>${orderItem.quantity}</@td>
+              <#assign effTotalQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)))><#-- SCIPIO -->
+              <@td>${effTotalQuantity}<#if ((orderItem.cancelQuantity!0) > 0)> (${uiLabelMap.CommonCancelled}: ${orderItem.cancelQuantity})</#if></@td><#-- SCIPIO: inappropriate, includes cancelled: orderItem.quantity -->
               <#assign currentOrderType = order.getRelatedOne("OrderType", false)/>
               <@td>${currentOrderType.get("description",locale)?default(currentOrderType.orderTypeId)}</@td>
             </@tr>

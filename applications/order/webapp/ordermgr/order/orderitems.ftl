@@ -159,6 +159,7 @@ code package.
                                                     <#else>
                                                         <#assign remainingQuantity = ((orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0)) - shippedQuantity?double)>
                                                     </#if>
+                                                    <#assign effTotalQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)))><#-- SCIPIO -->
                                                     <#-- to compute shortfall amount, sum up the orderItemShipGrpInvRes.quantityNotAvailable -->
                                                     <#assign shortfalledQuantity = 0/>
                                                     <#list orderItemShipGrpInvResList as orderItemShipGrpInvRes>
@@ -166,7 +167,7 @@ code package.
                                                             <#assign shortfalledQuantity = shortfalledQuantity + orderItemShipGrpInvRes.quantityNotAvailable/>
                                                         </#if>
                                                     </#list>
-                                        <@modal id="${productId}_q" label=(orderItem.quantity!0)?string.number>    
+                                        <@modal id="${productId}_q" label=effTotalQuantity?string.number><#-- SCIPIO: inappropriate, includes cancelled: (orderItem.quantity!0)?string.number -->   
                                             <@table type="data-complex">
                                                 <@tr valign="top">
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>

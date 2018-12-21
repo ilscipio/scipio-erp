@@ -19,7 +19,7 @@ code package.
         document.updateItemInfo.action = action;
         document.updateItemInfo.orderItemSeqId.value = orderItemSeqId ? orderItemSeqId : '';
         document.updateItemInfo.shipGroupSeqId.value = shipGroupSeqId ? shipGroupSeqId : '';
-        //document.updateItemInfo.submit();
+        document.updateItemInfo.submit();
         return;
     }
 </@script>

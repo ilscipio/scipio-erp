@@ -114,14 +114,18 @@ public class CustRequestServices {
                         if (dataResourceTypeId.equals(FileTypeResolver.IMAGE_TYPE)) {
                             try {
                                 BufferedImage bugImg = ImageIO.read(new ByteArrayInputStream(byteBuffer.array()));
+                                if (bugImg == null) { // SCIPIO: may be null
+                                    Debug.logError("Error uploading media file: Could not read/parse image file type to determine dimensions", module);
+                                    return ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels",
+                                            "ScaleImage.unable_to_parse", locale));
+                                }
                                 dataResource.put("scpWidth", (long) bugImg.getWidth());
                                 dataResource.put("scpHeight", (long) bugImg.getHeight());
                             } catch (Exception e) {
-                                Debug.logError(e, "Error uploading media file: Could not read/parse image file: "
+                                Debug.logError(e, "Error uploading media file: Could not read/parse image file type to determine dimensions: "
                                         + e.getMessage(), module);
-                                result = ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels",
-                                        "ScaleImage.unable_to_parse", locale) + ": " + e.getMessage());
-
+                                return ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels",
+                                        "ScaleImage.unable_to_parse", locale) + ": " + e.getMessage()); // SCIPIO: return instead of: result =
                             }
                         }
                         dataResource = delegator.createSetNextSeqId(dataResource);

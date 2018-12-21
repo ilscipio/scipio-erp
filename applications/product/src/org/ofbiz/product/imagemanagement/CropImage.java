@@ -100,6 +100,9 @@ public class CropImage {
             String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", delegator), context);
             String imageServerUrl = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.url", delegator), context);
             BufferedImage bufImg = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + imageName));
+            if (bufImg == null) { // SCIPIO: may be null
+                return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
+            }
 
             int x = Integer.parseInt(imageX);
             int y = Integer.parseInt(imageY);

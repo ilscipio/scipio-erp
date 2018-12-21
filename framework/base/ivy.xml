@@ -178,6 +178,7 @@
                 libs (javolution, xml-apis) and was not shipped with ofbiz 14/15 - ->
             <exclude module="jtidy"/>
         </dependency>-->
+        <dependency org="org.jsoup" name="jsoup" rev="1.11.3" conf="base,sources"/><!-- security: CVE-2015-6748 (transitive dep) -->
 
         <!-- commons jars -->
         <!-- NOTE: these should generally be updated together (some deps between them and historical compat issues) -->
@@ -196,13 +197,14 @@
         <dependency org="org.apache.commons" name="commons-math3" rev="3.6.1" conf="base,commons,sources"/>
         <dependency org="commons-net" name="commons-net" rev="3.6" conf="base,commons,sources"/>
         <dependency org="org.apache.commons" name="commons-pool2" rev="2.6.0" conf="base,commons,sources"/>
+        <dependency org="org.apache.commons" name="commons-text" rev="1.6" conf="base,commons,sources"/>
         <dependency org="commons-validator" name="commons-validator" rev="1.6" conf="base,commons,sources"/>
 
         <!-- j2eespecs jars -->
-        <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.1_spec" rev="1.0.2" conf="base,j2eespecs,sources"/><!-- WARN: conflict with javax.activation#activation -->
+        <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.1_spec" rev="1.1" conf="base,j2eespecs,sources"/><!-- WARN: conflict with javax.activation#activation -->
         <dependency org="org.apache.geronimo.specs" name="geronimo-j2ee-connector_1.6_spec" rev="1.0" conf="base,j2eespecs,sources"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxr_1.0_spec" rev="1.0" conf="base,j2eespecs,sources"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxrpc_1.1_spec" rev="1.0" conf="base,j2eespecs,sources"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxr_1.0_spec" rev="2.1" conf="base,j2eespecs,sources"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxrpc_1.1_spec" rev="2.1" conf="base,j2eespecs,sources"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-jms_1.1_spec" rev="1.1.1" conf="base,j2eespecs,sources"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-jta_1.1_spec" rev="1.1.1" conf="base,j2eespecs,sources"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-saaj_1.3_spec" rev="1.1" conf="base,j2eespecs,sources"/>
@@ -249,6 +251,10 @@
         <dependency org="com.mortennobel" name="java-image-scaling" rev="0.8.6" conf="base,media,sources"/>
         <dependency org="org.imgscalr" name="imgscalr-lib" rev="4.2" conf="base,media,sources"/>
         <dependency org="com.twelvemonkeys.common" name="common-image" rev="3.4.1" conf="base,media,sources"/>
+        <!-- TODO?: Uncomment this for limited JPEG2000 and TIFF support
+        <dependency org="com.github.jai-imageio" name="jai-imageio-core" rev="1.3.0" conf="base,media,sources"/>
+        <dependency org="com.github.jai-imageio" name="jai-imageio-jpeg2000" rev="1.3.0" conf="base,media,sources"/>
+        -->
 
         <!--
             OTHER FRAMEWORK COMPONENT DEPENDENCIES
@@ -268,7 +274,8 @@
         <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.5.35" conf="base,sources"/>
         <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.5.35" conf="base,sources"/>
         <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.5.35" conf="base,sources"/>
-        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-websocket" rev="8.5.35" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-websocket" rev="8.5.35" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-websocket-api" rev="8.5.35" conf="base,sources"/>
         <!-- gone since 8.5.3+?
         <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.5.35" conf="base,sources"/>
         <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.5.35" conf="base,sources"/>-->

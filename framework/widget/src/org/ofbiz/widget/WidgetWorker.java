@@ -29,7 +29,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
@@ -57,7 +57,7 @@ public final class WidgetWorker {
         // Try to reducing a possibly encoded string down to its simplest form: /projectmgr/control/EditTaskContents?workEffortId=10003
         // This step make sure the following appending externalLoginKey operation to work correctly
         // SCIPIO: NOTE: we are less likely to have this escaping issue, because we turn off the HTML early escaping in Scipio and leave it to Freemarker.
-        String localRequestName = StringEscapeUtils.unescapeHtml(target);
+        String localRequestName = StringEscapeUtils.unescapeHtml4(target);
         localRequestName = UtilHttp.encodeAmpersands(localRequestName);
 
         Appendable localWriter = new StringWriter();

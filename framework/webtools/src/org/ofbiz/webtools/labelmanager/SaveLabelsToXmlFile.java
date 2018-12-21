@@ -25,7 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.UtilGenerics;
@@ -119,9 +119,10 @@ public class SaveLabelsToXmlFile {
                         continue;
                     }
                     Element propertyElem = UtilXml.addChildElement(resourceElem, "property", resourceDocument);
-                    propertyElem.setAttribute("key", StringEscapeUtils.unescapeHtml(labelInfo.getLabelKey()));
+                    // SCIPIO: Switched all unescapeHtml -> unescapeHtml4 (apache commons-text)
+                    propertyElem.setAttribute("key", StringEscapeUtils.unescapeHtml4(labelInfo.getLabelKey()));
                     if (UtilValidate.isNotEmpty(labelInfo.getLabelKeyComment())) {
-                        Comment labelKeyComment = resourceDocument.createComment(StringEscapeUtils.unescapeHtml(labelInfo.getLabelKeyComment()));
+                        Comment labelKeyComment = resourceDocument.createComment(StringEscapeUtils.unescapeHtml4(labelInfo.getLabelKeyComment()));
                         Node parent = propertyElem.getParentNode();
                         parent.insertBefore(labelKeyComment, propertyElem);
                     }
@@ -132,11 +133,11 @@ public class SaveLabelsToXmlFile {
                             valueString = labelValue.getLabelValue();
                         }
                         if (UtilValidate.isNotEmpty(valueString)) {
-                            valueString = StringEscapeUtils.unescapeHtml(valueString);
+                            valueString = StringEscapeUtils.unescapeHtml4(valueString);
                             Element valueElem = UtilXml.addChildElementValue(propertyElem, "value", valueString, resourceDocument);
                             valueElem.setAttribute("xml:lang", localeFound);
                             if (UtilValidate.isNotEmpty(labelValue.getLabelComment())) {
-                                Comment labelComment = resourceDocument.createComment(StringEscapeUtils.unescapeHtml(labelValue.getLabelComment()));
+                                Comment labelComment = resourceDocument.createComment(StringEscapeUtils.unescapeHtml4(labelValue.getLabelComment()));
                                 Node parent = valueElem.getParentNode();
                                 parent.insertBefore(labelComment, valueElem);
                             }

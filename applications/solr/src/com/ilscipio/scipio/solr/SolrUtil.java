@@ -37,6 +37,7 @@ public abstract class SolrUtil {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String solrConfigName = "solrconfig";
+    public static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("solr", "solr.debug", false); // SCIPIO
 
     private static final boolean solrEnabled = getSolrSysPropCfgBool("enabled", true);
     private static final boolean solrEcaEnabled = getSolrSysPropCfgBool("eca.enabled", false);
@@ -846,5 +847,12 @@ public abstract class SolrUtil {
             // TODO: should try to lookup container ports in this case
             return false;
         }
+    }
+
+    /**
+     * Returns true if either solr.debug is true or verbose logging is on.
+     */
+    public static boolean verboseOn() {
+        return (SolrUtil.DEBUG || Debug.verboseOn());
     }
 }

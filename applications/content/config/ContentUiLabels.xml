@@ -3775,7 +3775,7 @@
     </property>
     <property key="ContentUploadFileTypeNotMatch">
         <value xml:lang="de">Upload-Dateityp stimmt nicht mit dem ausgewählten überein.</value>
-        <value xml:lang="en">Upload file type not match your selected.</value>
+        <value xml:lang="en">Upload file type does not match your selection.</value>
         <value xml:lang="fr">Le type de fichier chargé ne correspond pas avec votre selection.</value>
         <value xml:lang="it">Tipo file da caricare non corrisponde alla tua selezione.</value>
         <value xml:lang="ja">選択したアップロードファイルの種類が一致しません。</value>

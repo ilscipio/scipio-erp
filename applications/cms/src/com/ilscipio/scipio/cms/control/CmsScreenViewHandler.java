@@ -90,11 +90,12 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         CmsPage cmsPage = null;
         CmsCallType renderMode;
         CmsView cmsView = CmsView.findByName(delegator, name, webSiteId, true);
+        CmsControlState controlState = CmsControlState.fromRequest(request);
 
         // 2017-04-03: due to redirection issues, we have to use saved path first, so use the same
         // info as the original request. re-lookup is only for pure view handler and for fallback.
-        String requestServletPath = (String) request.getAttribute("cmsRequestServletPath");
-        String requestPath = (String) request.getAttribute("cmsRequestPath");
+        String requestServletPath = controlState.getRequestServletPath();
+        String requestPath = controlState.getRequestPath();
         if (requestServletPath == null || requestPath == null) { // should be set together, and null makes NPE elsewhere
             requestServletPath = CmsControlUtil.normalizeServletPathNoNull(request.getServletPath());
             requestPath = CmsControlUtil.normalizeServletRootRequestPathNoNull(request.getPathInfo());
@@ -109,7 +110,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         }
 
         // 2016: check preview flag
-        renderMode = (CmsCallType) request.getAttribute("cmsPageRenderMode");
+        renderMode = controlState.getPageRenderMode();
 
         // 2016: check preview mode parameter
         // NOTE: this MAY have been done in process filter, but it possible to run without it, so do it again here
@@ -118,40 +119,35 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         }
 
         // 2016: MUST NOT CACHE PREVIEWS!
-        boolean useDataObjectCache = renderMode != CmsCallType.OFBIZ_PREVIEW;
+        boolean useDataObjectCache = (renderMode != CmsCallType.OFBIZ_PREVIEW);
 
+        /* 2018-12-18: We have no need of this anymore; old CmsControlServlet is gone
+         * DEV NOTE: If you need this again in future, this logic must be added to CmsControlState and follow pattern of:
+         *   getProcessMapping(Delegator, boolean)
         // 2016: NEW MODE: use cmsPage if already set (by old CmsControlServlet or other)
         // NOTE: reliance on this is likely TEMPORARY as the CmsControlServlet itself will probably disappear or change significantly,
         // but this code can remain here anyway.
-        cmsPage = (CmsPage) request.getAttribute("cmsPage");
+        cmsPage = controlState.getPage();
         if (cmsPage == null) {
             // in case we run into serialization issues, allow re-lookup by ID
-            String cmsPageId = (String) request.getAttribute("cmsPageId");
-            if (cmsPageId != null && !cmsPageId.isEmpty()) {
+            String cmsPageId = controlState.getPageId();
+            if (cmsPageId != null) {
                 cmsPage = CmsPage.getWorker().findById(delegator, cmsPageId, useDataObjectCache);
                 if (cmsPage == null) {
                     Debug.logWarning("Cms: Could not find page by ID: " + cmsPageId + "; ignoring", module);
+                } else {
+                    controlState.setPage(cmsPage);
                 }
             }
         }
+        */
 
         // Check for process mapping
         if (cmsPage == null) {
-            CmsProcessMapping procMapping = (CmsProcessMapping) request.getAttribute("cmsProcessMapping");
-            if (procMapping == null) {
-                // in case we run into serialization issues, allow re-lookup by ID
-                String cmsProcessMappingId = (String) request.getAttribute("cmsProcessMappingId");
-                if (cmsProcessMappingId != null && !cmsProcessMappingId.isEmpty()) {
-                    procMapping = CmsProcessMapping.getWorker().findById(delegator, cmsProcessMappingId, useDataObjectCache);
-                    if (procMapping == null) {
-                        Debug.logWarning("Cms: Could not find process mapping by ID: " + procMapping + "; ignoring", module);
-                    }
-                }
-            }
-
+            CmsProcessMapping procMapping = controlState.getProcessMapping(delegator, useDataObjectCache);
             if (procMapping != null) {
-                // CMS: 2016: not needed without wildcard renders
-                //String procExtraPathInfo = (String) request.getAttribute("cmsProcessExtraPathInfo");
+                // CMS: 2016: not needed without wildcard renders (DEV NOTE: If ever needed, use CmsControlState)
+                //String procExtraPathInfo = controlState.getProcessExtraPathInfo();
                 // CMS: 2016: wildcard renders not applicable to local renders
                 //boolean pageFromPathWildcard = false;
 

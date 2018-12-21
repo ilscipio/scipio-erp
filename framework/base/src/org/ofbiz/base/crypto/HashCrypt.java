@@ -30,7 +30,7 @@ import javax.crypto.spec.PBEKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.base.util.StringUtil;

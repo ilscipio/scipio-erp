@@ -75,7 +75,7 @@ public abstract class ContentImageServices {
 
     // SCIPIO: FIXME?: don't really want this dependency, but not major issue
     private static final String resourceProduct = "ProductErrorUiLabels";
-    private static final Locale LOG_LANG = Locale.ENGLISH; // always EN
+    private static final Locale LOG_LANG = Debug.getLogLocale();
 
     protected ContentImageServices() {
     }
@@ -307,10 +307,11 @@ public abstract class ContentImageServices {
                         }
 
                         // write new image
-                        String newFileLocExt = newFileLocation + "." + imgExtension;
+                        String targetFileType = imgExtension;
+                        String newFileLocExt = newFileLocation + "." + targetFileType;
                         String newFileFullLoc = imageServerPath + "/" + newFileLocExt;
                         try {
-                            ImageIO.write(bufNewImg, imgExtension, new File(newFileFullLoc));
+                            ImageIO.write(bufNewImg, targetFileType, new File(newFileFullLoc));
                             scaledImageCount++;
                         } catch (IllegalArgumentException e) {
                             Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", LOG_LANG) + ": " + e.getMessage(), module);
@@ -501,10 +502,14 @@ public abstract class ContentImageServices {
             InputStream stream = (InputStream) streamResult.get("stream");
             try {
                 bufImg = ImageIO.read(stream);
+                if (bufImg == null) { // SCIPIO: may be null
+                    Debug.logError(logPrefix+"Could not read/parse image file type to determine dimensions" + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")", module);
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")");
+                }
             } catch(Exception e) {
-                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")", module);
+                Debug.logError(logPrefix+"Could not read/parse image file type to determine dimensions" + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + "): " + e.toString(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : ImageDataResource.imageData (dataResourceId: " + origImageDataResourceId + ") (contentId: " + imageOrigContentId + ")");
-            }   finally {
+            } finally {
                 stream.close();
             }
 
@@ -554,16 +559,25 @@ public abstract class ContentImageServices {
                 List<GenericValue> fileExtValues = new LinkedList<GenericValue>();
                 try {
                     fileExtValues = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", mimeTypeId).queryList();
-                    if (UtilValidate.isEmpty(fileExtValues)) {
-
-                    }
-                    targetFmtExt = fileExtValues.get(0).getString("fileExtensionId");
-                    if (fileExtValues.size() > 1) {
-                        Debug.logWarning(logPrefix+"multiple FileExtension found for mimeTypeId '" + mimeTypeId + "'; using first: '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
+                    if (UtilValidate.isNotEmpty(fileExtValues)) {
+                        targetFmtExt = fileExtValues.get(0).getString("fileExtensionId");
+                        if (fileExtValues.size() > 1) {
+                            Debug.logWarning(logPrefix+"multiple FileExtension found for mimeTypeId '" + mimeTypeId + "'; using first: '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
+                        }
+                    } else {
+                        targetFmtExt = EntityUtilProperties.getPropertyValue("content", "image.thumbs.fileType.default", "jpg", delegator);
+                        Debug.logWarning(logPrefix+"can't determine thumbnail output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId 
+                                + "); unknown?; using system default: " + targetFmtExt, module);
+                        GenericValue fileExt = EntityQuery.use(delegator).from("FileExtension").where("fileExtensionId", targetFmtExt).queryOne();
+                        if (UtilValidate.isEmpty(fileExt)) {
+                            Debug.logError(logPrefix+"can't determine thumbnail output format from file type '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
+                            return ServiceUtil.returnError("can't determine thumbnail output format from file type '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")");
+                        }
+                        mimeTypeId = fileExt.getString("mimeTypeId");
                     }
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, logPrefix+"can't determine output format from DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage(), module);
-                    return ServiceUtil.returnError(e.getMessage());
+                    Debug.logError(e, logPrefix+"can't determine output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage(), module);
+                    return ServiceUtil.returnError("can't determine output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage());
                 }
             } else {
                 try {
@@ -575,7 +589,7 @@ public abstract class ContentImageServices {
                     mimeTypeId = fileExt.getString("mimeTypeId");
                 } catch (GenericEntityException e) {
                     Debug.logError(e, logPrefix+"can't determine output format from DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage(), module);
-                    return ServiceUtil.returnError(e.getMessage());
+                    return ServiceUtil.returnError("can't determine output format from DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage());
                 }
             }
 

@@ -297,29 +297,29 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     <@row>
         <@cell columns="4">
             <@chart type="pie" library="foundation">
-                <@chartdata value="36" title="Peperoni"/>
-                <@chartdata value="2" title="Sausage"/> 
-                <@chartdata value="19" title="Cheese"/> 
-                <@chartdata value="6" title="Chicken"/> 
-                <@chartdata value="27" title="Other"/>  
+                <@chartdata value=36 title="Peperoni"/>
+                <@chartdata value=2 title="Sausage"/> 
+                <@chartdata value=19 title="Cheese"/> 
+                <@chartdata value=6 title="Chicken"/> 
+                <@chartdata value=27 title="Other"/>  
             </@chart>
         </@cell>
         <@cell columns="4">
             <@chart type="bar" library="foundation">
-                <@chartdata value="36" title="Peperoni"/>
-                <@chartdata value="14" title="Sausage"/> 
-                <@chartdata value="8" title="Cheese"/> 
-                <@chartdata value="11" title="Chicken"/> 
-                <@chartdata value="7" title="Other"/>  
+                <@chartdata value=36 title="Peperoni"/>
+                <@chartdata value=14 title="Sausage"/> 
+                <@chartdata value=8 title="Cheese"/> 
+                <@chartdata value=11 title="Chicken"/> 
+                <@chartdata value=7 title="Other"/>  
             </@chart>
         </@cell>
         <@cell columns="4">
             <@chart type="line" library="foundation">
-                <@chartdata value="36" value2="1" title="Peperoni"/>
-                <@chartdata value="2" value2="2" title="Sausage"/> 
-                <@chartdata value="19" value2="3" title="Cheese"/> 
-                <@chartdata value="6" value2="4" title="Chicken"/> 
-                <@chartdata value="27" value2="5" title="Other"/>  
+                <@chartdata value=36 value2=1 title="Peperoni"/>
+                <@chartdata value=2 value2=2 title="Sausage"/> 
+                <@chartdata value=19 value2=3 title="Cheese"/> 
+                <@chartdata value=6 value2=4 title="Chicken"/> 
+                <@chartdata value=27 value2=5 title="Other"/>  
             </@chart>
         </@cell>
     </@row>-->
@@ -327,31 +327,31 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     <@row>
         <@cell columns="4">
             <@chart type="pie" library="chart" label1="Number" label2="Item">
-                <@chartdata value="36" title="Peperoni"/>
-                <@chartdata value="2" title="Sausage"/> 
-                <@chartdata value="19" title="Cheese"/> 
-                <@chartdata value="6" title="Chicken"/> 
-                <@chartdata value="27" title="Other"/>  
+                <@chartdata value=36 title="Peperoni"/>
+                <@chartdata value=2 title="Sausage"/> 
+                <@chartdata value=19 title="Cheese"/> 
+                <@chartdata value=6 title="Chicken"/> 
+                <@chartdata value=27 title="Other"/>  
             </@chart>
         </@cell>
         
         <@cell columns="4">
             <@chart type="bar" library="chart" label1="Number" label2="Item">
-                <@chartdata value="36" title="Peperoni"/>
-                <@chartdata value="14" title="Sausage"/> 
-                <@chartdata value="8" title="Cheese"/> 
-                <@chartdata value="11" title="Chicken"/> 
-                <@chartdata value="7" title="Other"/>  
+                <@chartdata value=36 title="Peperoni"/>
+                <@chartdata value=14 title="Sausage"/> 
+                <@chartdata value=8 title="Cheese"/> 
+                <@chartdata value=11 title="Chicken"/> 
+                <@chartdata value=7 title="Other"/>  
             </@chart>
         </@cell>
         
         <@cell columns="4">
             <@chart type="line" library="chart" label1="Number" label2="Item">
-                <@chartdata value="36" value2="1" title="Peperoni"/>
-                <@chartdata value="2" value2="2" title="Sausage"/> 
-                <@chartdata value="19" value2="3" title="Cheese"/> 
-                <@chartdata value="6" value2="4" title="Chicken"/> 
-                <@chartdata value="27" value2="5" title="Other"/>  
+                <@chartdata value=36 value2=1 title="Peperoni"/>
+                <@chartdata value=2 value2=2 title="Sausage"/> 
+                <@chartdata value=19 value2=3 title="Cheese"/> 
+                <@chartdata value=6 value2=4 title="Chicken"/> 
+                <@chartdata value=27 value2=5 title="Other"/>  
             </@chart>
         </@cell>
     </@row>

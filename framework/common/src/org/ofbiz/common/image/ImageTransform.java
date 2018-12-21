@@ -73,13 +73,15 @@ public class ImageTransform {
      * getBufferedImage
      * <p>
      * Set a buffered image
+     * <p>
+     * SCIPIO: NOTE: 2018-12-18: This will now return error if bufferedImage is null.
      *
      * @param   fileLocation    Full file Path or URL
      * @return  URL images for all different size types
      * @throws  IOException Error prevents the document from being fully parsed
      * @throws  IllegalArgumentException Errors occur in parsing
      */
-    public static  Map<String, Object> getBufferedImage(String fileLocation, Locale locale)
+    public static Map<String, Object> getBufferedImage(String fileLocation, Locale locale)
         throws IllegalArgumentException, IOException {
 
         /* VARIABLES */
@@ -89,14 +91,19 @@ public class ImageTransform {
         /* BUFFERED IMAGE */
         try {
             bufImg = ImageIO.read(new File(fileLocation));
+            if (bufImg == null) { // SCIPIO: may be null
+                Debug.logError(UtilProperties.getMessage(resource, "ImageTransform.unable_to_read_image", Debug.getLogLocale()) + " : " + fileLocation, module);
+                result.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resource, "ImageTransform.unable_to_read_image", locale) + " : " + fileLocation);
+                return result;
+            }
         } catch (IllegalArgumentException e) {
             String errMsg = UtilProperties.getMessage(resource, "ImageTransform.input_is_null", locale) + " : " + fileLocation + " ; " + e.toString();
-            Debug.logError(errMsg, module);
+            Debug.logError(UtilProperties.getMessage(resource, "ImageTransform.input_is_null", Debug.getLogLocale()) + " : " + fileLocation + " ; " + e.toString(), module); // SCIPIO: ENGLISH
             result.put(ModelService.ERROR_MESSAGE, errMsg);
             return result;
         } catch (IOException e) {
             String errMsg = UtilProperties.getMessage(resource, "ImageTransform.error_occurs_during_reading", locale) + " : " + fileLocation + " ; " + e.toString();
-            Debug.logError(errMsg, module);
+            Debug.logError(errMsg, UtilProperties.getMessage(resource, "ImageTransform.error_occurs_during_reading", Debug.getLogLocale()) + " : " + fileLocation + " ; " + e.toString()); // SCIPIO: ENGLISH
             result.put(ModelService.ERROR_MESSAGE, errMsg);
             return result;
         }

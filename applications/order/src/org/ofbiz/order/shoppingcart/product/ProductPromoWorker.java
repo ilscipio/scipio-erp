@@ -113,7 +113,7 @@ public final class ProductPromoWorker {
                 Debug.logError(e, "Error looking up store with id " + productStoreId, module);
             }
             if (productStore == null) {
-                Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoStoreFoundWithIdNotDoingPromotions", UtilMisc.toMap("productStoreId",productStoreId), cart.getLocale()), module);
+                Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoStoreFoundWithIdNotDoingPromotions", UtilMisc.toMap("productStoreId",productStoreId), Debug.getLogLocale()), module); // SCIPIO: log locale
                 return productPromos;
             }
 
@@ -179,7 +179,7 @@ public final class ProductPromoWorker {
             Debug.logError(e, "Error looking up store with id " + productStoreId, module);
         }
         if (productStore == null) {
-            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoStoreFoundWithIdNotDoingPromotions", UtilMisc.toMap("productStoreId",productStoreId), cart.getLocale()), module);
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoStoreFoundWithIdNotDoingPromotions", UtilMisc.toMap("productStoreId",productStoreId), Debug.getLogLocale()), module); // SCIPIO: log locale
             return promoCodes;
         }
         try {
@@ -219,7 +219,7 @@ public final class ProductPromoWorker {
             Debug.logError(e, "Error looking up store with id " + productStoreId, module);
         }
         if (productStore == null) {
-            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoStoreFoundWithIdNotDoingPromotions", UtilMisc.toMap("productStoreId",productStoreId), cart.getLocale()), module);
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoStoreFoundWithIdNotDoingPromotions", UtilMisc.toMap("productStoreId",productStoreId), Debug.getLogLocale()), module); // SCIPIO: log locale
             return productPromoList;
         }
 
@@ -264,7 +264,7 @@ public final class ProductPromoWorker {
             Debug.logError(e, "Error looking up agreement with id " + agreementId, module);
         }
         if (agreement == null) {
-            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoAgreementFoundWithIdNotDoingPromotions", UtilMisc.toMap("agreementId", agreementId), cart.getLocale()), module);
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoAgreementFoundWithIdNotDoingPromotions", UtilMisc.toMap("agreementId", agreementId), Debug.getLogLocale()), module); // SCIPIO: log locale
             return productPromoList;
         }
         GenericValue agreementItem = null;
@@ -274,7 +274,7 @@ public final class ProductPromoWorker {
             Debug.logError(e, "Error looking up agreement items for agreement with id " + agreementId, module);
         }
         if (agreementItem == null) {
-            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoAgreementItemFoundForAgreementWithIdNotDoingPromotions", UtilMisc.toMap("agreementId", agreementId), cart.getLocale()), module);
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNoAgreementItemFoundForAgreementWithIdNotDoingPromotions", UtilMisc.toMap("agreementId", agreementId), Debug.getLogLocale()), module); // SCIPIO: log locale
             return productPromoList;
         }
 
@@ -1226,7 +1226,7 @@ public final class ProductPromoWorker {
             // does nothing on order level, only checked on item level, so ignore by always considering passed
             return true;
         } else {
-            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondInputParameterLhs", UtilMisc.toMap("inputParamEnumId",productPromoCond.getString("inputParamEnumId")), cart.getLocale()), module);
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondInputParameterLhs", UtilMisc.toMap("inputParamEnumId",productPromoCond.getString("inputParamEnumId")), Debug.getLogLocale()), module); // SCIPIO: log locale
             return false;
         }
 
@@ -1247,7 +1247,7 @@ public final class ProductPromoWorker {
             } else if ("PPC_GTE".equals(operatorEnumId)) {
                 if (compare >= 0) return true;
             } else {
-                Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondCondition", UtilMisc.toMap("operatorEnumId",operatorEnumId) , cart.getLocale()), module);
+                Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondCondition", UtilMisc.toMap("operatorEnumId",operatorEnumId), Debug.getLogLocale()), module); // SCIPIO: log locale
                 return false;
             }
         }
@@ -1337,7 +1337,7 @@ public final class ProductPromoWorker {
                     return true;
                 }
             } else {
-                Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondCondition", UtilMisc.toMap("operatorEnumId",operatorEnumId) , cart.getLocale()), module);
+                Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnUnSupportedProductPromoCondCondition", UtilMisc.toMap("operatorEnumId",operatorEnumId), Debug.getLogLocale()), module); // SCIPIO: log locale
                 return false;
             }
             // was a compareBase and nothing returned above, so condition didn't pass, return false
@@ -1459,7 +1459,7 @@ public final class ProductPromoWorker {
                                 Debug.logError("Error calling isStoreInventoryAvailable service, result is: " + invReqResult, module);
                                 throw new CartItemModifyException((String) invReqResult.get(ModelService.ERROR_MESSAGE));
                             } else if (!"Y".equals(invReqResult.get("available"))) {
-                                Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNotApplyingGwpBecauseProductIdIsOutOfStockForProductPromoAction", UtilMisc.toMap("productId", productId, "productPromoAction", productPromoAction), cart.getLocale()), module);
+                                Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderNotApplyingGwpBecauseProductIdIsOutOfStockForProductPromoAction", UtilMisc.toMap("productId", productId, "productPromoAction", productPromoAction), Debug.getLogLocale()), module); // SCIPIO: log locale
                                 productId = null;
                                 product = null;
                             }
@@ -1517,7 +1517,7 @@ public final class ProductPromoWorker {
                         productId = alternateGwpProductId;
                         product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
                     } else {
-                        Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnAlternateGwpProductIdWasInPlaceButWasEitherNotValidOrIsNoLongerInStockForId", UtilMisc.toMap("alternateGwpProductId",alternateGwpProductId), cart.getLocale()), module);
+                        Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderAnAlternateGwpProductIdWasInPlaceButWasEitherNotValidOrIsNoLongerInStockForId", UtilMisc.toMap("alternateGwpProductId",alternateGwpProductId), Debug.getLogLocale()), module); // SCIPIO: log locale
                     }
                 }
 

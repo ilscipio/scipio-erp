@@ -253,6 +253,31 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     protected Map<String, Object> properties = Collections.emptyMap(); 
     
     String relativeDefinitionLocation; // SCIPIO
+
+    public enum LogLevel { // SCIPIO
+        DEBUG,
+        NORMAL,
+        QUIET;
+        
+        public static LogLevel fromName(String name, LogLevel defaultValue) {
+            if (UtilValidate.isEmpty(name)) {
+                return defaultValue;
+            }
+            return LogLevel.valueOf(LogLevel.class, name.toUpperCase());
+        }
+        
+        public boolean isDebug() {
+            return this == DEBUG;
+        }
+        public boolean isQuiet() {
+            return this == QUIET;
+        }
+    }
+    
+    /**
+     * SCIPIO: If true, avoids optional logging.
+     */
+    LogLevel logLevel = LogLevel.NORMAL;
     
     public ModelService() {}
 
@@ -296,6 +321,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             this.addParamClone(param);
         }
         this.relativeDefinitionLocation = model.relativeDefinitionLocation; // SCIPIO
+        this.logLevel = model.logLevel; // SCIPIO
     }
 
     @Override
@@ -542,7 +568,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     // it makes developers avoid the default-value attribute altogether.
                     // so, only log if debug flag or verbose are enabled (added conditions). verbose is configurable.
                     //Debug.logInfo(...);
-                    if (Debug.isOn(logParamLevel) || this.debug) {
+                    if ((Debug.isOn(logParamLevel) && !this.isQuiet()) || this.debug) {
                         Debug.logInfo("Set default value [" + defaultValueObj + "] for parameter [" + param.name + "]", module);
                     }
                 }
@@ -2230,6 +2256,20 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     public String getRelativeDefinitionLocation() {
         return relativeDefinitionLocation;
+    }
+
+    /**
+     * SCIPIO: Returns true if the service should not log any non-vital information.
+     */
+    public boolean isQuiet() {
+        return getLogLevel().isQuiet();
+    }
+
+    /**
+     * SCIPIO: Returns configured logging level.
+     */
+    public LogLevel getLogLevel() {
+        return logLevel;
     }
 
     /**

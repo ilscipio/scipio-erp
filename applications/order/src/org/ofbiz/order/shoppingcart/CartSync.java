@@ -128,7 +128,7 @@ public class CartSync implements AutoCloseable, Serializable {
             synchronized(UtilHttp.getSessionSyncObject(session)) {
                 lock = (CartSync) session.getAttribute("shoppingCartLock");
                 if (lock == null) {
-                    if (ShoppingCart.isDebug()) {
+                    if (ShoppingCart.verboseOn()) {
                         Debug.logInfo("shoppingCartLock not found in session; creating", module);
                     }
                     lock = createSetLockObject(session);

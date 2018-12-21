@@ -718,6 +718,9 @@ public class ImageManagementServices {
 
         try {
             BufferedImage bufImg = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + dataResourceName));
+            if (bufImg == null) { // SCIPIO: may be null
+                return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
+            }
             double imgHeight = bufImg.getHeight();
             double imgWidth = bufImg.getWidth();
             if (dataResourceName.lastIndexOf('.') > 0 && dataResourceName.lastIndexOf('.') < dataResourceName.length()) {
@@ -785,6 +788,9 @@ public class ImageManagementServices {
 
         try {
             BufferedImage bufImg = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + dataResourceName));
+            if (bufImg == null) { // SCIPIO: may be null
+                return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
+            }
             double imgHeight = bufImg.getHeight();
             double imgWidth = bufImg.getWidth();
             String filenameToUse = dataResourceName;
@@ -820,6 +826,9 @@ public class ImageManagementServices {
 
             if (imageType.equals(mimeType)) {
                 BufferedImage bufImg = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + dataResourceName));
+                if (bufImg == null) { // SCIPIO: may be null
+                    return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
+                }
                 ImageIO.write(bufImg, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUse));
 
                 File file = new File(imageServerPath + "/" + productId + "/" + dataResourceName);
@@ -887,6 +896,9 @@ public class ImageManagementServices {
                         String imageUrlAssoc = imageServerUrl + "/" + productId + "/" + filenameToUseAssoc;
 
                         BufferedImage bufImgAssoc = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + drDataResourceNameAssoc));
+                        if (bufImgAssoc == null) { // SCIPIO: may be null
+                            return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
+                        }
                         ImageIO.write(bufImgAssoc, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUseAssoc));
 
                         File fileAssoc = new File(imageServerPath + "/" + productId + "/" + drDataResourceNameAssoc);

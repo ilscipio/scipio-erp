@@ -135,7 +135,7 @@ NOTE: This template does not support globals as-is (#global)
     <#-- not really needed
     <#local fileType = imageUrl?keep_after_last(".")/>
     <#local filenameToUse = "IMG_"+productId+"_"+imageNr+"."+fileType/> -->
-    <#local locale = Static["org.apache.commons.lang.LocaleUtils"].toLocale("en_US")>
+    <#local locale = Static["org.apache.commons.lang3.LocaleUtils"].toLocale("en_US")>
     <#local localeStr = locale>
     <#assign paramMap={
             "locale" : locale,

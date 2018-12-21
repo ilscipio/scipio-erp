@@ -82,6 +82,9 @@ public class ReplaceImage {
 
         try {
             BufferedImage bufImg = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + dataResourceNameReplace));
+            if (bufImg == null) { // SCIPIO: may be null
+                return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
+            }
             ImageIO.write(bufImg, "jpg", new File(imageServerPath + "/" + productId + "/" + dataResourceNameExist));
 
             List<GenericValue> contentAssocReplaceList = EntityQuery.use(delegator).from("ContentAssoc").where("contentId", contentIdReplace, "contentAssocTypeId", "IMAGE_THUMBNAIL").queryList();
@@ -97,10 +100,16 @@ public class ReplaceImage {
 
                     if (UtilValidate.isNotEmpty(dataResourceAssocExist)) {
                         BufferedImage bufImgAssocReplace = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + dataResourceAssocReplace.get("drDataResourceName")));
+                        if (bufImgAssocReplace == null) { // SCIPIO: may be null
+                            return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
+                        }
                         ImageIO.write(bufImgAssocReplace, "jpg", new File(imageServerPath + "/" + productId + "/" + dataResourceAssocExist.get("drDataResourceName")));
                     }
                     else{
                         BufferedImage bufImgAssocReplace = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + dataResourceAssocReplace.get("drDataResourceName")));
+                        if (bufImgAssocReplace == null) { // SCIPIO: may be null
+                            return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
+                        }
                         ImageIO.write(bufImgAssocReplace, "jpg", new File(imageServerPath + "/" + productId + "/" + dataResourceNameExist.substring(0, dataResourceNameExist.length() - 4) + "-" + contentAssocReplace.get("mapKey") + ".jpg"));
                     }
                 }

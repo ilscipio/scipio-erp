@@ -48,6 +48,11 @@ public final class Debug {
     public static final int ERROR = 6;
     public static final int FATAL = 7;
 
+    /**
+     * SCIPIO: The locale of the log entries. This is always {@link Locale#ENGLISH}.
+     */
+    private static final Locale LOG_LOCALE = Locale.ENGLISH;
+
     private static final String[] levelProps = {"", "print.verbose", "print.timing", "print.info", "print.important", "print.warning", "print.error", "print.fatal"};
     private static final Level[] levelObjs = {Level.OFF, Level.DEBUG, Level.TRACE, Level.INFO, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL};
 
@@ -1022,5 +1027,23 @@ public final class Debug {
         }
         return callerInfo.getClassName().substring(callerInfo.getClassName().lastIndexOf('.') + 1) 
                 + "." + callerInfo.getMethodName() + "@" + callerInfo.getLineNumber();
+    }
+
+    /**
+     * SCIPIO: Returns the log locale. This is always {@link Locale#ENGLISH}.
+     * <p>
+     * NOTE: This should be used in Debug.logXxx calls which use UtilProperties.getMessage to prepare log-destined messages;
+     * i.e. call UtilProperties.getMessage once with context locale to format a message for caller, and then call
+     * UtilProperties.getMessage a second time with the log locale to print to the log. e.g.:
+     * <pre>
+     * {@code    Debug.logError("Something happened: " + UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", Debug.getLogLocale()), module);
+     *    return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "CommonErrorOccurredContactSupport", (Locale) context.get("locale"));
+     * }
+     * </pre>
+     * <p>
+     * Added 2018-12-18.
+     */
+    public static Locale getLogLocale() {
+        return LOG_LOCALE;
     }
 }

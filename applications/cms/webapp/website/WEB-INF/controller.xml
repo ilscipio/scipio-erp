@@ -82,7 +82,15 @@
         <security https="true" auth="false"/>
         <response name="success" type="view" value="pagenotfound"/>
     </request-map>
-    
+    <request-map uri="orderhistory">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="pagenotfound"/>
+    </request-map>
+    <request-map uri="viewprofile">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="pagenotfound"/>
+    </request-map>
+
     <!-- **************** -->
     <!--   VIEW MAPPINGS  -->
     <!-- **************** -->

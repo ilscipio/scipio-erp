@@ -76,7 +76,7 @@ public class UpgradeServices {
         // check permission
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (!security.hasPermission("ENTITY_MAINT", userLogin)) {
-            Debug.logError(UtilProperties.getMessage(resource, "EntityExtServicePermissionNotGranted", locale), module);
+            Debug.logError(UtilProperties.getMessage(resource, "EntityExtServicePermissionNotGranted", Debug.getLogLocale()), module); // SCIPIO: log locale
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "EntityExtServicePermissionNotGranted", locale));
         }
 

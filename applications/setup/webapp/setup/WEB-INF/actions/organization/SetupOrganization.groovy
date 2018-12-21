@@ -1,4 +1,4 @@
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.*;
 

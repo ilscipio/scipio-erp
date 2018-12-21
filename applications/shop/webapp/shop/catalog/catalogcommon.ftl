@@ -214,14 +214,18 @@
 </#macro>
 
 <#-- Makes options for insert within <@field type="select">. Used by keywordsearch & advancedsearch. WARN: uses context fields. -->
-<#macro productSortOrderSelectOptions sortOrder sortAscending showAdv="" showAdvDef=false extraArgs...>
+<#macro productSortOrderSelectOptions sortOrder sortAscending showAdv="" showAdvDef=false type="kws" extraArgs...>
     <#if !showAdv?is_boolean>
       <#local showAdv = showAdvFields!showAdvDef><#-- CONTEXT field -->
     </#if>
     <#local sortOrder = rawString(sortOrder)>
     <#-- SCIPIO: NOTE: removed the high-to-low checkbox in favor of dedicated options, because the box
         is not used in all sorting methods and it takes space -->
+  <#if type == "kws">
     <option value="SortKeywordRelevancy"<#if sortOrder == "SortKeywordRelevancy"> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductKeywordRelevancy}<#else>${uiLabelMap.ProductRelevance}</#if></option>
+  <#else><#-- type == "cat" -->
+    <option value=""<#if !sortOrder?has_content || sortOrder == "SortKeywordRelevancy"> selected="selected"</#if>>--</option>
+  </#if>
     <option value="SortProductField:productName"<#if sortOrder == "SortProductField:productName"> selected="selected"</#if>>${uiLabelMap.ProductProductName}</option>
   <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
     <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>

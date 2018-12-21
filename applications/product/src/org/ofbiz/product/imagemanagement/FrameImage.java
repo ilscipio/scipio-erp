@@ -44,6 +44,7 @@ import javax.swing.ImageIcon;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -114,7 +115,13 @@ public class FrameImage {
 
             // Image Frame
             BufferedImage bufImg1 = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + imageName));
+            if (bufImg1 == null) { // SCIPIO: may be null
+                return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
+            }
             BufferedImage bufImg2 = ImageIO.read(new File(imageServerPath + "/frame/"+frameImageName));
+            if (bufImg2 == null) { // SCIPIO: may be null
+                return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
+            }
 
             // SCIPIO: obsolete
 //            int bufImgType;
@@ -448,7 +455,15 @@ public class FrameImage {
             }
             // Image Frame
             BufferedImage bufImg1 = ImageIO.read(new File(imageServerPath + "/" + ImageUtil.cleanPathname(productId) + "/" + ImageUtil.cleanFilename(imageName)).getCanonicalFile()); // SCIPIO: clean parameters
+            if (bufImg1 == null) { // SCIPIO: may be null
+                request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", UtilHttp.getLocale(request)));
+                return "error";
+            }
             BufferedImage bufImg2 = ImageIO.read(new File(imageServerPath + "/frame/" + frameImageName));
+            if (bufImg2 == null) { // SCIPIO: may be null
+                request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", UtilHttp.getLocale(request)));
+                return "error";
+            }
 
             // SCIPIO: obsolete
 //            int bufImgType;
@@ -479,10 +494,9 @@ public class FrameImage {
             String mimeType = imageName.substring(imageName.lastIndexOf(".") + 1);
             ImageIO.write(bufNewImg, mimeType, new File(imageServerPath + "/preview/" + "/previewImage.jpg"));
 
-        }
-         else{
-             String errMsg = "Please select Image.";
-             request.setAttribute("_EVENT_MESSAGE_", errMsg);
+        } else {
+            String errMsg = "Please select Image.";
+            request.setAttribute("_EVENT_MESSAGE_", errMsg);
             return "error";
         }
         return "success";

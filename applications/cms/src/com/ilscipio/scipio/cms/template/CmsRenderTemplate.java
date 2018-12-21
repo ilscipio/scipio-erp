@@ -62,6 +62,7 @@ import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.content.CmsPage;
 import com.ilscipio.scipio.cms.content.CmsPageContent;
 import com.ilscipio.scipio.cms.content.CmsPageContext;
+import com.ilscipio.scipio.cms.control.CmsControlState;
 import com.ilscipio.scipio.cms.data.Preloadable;
 import com.ilscipio.scipio.cms.data.Preloadable.AbstractPreloadable;
 
@@ -139,7 +140,8 @@ public interface CmsRenderTemplate extends Serializable {
                 "cmsPageTemplate",
                 "cmsPage",
                 "cmsPageId",
-                "cmsIsPreview"
+                "cmsIsPreview",
+                CmsControlState.ATTR
         })));
 
         // FIXME: 2016: we need to unhardcode this names list through an Ofbiz patch.
@@ -609,6 +611,7 @@ public interface CmsRenderTemplate extends Serializable {
             context.put("cmsPageId", (page != null) ? page.getId() : null); // NOTE: mainly for debugging and such...
             context.put("cmsIsPreview", pageContext.isPreview());
             context.put("cmsCtxSysVarNames", cmsCtxSysVarNames);
+            context.put(CmsControlState.ATTR, pageContext.getControlState());
         }
 
         /**

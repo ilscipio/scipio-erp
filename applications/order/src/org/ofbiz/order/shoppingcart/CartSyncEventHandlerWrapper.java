@@ -53,7 +53,7 @@ public class CartSyncEventHandlerWrapper implements EventHandlerWrapper {
             }
             if (modelService != null) {
                 if (Boolean.TRUE.equals(modelService.getProperty("shoppingCart.update"))) {
-                    if (ShoppingCart.isDebug()) {
+                    if (ShoppingCart.verboseOn()) {
                         Debug.logInfo("Begin shoppingCart.update cart sync section for event service '" + serviceName + "'"
                                 + getLogSuffix(), module);
                     }
@@ -75,7 +75,7 @@ public class CartSyncEventHandlerWrapper implements EventHandlerWrapper {
                         // If OUT cart changed, simply let it replace our cart copy through CartUpdate.commit
                         ShoppingCart outCart = (ShoppingCart) request.getAttribute("shoppingCart");
                         if (outCart != null && outCart != cart) {
-                            if (ShoppingCart.isDebug()) {
+                            if (ShoppingCart.verboseOn()) {
                                 if (cart != null) {
                                     Debug.logInfo("Event changed shoppingCart request attribute"
                                             + "; local cart copy will be replaced" + getLogSuffix(), module);
@@ -97,7 +97,7 @@ public class CartSyncEventHandlerWrapper implements EventHandlerWrapper {
                             }
                         }
                     }
-                    if (ShoppingCart.isDebug()) {
+                    if (ShoppingCart.verboseOn()) {
                         Debug.logInfo("End shoppingCart.update cart sync section for event service '" + serviceName + "'"
                                 + getLogSuffix(), module);
                     }

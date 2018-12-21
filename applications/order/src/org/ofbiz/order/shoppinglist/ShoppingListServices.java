@@ -77,7 +77,7 @@ public class ShoppingListServices {
         Locale locale = (Locale) context.get("locale");
 
         if (frequency == null || interval == null) {
-            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderFrequencyOrIntervalWasNotSpecified", locale), module);
+            Debug.logWarning(UtilProperties.getMessage(resource_error,"OrderFrequencyOrIntervalWasNotSpecified", Debug.getLogLocale()), module); // SCIPIO: log locale
             return ServiceUtil.returnSuccess();
         }
 

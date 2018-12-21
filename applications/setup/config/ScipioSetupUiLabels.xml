@@ -111,6 +111,16 @@
         <value xml:lang="de">Benutzer zum Speichern zuordnen (in dieser Rolle)</value>
         <value xml:lang="en">Associate user to store (in this role)</value>
     </property>
+    <property key="SetupCatalogExtraStepsInfo">
+        <value xml:lang="de">Wenn Sie mit dem Setup fertig sind, besuchen Sie diese Seiten, um weitere Katalog- und Speicherkonfigurationen zu erhalten:</value>
+        <value xml:lang="en">Once you are done with setup, visit these pages for further catalog and store configuration:</value>
+        <value xml:lang="fr">Une fois la configuration terminée, visitez ces pages pour augmenter la configuration du catalogue et du magasin:</value>
+    </property>
+    <property key="SetupCatalogSEOFuncDesc">
+        <value xml:lang="de">SEO-URLs und Sitemaps sollten generiert werden, nachdem Sie den Katalog mit Produkten gefüllt haben.</value>
+        <value xml:lang="en">SEO URLs and sitemaps should be generated after you have populated the catalog with products.</value>
+        <value xml:lang="fr">Les URL SEO et les plans Sitemap doivent être générés après que vous avez rempli le catalogue avec des produits.</value>
+    </property>
     <property key="SetupCompleteMsg">
         <value xml:lang="de">Alle Setup-Schritte wurden abgeschlossen. Setup abgeschlossen!</value>
         <value xml:lang="en">All setup steps completed. Setup Complete!</value>

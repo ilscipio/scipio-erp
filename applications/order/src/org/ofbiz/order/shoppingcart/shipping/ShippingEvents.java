@@ -294,7 +294,7 @@ public class ShippingEvents {
                 if (ServiceUtil.isFailure(e.getServiceResult())) {
                     // TODO: REVIEW: here we can return either success or failure, for now return success for backward-compat...
                     //return ServiceUtil.returnFailure(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", locale));
-                    Debug.logWarning(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", Locale.ENGLISH), module);
+                    Debug.logWarning(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", Debug.getLogLocale()), module);
                     return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", locale));
                 }
             }
@@ -326,7 +326,7 @@ public class ShippingEvents {
                 if (ServiceUtil.isFailure(e.getServiceResult())) {
                     // TODO: REVIEW: here we can return either success or failure, for now return success for backward-compat...
                     //return ServiceUtil.returnFailure(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", locale));
-                    Debug.logWarning(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", Locale.ENGLISH), module);
+                    Debug.logWarning(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", Debug.getLogLocale()), module);
                     return ServiceUtil.returnSuccess(UtilProperties.getMessage(resource_error, "shippingevents.problem_calculating_shipping_offline", locale));
                 }
             }

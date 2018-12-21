@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transaction;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;

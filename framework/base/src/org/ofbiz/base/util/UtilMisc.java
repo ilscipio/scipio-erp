@@ -1420,4 +1420,54 @@ public final class UtilMisc {
     public static <T> List<T> unmodifiableReversedList(Collection<T> list) {
         return Collections.unmodifiableList(asReversedList(list));
     }
+
+    /**
+     * SCIPIO: A small helper to extra all the values for a given field from each map.
+     * Convenience method to avoid null pointers and stream API.
+     * Does nothing if either mapList or out are null.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V, T extends V, C extends Collection<T>> C getMapValuesForKey(Collection<? extends Map<K, V>> mapList, K key, C out) {
+        if (mapList != null && out != null) {
+            for(Map<K, V> map : mapList) {
+                out.add((T) map.get(key));
+            }
+        }
+        return out;
+    }
+    
+    /**
+     * SCIPIO: A small helper to extra all the values for a given field from each map, as a list of same length.
+     * Convenience method to avoid null pointers and stream API.
+     * If mapList is null or mapList is empty, returns unmodifiable empty list.
+     * Use {@link #getMapValuesForKeyOrNewList} to force new list in all cases.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V, T extends V> List<T> getMapValuesForKey(Collection<? extends Map<K, V>> mapList, K key) {
+        if (mapList == null || mapList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<T> out = new ArrayList<>(mapList.size());
+        for(Map<K, V> map : mapList) {
+            out.add((T) map.get(key));
+        }
+        return out;
+    }
+
+    /**
+     * SCIPIO: A small helper to extra all the values for a given field from each map, as a same-sized ArrayList.
+     * Convenience method to avoid null pointers and stream API.
+     * NOTE: Always creates a new ArrayList even if mapList is null or empty.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V, T extends V> List<T> getMapValuesForKeyOrNewList(Collection<? extends Map<K, V>> mapList, K key) {
+        if (mapList == null || mapList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<T> out = new ArrayList<>(mapList.size());
+        for(Map<K, V> map : mapList) {
+            out.add((T) map.get(key));
+        }
+        return out;
+    }
 }

@@ -22,7 +22,7 @@ code package.
                    <#if screenshots?has_content>
                       <#list screenshots as screenshot>
                         <#-- TODO: <a id="single_image" href="<@ofbizContentUrl>${screenshot.resourceValue}</@ofbizContentUrl>">-->
-                        <@img src=makeOfbizContentUrl(screenshot.resourceValue) height="250px" type="contain"/>
+                        <@img src=makeOfbizContentUrl(screenshot.resourceValue) width="100%" height="250px" type="contain"/>
                         <#--<span class="${style.text_right}"><@modal icon="${styles.icon} fa-search">
                             <@img src=makeOfbizContentUrl(screenshot.resourceValue)/>
                         </@modal>

@@ -423,7 +423,7 @@ public class CartUpdate implements AutoCloseable {
          * NOTE: Even if there are nested CartUpdate instances/calls, we only need
          * one CartSync for the entire thing.
          */
-        private final boolean debug = ShoppingCart.isDebug();
+        private final boolean debug = ShoppingCart.verboseOn();
 
         CartUpdateStatus(int nestedLevel, CartSync cartSync, ShoppingCart sourceCart, boolean cartWasChanged) {
             this.nestedLevel = nestedLevel;

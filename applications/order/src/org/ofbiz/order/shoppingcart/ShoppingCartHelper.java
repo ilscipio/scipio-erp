@@ -545,7 +545,7 @@ public class ShoppingCartHelper {
                         }
                         if (requirementAlreadyInCart) {
                             if (Debug.warningOn()) {
-                                Debug.logWarning(UtilProperties.getMessage(resource_error, "OrderTheRequirementIsAlreadyInTheCartNotAdding", UtilMisc.toMap("requirementId",requirementId), cart.getLocale()), module);
+                                Debug.logWarning(UtilProperties.getMessage(resource_error, "OrderTheRequirementIsAlreadyInTheCartNotAdding", UtilMisc.toMap("requirementId",requirementId), Debug.getLogLocale()), module); // SCIPIO: log locale
                             }
                             continue;
                         }
@@ -883,9 +883,9 @@ public class ShoppingCartHelper {
                         deleteList.add(this.cart.findCartItem(index));
                     }
                 } catch (NumberFormatException nfe) {
-                    Debug.logWarning(nfe, UtilProperties.getMessage(resource_error, "OrderCaughtNumberFormatExceptionOnCartUpdate", cart.getLocale()));
+                    Debug.logWarning(nfe, UtilProperties.getMessage(resource_error, "OrderCaughtNumberFormatExceptionOnCartUpdate", Debug.getLogLocale())); // SCIPIO: log locale
                 } catch (Exception e) {
-                    Debug.logWarning(e, UtilProperties.getMessage(resource_error, "OrderCaughtExceptionOnCartUpdate", cart.getLocale()));
+                    Debug.logWarning(e, UtilProperties.getMessage(resource_error, "OrderCaughtExceptionOnCartUpdate", Debug.getLogLocale())); // SCIPIO: log locale
                 }
             } // else not a parameter we need
         }
@@ -898,7 +898,7 @@ public class ShoppingCartHelper {
                     int index = Integer.parseInt(indexStr);
                     item = this.cart.findCartItem(index);
                 } catch (Exception e) {
-                    Debug.logWarning(e, UtilProperties.getMessage(resource_error, "OrderProblemsGettingTheCartItemByIndex", cart.getLocale()));
+                    Debug.logWarning(e, UtilProperties.getMessage(resource_error, "OrderProblemsGettingTheCartItemByIndex", Debug.getLogLocale())); // SCIPIO: log locale
                 }
                 if (item != null) {
                     deleteList.add(item);

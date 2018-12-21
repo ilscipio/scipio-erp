@@ -8,11 +8,13 @@
                 <@menuitem type="generic">
                     <@modal id="modal_new_image_size_preset" label=uiLabelMap.CmsCreateCustomImageSizePreset linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                         <@heading>${uiLabelMap.CmsCreateCustomImageSizePreset}</@heading>
-                        <div class="cmsmedia-autoresize-area">
-	                        <form method="post" action="<@ofbizUrl>media</@ofbizUrl>" name="mediaForm">
+                        <div class="cmsmedia-customvariantsize-area">
+	                        <form method="post" action="<@ofbizUrl>createCustomImageSizePreset</@ofbizUrl>" name="customVariantSizesForm">
 	                        	<@field type="text" label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
 	                        	<hr/>
-	                            <@customVariantSizeForm />
+	                        	<div class="cmsmedia-customvariantsize-method customVariantSizesForm">
+	                            	<@customVariantSizeForm />
+	                            </div>
 	                            <@td><@field type="submit" value=uiLabelMap.CommonCreate class="${styles.link_run_sys!} ${styles.action_create!}" /></@td>
 	                            <@commonCustomVariantSizeScript/>
 	                        </form>

@@ -435,16 +435,11 @@
         <response name="success" type="view" value="customImageSizePresets"/>
     </request-map>
 
-    <request-map uri="addCustomImageSizePreset">
-        <security https="true" auth="true"/>        
-        <response name="success" type="view" value="addCustomImageSizePreset"/>
-    </request-map>
-
     <request-map uri="createCustomImageSizePreset">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsCreateCustomImageSizePreset"/>
         <response name="success" type="view" value="customImageSizePresets"/>
-        <response name="error" type="view" value="addCustomImageSizePreset"/>
+        <response name="error" type="view" value="customImageSizePresets"/>
     </request-map>
 
     <request-map uri="updateMedia">
@@ -583,7 +578,6 @@
     <view-map name="assets" type="screen" page="component://cms/widget/CMSScreens.xml#assets"/>
     <view-map name="editAsset" type="screen" page="component://cms/widget/CMSScreens.xml#editAsset"/>
     <view-map name="customImageSizePresets" type="screen" page="component://cms/widget/CMSScreens.xml#customImageSizePresets"/>
-    <view-map name="addCustomImageSizePreset" type="screen" page="component://cms/widget/CMSScreens.xml#addCustomImageSizePreset"/>
     <view-map name="scripts" type="screen" page="component://cms/widget/CMSScreens.xml#scripts"/>
     <view-map name="editScript" type="screen" page="component://cms/widget/CMSScreens.xml#editScript"/>
     <view-map name="media" type="screen" page="component://cms/widget/CMSScreens.xml#media"/>

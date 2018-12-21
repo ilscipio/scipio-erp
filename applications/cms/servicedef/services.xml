@@ -841,6 +841,16 @@
         <attribute name="listSize" type="Integer" mode="INOUT" optional="true"/>
         <attribute name="mediaFiles" type="List" mode="OUT" optional="false"/>
     </service>
+    
+    <service name="cmsCreateCustomImageSizePreset" engine="java"
+        location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="createCustomImageSizePreset" auth="true" transaction-timeout="7200">
+        <description>Creates custom image media presets.</description>
+        <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
+        <attribute mode="IN" name="variantSizeName" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeWidth" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeHeight" type="List" optional="true"/>
+        <attribute mode="IN" name="presetName" type="String" optional="true"/>
+    </service>
 
     <!-- ========================================================= -->
     <!-- Control/request data services -->

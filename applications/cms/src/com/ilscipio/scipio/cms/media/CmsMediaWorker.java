@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -132,7 +134,13 @@ public abstract class CmsMediaWorker {
 
     // TODO: REVIEW: for now we are intentionally ignoring the thruDate on ContentAssoc to simplify.
     // I don't see the point in keeping old records...
-
+    
+    public static List<GenericValue> getVariantContentAssocTo(HttpServletRequest request, String contentId) throws GenericEntityException {
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        return getVariantContentAssocTo(request, contentId);
+    }
+    
+    
     public static List<GenericValue> getVariantContentAssocTo(Delegator delegator, String contentId) throws GenericEntityException {
         EntityCondition cond = EntityCondition.makeCondition(
                 EntityCondition.makeCondition("contentIdStart", contentId),

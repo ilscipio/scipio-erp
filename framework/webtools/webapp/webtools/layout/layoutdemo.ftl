@@ -115,6 +115,13 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     </@row>    
 </@section>
 
+<@section title="Responsive Images">
+    <@row>
+        <@cell columns=4><@img src="https://placehold.it/240x800" id="test" type="cover" link="#" height="100px" width="100%" />Cover</@cell>
+        <@cell columns=4><@img src="https://placehold.it/240x800" type="contain" link="#" height="100px" width="100%" />Contain</@cell>
+        <@cell columns=4><@img src="https://placehold.it/240x800" type="none" link="#" height="100px" width="100%" />Automatically adjusted</@cell>
+    </@row>    
+</@section>
 
 <@section title="Section Titles and Headings - Auto Leveling">
   <@section title="Nested Section Title A">

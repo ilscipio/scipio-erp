@@ -5042,3 +5042,11 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
   </#if>
 </#macro>
 
+<#function getVariantContent contentIdTo="">
+	<#local varianContent=Static["com.ilscipio.scipio.cms.media.CmsMediaWorker"].getVariantContentAssocTo(request!, contentIdTo)>
+	<#list varianContent as content>
+		${Static["org.ofbiz.base.util.Debug"].log("content.scpWidth")}
+	</#list>
+	<#return variantContent>
+</#function>
+

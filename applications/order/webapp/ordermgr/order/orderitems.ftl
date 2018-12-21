@@ -30,7 +30,7 @@ code package.
                         <#assign orderItemContentWrapper = Static["org.ofbiz.order.order.OrderContentWrapper"].makeOrderContentWrapper(orderItem, request)>
                         <#assign orderItemShipGrpInvResList = orderReadHelper.getOrderItemShipGrpInvResList(orderItem)>
                         <#if orderHeader.orderTypeId == "SALES_ORDER"><#assign pickedQty = orderReadHelper.getItemPickedQuantityBd(orderItem)></#if>
-                        <@tr class="${rowColor!}">
+                        <@tr class=rowColor!"">
                             <#assign orderItemType = orderItem.getRelatedOne("OrderItemType", false)!>
                             <#assign productId = orderItem.productId!>
                             <#-- SCIPIO: This product lookup added by us, missing from upstream patch -->

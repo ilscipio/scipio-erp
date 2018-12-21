@@ -13,13 +13,24 @@ code package.
       <#assign allowPriceChange = true/>
   </#if>
 
+<@script>
+    <#-- SCIPIO: without this, may have issues with b -->
+    function submitUpdateItemInfoForm(action, orderItemSeqId, shipGroupSeqId) {
+        document.updateItemInfo.action = action;
+        document.updateItemInfo.orderItemSeqId.value = orderItemSeqId ? orderItemSeqId : '';
+        document.updateItemInfo.shipGroupSeqId.value = shipGroupSeqId ? shipGroupSeqId : '';
+        //document.updateItemInfo.submit();
+        return;
+    }
+</@script>
+
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
     <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>
       <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
-        <@menuitem type="link" href="javascript:document.updateItemInfo.submit()" text=uiLabelMap.OrderUpdateItems class="+${styles.action_run_sys!} ${styles.action_update!}"/>
-        <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelSelectedOrderItems')}';document.updateItemInfo.submit()" text=uiLabelMap.OrderCancelSelectedItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
-        <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.submit()" text=uiLabelMap.OrderCancelAllItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
+        <@menuitem type="link" href="javascript:submitUpdateItemInfoForm('${escapeFullUrl(makeOfbizUrl('updateOrderItems'), 'js')}');" text=uiLabelMap.OrderUpdateItems class="+${styles.action_run_sys!} ${styles.action_update!}"/>
+        <@menuitem type="link" href="javascript:submitUpdateItemInfoForm('${escapeFullUrl(makeOfbizUrl('cancelSelectedOrderItems'), 'js')}');" text=uiLabelMap.OrderCancelSelectedItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
+        <@menuitem type="link" href="javascript:submitUpdateItemInfoForm('${escapeFullUrl(makeOfbizUrl('cancelOrderItem'), 'js')}');" text=uiLabelMap.OrderCancelAllItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
         <@menuitem type="link" href=makeOfbizUrl("orderview?${rawString(paramString)}") text=uiLabelMap.OrderViewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
       </#if>
     </#if>
@@ -38,10 +49,10 @@ code package.
         <@table type="data-complex" class="+order-items">
 
         <#if orderItemList?has_content>
-            <form name="updateItemInfo" method="post" action="<@ofbizUrl>updateOrderItems</@ofbizUrl>">
+            <form name="updateItemInfo" id="updateItemInfo" method="post" action="<@ofbizUrl>updateOrderItems</@ofbizUrl>">
             <input type="hidden" name="orderId" value="${orderId}"/>
-            <input type="hidden" name="orderItemSeqId" value=""/>
-            <input type="hidden" name="shipGroupSeqId" value=""/>
+            <input type="hidden" name="orderItemSeqId" value="" id="updateItemInfo_orderItemSeqId"/>
+            <input type="hidden" name="shipGroupSeqId" value="" id="updateItemInfo_shipGroupSeqId"/>
             <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER')>
               <#-- SCIPIO: FIXME? why is supplierPartyId the partyId? should have a supplierPartyId explicitly in groovy script to clarify this -->
               <input type="hidden" name="supplierPartyId" value="${partyId!}"/>
@@ -338,8 +349,8 @@ code package.
                                     <@td>
                                       <@menu type="button">
                                         <#if itemSelectable>
-                                          <@menuitem type="link" href="javascript:document.updateItemInfo.action='${escapeFullUrl(makeOfbizUrl('cancelOrderItem'), 'js')}';document.updateItemInfo.orderItemSeqId.value='${orderItem.orderItemSeqId}';document.updateItemInfo.shipGroupSeqId.value='${shipGroup.shipGroupSeqId}';document.updateItemInfo.submit()"
-                                            text="${rawLabel('CommonCancel')} ${rawLabel('CommonItem')}" class="+${styles.action_run_sys!} ${styles.action_terminate!} ${styles.action_importance_high!}" /><#-- SCIPIO: removed: target="_orderImage" -->
+                                          <@menuitem type="link" href="javascript:submitUpdateItemInfoForm('${escapeFullUrl(makeOfbizUrl('cancelOrderItem'), 'js')}', '${escapeVal(orderItem.orderItemSeqId!, 'js')}', '${escapeVal(shipGroup.shipGroupSeqId!, 'js')}');"
+                                            text=(rawLabel('CommonCancel')+" "+rawLabel('CommonItem')) class="+${styles.action_run_sys!} ${styles.action_terminate!} ${styles.action_importance_high!}" /><#-- SCIPIO: removed: target="_orderImage" -->
                                         </#if>
                                       </@menu>
                                     </@td>

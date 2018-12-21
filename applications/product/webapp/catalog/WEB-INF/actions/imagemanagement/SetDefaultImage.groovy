@@ -137,7 +137,7 @@ if (fileType) {
         context.clientFileName = clientFileName;
         context.filenameToUse = filenameToUse;
 
-        characterEncoding = request.getCharacterEncoding();
+        characterEncoding = "UTF-8"; // SCIPIO: ALWAYS use UTF-8 for filenames, not request encoding: characterEncoding = request.getCharacterEncoding();
         imageUrl = imageUrlPrefix + "/" + filePathPrefix + java.net.URLEncoder.encode(filenameToUse, characterEncoding);
 
         try {

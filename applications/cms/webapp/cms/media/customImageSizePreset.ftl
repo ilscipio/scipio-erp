@@ -30,10 +30,7 @@
     <#if customImageSizePresets?has_content>
         <@section>
             <@paginate mode="content" url=makeOfbizUrl("customImageSizePresets") viewSize=(viewSize!10) viewIndex=(viewIndex!0) listSize=(listSize!0)>
-                <form method="post" action="<@ofbizUrl>media</@ofbizUrl>" name="mediaForm">
-                    <input type="hidden" name="VIEW_SIZE" value="${viewSize!}"/>
-                    <input type="hidden" name="VIEW_INDEX" value="${viewIndex!}"/>
-                    
+                
                     <@table type="data-list" autoAltRows=true>
                         <@thead>
                             <@tr class="header-row">
@@ -44,18 +41,21 @@
                         </@thead>
                         <#list customImageSizePresets as preset>
                             <@tr>
-                                <@td>${preset.presetId}</@td>
-                                <@td><@field type="text" name="presetName" value=preset.presetName! required=true /></@td>
-                                <@td>
-                                    <form id="ImageSizePreset_${preset_index}" name="ImageSizePreset_${preset_index}" method="post" action="<@ofbizUrl>updateCustomImageSizePreset</@ofbizUrl>">
-                                        <input name="presetId" type="hidden" value="${preset.presetId}"/>
-                                        <@field type="submit" value=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
-                                    </form>
-                                </@td>
+                                <form method="post" action="" name="customImageSizePresets_${preset_index}">
+                                    <input type="hidden" name="VIEW_SIZE" value="${viewSize!}"/>
+                                    <input type="hidden" name="VIEW_INDEX" value="${viewIndex!}"/>
+                                    <input name="presetId" type="hidden" value="${preset.presetId}"/>
+                                    <@td>${preset.presetId}</@td>
+                                    <@td><@field type="text" name="presetName" value=preset.presetName! required=true /></@td>
+                                    <@td>
+                                        <a href="javascript:document.forms['customImageSizePresets_${preset_index}'].action='${makeOfbizUrl('updateCustomImageSizePreset')}'; 
+                                            document.forms['customImageSizePresets_${preset_index}'].submit();" 
+                                            class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                                    </@td>
+                                </form>
                             </@tr>
                         </#list>
                     </@table>
-                </form>
             </@paginate>
         </@section>
     <#else>

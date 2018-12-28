@@ -39,6 +39,7 @@ import java.util.concurrent.Callable;
 
 import javax.transaction.Transaction;
 
+import org.apache.commons.collections4.ListUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
@@ -2079,29 +2080,74 @@ public class OrderServices {
                     "OrderErrorCannotGetOrderItemAssocEntity", UtilMisc.toMap("itemMsgInfo",itemMsgInfo), locale));
         }
 
+        // SCIPIO: In addition to OrderItemShipGroupAssoc we also must lookup any OrderItem that might not have a ship group yet
+        // These get processed last, after the ship group entries
+        List<GenericValue> noShipGroupOrderItems = Collections.emptyList();
+        List<GenericValue> allOrderItems = Collections.emptyList();
+        if (shipGroupSeqId == null) {
+            try {
+                allOrderItems = EntityQuery.use(delegator).from("OrderItem").where(fields).queryList();
+                noShipGroupOrderItems = new ArrayList<>(allOrderItems.size());
+                if (allOrderItems.size() > 0) {
+                    /* SCIPIO: I think we have to go over OrderItem always in case the ship group only covers part of the quantity
+                    // keep only those that don't have OrderItemShipGroupAssoc records already
+                    for(GenericValue orderItem : allOrderItems) {
+                        boolean hasShipGrp = false;
+                        for(GenericValue orderItemShipGroupAssoc : orderItemShipGroupAssocs) {
+                            if (orderItemShipGroupAssoc.get("orderItemSeqId").equals(orderItem.get("orderItemSeqId"))) {
+                                hasShipGrp = true;
+                                break;
+                            }
+                        }
+                        if (!hasShipGrp) {
+                            noShipGroupOrderItems.add(orderItem);
+                        }
+                    }*/
+                    noShipGroupOrderItems.addAll(allOrderItems);
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                        "OrderErrorCannotGetOrderItemAssocEntity", UtilMisc.toMap("itemMsgInfo",itemMsgInfo), locale));
+            }
+        }
+
         // SCIPIO: TODO: REVIEW: orderItemShipGroupAssocs is never null here, it will be an empty list;
         // for now this is GOOD because the service will not fail if the item exists but had no ship groups;
         // just in case, commented the error message further below...
         if (orderItemShipGroupAssocs != null) {
-            for (GenericValue orderItemShipGroupAssoc : orderItemShipGroupAssocs) {
+            for (GenericValue orderItemShipGroupAssoc : ListUtils.union(orderItemShipGroupAssocs, noShipGroupOrderItems)) { // SCIPIO: noShipGroupOrderItems 
                 GenericValue orderItem = null;
                 String itemStatus = "ITEM_CANCELLED";
-                try {
-                    orderItem = orderItemShipGroupAssoc.getRelatedOne("OrderItem", false);
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
+                
+                if ("OrderItem".equals(orderItemShipGroupAssoc.getEntityName())) { // SCIPIO
+                    orderItem = orderItemShipGroupAssoc;
+                    orderItemShipGroupAssoc = null;
+                    try { // SCIPIO: Refresh in case a previous loop modified the same OrderItem
+                        orderItem.refresh();
+                    } catch (GenericEntityException e) {
+                        Debug.logWarning(e, "Could not refresh order item " + orderItem.get("orderId") + "#" 
+                                + orderItem.get("orderItemSeqId") + "; cannot cancel item", module);
+                        continue;
+                    }
+                } else {
+                    try {
+                        orderItem = orderItemShipGroupAssoc.getRelatedOne("OrderItem", false);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                    }
+    
+                    if (orderItem == null) {
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                                "OrderErrorCannotCancelItemItemNotFound", UtilMisc.toMap("itemMsgInfo",itemMsgInfo), locale));
+                    }
                 }
 
-                if (orderItem == null) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
-                            "OrderErrorCannotCancelItemItemNotFound", UtilMisc.toMap("itemMsgInfo",itemMsgInfo), locale));
-                }
-
-                BigDecimal aisgaCancelQuantity =  orderItemShipGroupAssoc.getBigDecimal("cancelQuantity");
+                BigDecimal aisgaCancelQuantity = (orderItemShipGroupAssoc != null) ? orderItemShipGroupAssoc.getBigDecimal("cancelQuantity") : null; // SCIPIO: null check
                 if (aisgaCancelQuantity == null) {
                     aisgaCancelQuantity = BigDecimal.ZERO;
                 }
-                BigDecimal availableQuantity = orderItemShipGroupAssoc.getBigDecimal("quantity").subtract(aisgaCancelQuantity);
+                BigDecimal availableQuantity = (orderItemShipGroupAssoc != null) ? orderItemShipGroupAssoc.getBigDecimal("quantity").subtract(aisgaCancelQuantity) : null; // SCIPIO: null check
 
                 BigDecimal itemCancelQuantity = orderItem.getBigDecimal("cancelQuantity");
                 if (itemCancelQuantity == null) {
@@ -2136,15 +2182,25 @@ public class OrderServices {
                     thisCancelQty = itemQuantity;
                 }
 
-                if (availableQuantity.compareTo(thisCancelQty) >= 0) {
-                    if (availableQuantity.compareTo(BigDecimal.ZERO) == 0) {
-                        continue;  //OrderItemShipGroupAssoc already cancelled
+                // SCIPIO: Added orderItemShipGroupAssoc null case
+                //if (availableQuantity.compareTo(thisCancelQty) >= 0)) {
+                if ((orderItemShipGroupAssoc != null && availableQuantity.compareTo(thisCancelQty) >= 0) || (orderItemShipGroupAssoc == null && itemQuantity.compareTo(thisCancelQty) >= 0)) {
+                    if (orderItemShipGroupAssoc != null) { // SCIPIO: null check
+                        if (availableQuantity.compareTo(BigDecimal.ZERO) == 0) {
+                            continue;  //OrderItemShipGroupAssoc already cancelled
+                        }
+                    } else {
+                        if (itemQuantity.compareTo(BigDecimal.ZERO) == 0) {
+                            continue;  // SCIPIO: OrderItem already cancelled
+                        }
                     }
                     orderItem.set("cancelQuantity", itemCancelQuantity.add(thisCancelQty));
-                    orderItemShipGroupAssoc.set("cancelQuantity", aisgaCancelQuantity.add(thisCancelQty));
+                    if (orderItemShipGroupAssoc != null) { // SCIPIO: null check
+                        orderItemShipGroupAssoc.set("cancelQuantity", aisgaCancelQuantity.add(thisCancelQty));
+                    }
 
                     try {
-                        List<GenericValue> toStore = UtilMisc.toList(orderItem, orderItemShipGroupAssoc);
+                        List<GenericValue> toStore = (orderItemShipGroupAssoc != null) ? UtilMisc.toList(orderItem, orderItemShipGroupAssoc) : UtilMisc.toList(orderItem); // SCIPIO: null check
                         delegator.storeAll(toStore);
                     } catch (GenericEntityException e) {
                         Debug.logError(e, module);
@@ -2152,22 +2208,23 @@ public class OrderServices {
                                 "OrderUnableToSetCancelQuantity", UtilMisc.toMap("itemMsgInfo",itemMsgInfo), locale));
                     }
 
-                    Map<String, Object> localCtx = UtilMisc.toMap("userLogin", userLogin,
-                            "orderId", orderItem.getString("orderId"),
-                            "orderItemSeqId", orderItem.getString("orderItemSeqId"),
-                            "shipGroupSeqId", orderItemShipGroupAssoc.getString("shipGroupSeqId"));
-                    if (availableQuantity.compareTo(thisCancelQty) == 0) {
-                        try {
-                            resp= dispatcher.runSync("deleteOrderItemShipGroupAssoc", localCtx);
-                            if (ServiceUtil.isError(resp)) {
-                                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resp));
+                    if (orderItemShipGroupAssoc != null) { // SCIPIO: null check
+                        Map<String, Object> localCtx = UtilMisc.toMap("userLogin", userLogin,
+                                "orderId", orderItem.getString("orderId"),
+                                "orderItemSeqId", orderItem.getString("orderItemSeqId"),
+                                "shipGroupSeqId", orderItemShipGroupAssoc.getString("shipGroupSeqId"));
+                        if (availableQuantity.compareTo(thisCancelQty) == 0) {
+                            try {
+                                resp= dispatcher.runSync("deleteOrderItemShipGroupAssoc", localCtx);
+                                if (ServiceUtil.isError(resp)) {
+                                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resp));
+                                }
+                            } catch (GenericServiceException e) {
+                                Debug.logError(e, module);
+                                return ServiceUtil.returnError(e.getMessage());
                             }
-                        } catch (GenericServiceException e) {
-                            Debug.logError(e, module);
-                            return ServiceUtil.returnError(e.getMessage());
                         }
                     }
-
 
                     //  create order item change record
                     if (!"Y".equals(orderItem.getString("isPromo"))) {

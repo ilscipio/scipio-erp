@@ -40,7 +40,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.RequestHandler;
-import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
 import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.model.ModelFormField;
@@ -400,15 +399,19 @@ public final class WidgetWorker {
 
     public static String determineAutoLinkType(String linkType, String target, String targetType, HttpServletRequest request) {
         if ("auto".equals(linkType)) {
-            if ("intra-app".equals(targetType)) {
+            if (target != null && "intra-app".equals(targetType)) { // SCIPIO: Added null target check, in case
                 String requestUri = (target.indexOf('?') > -1) ? target.substring(0, target.indexOf('?')) : target;
                 ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
                 ConfigXMLReader.RequestMap requestMap = null;
                 try {
                     requestMap = rh.getControllerConfig().getRequestMapMap().get(requestUri);
-                } catch (WebAppConfigurationException e) {
-                    Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+                // SCIPIO: There's no reason for this to crash or print huge error; will be handled elsewhere
+                //} catch (WebAppConfigurationException e) {
+                //    Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+                } catch (Exception e) {
+                    Debug.logError("determineAutoLinkType: Cannot determine widget link type for target '" + target 
+                            + "': Exception thrown while parsing controller.xml file: " + e.toString(), module);
                 }
                 if (requestMap != null && requestMap.event != null) {
                     return "hidden-form";

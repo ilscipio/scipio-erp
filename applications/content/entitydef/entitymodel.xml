@@ -829,6 +829,11 @@ code package.
       <!-- SCIPIO: NOTE: scpWidth & scpHeight are added to DataResource instead of as DataResourceAttribute because the latter is guaranteed to be too slow for future queries. -->
       <field name="scpWidth" type="numeric"><description>SCIPIO: 2017-08-11: image or video width (px) (optimization; originally added for auto-resized images, contentAssocTypeId IMGSZ_*; may be null for other purposes)</description></field>
       <field name="scpHeight" type="numeric"><description>SCIPIO: 2017-08-11: image or video width (px) (optimization; originally added for auto-resized images, contentAssocTypeId IMGSZ_*; may be null for other purposes)</description></field>
+      <!-- SCIPIO (12/31/2018): IMPORTANT NOTE: 
+        Represents an image dimension with its common fields (height & width) and other fields used for responsive images
+        Will replace all custom scp* fields above in the future, for now keeping them for backward compatibility.  
+      -->
+      <field name="sizeId" type="id-ne"></field>
       <prim-key field="dataResourceId"/>
       <relation type="one" fk-name="DTRSRC_STATUS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
@@ -866,6 +871,9 @@ code package.
         </relation>
         <relation type="one" fk-name="DATA_REC_SVRSP" rel-entity-name="SurveyResponse">
             <key-map field-name="surveyResponseId"/>
+        </relation>
+        <relation type="one" fk-name="DATA_REC_DIM" rel-entity-name="ImageSizeDimension">
+            <key-map field-name="sizeId"/>
         </relation>
     </entity>
     <entity entity-name="DataResourceAttribute"
@@ -1324,17 +1332,48 @@ code package.
         </relation>
         <relation type="one" fk-name="IS_DIMENSION" rel-entity-name="ImageSizeDimension">
             <key-map field-name="sizeId"/>
-        </relation>        
-    </entity>   
-     
+        </relation>
+    </entity>
+
     <entity entity-name="ImageSizeDimension" package-name="com.ilscipio.scipio.image"
         title="Image dimensions" author="Ilscipio GmbH" version="1.0">
         <field name="sizeId" type="id-ne"></field>
         <field name="sizeName" type="name"></field>
-        <field name="dimensionWidth" type="numeric"></field>        
+        <field name="dimensionWidth" type="numeric"></field>
         <field name="dimensionHeight" type="numeric"></field>        
-        <prim-key field="sizeId"/>
-    </entity>  
+        <prim-key field="sizeId"/>        
+    </entity>
+
+    <entity entity-name="ImageViewPort" package-name="com.ilscipio.scipio.image"
+        title="Image view port" author="Ilscipio GmbH" version="1.0">
+        <field name="contentId" type="id-ne"><description>Meant to be used with parent content</description></field>
+        <field name="viewPortSizeId" type="id-ne"></field>
+
+        <prim-key field="contentId" />
+        <prim-key field="viewPortSizeId"/>
+
+        <relation type="one" fk-name="CONTENT_VP" rel-entity-name="Content">
+            <key-map field-name="contentId"/>
+        </relation>
+        <relation type="one" fk-name="IWP_VW_SZ" rel-entity-name="ImageViewPortSize">
+            <key-map field-name="viewPortSizeId"/>
+        </relation>
+    </entity>
+
+    <entity entity-name="ImageViewPortSize" package-name="com.ilscipio.scipio.image"
+        title="Image view port size" author="Ilscipio GmbH" version="1.0">
+        <field name="viewPortSizeId" type="id-ne"></field>
+        <field name="srcsetModeEnumId" type="id"><description><![CDATA[
+            (12/31/2018): As of now the spec allows device-pixel-ratio and viewport based selection. 
+            See https://w3c.github.io/html/semantics-embedded-content.html#embedded-content-introduction
+        ]]></description></field>
+        <field name="viewPortMediaQuery" type="long-varchar"><description>This is only valid for viewport based selection</description></field>
+        <field name="viewPortLength" type="numeric"><description>This is only valid for viewport based selection</description></field>
+        <prim-key field="viewPortSizeId"/>
+        <relation type="one" fk-name="ISD_SRCSET" title="ImgSrcset" rel-entity-name="Enumeration">
+            <key-map field-name="srcsetModeEnumId" rel-field-name="enumId"/>
+        </relation>
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.content.preference -->

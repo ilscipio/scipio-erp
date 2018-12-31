@@ -108,6 +108,10 @@ code package.
     <Enumeration enumId="SUBSCRIBE_GOLD" enumTypeId="SUBSCRIPTION_TYPE" enumCode="GOLD" sequenceId="30" description="Gold Level"/>
     <Enumeration enumId="SUBSCRIBE_SILVER" enumTypeId="SUBSCRIPTION_TYPE" enumCode="SILVER" sequenceId="20" description="Silver Level"/>
 
+    <EnumerationType enumTypeId="IMG_SRCSET_MODE" description="Image scrset mode (device-pixel-ratio or viewport)"/>
+    <Enumeration enumId="IMG_SRCSET_DPR" enumTypeId="IMG_SRCSET_MODE" enumCode="DPR" sequenceId="00" description="Device pixel ratio"/>
+    <Enumeration enumId="IMG_SRCSET_VW" enumTypeId="IMG_SRCSET_MODE" enumCode="VW" sequenceId="10" description="ViewPort"/>
+
     <DataResourceType dataResourceTypeId="LOCAL_FILE" description="Local File" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="OFBIZ_FILE" description="File (rel to OFBIZ_HOME)" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="CONTEXT_FILE" description="File (rel to webapp root)" hasTable="N" parentTypeId=""/>

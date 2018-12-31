@@ -165,6 +165,21 @@
                                           </div>
                                     </@section>
                                 </@cell>
+                                <@cell columns=10 class="+${styles.grid_large_offset}2">
+                                    <@section id="responsiveimgsizesarea" title=uiLabelMap.CmsMediaResponsiveImgSizesArea>
+                                        <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaResponsiveImgSizes name="responsiveImgSizes" id="responsiveImgSizes" tooltip=uiLabelMap.CmsMediaResponsiveImgSizesDesc
+                                            checked=(parameters.responsiveImgSizes?? && ("true" == parameters.responsiveImgSizes))/>
+                                        <div class="cmsmedia-responseimgsizes-area responseImgSizesForm" style="display:none;">
+                                            <#assign srcsetModes = delegator.findByAnd("Enumeration", {"enumTypeId" : "IMG_SRCSET_MODE"}, null, true)>
+                                            <@field type="select" name="srcsetModeEnumId" labelArea=true label=uiLabelMap.ImageSrcsetMode required=true>
+                                              <#list srcsetModes as srcsetMode>
+                                                  <option value="${srcsetMode.enumId}">${srcsetMode.description}</option>
+                                              </#list>
+                                            </@field>
+                                            <@responsiveImgForm />
+                                        </div>
+                                    </@section>
+                                </@cell>
                           </@row>
                           <@script>
                             jQuery(document).ready(function() {
@@ -180,7 +195,7 @@
                                 changeTypeElem(dataResourceTypeIdElem);
                                 dataResourceTypeIdElem.change(function() { changeTypeElem(this); });
                                 
-                                jQuery('#customVariantSizes').click(function() { 
+                                jQuery('#customVariantSizes').click(function() {
                                     var isChecked = jQuery(this).is(':checked');
                                     if (isChecked === true) {
                                         jQuery('.cmsmedia-customvariantsize-area').show();
@@ -190,7 +205,16 @@
                                         jQuery('#mediaForm').attr('action', '<@ofbizUrl>${formAction}</@ofbizUrl>');
                                     }
                                 });
-                                
+
+                                jQuery('#responsiveImgSizes').click(function() {
+                                    if (jQuery('#customVariantSizes').is(':not(:checked)')) return;
+                                    var isChecked = jQuery(this).is(':checked');
+                                    if (isChecked === true) {
+                                        jQuery('.cmsmedia-responseimgsizes-area').show();
+                                    } else {
+                                        jQuery('.cmsmedia-responseimgsizes-area').hide();
+                                    }
+                                });
                             });
                           </@script>
                           <@commonCustomVariantSizeScript saveAsPreset=true/>

@@ -948,4 +948,21 @@
     <property key="CmsCreateCustomImageSizePreset">        
         <value xml:lang="en">Create Custom Image Size Preset</value>
     </property>
+    
+    <property key="CmsMediaResponsiveImgSizesArea">
+        <value xml:lang="en">Responsive Image Sizes</value>
+    </property>
+    <property key="CmsMediaResponsiveImgSizes">
+        <value xml:lang="en">Enable responsive image sizes</value>
+    </property>
+    <property key="ImageSrcsetMode">
+        <value xml:lang="en">Mode</value>
+    </property>
+    <property key="ImageViewPortMediaQuery">
+        <value xml:lang="en">Viewport media query</value>
+    </property>
+    <property key="ImageViewPortLength">
+        <value xml:lang="en">Viewport length</value>
+    </property>
+
 </resource>

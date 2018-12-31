@@ -709,7 +709,7 @@ Common CMS editor macros and utilities
 
 <#macro commonCustomVariantSizeScript saveAsPreset=false>
     <@script>
-		<#if saveAsPreset>
+        <#if saveAsPreset>
          var saveAsPreset = function() {
             var isChecked = jQuery(this).is(':checked');
             if (isChecked === true) {
@@ -739,4 +739,22 @@ Common CMS editor macros and utilities
             jQuery('.' + $(this).val()).show();
         });
     </@script>
+</#macro>
+
+<#macro responsiveImgForm>
+     <@fields type="default-manual" label=uiLabelMap.CmsMediaResponsiveImgForm>
+      <@row>
+        <@cell columns=6>
+          <@field type="text" inline=true name="viewPortMediaQuery" labelArea=true label=uiLabelMap.ImageViewPortMediaQuery required=true value="" />
+        </@cell>
+        <@cell columns=6>
+            <@field type="text" inline=true name="viewPortLength" labelArea=true label=uiLabelMap.ImageViewPortLength required=true value="" />
+        </@cell>
+      </@row>
+      <@row class="+cmsmedia-responsiveimg-add-cnt">
+        <@cell columns=4>
+            <a href="javascript:void(0);" class="cmsmedia-responsiveimg-add">[+]</a>
+        </@cell>
+      </@row>
+     </@fields>
 </#macro>

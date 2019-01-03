@@ -1307,7 +1307,10 @@
     </simple-method>
 
     <simple-method method-name="createContentAlternativeUrl" short-description="Create Content Alternative URLs.">
-        <set field="defaultLocaleString" from-field="parameters.locale" default-value="en"/>
+        <!-- SCIPIO: Added type="String" to force Locale.toString()
+            TODO: REVIEW: defaulting to the service call locale just for createDataResource is sketchy 
+            and possibly undesirable -->
+        <set field="defaultLocaleString" type="String" from-field="parameters.locale" default-value="en"/>
         <set field="contents" type="List"/>
         <if>
             <condition>

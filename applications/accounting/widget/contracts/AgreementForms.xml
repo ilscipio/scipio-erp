@@ -217,7 +217,7 @@ code package.
         <field name="textValue"><display/></field>
         <field name="description"><display/></field>
         <field name="editAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
-            <hyperlink target="editAgreementTerm" description="${uiLabelMap.CommonEdit}" also-hidden="false">
+            <hyperlink target="EditAgreementItemTerm" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="agreementTermId"/>
                 <parameter param-name="agreementId"/>
             </hyperlink>

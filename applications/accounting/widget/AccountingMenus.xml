@@ -388,7 +388,7 @@
             <condition>
                 <if-empty field="agreementItem.agreementItemSeqId"/>
             </condition>
-            <link target="EditAgreementRole">
+            <link target="EditAgreementRoles">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
         </menu-item>

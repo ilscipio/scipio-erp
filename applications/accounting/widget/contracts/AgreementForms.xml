@@ -219,12 +219,14 @@ code package.
         <field name="editAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="EditAgreementItemTerm" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="agreementTermId"/>
+                <parameter param-name="agreementItemSeqId"/>
                 <parameter param-name="agreementId"/>
             </hyperlink>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteAgreementTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="agreementTermId"/>
+                <parameter param-name="agreementItemSeqId"/>
                 <parameter param-name="agreementId"/>
             </hyperlink>
         </field>

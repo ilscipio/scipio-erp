@@ -45,10 +45,13 @@
                 <set field="activeSubMenuItem" value="agreements" />
                 <set field="agreementId" from-field="parameters.agreementId" />
                 <entity-one entity-name="Agreement" value-field="agreement" />
+                <entity-and entity-name="AgreementItem" list="agreementItems">
+                    <field-map field-name="agreementId" from-field="agreement.agreementId"/>
+                </entity-and>
                 <set field="titleProperty" value="${groovy: context.agreement ? 'PageTitleEditAgreement' : 'AccountingNewAgreement'}" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -57,14 +60,20 @@
                                 </not>
                             </condition>
                             <widgets>
+                                <container style="${styles.grid_row}">
+                                    <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                        <platform-specific>
+                                            <html>
+                                                <html-template location="component://accounting/webapp/accounting/agreement/CopyAgreement.ftl" />
+                                            </html>
+                                        </platform-specific>
+                                    </container>
+                                </container>
                                 <screenlet>
                                     <include-form name="EditAgreement" location="component://accounting/widget/contracts/AgreementForms.xml" />
                                 </screenlet>
-                                <platform-specific>
-                                    <html>
-                                        <html-template location="component://accounting/webapp/accounting/agreement/CopyAgreement.ftl" />
-                                    </html>
-                                </platform-specific>
+                                <include-form name="ListAgreementItems" location="component://accounting/widget/contracts/AgreementForms.xml" />
+                                <include-form name="ListAgreementTerms" location="component://accounting/widget/contracts/AgreementForms.xml" />
                             </widgets>
                             <fail-widgets>
                                 <screenlet>
@@ -115,7 +124,7 @@
                 <entity-one entity-name="AgreementItem" value-field="agreementItem" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditAgreementItem" location="component://accounting/widget/contracts/AgreementForms.xml" />
@@ -152,7 +161,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListAgreementPromoAppls" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementPromoAppls" />
                 <set field="buttonBarItem" value="ListAgreementPromoAppls" />
                 <set field="agreementId" from-field="parameters.agreementId" />
                 <entity-one entity-name="Agreement" value-field="agreement" />
@@ -179,7 +188,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditAgreementPromoAppl" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementPromoAppls" />
                 <set field="buttonBarItem" value="ListAgreementPromoAppls" />
                 <set field="agreementId" from-field="parameters.agreementId" />
                 <entity-one entity-name="Agreement" value-field="agreement" />
@@ -203,7 +212,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListAgreementItemTerms" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementItemTerms" />
                 <set field="buttonBarItem" value="ListAgreementItemTerms" />
                 <set field="agreementId" from-field="parameters.agreementId" />
                 <entity-one entity-name="Agreement" value-field="agreement" />
@@ -214,7 +223,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="ListAgreementItemTerms" location="component://accounting/widget/contracts/AgreementForms.xml" />
@@ -229,7 +238,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditAgreementItemTerm" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementItemTerms" />
                 <set field="buttonBarItem" value="ListAgreementItemTerms" />
                 <set field="agreementId" from-field="parameters.agreementId" />
                 <set field="agreementItemSeqId" from-field="parameters.agreementItemSeqId" />
@@ -239,7 +248,7 @@
                 <entity-one entity-name="AgreementTerm" value-field="agreementTerm" auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditAgreementItemTerm" location="component://accounting/widget/contracts/AgreementForms.xml" />
@@ -254,7 +263,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListAgreementItemProducts" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementItemProducts" />
                 <set field="buttonBarItem" value="ListAgreementItemProducts" />
                 <entity-one entity-name="Agreement" value-field="agreement" auto-field-map="true" />
                 <entity-one entity-name="AgreementItem" value-field="agreementItem" />
@@ -265,7 +274,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="ListAgreementItemProducts" location="component://accounting/widget/contracts/AgreementForms.xml" />
@@ -280,7 +289,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListAgreementItemFacilities" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementItemWarehouses" />
                 <set field="buttonBarItem" value="ListAgreementItemFacilities" />
                 <entity-one entity-name="Agreement" value-field="agreement" auto-field-map="true" />
                 <entity-one entity-name="AgreementItem" value-field="agreementItem" />
@@ -291,7 +300,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="ListAgreementItemFacilities" location="component://accounting/widget/contracts/AgreementForms.xml" />
@@ -369,7 +378,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditAgreementItemProduct" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementItemProducts" />
 
                 <set field="agreementId" from-field="parameters.agreementId" />
                 <set field="agreementItemSeqId" from-field="parameters.agreementItemSeqId" />
@@ -380,7 +389,7 @@
                 <entity-one entity-name="AgreementProductAppl" value-field="agreementProductAppl" auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditAgreementItemProduct" location="component://accounting/widget/contracts/AgreementForms.xml" />
@@ -395,7 +404,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditAgreementItemFacility" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementItemWarehouses" />
 
                 <set field="agreementId" from-field="parameters.agreementId" />
                 <set field="agreementItemSeqId" from-field="parameters.agreementItemSeqId" />
@@ -406,7 +415,7 @@
                 <entity-one entity-name="AgreementFacilityAppl" value-field="agreementFacilityAppl" auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditAgreementItemFacility" location="component://accounting/widget/contracts/AgreementForms.xml" />
@@ -421,7 +430,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListAgreementItemProducts" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementItemSupplierProducts" />
                 <set field="buttonBarItem" value="ListAgreementItemSupplierProducts" />
                 <entity-one entity-name="Agreement" value-field="agreement" auto-field-map="true" />
                 <entity-one entity-name="AgreementItem" value-field="agreementItem" />
@@ -432,7 +441,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <link target="ListAgreementItemSupplierProductsReport" text="${uiLabelMap.CommonPrint}" style="${styles.link_run_sys} ${styles.action_export}" target-window="_BLANK">
@@ -509,13 +518,13 @@
                         </and>
                     </condition>
                     <widgets>
-                        <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                             </decorator-section>
                         </decorator-screen>
                     </widgets>
                     <fail-widgets>
-                        <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                        <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                                 <label style="heading">${uiLabelMap.AccountingAgreementIsNotSetForSupplierProducts}
                                 </label>
@@ -531,7 +540,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListAgreementItemParties" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementItemParties" />
                 <set field="buttonBarItem" value="ListAgreementItemParties" />
                 <entity-one entity-name="Agreement" value-field="agreement" auto-field-map="true" />
                 <entity-one entity-name="AgreementItem" value-field="agreementItem" />
@@ -541,7 +550,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="ListAgreementItemParties" location="component://accounting/widget/contracts/AgreementForms.xml" />
@@ -556,7 +565,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditAgreementItemParty" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementItemParties" />
                 <set field="buttonBarItem" value="ListAgreementItemParties" />
                 <set field="agreementId" from-field="parameters.agreementId" />
                 <set field="agreementItemSeqId" from-field="parameters.agreementItemSeqId" />
@@ -566,7 +575,7 @@
                 <entity-one entity-name="AgreementPartyApplic" value-field="agreementPartyApplic" auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditAgreementItemParty" location="component://accounting/widget/contracts/AgreementForms.xml" />
@@ -581,7 +590,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleListAgreementGeographicalApplic" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementGeographicalApplic" />
                 <set field="buttonBarItem" value="ListAgreementGeographicalApplic" />
                 <entity-one entity-name="Agreement" value-field="agreement" auto-field-map="true" />
                 <entity-one entity-name="AgreementItem" value-field="agreementItem" />
@@ -591,7 +600,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="ListAgreementGeographicalApplic" location="component://accounting/widget/contracts/AgreementForms.xml" />
@@ -606,7 +615,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditAgreementGeographicalApplic" />
-                <set field="activeSubMenuItem" value="AgreementItems" />
+                <set field="activeSubMenuItem" value="ListAgreementGeographicalApplic" />
                 <set field="buttonBarItem" value="ListAgreementGeographicalApplic" />
                 <set field="agreementId" from-field="parameters.agreementId" />
                 <set field="agreementItemSeqId" from-field="parameters.agreementItemSeqId" />
@@ -617,7 +626,7 @@
                     auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditAgreementGeographicalApplic" location="component://accounting/widget/contracts/AgreementForms.xml" />
@@ -632,7 +641,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditAgreementWorkEffortApplics" />
-                <set field="activeSubMenuItem" value="AgreementWorkEffortApplics" />
+                <set field="activeSubMenuItem" value="AgreementWorkEffort" />
                 <set field="agreementId" from-field="parameters.agreementId" />
                 <entity-one entity-name="Agreement" value-field="agreement" auto-field-map="true" />
             </actions>

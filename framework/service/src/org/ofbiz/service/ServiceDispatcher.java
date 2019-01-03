@@ -957,8 +957,12 @@ public class ServiceDispatcher {
                 throw new ServiceAuthException("ERROR: the permission-service [" + origService.permissionServiceName + "] did not return a result. Not running the service [" + origService.name + "]");
             }
             if (hasPermission) {
-                context.putAll(permResp);
-                context = origService.makeValid(context, ModelService.IN_PARAM);
+                // SCIPIO: 2019-01-02: This erroneously applied the makeValid logic on the whole incoming context;
+                // it should only be applied to the result, and then that dumped into the context; this is faster anyway
+                //context.putAll(permResp);
+                //context = origService.makeValid(context, ModelService.IN_PARAM);
+                Map<String, Object> validPermRespForContext = origService.makeValid(permResp, ModelService.IN_PARAM);
+                context.putAll(validPermRespForContext);
             } else {
                 String message = (String) permResp.get("failMessage");
                 if (UtilValidate.isEmpty(message)) {

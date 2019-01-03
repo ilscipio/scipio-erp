@@ -286,14 +286,13 @@ code package.
     <screen name="AgreementSubDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" value="Agreement"/>
+                <set field="activeSubMenu" value="AgreementItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                 </decorator-screen>
             </widgets>
         </section>
-
     </screen>
     
     <!-- 

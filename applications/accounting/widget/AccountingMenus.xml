@@ -364,31 +364,31 @@
     * Contracts 
     **************
     -->
-    <!--SCIPIO:  Agreement fixes -->
+    <!--SCIPIO: Agreement fixes -->
     <menu name="ContractsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="EditAgreement" menu-container-style="+scipio-nav-actions-menu">
-        <menu-item name="EditAgreement" title="${uiLabelMap.AccountingAgreement}" widget-style="+${styles.action_nav} ${styles.action_add}">
+        <menu-item name="EditAgreement" title="${uiLabelMap.AccountingAgreement}">
             <link target="EditAgreement">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
-            <sub-menu include="AgreementItemTabBar" name="Agreement"/>
         </menu-item>
-        <menu-item name="AgreementItems" title="${uiLabelMap.CommonItems}" widget-style="+${styles.action_nav} ${styles.action_add}">
+        <menu-item name="AgreementItems" title="${uiLabelMap.CommonItems}">
             <link target="ListAgreementItems">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
+            <sub-menu include="AgreementItemSideBar" name="AgreementItem"/>
         </menu-item>
-        <menu-item name="AgreementRoles" title="${uiLabelMap.CommonParties}" widget-style="+${styles.action_nav} ${styles.action_add}">
+        <menu-item name="AgreementRoles" title="${uiLabelMap.CommonParties}">
             <link target="EditAgreementRoles">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
         </menu-item>
-        <menu-item name="AgreementTerms" title="${uiLabelMap.AccountingAgreementTerms}" widget-style="+${styles.action_nav} ${styles.action_add}">
+        <menu-item name="AgreementTerms" title="${uiLabelMap.AccountingAgreementTerms}">
             <link target="EditAgreementTerms">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
         </menu-item>
-        <menu-item name="AgreementWorkEffort" title="${uiLabelMap.WorkEffort}" widget-style="+${styles.action_nav} ${styles.action_add}">
+        <menu-item name="AgreementWorkEffort" title="${uiLabelMap.WorkEffort}">
             <link target="EditAgreementWorkEffortApplics">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
@@ -482,8 +482,8 @@
         </menu-item>
     </menu>
 
-    <menu name="AgreementItemTabBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="EditAgreementItem"   menu-container-style="+scipio-nav-actions-menu">
+    <menu name="AgreementItemTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          default-menu-item-name="EditAgreementItem">
         <menu-item name="EditAgreementItem" title="${uiLabelMap.AccountingAgreementItem}">
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
@@ -583,6 +583,11 @@
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
         </menu-item>
+    </menu>
+
+    <menu name="AgreementItemSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="EditAgreementItem" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="AgreementItemTabBar" recursive="includes-only" />
     </menu>
 
     <menu name="AgreementItemSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

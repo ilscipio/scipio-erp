@@ -623,7 +623,14 @@ public class ServiceDispatcher {
                 Debug.logTiming("Sync service [" + localName + "/" + modelService.name + "] finished in [" + timeToRun + "] milliseconds", module);
             }
         } else if (Debug.infoOn() && timeToRun > showSlowServiceThreshold) {
-            Debug.logTiming("Slow sync service execution detected: service [" + localName + "/" + modelService.name + "] finished in [" + timeToRun + "] milliseconds", module);
+            // SCIPIO: We can't just logTiming here, or the message may be hidden by an implicit Debug.timingOn() while being fairly important
+            //Debug.logTiming("Slow sync service execution detected: service [" + localName + "/" + modelService.name + "] finished in [" + timeToRun + "] milliseconds", module);
+            final String msg = "Slow sync service execution detected: service [" + localName + "/" + modelService.name + "] finished in [" + timeToRun + "] milliseconds";
+            if (Debug.timingOn()) {
+                Debug.logTiming(msg, module);
+            } else {
+                Debug.logInfo(msg, module);
+            }
         }
         if ((Debug.verboseOn() || modelService.debug) && timeToRun > 50 && !modelService.hideResultInLog) {
             // Sanity check - some service results can be multiple MB in size. Limit message size to 10K.

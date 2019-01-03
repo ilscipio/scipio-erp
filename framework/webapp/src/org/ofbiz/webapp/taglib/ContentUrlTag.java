@@ -189,7 +189,7 @@ public class ContentUrlTag {
         // SCIPIO: 2017-11-18: Factored out dispersed secure checks into RequestLinkUtil:
         StringBuilder sb = new StringBuilder();
         appendContentPrefix(webSite, secure, sb);
-        urlBuffer.append(sb.toString());
+        urlBuffer.append(sb);
         if (sb.length() == 0) {
             Debug.logWarning("appendContentPrefix: We appear to be rendering from a non-webapp"
                     + " render context, but no content prefix is defined in url.properties; cannot"

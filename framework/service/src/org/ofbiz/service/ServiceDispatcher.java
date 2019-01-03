@@ -19,6 +19,7 @@
 package org.ofbiz.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -201,17 +202,34 @@ public class ServiceDispatcher {
         }
     }
 
+    /**
+     * Registers a callback by associating it to a service.
+     *
+     * @param serviceName the name of the service to associate the callback with
+     * @param cb the callback to register
+     */
     public synchronized void registerCallback(String serviceName, GenericServiceCallback cb) {
-        List<GenericServiceCallback> callBackList = callbacks.get(serviceName);
-        if (callBackList == null) {
-            callBackList = new ArrayList<>(); // SCIPIO: switched to ArrayList
-        }
-        callBackList.add(cb);
-        callbacks.put(serviceName, callBackList);
+        callbacks.computeIfAbsent(serviceName, x -> new ArrayList<>()).add(cb); // SCIPIO: switched to ArrayList
     }
 
+    /**
+     * Provides a list of the enabled callbacks corresponding to a service.
+     *
+     * As a side effect, disabled callbacks are removed.
+     *
+     * @param serviceName the name of service whose callbacks should be called
+     * @return a list of callbacks corresponding to {@code serviceName}
+     */
     public List<GenericServiceCallback> getCallbacks(String serviceName) {
-        return callbacks.get(serviceName);
+        // SCIPIO: counter-productive code
+        //List<GenericServiceCallback> res = callbacks.getOrDefault(serviceName, Collections.emptyList());
+        //res.removeIf(gsc -> !gsc.isEnabled());
+        List<GenericServiceCallback> res = callbacks.get(serviceName);
+        if (res == null) {
+            return Collections.emptyList();
+        }
+        res.removeIf(gsc -> !gsc.isEnabled());
+        return res;
     }
 
     /**

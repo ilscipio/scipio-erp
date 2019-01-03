@@ -173,7 +173,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="ListAgreementPromoAppls" location="component://accounting/widget/contracts/AgreementForms.xml" />
@@ -197,7 +197,7 @@
                 <entity-one entity-name="AgreementPromoAppl" value-field="agreementPromoAppl" auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="AgreementSubDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="EditAgreementPromoAppl" location="component://accounting/widget/contracts/AgreementForms.xml" />

@@ -47,6 +47,16 @@ public abstract class DelegatorFactory implements Factory<Delegator, String> {
         }
     }
 
+    /**
+     * SCIPIO: Returns the default delegator (name: "default").
+     * Helper method.
+     * <p>
+     * Added 2019-01-02.
+     */
+    public static Delegator getDefaultDelegator() {
+        return getDelegator("default");
+    }
+
     public static Future<Delegator> getDelegatorFuture(String delegatorName) {
         if (delegatorName == null) {
             delegatorName = "default";

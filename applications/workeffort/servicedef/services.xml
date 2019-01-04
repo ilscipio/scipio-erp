@@ -673,6 +673,7 @@ code package.
                 <fail-property resource="WorkEffortUiLabels" property="WorkEffortRequiredFieldMissingWorkEffortId"/>
             </type-validate>
         </override>
+        <override name="estimatedQuantity" type="java.lang.Number"/><!-- SCIPIO: Accepts Double or BigDecimal (all-compatibility) -->
     </service>
     <service name="updateWorkEffortGoodStandard" engine="simple" default-entity-name="WorkEffortGoodStandard"
             location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortGoodStandard">
@@ -703,6 +704,7 @@ code package.
                 <fail-property resource="WorkEffortUiLabels" property="WorkEffortRequiredFieldMissingWorkEffortId"/>
             </type-validate>
         </override>
+        <override name="estimatedQuantity" type="java.lang.Number"/><!-- SCIPIO: Accepts Double or BigDecimal (all-compatibility) -->
     </service>
     <service name="removeWorkEffortGoodStandard" engine="simple" default-entity-name="WorkEffortGoodStandard"
             location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="removeWorkEffortGoodStandard">

@@ -772,6 +772,12 @@ code package.
     </simple-method>
 
     <simple-method method-name="createWorkEffortGoodStandard" short-description="Create a link between a WorkEffort and a Product">
+        <!-- SCIPIO: Accept Double or BigDecimal (all-compatibility) -->
+        <script lang="groovy"><![CDATA[
+            if (parameters.containsKey("estimatedQuantity")) {
+                parameters.estimatedQuantity = parameters.estimatedQuantity.doubleValue();
+            }
+        ]]></script>
         <entity-one entity-name="WorkEffortGoodStandard" value-field="lookedUpValue"/>
         <if-not-empty field="lookedUpValue">
             <add-error>
@@ -790,6 +796,12 @@ code package.
         </if-not-empty>
     </simple-method>
     <simple-method method-name="updateWorkEffortGoodStandard" short-description="Update a link between a WorkEffort and a Product">
+        <!-- SCIPIO: Accept Double or BigDecimal (all-compatibility) -->
+        <script lang="groovy"><![CDATA[
+            if (parameters.containsKey("estimatedQuantity")) {
+                parameters.estimatedQuantity = parameters.estimatedQuantity.doubleValue();
+            }
+        ]]></script>
         <entity-one entity-name="WorkEffortGoodStandard" value-field="lookedUpValue"/>
         <set-nonpk-fields map="parameters" value-field="lookedUpValue"/>
         <store-value value-field="lookedUpValue"/>

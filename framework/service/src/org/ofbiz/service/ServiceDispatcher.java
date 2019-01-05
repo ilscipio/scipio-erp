@@ -339,6 +339,9 @@ public class ServiceDispatcher {
             }
 
             try {
+                // SCIPIO: Performs auto type conversions for fields marked type-convert="true" (failures caught by validator afterward)
+                modelService.applyTypeConvert(context, ModelService.IN_PARAM, locale, null, null);
+
                 int lockRetriesRemaining = LOCK_RETRIES;
                 boolean needsLockRetry = false;
 
@@ -714,6 +717,9 @@ public class ServiceDispatcher {
             }
 
             try {
+                // SCIPIO: Performs auto type conversions for fields marked type-convert="true" (failures caught by validator afterward)
+                service.applyTypeConvert(context, ModelService.IN_PARAM, locale, null, null);
+
                 // get eventMap once for all calls for speed, don't do event calls if it is null
                 Map<String, List<ServiceEcaRule>> eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
 

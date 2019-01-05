@@ -487,6 +487,7 @@ public class ModelServiceReader implements Serializable {
                         param.optional = "true".equalsIgnoreCase(autoElement.getAttribute("optional")); // default to true
                         param.formDisplay = !"false".equalsIgnoreCase(autoElement.getAttribute("form-display")); // default to false
                         param.allowHtml = UtilXml.checkEmpty(autoElement.getAttribute("allow-html"), "none").intern(); // default to none
+                        param.typeConvert = "true".equalsIgnoreCase(autoElement.getAttribute("type-convert")); // SCIPIO: auto type convert flag: default to false
                         modelParamMap.put(field.getName(), param);
                     }
                 }
@@ -549,6 +550,9 @@ public class ModelServiceReader implements Serializable {
             if (param.fieldName.length() == 0 && param.entityName.length() > 0) {
                 param.fieldName = param.name;
             }
+
+            // SCIPIO: auto type convert flag
+            param.typeConvert = "true".equalsIgnoreCase(attribute.getAttribute("type-convert")); // default to false
 
             // set the validators
             this.addValidators(attribute, param);
@@ -691,6 +695,11 @@ public class ModelServiceReader implements Serializable {
                 String defValue = overrideElement.getAttribute("default-value");
                 if (UtilValidate.isNotEmpty(defValue)) {
                     param.setDefaultValue(defValue);
+                }
+
+                // SCIPIO: auto type convert flag
+                if (UtilValidate.isNotEmpty(overrideElement.getAttribute("type-convert"))) {
+                    param.typeConvert = "true".equalsIgnoreCase(overrideElement.getAttribute("type-convert")); // default to true
                 }
 
                 // override validators

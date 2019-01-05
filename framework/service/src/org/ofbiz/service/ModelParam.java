@@ -92,6 +92,9 @@ public class ModelParam implements Serializable {
     /** Is this Parameter set internally? */
     public boolean internal = false;
 
+    // SCIPIO
+    boolean typeConvert = false;
+    
     public ModelParam() {}
 
     public ModelParam(ModelParam param) {
@@ -116,6 +119,8 @@ public class ModelParam implements Serializable {
         this.overrideFormDisplay = param.overrideFormDisplay;
         this.allowHtml = param.allowHtml;
         this.internal = param.internal;
+        // SCIPIO
+        this.typeConvert = param.typeConvert;
     }
 
     public void addValidator(String className, String methodName, String failMessage) {
@@ -203,6 +208,10 @@ public class ModelParam implements Serializable {
     }
     public void copyDefaultValue(ModelParam param) {
         this.setDefaultValue(param.defaultValue);
+    }
+
+    public boolean isTypeConvert() { // SCIPIO
+        return typeConvert;
     }
 
     public boolean equals(ModelParam model) {

@@ -578,7 +578,9 @@ public final class UtilHttp {
         if (request.getContextPath().length() > 1) {
             appName = request.getContextPath().substring(1);
         }
-        return appName;
+        // SCIPIO: Prevent slashes in "application name", only bad things can come of them (see also LoginWorker)
+        //return appName
+        return appName.replaceAll("/", "_");
     }
 
     public static void setInitialRequestInfo(HttpServletRequest request) {

@@ -115,11 +115,19 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     </@row>    
 </@section>
 
+
+<#assign sizesMap = {"max-width: 1920px" : "100vw", "max-width: 1600px" : "100vw", "max-width: 1400px" : "100vw", "max-width: 1280px" : "100vw", "max-width: 1024px" : "100vw"}>
+<#assign srcsetMap = { 
+                      "https://placehold.it/1024x800" : "1024", "https://placehold.it/900x800" : "900", "https://placehold.it/860x800" : "860", "https://placehold.it/800x800" : "800",
+                      "https://placehold.it/768x800" : "768", "https://placehold.it/640x800" : "640", "https://placehold.it/560x800" : "560", "https://placehold.it/480x800" : "480",
+                      "https://placehold.it/320x800" : "320", "https://placehold.it/280x800" : "280", "https://placehold.it/200x800" : "200", "https://placehold.it/150x800" : "150"
+                  	}>
+
+<#assign responsiveMap = {"srcset" : srcsetMap, "sizes" : sizesMap}>
+
 <@section title="Responsive Images">
     <@row>
-        <@cell columns=4><@img src="https://placehold.it/240x800" id="test" type="cover" link="#" height="100px" width="100%" />Cover</@cell>
-        <@cell columns=4><@img src="https://placehold.it/240x800" type="contain" link="#" height="100px" width="100%" />Contain</@cell>
-        <@cell columns=4><@img src="https://placehold.it/240x800" type="none" link="#" height="100px" width="100%" />Automatically adjusted</@cell>
+        <@cell columns=12><@img src="https://placehold.it/240x800" type="none" link="#" responsiveMap=responsiveMap />Responsive</@cell>
     </@row>    
 </@section>
 

@@ -1722,12 +1722,12 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                     <#if responsiveKeys?contains('scrset')>
                         <#local scrsetMap=toSimpleMap(responsiveMap)['scrset']>
                     </#if>
-                    <#if responsiveKeys?contains('sizesMap')>
+                    <#if responsiveKeys?contains('sizes')>
                         <#local sizesMap=toSimpleMap(responsiveMap)['sizes']>
                     </#if>
                  </#if>
                 <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
-                    <img src="${escapeFullUrl(src, 'html')}" srcset="${srcSet}" class="scipio-image" style="${imgStyle}"/>
+                    <img src="${escapeFullUrl(src, 'html')}" <#if scrsetMap?has_content>srcset="${scrsetMap}" <#if sizesMap?has_content>sizes="${sizesMap}"</#if></#if> class="scipio-image" style="${imgStyle}"/>
                 <#if link?has_content></a></#if>
                 <#if nested?has_content><#nested></#if>
             </div>

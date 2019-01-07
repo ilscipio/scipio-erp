@@ -386,10 +386,11 @@ check_requirements() {
   if ! check_min_version "${GITVERSION}" "2.7"; then
     print_warn "You are running git ${GITVERSION}; this script has not been tested with git version less than 2.7"
   fi
-  if ! git --help --all | grep -q 'subtree'; then
-    print_error_req "git subtree command does not appear installed - upgrade git?"
-    return 2
-  fi
+  # FIXME: subtree command test broken since git 2.20.0 or .1, gone from list (?)
+  #if ! git --help --all | grep -q 'subtree'; then
+  #  print_error_req "git subtree command does not appear installed - upgrade git?"
+  #  return 2
+  #fi
   if [ ! -e ".git/config" ]; then
     print_error_req "This directory does not appear to be a git working copy - this script requires SCIPIO-ERP git repository"
     return 2

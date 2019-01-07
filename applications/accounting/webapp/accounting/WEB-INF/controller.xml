@@ -992,7 +992,6 @@ code package.
     
     
     <!-- Shared Agreement Screens -->
-    <!-- SCIPIO: TODO: REVIEW: the view EditAgreementRoles is no longer defined...
     <request-map uri="EditAgreementRoles">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditAgreementRoles"/>
@@ -1015,7 +1014,7 @@ code package.
         <response name="success" type="view" value="EditAgreementRoles"/>
         <response name="error" type="view" value="EditAgreementRoles"/>
     </request-map>
-    -->
+
     
     <!-- 
     **************
@@ -2959,6 +2958,7 @@ code package.
     <view-map name="ListAgreementItemTerms" type="screen" page="component://accounting/widget/contracts/AgreementScreens.xml#ListAgreementItemTerms"/>
     <view-map name="EditAgreementItemTerm" type="screen" page="component://accounting/widget/contracts/AgreementScreens.xml#EditAgreementItemTerm"/>
 
+    <view-map name="EditAgreementRoles" type="screen" page="component://accounting/widget/contracts/AgreementScreens.xml#EditAgreementRoles"/>
     <view-map name="ListAgreementItemProducts" type="screen" page="component://accounting/widget/contracts/AgreementScreens.xml#ListAgreementItemProducts"/>
     <view-map name="ListAgreementItemProductsReport" type="screenfop" page="component://accounting/widget/contracts/AgreementScreens.xml#ListAgreementItemProductsReport" content-type="application/pdf" encoding="none"/>
     <view-map name="EditAgreementItemProduct" type="screen" page="component://accounting/widget/contracts/AgreementScreens.xml#EditAgreementItemProduct"/>

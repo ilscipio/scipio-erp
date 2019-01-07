@@ -10,7 +10,7 @@ code package.
 We will solve/implement the request as soon as possible
 <br /><br />
 The status and used hours can always be checked <br />
-<a href="${rawString(baseSecureUrl!)}/myportal/control/showPortletMainDecorator?portalPortletId=ViewCustRequest&amp;id=${custRequest.custRequestId}">here....</a>
+<a href="<@ofbizInterWebappUrl>/myportal/control/showPortletMainDecorator?portalPortletId=ViewCustRequest&amp;id=${custRequest.custRequestId}</@ofbizInterWebappUrl>">here....</a>
 <br /><br />
 Regards.
 <br /><br />

@@ -38,6 +38,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.wsdl.Binding;
 import javax.wsdl.BindingInput;
@@ -279,6 +280,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     LogLevel logLevel = LogLevel.NORMAL;
     
+    private transient List<ModelParam> typeConvertParamList; // SCIPIO
+
     public ModelService() {}
 
     public ModelService(ModelService model) {
@@ -322,6 +325,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
         this.relativeDefinitionLocation = model.relativeDefinitionLocation; // SCIPIO
         this.logLevel = model.logLevel; // SCIPIO
+        this.typeConvertParamList = model.typeConvertParamList; // SCIPIO
     }
 
     @Override
@@ -967,59 +971,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
 
         if (locale == null) {
-            // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
-            if (source.containsKey("locale")) {
-                // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (this uses UtilMisc.parseLocale)
-                // NOTE: if includeInternal, the convert is run a second time further below; but if we are taking strings,
-                // performance is not the concern anyway.
-                //locale = (Locale) source.get("locale");
-                Object value = source.get("locale");
-                if (value instanceof Locale) {
-                    locale = (Locale) value;
-                } else if (value != null) {
-                    try {
-                        locale = (Locale) ObjectType.simpleTypeConvert(value, Locale.class.getName(), null, null, null, true);
-                    } catch (GeneralException e) {
-                        // SCIPIO: NOTE: this message may be duplicated below in some cases when includeInternal==true,
-                        // but we must always warn with special message here because this also affects the other fields
-                        String errMsg = "Type conversion of special field [locale] to type [" + Locale.class.getName()
-                                + "] failed for value \"" + value + "\" - other fields will use a default locale for conversion: " + e.toString();
-                        Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
-                        if (errorMessages != null) {
-                            errorMessages.add(errMsg);
-                        }
-                    }
-                }
-            }
-            if (locale == null) {
-                locale = Locale.getDefault();
-            }
+            locale = getLocale(source, errorMessages); // SCIPIO: Refactored
         }
 
         if (timeZone == null) {
-            // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
-            if (source.containsKey("timeZone")) {
-                // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (same as locale above)
-                //timeZone = (TimeZone) source.get("timeZone");
-                Object value = source.get("timeZone");
-                if (value instanceof TimeZone) {
-                    timeZone = (TimeZone) value;
-                } else if (value != null) {
-                    try {
-                        timeZone = (TimeZone) ObjectType.simpleTypeConvert(value, TimeZone.class.getName(), null, null, locale, true);
-                    } catch (GeneralException e) {
-                        String errMsg = "Type conversion of special field [timeZone] to type [" + TimeZone.class.getName()
-                                + "] failed for value \"" + value + "\" - other fields will use a default TimeZone for conversion: " + e.toString();
-                        Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
-                        if (errorMessages != null) {
-                            errorMessages.add(errMsg);
-                        }
-                    }
-                }
-            }
-            if (timeZone == null) {
-                timeZone = TimeZone.getDefault();
-            }
+            timeZone = getTimeZone(source, locale, errorMessages); // SCIPIO: Refactored
         }
 
         for (ModelParam param: contextParamList) {
@@ -1061,6 +1017,98 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             }
         }
         return target;
+    }
+
+    private Locale getLocale(Map<String, ?> source, List<? super String> errorMessages) { // SCIPIO: Refactored from makeValid
+        Locale locale = null;
+        // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
+        if (source.containsKey("locale")) {
+            // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (this uses UtilMisc.parseLocale)
+            // NOTE: if includeInternal, the convert is run a second time further below; but if we are taking strings,
+            // performance is not the concern anyway.
+            //locale = (Locale) source.get("locale");
+            Object value = source.get("locale");
+            if (value instanceof Locale) {
+                locale = (Locale) value;
+            } else if (value != null) {
+                try {
+                    locale = (Locale) ObjectType.simpleTypeConvert(value, Locale.class.getName(), null, null, null, true);
+                } catch (GeneralException e) {
+                    // SCIPIO: NOTE: this message may be duplicated below in some cases when includeInternal==true,
+                    // but we must always warn with special message here because this also affects the other fields
+                    String errMsg = "Type conversion of special field [locale] to type [" + Locale.class.getName()
+                            + "] failed for value \"" + value + "\" - other fields will use a default locale for conversion: " + e.toString();
+                    Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
+                    if (errorMessages != null) {
+                        errorMessages.add(errMsg);
+                    }
+                }
+            }
+        }
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
+        return locale;
+    }
+    
+    private TimeZone getTimeZone(Map<String, ?> source, Locale locale, List<? super String> errorMessages) { // SCIPIO: Refactored from makeValid
+        TimeZone timeZone = null;
+        // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
+        if (source.containsKey("timeZone")) {
+            // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (same as locale above)
+            //timeZone = (TimeZone) source.get("timeZone");
+            Object value = source.get("timeZone");
+            if (value instanceof TimeZone) {
+                timeZone = (TimeZone) value;
+            } else if (value != null) {
+                try {
+                    timeZone = (TimeZone) ObjectType.simpleTypeConvert(value, TimeZone.class.getName(), null, null, locale, true);
+                } catch (GeneralException e) {
+                    String errMsg = "Type conversion of special field [timeZone] to type [" + TimeZone.class.getName()
+                            + "] failed for value \"" + value + "\" - other fields will use a default TimeZone for conversion: " + e.toString();
+                    Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
+                    if (errorMessages != null) {
+                        errorMessages.add(errMsg);
+                    }
+                }
+            }
+        }
+        if (timeZone == null) {
+            timeZone = TimeZone.getDefault();
+        }
+        return timeZone;
+    }
+    
+    /**
+     * SCIPIO: Performs auto type conversions for fields marked type-convert="auto", in-place in the context.
+     */
+    public void applyTypeConvert(Map<String, Object> context, String mode, Locale locale, TimeZone timeZone, List<? super String> errorMessages) {
+        for(ModelParam param : getTypeConvertParamList()) {
+            if (param.mode.equals(IN_OUT_PARAM) || param.mode.equals(mode)) {
+                String key = param.name;
+                Object value = context.get(key);
+                if (value != null) {
+                    if (locale == null) {
+                        locale = getLocale(context, errorMessages); // SCIPIO: Refactored
+                    }
+    
+                    if (timeZone == null) {
+                        timeZone = getTimeZone(context, locale, errorMessages); // SCIPIO: Refactored
+                    }
+                    try {
+                        // no need to fail on type conversion; the validator will catch this
+                        value = ObjectType.simpleTypeConvert(value, param.type, null, timeZone, locale, false);
+                        context.put(key, value);
+                    } catch (GeneralException e) {
+                        String errMsg = "Type conversion of field [" + key + "] to type [" + param.type + "] failed for value \"" + value + "\": " + e.toString();
+                        Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
+                        if (errorMessages != null) {
+                            errorMessages.add(errMsg);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private Map<String, Object> makePrefixMap(Map<String, ? extends Object> source, ModelParam param) {
@@ -2270,6 +2318,20 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     public LogLevel getLogLevel() {
         return logLevel;
+    }
+
+    /**
+     * SCIPIO: Returns the service attributes marked for auto-conversion.
+     */
+    public List<ModelParam> getTypeConvertParamList() {
+        List<ModelParam> paramList = this.typeConvertParamList;
+        if (paramList == null) {
+            paramList = this.getModelParamList().stream().filter(p -> p.isTypeConvert())
+                    .collect(Collectors.toCollection(ArrayList::new));
+            ((ArrayList<ModelParam>) paramList).trimToSize();
+            this.typeConvertParamList = Collections.unmodifiableList(paramList);
+        }
+        return paramList;
     }
 
     /**

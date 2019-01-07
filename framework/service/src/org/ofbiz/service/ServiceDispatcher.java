@@ -19,6 +19,7 @@
 package org.ofbiz.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -201,17 +202,34 @@ public class ServiceDispatcher {
         }
     }
 
+    /**
+     * Registers a callback by associating it to a service.
+     *
+     * @param serviceName the name of the service to associate the callback with
+     * @param cb the callback to register
+     */
     public synchronized void registerCallback(String serviceName, GenericServiceCallback cb) {
-        List<GenericServiceCallback> callBackList = callbacks.get(serviceName);
-        if (callBackList == null) {
-            callBackList = new ArrayList<>(); // SCIPIO: switched to ArrayList
-        }
-        callBackList.add(cb);
-        callbacks.put(serviceName, callBackList);
+        callbacks.computeIfAbsent(serviceName, x -> new ArrayList<>()).add(cb); // SCIPIO: switched to ArrayList
     }
 
+    /**
+     * Provides a list of the enabled callbacks corresponding to a service.
+     *
+     * As a side effect, disabled callbacks are removed.
+     *
+     * @param serviceName the name of service whose callbacks should be called
+     * @return a list of callbacks corresponding to {@code serviceName}
+     */
     public List<GenericServiceCallback> getCallbacks(String serviceName) {
-        return callbacks.get(serviceName);
+        // SCIPIO: counter-productive code
+        //List<GenericServiceCallback> res = callbacks.getOrDefault(serviceName, Collections.emptyList());
+        //res.removeIf(gsc -> !gsc.isEnabled());
+        List<GenericServiceCallback> res = callbacks.get(serviceName);
+        if (res == null) {
+            return Collections.emptyList();
+        }
+        res.removeIf(gsc -> !gsc.isEnabled());
+        return res;
     }
 
     /**
@@ -321,6 +339,9 @@ public class ServiceDispatcher {
             }
 
             try {
+                // SCIPIO: Performs auto type conversions for fields marked type-convert="true" (failures caught by validator afterward)
+                modelService.applyTypeConvert(context, ModelService.IN_PARAM, locale, null, null);
+
                 int lockRetriesRemaining = LOCK_RETRIES;
                 boolean needsLockRetry = false;
 
@@ -605,7 +626,14 @@ public class ServiceDispatcher {
                 Debug.logTiming("Sync service [" + localName + "/" + modelService.name + "] finished in [" + timeToRun + "] milliseconds", module);
             }
         } else if (Debug.infoOn() && timeToRun > showSlowServiceThreshold) {
-            Debug.logTiming("Slow sync service execution detected: service [" + localName + "/" + modelService.name + "] finished in [" + timeToRun + "] milliseconds", module);
+            // SCIPIO: We can't just logTiming here, or the message may be hidden by an implicit Debug.timingOn() while being fairly important
+            //Debug.logTiming("Slow sync service execution detected: service [" + localName + "/" + modelService.name + "] finished in [" + timeToRun + "] milliseconds", module);
+            final String msg = "Slow sync service execution detected: service [" + localName + "/" + modelService.name + "] finished in [" + timeToRun + "] milliseconds";
+            if (Debug.timingOn()) {
+                Debug.logTiming(msg, module);
+            } else {
+                Debug.logInfo(msg, module);
+            }
         }
         if ((Debug.verboseOn() || modelService.debug) && timeToRun > 50 && !modelService.hideResultInLog) {
             // Sanity check - some service results can be multiple MB in size. Limit message size to 10K.
@@ -689,6 +717,9 @@ public class ServiceDispatcher {
             }
 
             try {
+                // SCIPIO: Performs auto type conversions for fields marked type-convert="true" (failures caught by validator afterward)
+                service.applyTypeConvert(context, ModelService.IN_PARAM, locale, null, null);
+
                 // get eventMap once for all calls for speed, don't do event calls if it is null
                 Map<String, List<ServiceEcaRule>> eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
 

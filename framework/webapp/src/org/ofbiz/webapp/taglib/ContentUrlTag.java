@@ -28,9 +28,14 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.webapp.ExtWebappInfo;
+import org.ofbiz.webapp.FullWebappInfo;
+import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.control.RequestLinkUtil;
+import org.ofbiz.webapp.renderer.RenderEnvType;
 import org.ofbiz.webapp.renderer.RendererInfo;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
@@ -123,9 +128,9 @@ public class ContentUrlTag {
      */
     public static void appendContentPrefix(HttpServletRequest request, Appendable urlBuffer, String webSiteId, Boolean secure, String type) throws IOException {
         if (request == null) {
-            Debug.logWarning("appendContentPrefix: Request is null; this probably means this was used where it"
-                    + " shouldn't be; falling back to prefix from url.properties if available (no WebSite, delegator or security setting known)", module);
-            if (checkDoLocalContentPrefix(null, urlBuffer, true, type, false)) {
+            Debug.logError("appendContentPrefix: request is null; this probably means appendContentPrefix was used where it"
+                    + " shouldn't be or context is incomplete; falling back to *content.url.prefix.* from url.properties if available (no WebSite, delegator or security setting known)", module);
+            if (checkDoLocalContentPrefix(DelegatorFactory.getDefaultDelegator(), urlBuffer, true, type, false)) {
                 return;
             }
             appendContentPrefix((GenericValue) null, true, urlBuffer);
@@ -160,6 +165,11 @@ public class ContentUrlTag {
 
     /**
      * SCIPIO: Appends content prefix to buffer, using a render context.
+     * <p>
+     * This call assumes this is for a static render context (no request).
+     * <p>
+     * 2019-01-04: New fallback: because this is a static context, if no explicit prefix is configured
+     * for the WebSite or in url.properties, this will attempt to use the base server URL.
      */
     public static void appendContentPrefix(Map<String, Object> context, Appendable urlBuffer, String webSiteId, Boolean secure, String type) throws IOException {
         // SCIPIO: FOP and local content request detection
@@ -173,6 +183,10 @@ public class ContentUrlTag {
             }
         }
         Delegator delegator = (Delegator) context.get("delegator");
+        if (delegator == null) {
+            Debug.logWarning("appendContentPrefix: delegator missing in context; using default delegator", module);
+            delegator = DelegatorFactory.getDefaultDelegator();
+        }
         if (checkDoLocalContentPrefix(delegator, urlBuffer, secure, type, isXslFo)) {
             return;
         }
@@ -187,16 +201,69 @@ public class ContentUrlTag {
             webSite = (webSiteId != null) ? WebSiteWorker.findWebSite(delegator, webSiteId) : null;
         }
         // SCIPIO: 2017-11-18: Factored out dispersed secure checks into RequestLinkUtil:
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(250);
         appendContentPrefix(webSite, secure, sb);
-        urlBuffer.append(sb.toString());
-        if (sb.length() == 0) {
-            Debug.logWarning("appendContentPrefix: We appear to be rendering from a non-webapp"
-                    + " render context, but no content prefix is defined in url.properties; cannot"
-                    + " create a full link", module);
+        if (sb.length() > 0) {
+            urlBuffer.append(sb);
+        } else {
+            if (RenderEnvType.fromContext(context).isStatic()) {
+                // FALLBACK PREFIX FOR STATIC RENDER CONTEXTS
+                // SCIPIO: 2019-01-04: In a static render context, we must always generate a full link,
+                // so find a backup prefix any way possible
+                // First try the legacy baseUrl/baseSecureUrl; if not set, use WebSiteProperties
+                appendFallbackStaticContentPrefix(context, urlBuffer, sb, webSiteId, webSite, secure, type, delegator);
+            }
         }
     }
 
+    private static void appendFallbackStaticContentPrefix(Map<String, Object> context, Appendable urlBuffer, StringBuilder sb, String webSiteId, GenericValue webSite,
+            Boolean secure, String type, Delegator delegator) throws IOException { // SCIPIO
+        String prefix = (String) context.get(Boolean.FALSE.equals(secure) ? "baseUrl" : "baseSecureUrl");
+        if (UtilValidate.isNotEmpty(prefix)) {
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("appendContentPrefix: No explicit content prefix configured"
+                        + "; using baseUrl/baseSecureUrl from non-webapp context: " + prefix + " (webSiteId: " + webSiteId + ")", module);
+            }
+            urlBuffer.append(prefix);
+        } else {
+            try {
+                OfbizUrlBuilder navPrefixBuilder;
+                if (webSite != null) {
+                    try {
+                        navPrefixBuilder = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), context).getOfbizUrlBuilder();
+                    } catch(IllegalArgumentException e) {
+                        Debug.logError("appendContentPrefix: Could not determine fallback content prefix using webSiteId: " 
+                                + webSiteId + "): " + e.toString(), module);
+                        navPrefixBuilder = OfbizUrlBuilder.fromServerDefaults(delegator);
+                    }
+                } else {
+                    navPrefixBuilder = OfbizUrlBuilder.fromServerDefaults(delegator);
+                }
+                if (sb == null) {
+                    sb = new StringBuilder(250);
+                }
+                navPrefixBuilder.buildHostPart(sb, secure);
+                if (sb.length() > 0) {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("appendContentPrefix: No explicit content prefix configured or baseUrl/baseSecureUrl in context"
+                                + "; using host from url.properties/WebSite: " + sb + " (webSiteId: " + webSiteId + ")", module);
+                    }
+                    urlBuffer.append(sb);
+                } else {
+                    // NOTE: In practice, this will never be printed because 
+                    // localhost will be used as a fallback
+                    Debug.logError("appendContentPrefix: We appear to be rendering from a non-webapp"
+                            + " render context, but no content.url.prefix.* is defined in url.properties (or WebSite) and no fallbacks available; cannot"
+                            + " create a full link (webSiteId: " + webSiteId + ")", module);
+                }
+            } catch (Exception e) {
+                // TODO: REVIEW: Could want to throw some of these errors instead...
+                Debug.logError("appendContentPrefix: Could not determine fallback content prefix from url.properties or WebSite (webSiteId: " 
+                        + webSiteId + "): " + e.toString(), module);
+            }
+        }
+    }
+    
     private static boolean isXslFo(RendererInfo renderInfo) {
         return (renderInfo != null && "xsl-fo".equals(renderInfo.getRendererName()));
     }

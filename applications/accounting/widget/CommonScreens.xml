@@ -249,8 +249,9 @@ code package.
                                                 </not>
                                             </condition>
                                             <widgets>
+                                                <!--
                                                 <include-menu location="component://accounting/widget/AccountingMenus.xml"
-                                                    name="AgreementItemTabBar" />
+                                                    name="AgreementItemTabBar" />-->
                                                 <container style="button-bar">
                                                     <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}"
                                                         style="${styles.link_nav} ${styles.action_add}" />
@@ -263,7 +264,7 @@ code package.
                                                     <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}"
                                                         style="${styles.link_nav} ${styles.action_add}" />
                                                     <include-menu location="component://accounting/widget/AccountingMenus.xml"
-                                                        name="AgreementSubTabBar" />
+                                                        name="AgreementTabBar" />
                                                 </container>
                                             </fail-widgets>
                                         </section>
@@ -277,6 +278,18 @@ code package.
                             </fail-widgets>
                         </section>
                     </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="AgreementSubDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" value="AgreementItem"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                 </decorator-screen>
             </widgets>
         </section>

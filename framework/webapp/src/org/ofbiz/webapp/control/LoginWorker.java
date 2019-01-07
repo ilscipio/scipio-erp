@@ -812,12 +812,21 @@ public class LoginWorker {
         }
     }
 
+    /**
+     * SCIPIO: OFBiz patch - Original does not work when the mount point has multiple slashes:  example: /en/shop vs /shop
+     * return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
+     */
     protected static String getAutoLoginCookieName(HttpServletRequest request) {
-        return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
+        return UtilHttp.getApplicationName(request).replaceAll("/","_") + ".autoUserLoginId";
+
     }
 
+    /**
+     * SCIPIO: OFBiz patch - Original does not work when the mount point has multiple slashes:  example: /en/shop vs /shop
+     * return UtilHttp.getApplicationName(request) + ".autoUserLoginId";
+     */
     protected static String getAutoLoginCookieName(String webappName) {
-        return webappName + ".autoUserLoginId";
+        return webappName.replaceAll("/","_") + ".autoUserLoginId";
     }
 
     public static String getAutoUserLoginId(HttpServletRequest request) {

@@ -72,6 +72,7 @@ public class LocalHttpSession implements HttpSession {
         return 0;
     }
 
+    @Deprecated
     @Override
     public javax.servlet.http.HttpSessionContext getSessionContext() {
         Debug.logWarning("getSessionContext called - deprecated", module);

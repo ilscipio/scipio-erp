@@ -13,16 +13,16 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHel
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGeneratorUtil.DataGeneratorProviders
 
-
 @DataGeneratorProvider(providers=[DataGeneratorProviders.LOCAL])
 public class ProductData extends DataGeneratorGroovyBaseScript {
-
+    private static final String module = "ProductData.groovy";
+    
     public String getDataType() {
         return DataTypeEnum.PRODUCT;
     }
 
     ProductData() {
-        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - PRODUCT DATA-=-=-=-", "");
+        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - PRODUCT DATA-=-=-=-", module);
     }
 
     public void init() {
@@ -53,8 +53,9 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
                 prodCatalogId = productStoreCatalog.getString("prodCatalogId");
             }
         } else {
-            if (!ProductStoreWorker.getProductStore(productStoreId))
+            if (!ProductStoreWorker.getProductStore(productStoreId)) {
                 productStoreId = null;
+            }
         }
         if (!productStoreId) {
             throw new Exception("Product store not found or invalid.");
@@ -129,8 +130,9 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
 
     private GenericValue checkProductCategory() {
         String productCategoryId = (context.productCategoryId) ? context.productCategoryId : null;
-        if (!productCategoryId)
+        if (!productCategoryId) {
             return productCategoryId;
+        }
         GenericValue productCategory;
         try {
             productCategory = delegator.findOne("ProductCategory", ["productCategoryId" :  productCategoryId],true);

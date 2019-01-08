@@ -13,11 +13,11 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroov
 
 
 public class TrackingCodeVisitData extends DataGeneratorGroovyBaseScript {
-
+    private static final String module = "TrackingCodeVisitData.groovy";
     private final static String DEFAULT_WEBAPP_NAME = "shop";
 
     TrackingCodeVisitData() {
-        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TRACKING VISIT DATA-=-=-=-", "");
+        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TRACKING VISIT DATA-=-=-=-", module);
     }
 
     public void init() {

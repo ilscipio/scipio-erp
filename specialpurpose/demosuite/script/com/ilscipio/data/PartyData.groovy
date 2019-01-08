@@ -22,9 +22,10 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGenerato
 
 @DataGeneratorProvider(providers=[DataGeneratorProviders.JFAIRY])
 public class PartyData extends DataGeneratorGroovyBaseScript {
+    private static final String module = "PartyData.groovy";
     
     PartyData() {
-        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - PARTY DATA-=-=-=-", "");
+        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - PARTY DATA-=-=-=-", module);
     }
     
     final String DEFAULT_USER_LOGIN_PWD = "scipio";

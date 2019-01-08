@@ -15,10 +15,10 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGenerato
 
 @DataGeneratorProvider(providers=[DataGeneratorProviders.LOCAL])
 public class OrderData extends DataGeneratorGroovyBaseScript {
-    public static final String module = "OrderData.groovy";
+    private static final String module = "OrderData.groovy";
     
     OrderData() {
-        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - ORDER DATA-=-=-=-", "");
+        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - ORDER DATA-=-=-=-", module);
     }
 
     public String getDataType() {
@@ -76,8 +76,9 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
                 prodCatalogId = productStoreCatalog.getString("prodCatalogId");
             }
         } else {
-            if (!ProductStoreWorker.getProductStore(productStoreId))
+            if (!ProductStoreWorker.getProductStore(productStoreId)) {
                 productStoreId = null;
+            }
         }
         if (!productStoreId) {
             throw new Exception("Product store not found or invalid.");
@@ -98,8 +99,9 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
                 partyGroupId = partyGroups[0].getString("partyId");
             }
         }
-        if (!partyGroupId)
+        if (!partyGroupId) {
             throw new Exception("Party group not found or invalid.");
+        }
 
         // If no partyCustomerId is passed, pick one randomly
         if (!partyCustomerId) {
@@ -110,8 +112,9 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
                 partyCustomerId = partyCustomers[0].getString("partyId");
             }
         }
-        if (!partyCustomerId)
+        if (!partyCustomerId) {
             throw new Exception("Party customer not found or invalid.");
+        }
 
         context.prodCatalogId = prodCatalogId;
         context.productStoreId = productStoreId;

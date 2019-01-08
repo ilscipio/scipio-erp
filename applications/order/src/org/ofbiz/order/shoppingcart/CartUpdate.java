@@ -192,17 +192,17 @@ public class CartUpdate implements AutoCloseable {
 
             ShoppingCart cart = status.sourceCart; // May be set manually by caller
             if (cart == null) {
-                if (createCartIfMissing) {
-                    // IMPORTANT: DO NOT MODIFY SESSION (yet; only in end())! Cannot allow session attr change until committed.
-                    // Prevent session modification using scope filter.
-                    // This will also prevent the setCartObject call done by getCartObject from calling our commit(ShoppingCart).
-                    final RequestVarScopes modifyScopesFilter = this.modifyScopesFilter.request() ?
-                            RequestVarScopes.REQUEST : RequestVarScopes.NONE;
+                //if (createCartIfMissing) {
+                // IMPORTANT: DO NOT MODIFY SESSION (yet; only in end())! Cannot allow session attr change until committed.
+                // Prevent session modification using scope filter.
+                // This will also prevent the setCartObject call done by getCartObject from calling our commit(ShoppingCart).
+                final RequestVarScopes modifyScopesFilter = this.modifyScopesFilter.request() ?
+                        RequestVarScopes.REQUEST : RequestVarScopes.NONE;
 
-                    cart = ShoppingCartEvents.getCartObject(request, checkRequestFirst, modifyScopesFilter);
-                } else {
-                    cart = ShoppingCartEvents.getCartObjectIfExists(request, checkRequestFirst);
-                }
+                cart = ShoppingCartEvents.getCartObject(request, createCartIfMissing, checkRequestFirst, modifyScopesFilter);
+                //} else {
+                //    cart = ShoppingCartEvents.getCartObjectIfExists(request, checkRequestFirst);
+                //}
             }
             if (cart != null) {
                 setCurrentCart(recordAndCopyCartForUpdate(cart));

@@ -1108,7 +1108,7 @@ public class ShoppingCartEvents {
      * NOTE: If locale or currency has changed, <code>checkRequestFirst</code> may be ignored, because cart changes
      * should always 
      */
-    static ShoppingCart getCartObject(HttpServletRequest request, boolean checkRequestFirst, RequestVarScopes modifyScopesFilter) { // SCIPIO: added checkRequestFirst, modifyScopesFilter
+    static ShoppingCart getCartObject(HttpServletRequest request, boolean createifMissing, boolean checkRequestFirst, RequestVarScopes modifyScopesFilter) { // SCIPIO: added checkRequestFirst, modifyScopesFilter
         // SCIPIO: Heavily refactored for synchronized cart updates
         HttpSession session = request.getSession();
         ShoppingCart cart = null, requestCart = (ShoppingCart) request.getAttribute("shoppingCart");
@@ -1133,7 +1133,7 @@ public class ShoppingCartEvents {
             }
         }
 
-        if (cart == null) {
+        if (createifMissing && cart == null) {
             try (CartSync cartSync = CartSync.synchronizedSection(request)) {
                 // SCIPIO: Check session cart again inside synchronized (only session might have changed)
                 ShoppingCart sessionCart = (ShoppingCart) session.getAttribute("shoppingCart");
@@ -1152,7 +1152,7 @@ public class ShoppingCartEvents {
         // This helps ensure that read-only cart accesses in the rest of this request will all use the same cart.
         // NOTE: However, cart update blocks do the opposite and read cart to modify from session first - see CartUpdate.begin().
         // NOTE: Requires that the req attr was already null; will not crush it (caller - CartUpdate - will handle that as necessary)
-        if (requestCart == null && modifyScopesFilter.request()) {
+        if (requestCart == null && modifyScopesFilter.request() && cart != null) {
             request.setAttribute("shoppingCart", cart);
         }
         return cart;
@@ -1202,7 +1202,7 @@ public class ShoppingCartEvents {
     public static ShoppingCart getCartObject(HttpServletRequest request, Locale locale, String currencyUom) {
         Debug.logWarning("DEPRECATED: getCartObject with explicit locale and currencyUom called (" + Debug.getCallerShortInfo() 
             + ") - not supported - locale and currency will not be updated in cart - please report this issue or fix calling code", module);
-        return getCartObject(request, true, RequestVarScopes.ALL); // SCIPIO: checkRequestFirst, modifyScopesFilter
+        return getCartObject(request, true, true, RequestVarScopes.ALL); // SCIPIO: checkRequestFirst, modifyScopesFilter
     }
 
     /** 
@@ -1221,19 +1221,15 @@ public class ShoppingCartEvents {
      * </ul>
      */
     public static ShoppingCart getCartObject(HttpServletRequest request) {
-        return getCartObject(request, true, RequestVarScopes.ALL); // SCIPIO: checkRequestFirst, modifyScopesFilter
+        return getCartObject(request, true, true, RequestVarScopes.ALL); // SCIPIO: checkRequestFirst, modifyScopesFilter
     }
 
     /** SCIPIO: Get cart method only if set, uses the locale and currency from the session. Added 2018-11-29.
+     * NOTE: 2019-01: This now automatically transfers 
      * @see {@link #getCartObject(HttpServletRequest)} */
     public static ShoppingCart getCartObjectIfExists(HttpServletRequest request) {
-        return (ShoppingCart) RequestVarScopes.REQUEST_AND_SESSION.getValue(request, "shoppingCart");
-    }
-
-    /** SCIPIO: Get cart method only if set, uses the locale and currency from the session. Added 2018-11-30.
-     * @see {@link #getCartObject(HttpServletRequest)} */
-    public static ShoppingCart getCartObjectIfExists(HttpServletRequest request, boolean checkRequestFirst) { // SCIPIO: specificScopeFirst
-        return (ShoppingCart) RequestVarScopes.REQUEST_AND_SESSION.getValue(request, "shoppingCart", checkRequestFirst);
+        //return (ShoppingCart) RequestVarScopes.REQUEST_AND_SESSION.getValue(request, "shoppingCart");
+        return getCartObject(request, false, true, RequestVarScopes.ALL);
     }
 
     /**

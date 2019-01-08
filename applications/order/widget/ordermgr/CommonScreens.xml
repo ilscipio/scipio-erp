@@ -38,6 +38,7 @@ code package.
                 <set field="activeApp" value="ordermgr" global="true"/>
                 
                 <!-- base/top/specific map first, then more common map added for shared labels -->
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/><!-- SCIPIO: Some shop labels may be needed due to sharing code (not ideal, FIXME/remove?) -->
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderErrorUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>

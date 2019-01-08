@@ -1110,24 +1110,29 @@ public class ShoppingCartEvents {
      */
     static ShoppingCart getCartObject(HttpServletRequest request, boolean createifMissing, boolean checkRequestFirst, RequestVarScopes modifyScopesFilter) { // SCIPIO: added checkRequestFirst, modifyScopesFilter
         // SCIPIO: Heavily refactored for synchronized cart updates
-        HttpSession session = request.getSession();
         ShoppingCart cart = null, requestCart = (ShoppingCart) request.getAttribute("shoppingCart");
         if (checkRequestFirst) {
             // SCIPIO: Check request attribute first, typically for pure cart reads during a request, which use
             // local request cache for consistency in the rendering
             cart = requestCart;
             if (cart == null) {
-                cart = (ShoppingCart) session.getAttribute("shoppingCart");
+                HttpSession session = request.getSession(false);
+                if (session != null) {
+                    cart = (ShoppingCart) session.getAttribute("shoppingCart");
+                }
             } else {
                 // SCIPIO: 2018-11-30: This code was destructive; do not automatically transfer the request attribute to 
                 // session anymore; instead, setCartObject and CartUpdate#close() do it, and as bonus we avoid extra sync blocks.
                 // NOTE: We now do the opposite further below and transfer session to request instead.
-                //session.setAttribute("shoppingCart", cart);
+                //request.getSession().setAttribute("shoppingCart", cart);
             }
         } else {
             // SCIPIO: Check session attributes first, typically only done at the beginning of a CartUpdate section
             // (required there to avoid lost cart updates from other threads)
-            cart = (ShoppingCart) session.getAttribute("shoppingCart");
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                cart = (ShoppingCart) session.getAttribute("shoppingCart");
+            }
             if (cart == null) {
                 cart = requestCart;
             }
@@ -1136,7 +1141,8 @@ public class ShoppingCartEvents {
         if (createifMissing && cart == null) {
             try (CartSync cartSync = CartSync.synchronizedSection(request)) {
                 // SCIPIO: Check session cart again inside synchronized (only session might have changed)
-                ShoppingCart sessionCart = (ShoppingCart) session.getAttribute("shoppingCart");
+                HttpSession session = request.getSession(false);
+                ShoppingCart sessionCart = (session != null) ? (ShoppingCart) session.getAttribute("shoppingCart") : null;
                 cart = sessionCart;
                 if (cart == null) {
                     // NEW CART

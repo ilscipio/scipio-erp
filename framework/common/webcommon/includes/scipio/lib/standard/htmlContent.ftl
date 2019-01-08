@@ -1682,7 +1682,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
   <#elseif (linkTarget?is_boolean && linkTarget == true) || !linkTarget?has_content>
     <#local linkTarget = styles[stylePrefix + "_linktarget"]!"">
   </#if>
-  <@img_markup class=class id=id src=src responsiveMap={} type=type width=width height=height link=link linkTarget=linkTarget origArgs=origArgs passArgs=passArgs><#nested></@img_markup>
+  <@img_markup class=class id=id src=src responsiveMap=responsiveMap type=type width=width height=height link=link linkTarget=linkTarget origArgs=origArgs passArgs=passArgs><#nested></@img_markup>
 </#macro>
 
 <#-- @img main markup - theme override -->
@@ -1713,21 +1713,30 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
         <#default>
             <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapeVal(type, 'css-html')};</#local>
             <#local class = addClassArg(class, "scipio-image-container")>
-            
+            ${Static["org.ofbiz.base.util.Debug"].log("is responsive =====> " + responsiveMap?has_content?string)}
             <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if> style="${imgContainer}" scipioFit="${escapeVal(type, 'html')}">
-                 <#local scrsetMap = {}>
-                 <#local sizesMap = {}>
+                 <#local srcset = "">
+                 <#local sizes = "">
                  <#if responsiveMap?has_content>
                     <#local responsiveKeys = mapKeys(responsiveMap)>
-                    <#if responsiveKeys?contains('scrset')>
-                        <#local scrsetMap=toSimpleMap(responsiveMap)['scrset']>
+                    <#if responsiveKeys?contains('srcset')>
+                        <#local srcsetMap=toSimpleMap(responsiveMap)['srcset']>
+                        <#list srcsetMap?keys as srcsetEntry>
+                            <#if !srcsetEntry?is_first><#local srcset=srcset + ", "></#if>
+                            <#local srcset=srcset + (srcsetEntry + " " + srcsetMap[srcsetEntry] + "w")>
+                        </#list>
                     </#if>
                     <#if responsiveKeys?contains('sizes')>
                         <#local sizesMap=toSimpleMap(responsiveMap)['sizes']>
+                        <#list sizesMap?keys as sizesEntry>
+                            <#if !sizesEntry?is_first><#local sizes=sizes + ", "></#if>
+                            <#local sizes=sizes + ("(" + sizesEntry + ") " + sizesMap[sizesEntry])>
+                        </#list>
+                        
                     </#if>
                  </#if>
                 <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
-                    <img src="${escapeFullUrl(src, 'html')}" <#if scrsetMap?has_content>srcset="${scrsetMap}" <#if sizesMap?has_content>sizes="${sizesMap}"</#if></#if> class="scipio-image" style="${imgStyle}"/>
+                    <img src="${escapeFullUrl(src, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>sizes="${sizes}"</#if></#if> class="scipio-image" style="${imgStyle}"/>
                 <#if link?has_content></a></#if>
                 <#if nested?has_content><#nested></#if>
             </div>

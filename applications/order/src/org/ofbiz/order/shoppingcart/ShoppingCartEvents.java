@@ -2137,12 +2137,12 @@ public class ShoppingCartEvents {
 
         String productStoreId = request.getParameter("productStoreId");
 
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         if (UtilValidate.isNotEmpty(productStoreId)) {
             session.setAttribute("productStoreId", productStoreId);
         }
-
-        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
-        ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         // TODO: re-factor and move this inside the ShoppingCart constructor
         String orderMode = request.getParameter("orderMode");

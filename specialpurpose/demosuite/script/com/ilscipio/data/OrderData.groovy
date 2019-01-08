@@ -76,7 +76,7 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
                 prodCatalogId = productStoreCatalog.getString("prodCatalogId");
             }
         } else {
-            if (!ProductStoreWorker.getProductStore(productStoreId)) {
+            if (!ProductStoreWorker.getProductStore(productStoreId, delegator)) {
                 productStoreId = null;
             }
         }

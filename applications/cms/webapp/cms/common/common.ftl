@@ -758,3 +758,26 @@ Common CMS editor macros and utilities
       </@row>
      </@fields>
 </#macro>
+
+<#macro responsiveImgScript>
+    <@script>
+        var addResponsiveImgSize = function() {
+            <#assign customResponsiveImgForm><@responsiveImgForm /></#assign>
+            var customResponsiveImgForm = '${escapeVal(customResponsiveImgForm, 'js')}';
+            jQuery('.cmsmedia-responsiveimg-area').find('.cmsmedia-responsiveimg-add-cnt').remove();
+            jQuery('.cmsmedia-responsiveimg-area.responsiveImgSizesForm').append(customResponsiveImgForm);
+            jQuery('.cmsmedia-responsiveimg-add').click(addResponsiveImgSize);
+       };
+       
+       $('select[name=srcsetModeEnumId]').change(function(){
+           if ($(this).val() != "IMG_SRCSET_VW") {
+               jQuery('.cmsmedia-responsiveimg-area').remove();
+               jQuery('.cmsmedia-responsiveimg-add').click(addResponsiveImgSize);
+           }
+       });
+
+       jQuery('.cmsmedia-responsiveimg-add').click(addResponsiveImgSize);
+    </@script>
+</#macro>
+
+

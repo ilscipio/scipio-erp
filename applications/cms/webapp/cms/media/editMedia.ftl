@@ -169,7 +169,7 @@
                                     <@section id="responsiveimgsizesarea" title=uiLabelMap.CmsMediaResponsiveImgSizesArea>
                                         <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaResponsiveImgSizes name="responsiveImgSizes" id="responsiveImgSizes" tooltip=uiLabelMap.CmsMediaResponsiveImgSizesDesc
                                             checked=(parameters.responsiveImgSizes?? && ("true" == parameters.responsiveImgSizes))/>
-                                        <div class="cmsmedia-responseimgsizes-area responseImgSizesForm" style="display:none;">
+                                        <div class="cmsmedia-responsiveimg-area responsiveImgSizesForm" style="display:none;">
                                             <#assign srcsetModes = delegator.findByAnd("Enumeration", {"enumTypeId" : "IMG_SRCSET_MODE"}, null, true)>
                                             <@field type="select" name="srcsetModeEnumId" labelArea=true label=uiLabelMap.ImageSrcsetMode required=true>
                                               <#list srcsetModes as srcsetMode>
@@ -210,14 +210,15 @@
                                     if (jQuery('#customVariantSizes').is(':not(:checked)')) return;
                                     var isChecked = jQuery(this).is(':checked');
                                     if (isChecked === true) {
-                                        jQuery('.cmsmedia-responseimgsizes-area').show();
+                                        jQuery('.cmsmedia-responsiveimg-area').show();
                                     } else {
-                                        jQuery('.cmsmedia-responseimgsizes-area').hide();
+                                        jQuery('.cmsmedia-responsiveimg-area').hide();
                                     }
                                 });
                             });
                           </@script>
                           <@commonCustomVariantSizeScript saveAsPreset=true/>
+                          <@responsiveImgScript />
                         </#if>
                         <#if !media?has_content>
                             <@field type="file" name="uploadedFile" label=uiLabelMap.CommonMedia required=true />

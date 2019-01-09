@@ -19,6 +19,7 @@
 package org.ofbiz.product.store;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,35 +56,39 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 public final class ProductStoreWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    protected static Map<String, String> defaultProductStoreEmailScreenLocation = new HashMap<String, String>();
+    private static final Map<String, String> defaultProductStoreEmailScreenLocation; // SCIPIO: made final and unmodifiable
 
     static {
+        Map<String, String> emails = new HashMap<>(); // SCIPIO
+        
         // SCIPIO: now points to shop
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CONFIRM", "component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_COMPLETE", "component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_BACKORDER", "component://shop/widget/EmailOrderScreens.xml#BackorderNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_CHANGE", "component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice");
+        emails.put("PRDS_ODR_CONFIRM", "component://shop/widget/EmailOrderScreens.xml#OrderConfirmNotice");
+        emails.put("PRDS_ODR_COMPLETE", "component://shop/widget/EmailOrderScreens.xml#OrderCompleteNotice");
+        emails.put("PRDS_ODR_BACKORDER", "component://shop/widget/EmailOrderScreens.xml#BackorderNotice");
+        emails.put("PRDS_ODR_CHANGE", "component://shop/widget/EmailOrderScreens.xml#OrderChangeNotice");
 
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAYRETRY", "component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice");
+        emails.put("PRDS_ODR_PAYRETRY", "component://shop/widget/EmailOrderScreens.xml#PaymentRetryNotice");
 
         // SCIPIO: new payment status mails
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAY_CHANGE", "component://shop/widget/EmailOrderScreens.xml#PaymentChangeNotice");
-        defaultProductStoreEmailScreenLocation.put("PRDS_ODR_PAY_COMPLT", "component://shop/widget/EmailOrderScreens.xml#PaymentCompletedNotice");
+        emails.put("PRDS_ODR_PAY_CHANGE", "component://shop/widget/EmailOrderScreens.xml#PaymentChangeNotice");
+        emails.put("PRDS_ODR_PAY_COMPLT", "component://shop/widget/EmailOrderScreens.xml#PaymentCompletedNotice");
 
-        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_ACCEPT", "component://shop/widget/EmailReturnScreens.xml#ReturnAccept");
-        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_COMPLETE", "component://shop/widget/EmailReturnScreens.xml#ReturnComplete");
-        defaultProductStoreEmailScreenLocation.put("PRDS_RTN_CANCEL", "component://shop/widget/EmailReturnScreens.xml#ReturnCancel");
+        emails.put("PRDS_RTN_ACCEPT", "component://shop/widget/EmailReturnScreens.xml#ReturnAccept");
+        emails.put("PRDS_RTN_COMPLETE", "component://shop/widget/EmailReturnScreens.xml#ReturnComplete");
+        emails.put("PRDS_RTN_CANCEL", "component://shop/widget/EmailReturnScreens.xml#ReturnCancel");
 
-        defaultProductStoreEmailScreenLocation.put("PRDS_GC_PURCHASE", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardPurchase");
-        defaultProductStoreEmailScreenLocation.put("PRDS_GC_RELOAD", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardReload");
+        emails.put("PRDS_GC_PURCHASE", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardPurchase");
+        emails.put("PRDS_GC_RELOAD", "component://shop/widget/EmailGiftCardScreens.xml#GiftCardReload");
 
-        defaultProductStoreEmailScreenLocation.put("PRDS_QUO_CONFIRM", "component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteSimple");
+        emails.put("PRDS_QUO_CONFIRM", "component://order/widget/ordermgr/QuoteScreens.xml#ViewQuoteSimple");
 
-        defaultProductStoreEmailScreenLocation.put("PRDS_PWD_RETRIEVE", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
+        emails.put("PRDS_PWD_RETRIEVE", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
 
-        defaultProductStoreEmailScreenLocation.put("PRDS_TELL_FRIEND", "component://shop/widget/EmailProductScreens.xml#TellFriend");
+        emails.put("PRDS_TELL_FRIEND", "component://shop/widget/EmailProductScreens.xml#TellFriend");
 
-        defaultProductStoreEmailScreenLocation.put("PRDS_CUST_REGISTER", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
+        emails.put("PRDS_CUST_REGISTER", "component://securityext/widget/EmailSecurityScreens.xml#PasswordEmail");
+
+        defaultProductStoreEmailScreenLocation = Collections.unmodifiableMap(emails);
     }
 
     private ProductStoreWorker() {}
@@ -126,8 +131,7 @@ public final class ProductStoreWorker {
     public static String getStoreCurrencyUomId(HttpServletRequest request) {
         GenericValue productStore = getProductStore(request);
         if (UtilValidate.isEmpty(productStore)) {
-            Debug.logError(
-                    "No product store found in request, cannot set CurrencyUomId!", module);
+            Debug.logError("No product store found in request, cannot set CurrencyUomId!", module);
             return null;
         } else {
             return UtilHttp.getCurrencyUom(request.getSession(), productStore.getString("defaultCurrencyUomId"));
@@ -137,8 +141,7 @@ public final class ProductStoreWorker {
     public static Locale getStoreLocale(HttpServletRequest request) {
         GenericValue productStore = getProductStore(request);
         if (UtilValidate.isEmpty(productStore)) {
-            Debug.logError(
-                    "No product store found in request, cannot set locale!", module);
+            Debug.logError("No product store found in request, cannot set locale!", module);
             return null;
         } else {
             return UtilHttp.getLocale(request, request.getSession(), productStore.getString("defaultLocaleString"));

@@ -362,6 +362,11 @@ public abstract class CmsMediaServices {
             if (UtilValidate.isNotEmpty(imageVariantConfig)) {
                 context.put("imageVariantConfig", imageVariantConfig);
             }
+            
+            if (context.containsKey("srcsetModeEnumId")) {
+                
+            }
+            
             result = dispatcher.runSync("cmsUploadMediaFile", context);
         } catch (GenericServiceException e) {
             result = ServiceUtil.returnError(e.getMessageList());

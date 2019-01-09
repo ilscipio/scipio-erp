@@ -778,6 +778,10 @@
         <attribute mode="IN" name="variantSizeHeight" type="List" optional="true"/>
         <attribute mode="IN" name="saveAsPreset" type="Boolean" optional="true"/>
         <attribute mode="IN" name="presetName" type="String" optional="true"/>
+        
+        <attribute mode="IN" name="srcsetModeEnumId" type="String" optional="true"/>
+        <attribute mode="IN" name="viewPortMediaQuery" type="List" optional="true"/>
+        <attribute mode="IN" name="viewPortLength" type="String" optional="true"/>
     </service>
     
     <service name="cmsUpdateMediaFile" engine="java"

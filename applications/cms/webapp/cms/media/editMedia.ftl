@@ -169,14 +169,16 @@
                                     <@section id="responsiveimgsizesarea" title=uiLabelMap.CmsMediaResponsiveImgSizesArea>
                                         <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaResponsiveImgSizes name="responsiveImgSizes" id="responsiveImgSizes" tooltip=uiLabelMap.CmsMediaResponsiveImgSizesDesc
                                             checked=(parameters.responsiveImgSizes?? && ("true" == parameters.responsiveImgSizes))/>
-                                        <div class="cmsmedia-responsiveimg-area responsiveImgSizesForm" style="display:none;">
+                                        <div class="cmsmedia-responsiveimg-area" style="display:none;">
                                             <#assign srcsetModes = delegator.findByAnd("Enumeration", {"enumTypeId" : "IMG_SRCSET_MODE"}, null, true)>
                                             <@field type="select" name="srcsetModeEnumId" labelArea=true label=uiLabelMap.ImageSrcsetMode required=true>
-                                              <#list srcsetModes as srcsetMode>
-                                                  <option value="${srcsetMode.enumId}">${srcsetMode.description}</option>
-                                              </#list>
+                                                  <#list srcsetModes as srcsetMode>
+                                                      <option value="${srcsetMode.enumId}">${srcsetMode.description}</option>
+                                                  </#list>
                                             </@field>
-                                            <@responsiveImgForm />
+                                            <div class="cmsmedia-responsiveimg-mode responsiveImgSizesForm" style="display:none;">
+                                                <@responsiveImgForm />
+                                            </div>
                                         </div>
                                     </@section>
                                 </@cell>

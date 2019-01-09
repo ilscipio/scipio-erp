@@ -788,7 +788,7 @@ public class ShoppingCartEvents {
     public static String quickInitPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        HttpSession session = request.getSession();
+        //HttpSession session = request.getSession();
         Locale locale = UtilHttp.getLocale(request);
         String supplierPartyId = request.getParameter("supplierPartyId_o_0");
 
@@ -842,10 +842,7 @@ public class ShoppingCartEvents {
 
         cart.setOrderType("PURCHASE_ORDER");
 
-        ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
-        session.setAttribute("productStoreId", cart.getProductStoreId());
-        session.setAttribute("orderMode", cart.getOrderType());
-        session.setAttribute("orderPartyId", cart.getOrderPartyId());
+        setCartObjectAndAttr(request, cart); // SCIPIO: refactored
         }
 
         return "success";
@@ -1273,6 +1270,36 @@ public class ShoppingCartEvents {
      * Added 2018-11-20. */
     public static ShoppingCart setCartObject(HttpServletRequest request, ShoppingCart cart) {
         return setCartObject(request, cart, RequestVarScopes.ALL);
+    }
+
+    /**
+     * SCIPIO: Sets the cart in session and request immediately as well as related cart attributes,
+     * WITHOUT a cart synchronized section.
+     * Added 2019-01. */
+    public static ShoppingCart setCartObjectAndAttr(HttpServletRequest request, ShoppingCart cart) {
+        cart = ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
+        HttpSession session = request.getSession();
+        if (cart != null) {
+            session.setAttribute("productStoreId", cart.getProductStoreId());
+            session.setAttribute("orderMode", cart.getOrderType());
+            session.setAttribute("orderPartyId", cart.getOrderPartyId());
+        } else {
+            session.removeAttribute("productStoreId"); // TODO: REVIEW: is this removal safe for shop? it may be essential for orderentry...
+            session.removeAttribute("orderMode");
+            session.removeAttribute("orderPartyId");
+        }
+        return cart;
+    }
+
+    /**
+     * SCIPIO: Sets the cart in session and request immediately as well as related cart attributes,
+     * all inside a cart synchronized section (convenience method).
+     * Added 2019-01. */
+    public static ShoppingCart setSyncCartObjectAndAttr(HttpServletRequest request, ShoppingCart cart) {
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
+            cart = setCartObjectAndAttr(request, cart);
+        }
+        return cart;
     }
 
     /**
@@ -1901,7 +1928,7 @@ public class ShoppingCartEvents {
     public static String loadCartFromShoppingList(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession();
-        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 
         String shoppingListId = request.getParameter("shoppingListId");
 
@@ -1922,12 +1949,7 @@ public class ShoppingCartEvents {
             return "error";
         }
 
-        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
-        ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
-        session.setAttribute("productStoreId", cart.getProductStoreId());
-        session.setAttribute("orderMode", cart.getOrderType());
-        session.setAttribute("orderPartyId", cart.getOrderPartyId());
-        }
+        setSyncCartObjectAndAttr(request, cart); // SCIPIO: refactored
 
         return "success";
     }
@@ -1961,12 +1983,7 @@ public class ShoppingCartEvents {
         // Make the cart read-only
         cart.setReadOnlyCart(true);
 
-        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
-        ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
-        session.setAttribute("productStoreId", cart.getProductStoreId());
-        session.setAttribute("orderMode", cart.getOrderType());
-        session.setAttribute("orderPartyId", cart.getOrderPartyId());
-        }
+        setSyncCartObjectAndAttr(request, cart); // SCIPIO: refactored
 
         return "success";
     }
@@ -2046,12 +2063,7 @@ public class ShoppingCartEvents {
         // Since we only need the cart items, so set the order id as null
         cart.setOrderId(null);
 
-        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
-        ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
-        session.setAttribute("productStoreId", cart.getProductStoreId());
-        session.setAttribute("orderMode", cart.getOrderType());
-        session.setAttribute("orderPartyId", cart.getOrderPartyId());
-        }
+        setSyncCartObjectAndAttr(request, cart); // SCIPIO: refactored
 
         // SCIPIO: this is moved before the session.setAttribute for thread safety reasons
         //// Since we only need the cart items, so set the order id as null

@@ -639,7 +639,6 @@ ${virtualJavaScript!}
 </@section>
 
 <@section>
-  <#-- SCIPIO: Not for now  -->
   <#-- Product Reviews -->
   <@render resource="component://shop/widget/CatalogScreens.xml#inlineproductreview" reqAttribs={"productId": product.productId!"", "categoryId": requestParameters.category_id!""} />
   <#-- <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductReviewThisProduct}!</a> -->

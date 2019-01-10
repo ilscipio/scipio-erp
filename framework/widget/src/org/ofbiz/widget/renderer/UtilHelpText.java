@@ -70,14 +70,16 @@ public final class UtilHelpText {
         }
         String entityResourceName = entity.getDefaultResourceName();
         String messageId = "FieldDescription." + entityName + "." + fieldName;
-        String fieldDescription = UtilProperties.getMessage(entityResourceName, messageId, locale);
-        if (fieldDescription.equals(messageId)) {
+        String fieldDescription = UtilProperties.getMessage(entityResourceName, messageId, locale, true); // SCIPIO: optional=true: return null if missing
+        //if (fieldDescription.equals(messageId)) {
+        if (UtilValidate.isEmpty(fieldDescription)) {
             messageId = "FieldDescription." + fieldName;
             if (Debug.verboseOn()) {
                 Debug.logVerbose("No help text found in [" + entityResourceName + "] with key [" + messageId + "], Trying with: " + messageId, module);
             }
-            fieldDescription = UtilProperties.getMessage(entityResourceName, messageId, locale);
-            if (fieldDescription.equals(messageId)) {
+            fieldDescription = UtilProperties.getMessage(entityResourceName, messageId, locale, true); // SCIPIO: optional=true: return null if missing
+            if (UtilValidate.isEmpty(fieldDescription)) {
+            //if (fieldDescription.equals(messageId)) {
                 if (Debug.verboseOn()) {
                     Debug.logVerbose("No help text found in [" + entityResourceName + "] with key [" + messageId + "]", module);
                 }

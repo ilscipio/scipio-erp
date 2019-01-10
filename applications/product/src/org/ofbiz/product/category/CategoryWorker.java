@@ -60,6 +60,8 @@ public final class CategoryWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    public static final List<String> TOP_TRAIL = UtilMisc.unmodifiableArrayList("TOP"); // SCIPIO
+
     private CategoryWorker () {}
 
     /**
@@ -417,6 +419,14 @@ public final class CategoryWorker {
      */
     public static List<String> setTrailIfFirstInRequest(ServletRequest request, List<String> crumb) {
         return setTrail(request, crumb, true);
+    }
+
+    /**
+     * SCIPIO: Resets the breadcrumb to the "TOP".
+     * Added 2019-01.
+     */
+    public static List<String> resetTrail(ServletRequest request) {
+        return setTrail(request, TOP_TRAIL, false);
     }
 
     public static boolean checkTrailItem(ServletRequest request, String category) {

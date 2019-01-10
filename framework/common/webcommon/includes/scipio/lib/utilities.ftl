@@ -1471,6 +1471,11 @@ in other words not expected to be printed as HTML.
 ************
 Gets a message label from a *Labels.xml property resource, using behavior and rules of the {{{UtilProperties}}} class (low-level).
 
+NOTE: For most client templates, you probably want to use #getLabel instead of this function. If you're looking
+to read *.properties files, use #getPropertyValue instead. This function is only a bare wrapper around the 
+UtilProperties#getMessage class method and does not consult the global label map (uiLabelMap) and is not meant
+to read *.properties files.
+
 If the name does not exist in the resource, by default this returns the property name, unless {{{true}}} for {{{optional}}}
 is passed in which case it returns empty string (NOT void/missing). The default value operator ("!") is effectively useless if used
 with this function (unlike #getPropertyValue).
@@ -1526,6 +1531,11 @@ TODO: implement as transform.
 ************
 Gets a message label from a *Labels.xml property resource, using behavior and rules of the {{{UtilProperties}}} class (low-level), with support
 with support for a polyvalent resource expression.
+
+NOTE: For most client templates, you probably want to use #getLabel instead of this function. If you're looking
+to read *.properties files, use #getPropertyValue instead. This function is only a bare wrapper around the 
+UtilProperties#getMessage class method and does not consult the global label map (uiLabelMap) and is not meant
+to read *.properties files.
 
 See #getPropertyMsg for more information; this is nearly the same as #getPropertyMsg but with extra support for a 
 resource expression.

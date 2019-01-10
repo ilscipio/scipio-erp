@@ -1065,6 +1065,7 @@ public final class UtilProperties implements Serializable {
             return optional ? "" : name;
         }
 
+        /* SCIPIO: This is poor use of ResourceBundle interface - use the exceptions instead
         String value = null;
         if (bundle.containsKey(name)) {
             value = bundle.getString(name);
@@ -1075,7 +1076,17 @@ public final class UtilProperties implements Serializable {
             Debug.logInfo(name + " misses in " + resource + " for locale " + locale, module);
             return name;
         }
-        return value == null ? name : value; // SCIPIO: TODO: REVIEW: some redundancy in this statement?...
+        return value == null ? name : value;
+        */
+        try {
+            return bundle.getString(name);
+        } catch(MissingResourceException e) {
+            if (optional) {
+                return "";
+            }
+            Debug.logInfo(name + " misses in " + resource + " for locale " + locale, module);
+            return name;
+        }
     }
 
     /** Returns the value of the specified property name from the specified

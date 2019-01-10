@@ -1416,11 +1416,15 @@ so the caller can perform the substitutions instead.
 *************
 * getPropertyValue
 ************
-Gets property or void/null if missing or has no content.
+Gets a property value from a *.properties file, or void/null if missing or has no content.
 
-NOTE: Always use default value ("!") or other test operator!
+NOTE: Always use default value ("!") or other presence test operator with this function. It behaves differently
+than #getPropertyMsg, which always returns a string, for legacy and consistency reasons (UtilProperties method design).
 
-NOTE: The result from this method is '''not''' HTML-encoded, as such values are normally code and not text messages.
+NOTE: The result from this method is '''not''' HTML-encoded, as such values are normally code and not text messages,
+in other words not expected to be printed as HTML.
+
+TODO: This should support going through EntityUtilProperties.
 
   * Parameters *
     resource                = (required) Resource name
@@ -1439,11 +1443,19 @@ NOTE: The result from this method is '''not''' HTML-encoded, as such values are 
 *************
 * getPropertyMsg
 ************
-Gets property using behavior and rules of the {{{UtilProperties}}} class (low-level).
+Gets a message label from *Labels.xml properties, using behavior and rules of the {{{UtilProperties}}} class (low-level).
 
-NOTE: 2019-01: This method description previously erroneously said this method returned empty if missing,
-which it did not. By default, it returns the property name if missing; you can now pass {{{true}}} for {{{optional}}}
-to return empty string if missing.
+If the name does not exist in the resource, by default this returns the property name, unless {{{true}}} for {{{optional}}}
+is passed in which case it returns empty string (NOT void/missing). The default value operator ("!") is effectively useless if used
+with this function (unlike #getPropertyValue).
+
+The default value behavior differs from #getPropertyValue for legacy reasons (UtilProperties method design
+and the template code it was menat to replace), and because for label messages (as opposed to #getPropertyValue, 
+which reads .properties files) it is very rare to need a label fallback in templates.
+
+NOTE: 2019-01: This method description previously erroneously said this method by default returned empty if missing,
+which it did not (it always returned the property name, like UtilProperties#getMessage, which it was intended
+to replace in templates).
 
 NOTE: The resulting message is subject to automatic HTML encoding (by Ofbiz). 
     Use #rawString on the result to prevent escaping.
@@ -1486,12 +1498,15 @@ TODO: implement as transform.
 *************
 * getPropertyMsgFromLocExpr
 ************
-Gets property using behavior and rules of the {{{UtilProperties}}} class (low-level), with support
-for a resource expression.
+Gets a message label from *Labels.xml properties, using behavior and rules of the {{{UtilProperties}}} class (low-level), with support
+with support for a polyvalent resource expression.
 
-NOTE: 2019-01: This method description previously erroneously said this method returned empty if missing,
-which it did not. By default, it returns the property name if missing; you can now pass {{{true}}} for {{{optional}}}
-to return empty string if missing.
+See #getPropertyMsg for more information; this is nearly the same as #getPropertyMsg but with extra support for a 
+resource expression.
+
+NOTE: 2019-01: This method description previously erroneously said this method by default returned empty if missing,
+which it did not (it always returned the property name, like UtilProperties#getMessage, which it was intended
+to replace in templates).
 
 TODO: implement as transform.
 

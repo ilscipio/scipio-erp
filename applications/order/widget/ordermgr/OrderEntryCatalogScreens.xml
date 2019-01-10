@@ -58,6 +58,10 @@ code package.
         <section>
             <actions>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/SideDeepCategory.groovy"/>
+                <!-- SCIPIO: FIXME?: Don't show links because category page is awful for now -->
+                <script lang="groovy"><![CDATA[
+                    context.crumbsShowLinks = false;
+                ]]></script>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://common/webcommon/includes/breadcrumbs.ftl"/></html></platform-specific>
@@ -128,6 +132,9 @@ code package.
                 <set field="configproductdetailScreen" value="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#configproductdetail"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/Product.groovy"/>
                 <set field="title" value="${uiLabelMap.PageTitleProductPage}: ${productTitle}"/>
+                <set field="showEditProductLink" type="Boolean" value="true"/><!-- SCIPIO: use this instead of editProduct.ftl -->
+                <!-- SCIPIO: This script is an orderentry-specific hack to enable breadcrumbs to display properly -->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/SetTrailFromProduct.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderCatalogDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
@@ -159,7 +166,8 @@ code package.
             </actions>
             <widgets>
                 <include-screen name="breadcrumbs"/>
-                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/editProduct.ftl"/></html></platform-specific>
+                <!-- SCIPIO: using showEditProductLink instead
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/editProduct.ftl"/></html></platform-specific>-->
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/productdetail.ftl"/></html></platform-specific>
             </widgets>
         </section>
@@ -174,7 +182,8 @@ code package.
             </actions>
             <widgets>
                 <include-screen name="breadcrumbs"/>
-                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/editProduct.ftl"/></html></platform-specific>
+                <!-- SCIPIO: using showEditProductLink instead
+                <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/editProduct.ftl"/></html></platform-specific>-->
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/catalog/configproductdetail.ftl"/></html></platform-specific>
             </widgets>
         </section>

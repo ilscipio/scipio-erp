@@ -1,3 +1,8 @@
+<#--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
 
 <#-- SCIPIO: common orderentry catalog definitions and macros
 
@@ -168,7 +173,7 @@
                       <#else>
                         <#assign dummy = setRequestAttribute("targetRequestName", "")>
                       </#if>
-                      <@render resource="component://shop/widget/CatalogScreens.xml#miniproductsummary" />
+                      <@render resource=(productsummaryScreen!"component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary")/>
                   </li>
                   <#assign product = pageProduct />
                   <#local listIndex = listIndex + 1 />
@@ -194,7 +199,7 @@
                 <#assign dummy = setRequestAttribute("listIndex", commonFeatureResultId_index)>
                 <#assign dummy = setRequestAttribute("formNamePrefix", "cfeatcssl")>                    
                 <#-- <#assign dummy = setRequestAttribute("targetRequestName", targetRequestName)> -->
-                <@render resource="component://shop/widget/CatalogScreens.xml#miniproductsummary" />
+                <@render resource=(productsummaryScreen!"component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary")/>
             </#list>
         </@section>
     </#if>

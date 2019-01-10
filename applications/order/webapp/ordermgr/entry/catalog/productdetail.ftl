@@ -1,3 +1,8 @@
+<#--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
 
 <#-- SCIPIO: WARNING: 2019: This entire page and its macros are duplicated in the shop webapp (FIXME?) -->
 
@@ -560,6 +565,7 @@
     
 </@section>
 
+<#-- SCIPIO: Not helpful for orderentry
 <@section>
         <#-- Prefill first select box (virtual products only)
         <div id="product-virtual-swatch">            
@@ -593,11 +599,11 @@
                 </#if>
             </#if>
         </div>
-         -->
+         - ->
 
         <@commonAssociatedProducts productValue=product commonFeatureResultIds=(commonFeatureResultIds!)/>
 
 </@section>
-
+ -->
 </div>
 

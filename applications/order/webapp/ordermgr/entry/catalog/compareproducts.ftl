@@ -13,7 +13,7 @@ code package.
     <#assign productContentWrapper = productData.productContentWrapper/>
     <#assign price = productData.priceMap/>
     <#-- SCIPIO: NOTE: productUrl manually (js-)html-escaped below -->
-    <#assign productUrl><@ofbizCatalogAltUrl productId=rawString(product.productId)/></#assign>
+    <#assign productUrl><@ofbizUrl uri="product?product_id="+escapeVal(product.productId, 'url')/></#assign>
     <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL", "url")!/>
     <#if !smallImageUrl?has_content>
         <#assign smallImageUrl = "/images/defaultImage.jpg"/>

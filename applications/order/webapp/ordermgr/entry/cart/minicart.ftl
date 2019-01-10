@@ -51,9 +51,9 @@ code package.
                 <@td>
                   <#if cartLine.getProductId()??>
                       <#if cartLine.getParentProductId()??>
-                          <a href="<@ofbizCatalogAltUrl productId=cartLine.getParentProductId()/>" class="${styles.link_nav_info_name!}">${cartLine.getName()}</a>
+                          <a href="<@ofbizUrl uri="product?product_id="+escapeVal(cartLine.getParentProductId(), 'url')/>" class="${styles.link_nav_info_name!}">${cartLine.getName()}</a>
                       <#else>
-                          <a href="<@ofbizCatalogAltUrl productId=cartLine.getProductId()/>" class="${styles.link_nav_info_name!}">${cartLine.getName()}</a>
+                          <a href="<@ofbizUrl uri="product?product_id="+escapeVal(cartLine.getProductId(), 'url')/>" class="${styles.link_nav_info_name!}">${cartLine.getName()}</a>
                       </#if>
                   <#else>
                     <strong>${cartLine.getItemTypeDescription()!}</strong>

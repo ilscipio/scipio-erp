@@ -2245,7 +2245,6 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 </@section>
 
 <@section title="Label functions">
-  <p><em>NOTE: For uiLabelMap and getLabel, label arguments </em></p>
   <ul>
     <li>Locale stored in uiLabelMap: ${(uiLabelMap.getInitialLocale())!"(missing)"}</li>
     <li>getLabel (resource exists in uiLabelMap): "${getLabel("CommonYes")}"</li>
@@ -2288,6 +2287,15 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     <li>getPropertyMsg with missing property: "${getPropertyMsg("CommonUiLabels", "FakeLabelName")}"</li>
     <li>getPropertyMsg with missing property, optional (should give empty string): "${getPropertyMsg("CommonUiLabels", "FakeLabelName", false, true, true)}"</li>
 
+  </ul>
+</@section>
+
+<@section title="Property value functions">
+  <ul>
+    <li>getPropertyValue: "${getPropertyValue("general", "unique.instanceId")!"(missing)"}"</li>
+    <li>getEntityPropertyValue: "${getEntityPropertyValue("general", "unique.instanceId")!"(missing)"}"</li>
+    <li>getPropertyValue (missing): "${getPropertyValue("general", "fake.property")!"(missing)"}"</li>
+    <li>getEntityPropertyValue (missing): "${getEntityPropertyValue("general", "fake.property")!"(missing)"}"</li>
   </ul>
 </@section>
 

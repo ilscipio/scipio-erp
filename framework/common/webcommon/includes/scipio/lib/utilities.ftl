@@ -1424,11 +1424,12 @@ than #getPropertyMsg, which always returns a string, for legacy and consistency 
 NOTE: The result from this method is '''not''' HTML-encoded, as such values are normally code and not text messages,
 in other words not expected to be printed as HTML.
 
-TODO: This should support going through EntityUtilProperties.
-
   * Parameters *
     resource                = (required) Resource name
     name                    = (required) Property name
+
+  * Related *
+    #getEntityPropertyValue
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function getPropertyValue resource name>
@@ -1436,6 +1437,31 @@ TODO: This should support going through EntityUtilProperties.
   <#if value?has_content>
     <#return rawString(value)>
   </#if> <#- else return nothing (void/null) ->
+</#function>
+-->
+
+<#-- 
+*************
+* getEntityPropertyValue
+************
+Gets a property value from a *.properties resource or its corresponding SystemProperty entity value, 
+or void/null if missing or has no content.
+
+NOTE: Always use default value ("!") or other presence test operator with this function. It behaves differently
+than #getPropertyMsg, which always returns a string, for legacy and consistency reasons (UtilProperties method design).
+
+NOTE: The result from this method is '''not''' HTML-encoded, as such values are normally code and not text messages,
+in other words not expected to be printed as HTML.
+
+  * Parameters *
+    resource                = (required) Resource name
+    name                    = (required) Property name
+
+  * Related *
+    #getPropertyValue
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function getEntityPropertyValue resource name>
 </#function>
 -->
 

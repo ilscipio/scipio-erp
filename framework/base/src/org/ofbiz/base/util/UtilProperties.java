@@ -1012,12 +1012,24 @@ public final class UtilProperties implements Serializable {
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
      * @param locale The locale that the given resource will correspond to
+     * @param optional If true, returns null if no message for given locale and does not log; if false, missing returns key name (SCIPIO)
+     * @return The value of the property in the properties file
+     */
+    public static String getMessage(String resource, String name, Locale locale, boolean optional) {
+        // SCIPIO: This whole method can delegate to NoTrim version.
+        String value = getMessageNoTrim(resource, name, locale, optional);
+        return value.isEmpty() ? value : value.trim();
+    }
+
+    /** Returns the value of the specified property name from the specified
+     *  resource/properties file corresponding to the given locale.
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param locale The locale that the given resource will correspond to
      * @return The value of the property in the properties file
      */
     public static String getMessage(String resource, String name, Locale locale) {
-        // SCIPIO: This whole method can delegate to NoTrim version.
-        String value = getMessageNoTrim(resource, name, locale);
-        return value == null ? name : value.trim();
+        return getMessage(resource, name, locale, false);
     }
 
     /** Returns the value of the specified property name from the specified
@@ -1028,9 +1040,10 @@ public final class UtilProperties implements Serializable {
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
      * @param locale The locale that the given resource will correspond to
+     * @param optional If true, returns "" if no message for given locale and does not log; if false, missing returns key name (SCIPIO)
      * @return The value of the property in the properties file
      */
-    public static String getMessageNoTrim(String resource, String name, Locale locale) {
+    public static String getMessageNoTrim(String resource, String name, Locale locale, boolean optional) {
         if (UtilValidate.isEmpty(resource)) {
             return "";
         }
@@ -1049,19 +1062,57 @@ public final class UtilProperties implements Serializable {
         ResourceBundle bundle = getResourceBundle(resource, locale);
 
         if (bundle == null) {
-            return name;
+            return optional ? "" : name;
         }
 
         String value = null;
         if (bundle.containsKey(name)) {
             value = bundle.getString(name);
         } else {
+            if (optional) { // SCIPIO
+                return "";
+            }
             Debug.logInfo(name + " misses in " + resource + " for locale " + locale, module);
             return name;
         }
         return value == null ? name : value; // SCIPIO: TODO: REVIEW: some redundancy in this statement?...
     }
 
+    /** Returns the value of the specified property name from the specified
+     *  resource/properties file corresponding to the given locale.
+     * <p>
+     * SCIPIO: Version that guarantees there be no trim() operation.
+     *
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param locale The locale that the given resource will correspond to
+     * @return The value of the property in the properties file
+     */
+    public static String getMessageNoTrim(String resource, String name, Locale locale) {
+        return getMessageNoTrim(resource, name, locale, false); // SCIPIO: delegate
+    }
+
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding
+     * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param arguments An array of Objects to insert into the message argument place holders
+     * @param locale The locale that the given resource will correspond to
+     * @param optional If true, returns "" if no message for given locale and does not log; if false, missing returns key name (SCIPIO)
+     * @return The value of the property in the properties file
+     */
+    public static String getMessage(String resource, String name, Object[] arguments, Locale locale, boolean optional) {
+        String value = getMessage(resource, name, locale, optional);
+
+        if (UtilValidate.isEmpty(value)) {
+            return "";
+        }
+        if (arguments != null && arguments.length > 0) {
+            value = MessageFormat.format(value, arguments);
+        }
+        return value;
+    }
+    
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
      * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
      * @param resource The name of the resource - can be a file, class, or URL
@@ -1071,13 +1122,26 @@ public final class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static String getMessage(String resource, String name, Object[] arguments, Locale locale) {
-        String value = getMessage(resource, name, locale);
+        return getMessage(resource, name, arguments, locale, false); // SCIPIO: delegate
+    }
+
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding
+     * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param arguments A List of Objects to insert into the message argument place holders
+     * @param locale The locale that the given resource will correspond to
+     * @param optional If true, returns "" if no message for given locale and does not log; if false, missing returns key name (SCIPIO)
+     * @return The value of the property in the properties file
+     */
+    public static <E> String getMessage(String resource, String name, List<E> arguments, Locale locale, boolean optional) {
+        String value = getMessage(resource, name, locale, optional);
 
         if (UtilValidate.isEmpty(value)) {
             return "";
         }
-        if (arguments != null && arguments.length > 0) {
-            value = MessageFormat.format(value, arguments);
+        if (UtilValidate.isNotEmpty(arguments)) {
+            value = MessageFormat.format(value, arguments.toArray());
         }
         return value;
     }
@@ -1091,7 +1155,23 @@ public final class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static <E> String getMessage(String resource, String name, List<E> arguments, Locale locale) {
-        String value = getMessage(resource, name, locale);
+        return getMessage(resource, name, arguments, locale, false); // SCIPIO: delegate
+    }
+
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding
+     * to the given locale and replacing argument place holders with the given arguments using the MessageFormat class
+     * <p>
+     * SCIPIO: Version that guarantees there to be no trim() operation.
+     *
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param arguments A List of Objects to insert into the message argument place holders
+     * @param locale The locale that the given resource will correspond to
+     * @param optional If true, returns "" if no message for given locale and does not log; if false, missing returns key name (SCIPIO)
+     * @return The value of the property in the properties file
+     */
+    public static <E> String getMessageNoTrim(String resource, String name, List<E> arguments, Locale locale, boolean optional) {
+        String value = getMessageNoTrim(resource, name, locale, optional);
 
         if (UtilValidate.isEmpty(value)) {
             return "";
@@ -1114,19 +1194,33 @@ public final class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static <E> String getMessageNoTrim(String resource, String name, List<E> arguments, Locale locale) {
-        String value = getMessageNoTrim(resource, name, locale);
+        return getMessageNoTrim(resource, name, arguments, locale, false); // SCIPIO: delegate
+
+    }
+    
+    public static String getMessageList(String resource, String name, Locale locale, Object... arguments) {
+        return getMessage(resource, name, arguments, locale);
+    }
+
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding
+     * to the given locale and replacing argument place holders with the given arguments using the FlexibleStringExpander class
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param context A Map of Objects to insert into the message place holders using the ${} syntax of the FlexibleStringExpander
+     * @param locale The locale that the given resource will correspond to
+     * @param optional If true, returns "" if no message for given locale and does not log; if false, missing returns key name (SCIPIO)
+     * @return The value of the property in the properties file
+     */
+    public static String getMessage(String resource, String name, Map<String, ? extends Object> context, Locale locale, boolean optional) {
+        String value = getMessage(resource, name, locale, optional);
 
         if (UtilValidate.isEmpty(value)) {
             return "";
         }
-        if (UtilValidate.isNotEmpty(arguments)) {
-            value = MessageFormat.format(value, arguments.toArray());
+        if (UtilValidate.isNotEmpty(context)) {
+            value = FlexibleStringExpander.expandString(value, context, locale);
         }
         return value;
-    }
-
-    public static String getMessageList(String resource, String name, Locale locale, Object... arguments) {
-        return getMessage(resource, name, arguments, locale);
     }
 
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
@@ -1138,7 +1232,23 @@ public final class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static String getMessage(String resource, String name, Map<String, ? extends Object> context, Locale locale) {
-        String value = getMessage(resource, name, locale);
+        return getMessage(resource, name, context, locale, false); // SCIPIO: delegate
+    }
+    
+    /** Returns the value of the specified property name from the specified resource/properties file corresponding
+     * to the given locale and replacing argument place holders with the given arguments using the FlexibleStringExpander class
+     * <p>
+     * SCIPIO: Version that guarantees there to be no trim() operation.
+     *
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @param context A Map of Objects to insert into the message place holders using the ${} syntax of the FlexibleStringExpander
+     * @param locale The locale that the given resource will correspond to
+     * @param optional If true, returns "" if no message for given locale and does not log; if false, missing returns key name (SCIPIO)
+     * @return The value of the property in the properties file
+     */
+    public static String getMessageNoTrim(String resource, String name, Map<String, ? extends Object> context, Locale locale, boolean optional) {
+        String value = getMessageNoTrim(resource, name, locale, optional);
 
         if (UtilValidate.isEmpty(value)) {
             return "";
@@ -1161,15 +1271,7 @@ public final class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static String getMessageNoTrim(String resource, String name, Map<String, ? extends Object> context, Locale locale) {
-        String value = getMessageNoTrim(resource, name, locale);
-
-        if (UtilValidate.isEmpty(value)) {
-            return "";
-        }
-        if (UtilValidate.isNotEmpty(context)) {
-            value = FlexibleStringExpander.expandString(value, context, locale);
-        }
-        return value;
+        return getMessageNoTrim(resource, name, context, locale, false); // SCIPIO: delegate
     }
 
     public static String getMessageMap(String resource, String name, Locale locale, Object... context) {

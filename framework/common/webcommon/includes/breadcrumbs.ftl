@@ -21,35 +21,35 @@
         </#if>
         <#local previousCategoryId = "">
         <#list crumbs as crumb>
+                <#local rawCrumb = rawString(crumb)><#-- SCIPIO -->
                 <#-- SCIPIO: Try content wrappers set by screen first; if not there, lookup ourselves -->
                 <#local catContentWrapper = {}>
-                <#if (catContentWrappers[crumb])??>
-                  <#local catContentWrapper = catContentWrappers[crumb]>
+                <#if (catContentWrappers[rawCrumb])??>
+                  <#local catContentWrapper = catContentWrappers[rawCrumb]>
                 <#else>
-                  <#local crumbProdCategory = delegator.findOne("ProductCategory", {"productCategoryId":crumb}, true)!/>
+                  <#local crumbProdCategory = delegator.findOne("ProductCategory", {"productCategoryId":rawCrumb}, true)!/>
                   <#if crumbProdCategory?has_content>
                     <#local catContentWrapper = Static["org.ofbiz.product.category.CategoryContentWrapper"].makeCategoryContentWrapper(crumbProdCategory, request)!>
                   </#if>
                 </#if>
                 <#local elemClass = styles.nav_breadcrumb!>
-                <#if !crumb_has_next && !productContentWrapper?has_content>
+                <#if !crumb?has_next && !productContentWrapper?has_content>
                   <#local elemClass = addClassArg(elemClass, styles.nav_breadcrumb_active!)>
                 </#if>
-                <li<@compiledClassAttribStr class=elemClass/>>
-                   <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>"<@compiledClassAttribStr class=styles.nav_breadcrumb_link!/>><#rt>
-                     <#-- WARN: ?string required for ?has_content to work with result from content wrapper! -->
+                <li<@compiledClassAttribStr class=elemClass/>><#rt/>
+                   <a href="<@ofbizCatalogUrl currentCategoryId=rawCrumb previousCategoryId=(previousCategoryId!"")/>"<@compiledClassAttribStr class=(styles.nav_breadcrumb_link!)/>><#t>
                      <#local crumbText = (catContentWrapper.get("CATEGORY_NAME"))!>
                      <#if !crumbText?has_content>
                        <#local crumbText = (catContentWrapper.get("DESCRIPTION"))!>
                        <#if !crumbText?has_content>
-                         <#-- use the ID --><#t>
+                         <#-- use the ID -->
                          <#local crumbText = crumb>
                        </#if>
                      </#if>
                      ${crumbText}<#t>
-                   </a><#lt>
-                </li> 
-            <#local previousCategoryId = crumb />
+                   </a><#t>
+                </li><#lt/>
+            <#local previousCategoryId = rawCrumb />
         </#list>
     
         <#-- We always assume that the product Detail page is the last in trail -->
@@ -80,5 +80,6 @@
     </@nav>
 </#macro>
 
-<@breadcrumbs catContentWrappers=(catContentWrappers!{}) productContentWrapper=(productContentWrapper!) useTitleFallback=(useBreadcrumbsTitleFallback!"")/>
-
+<#if (breadcrumbsLibOnly!false) != true><#-- SCIPIO: Set to true to include only the macro -->
+  <@breadcrumbs catContentWrappers=(catContentWrappers!{}) productContentWrapper=(productContentWrapper!) useTitleFallback=(useBreadcrumbsTitleFallback!"")/>
+</#if>

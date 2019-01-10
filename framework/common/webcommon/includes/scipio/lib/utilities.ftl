@@ -1348,12 +1348,9 @@ DEV NOTE: It is not possible to add custom locale here; already loaded into the 
       <#else>
         <#return getPropertyMsg(resource, name, msgArgs, (uiLabelMap.getLocale())!true)>
       </#if>
-    <#else>
-      <#return "">
     </#if>
-  <#else>
-    <#return ""> 
   </#if>
+  <#return "">
 </#function>
 
 <#-- 
@@ -1437,8 +1434,11 @@ NOTE: The result from this method is '''not''' HTML-encoded, as such values are 
 *************
 * getPropertyMsg
 ************
-Gets property or empty string if missing, using behavior and rules of the {{{UtilProperties}}}
-class (low-level).
+Gets property using behavior and rules of the {{{UtilProperties}}} class (low-level).
+
+NOTE: 2019-01: This method description previously erroneously said this method returned empty if missing,
+which it did not. By default, it returns the property name if missing; you can now pass {{{true}}} for {{{optional}}}
+to return empty string if missing.
 
 NOTE: The resulting message is subject to automatic HTML encoding (by Ofbiz). 
     Use #rawString on the result to prevent escaping.
@@ -1456,8 +1456,12 @@ TODO: implement as transform.
                               If boolean: if true, uses locale from context; if false, forced to use system default.
                               NOTE: There should almost always be a locale in context or explicit.
                                   Fallback on system default usually means something is missing.
+    optional                = (boolean, default: false) If true, missing label returns empty; if false returns key name
+
+  * History *
+    Added optional flag and fixed description for 1.14.5.
 -->
-<#function getPropertyMsg resource name msgArgs=false locale=true>
+<#function getPropertyMsg resource name msgArgs=false locale=true optional=false>
   <#if locale?is_boolean>
     <#if locale>
       <#local locale = .globals.locale!Static["java.util.Locale"].getDefault()>
@@ -1466,10 +1470,10 @@ TODO: implement as transform.
     </#if>
   </#if>
   <#if msgArgs?is_sequence || msgArgs?is_hash><#-- NOTE: these will actually call different overloads -->
-    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, locale)>
+    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, locale, optional)>
   <#else>
     <#-- don't use context by default here (only uiLabelMap/getLabel should do that): context!{} -->
-    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, locale)>
+    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, locale, optional)>
   </#if>
 </#function>
 
@@ -1477,7 +1481,12 @@ TODO: implement as transform.
 *************
 * getPropertyMsgFromLocExpr
 ************
-Gets property or empty string if missing (same behavior as UtilProperties).
+Gets property using behavior and rules of the {{{UtilProperties}}} class (low-level), with support
+for a resource expression.
+
+NOTE: 2019-01: This method description previously erroneously said this method returned empty if missing,
+which it did not. By default, it returns the property name if missing; you can now pass {{{true}}} for {{{optional}}}
+to return empty string if missing.
 
 TODO: implement as transform.
 
@@ -1486,11 +1495,15 @@ TODO: implement as transform.
                               If name alone, assumes CommonUiLabels for resource.
     msgArgs                 = ((map)|(list)|(boolean), default: -false / none-) Substitute values for message template
     locale                  = ((locale)|(boolean), default: -true / locale from context-) Explicit locale
-    
+    optional                = (boolean, default: false) If true, missing label returns empty; if false returns key name
+
   * Related *
     #getPropertyMsg
+
+  * History *
+    Added optional flag and fixed description for 1.14.5.
 -->
-<#function getPropertyMsgFromLocExpr resourceExpr msgArgs=false locale=true>
+<#function getPropertyMsgFromLocExpr resourceExpr msgArgs=false locale=true optional=false>
   <#local parts = resourceExpr?split("#")>
   <#if (parts?size >= 2)>
     <#local resource = parts[0]>
@@ -1499,7 +1512,7 @@ TODO: implement as transform.
     <#local resource = "CommonUiLabels">
     <#local name = parts[0]>
   </#if>
-  <#return getPropertyMsg(resource, name, msgArgs, locale)> 
+  <#return getPropertyMsg(resource, name, msgArgs, locale, optional)> 
 </#function>
 
 <#-- 

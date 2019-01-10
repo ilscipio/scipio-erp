@@ -2282,6 +2282,12 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     <li>getLabel (resource not present in uiLabelMap + explicit args): "${getLabel("AccountingEftPartyNotAuthorized", "AccountingErrorUiLabels", {"partyId":"INSERTED-PARTYID", "paymentMethodId":"INSERTED-PAYMENTMETHODID"})}"</li>
     
     <li>getLabel with orderId: ${getLabel('ProductErrorOrderIdNotFound', 'ProductUiLabels', {"orderId":'WS10000'})}</li>
+
+    <li>getLabel with missing property in uiLabelMap (should give empty string): "${getLabel("FakeLabelName")}"</li>
+    <li>getLabel with missing property in CommonUiLabels (should give empty string): "${getLabel("FakeLabelName", "CommonUiLabels")}"</li>
+    <li>getPropertyMsg with missing property: "${getPropertyMsg("CommonUiLabels", "FakeLabelName")}"</li>
+    <li>getPropertyMsg with missing property, optional (should give empty string): "${getPropertyMsg("CommonUiLabels", "FakeLabelName", false, true, true)}"</li>
+
   </ul>
 </@section>
 

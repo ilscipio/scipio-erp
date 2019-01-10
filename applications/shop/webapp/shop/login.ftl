@@ -152,29 +152,28 @@ code package.
     </@cell>
 </@row>
 <#-- SOCIAL PLugins - requires Facebook, Google or Twitter Authentication Addon -->
-<#if getPropertyMsg("shop.properties","facebook.enabled") == "Y" 
-    || getPropertyMsg("shop.properties","google.enabled") == "Y" 
-    || getPropertyMsg("shop.properties","twitter.enabled") == "Y"
-    || getPropertyMsg("shop.properties","linkedin.enabled") == "Y">
+<#if ("Y" == getPropertyValue("shop", "facebook.enabled")!)
+    || ("Y" == getPropertyValue("shop", "google.enabled")!)
+    || ("Y" == getPropertyValue("shop", "twitter.enabled")!)
+    || ("Y" == getPropertyValue("shop", "linkedin.enabled")!)>
 <@section>
 <@row>
     <@cell columns=6>
-            
             <@heading>${uiLabelMap.CommonOrLoginWith}</@heading>
             <#-- Facebook Login (Requires Facebook Authentication Addon)-->
-            <#if getPropertyMsg("shop.properties","facebook.enabled") == "Y">
+            <#if "Y" == getPropertyValue("shop", "facebook.enabled")!>
                 <#include "component://auth-facebook/webapp/facebook/fb-common.ftl"/>
                 <@fbButton/>
             </#if>
-            <#if getPropertyMsg("shop.properties","google.enabled") == "Y">
+            <#if "Y" == getPropertyValue("shop", "google.enabled")!>
                 <#include "component://auth-google/webapp/google/google-common.ftl"/>
                 <@googleButton/>
             </#if>
-            <#if getPropertyMsg("shop.properties","twitter.enabled") == "Y">
+            <#if "Y" == getPropertyValue("shop", "twitter.enabled")!>
                 <#include "component://auth-twitter/webapp/twitter/twitter-common.ftl"/>
                 <@twitterButton/>
             </#if>
-            <#if getPropertyMsg("shop.properties","linkedin.enabled") == "Y">
+            <#if "Y" == getPropertyValue("shop", "linkedin.enabled")!>
                 <#include "component://auth-linkedin/webapp/linkedin/linkedin-common.ftl"/>
                 <@linkedinButton/>
             </#if>

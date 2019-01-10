@@ -1279,9 +1279,10 @@ FIXME: Some of the behavior is currently hardcoded inside the renderTarget imple
 *************
 * getLabel
 ************
-Returns label from global label map or resource, or empty string if no label is found,
-with automatic screen html-escaping applied.
-This is a higher-level, abstracted function for fetching labels.
+Returns label from global label map (uiLabelMap) or resource, or empty string if no label is found,
+with automatic screen html-escaping applied (use #rawLabel instead to avoid this).
+
+This is a higher-level, abstracted function for fetching labels, compared to keying the {{{uiLabelMap}}}.
 
 By default this function tries to maintain the same behavior as {{{uiLabelMap}}} with respect to locale
 selection and the context map used for label substitutions/arguments.
@@ -1360,11 +1361,12 @@ DEV NOTE: It is not possible to add custom locale here; already loaded into the 
 *************
 * rawLabel
 ************
-Returns label from global label map or resource, or empty string if no label is found,
-and prevents automatic html-escaping on the result.
-This is a higher-level, abstracted function for fetching labels.
+Returns label from global label map (uiLabelMap) or resource, or empty string if no label is found,
+and prevents automatic html-escaping on the result (unlike #getLabel).
 
-Shorthand for {{{rawString(getLabel(...))}}}.
+This is a higher-level, abstracted function for fetching labels, compared to keying the {{{uiLabelMap}}}.
+
+Shorthand for {{{rawString(getLabel(...))}}}. See #getLabel for more information.
 
   * Parameters *
     name                    = ((string), required) Label name

@@ -260,8 +260,14 @@ public class CartUpdate implements AutoCloseable {
         } else { // (assuming we made a cart)
             // ROLLBACK - Restore old request attribute cart and leave session alone
             RequestVarScopes.REQUEST.setOrRemoveValue(request, modifyScopesFilter, "shoppingCart", prevRequestCart);
-            Debug.logWarning("End cart update section (depth: " + status.nestedLevel  + ") - not committed "
+            if (isDebug()) {
+                Debug.logWarning("End cart update section (depth: " + status.nestedLevel  + ") - not committed "
                     + (isTopLevel() ? "to session" : "locally") + getLogSuffix(), module);
+            } else if (Debug.infoOn()) {
+                // NOTE: This is now INFO because this already happens in some known non-problem cases
+                Debug.logInfo("End cart update section (depth: " + status.nestedLevel  + ") - not committed "
+                        + (isTopLevel() ? "to session" : "locally") + getLogSuffix(), module);
+            }
         }
         if (!isTopLevel()) {
             status.nestedLevel--;

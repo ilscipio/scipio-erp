@@ -1416,7 +1416,7 @@ so the caller can perform the substitutions instead.
 *************
 * getPropertyValue
 ************
-Gets a property value from a *.properties file, or void/null if missing or has no content.
+Gets a property value from a *.properties resource, or void/null if missing or has no content.
 
 NOTE: Always use default value ("!") or other presence test operator with this function. It behaves differently
 than #getPropertyMsg, which always returns a string, for legacy and consistency reasons (UtilProperties method design).
@@ -1443,7 +1443,7 @@ TODO: This should support going through EntityUtilProperties.
 *************
 * getPropertyMsg
 ************
-Gets a message label from *Labels.xml properties, using behavior and rules of the {{{UtilProperties}}} class (low-level).
+Gets a message label from a *Labels.xml property resource, using behavior and rules of the {{{UtilProperties}}} class (low-level).
 
 If the name does not exist in the resource, by default this returns the property name, unless {{{true}}} for {{{optional}}}
 is passed in which case it returns empty string (NOT void/missing). The default value operator ("!") is effectively useless if used
@@ -1498,7 +1498,7 @@ TODO: implement as transform.
 *************
 * getPropertyMsgFromLocExpr
 ************
-Gets a message label from *Labels.xml properties, using behavior and rules of the {{{UtilProperties}}} class (low-level), with support
+Gets a message label from a *Labels.xml property resource, using behavior and rules of the {{{UtilProperties}}} class (low-level), with support
 with support for a polyvalent resource expression.
 
 See #getPropertyMsg for more information; this is nearly the same as #getPropertyMsg but with extra support for a 

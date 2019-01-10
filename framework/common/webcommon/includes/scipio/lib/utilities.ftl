@@ -1318,6 +1318,9 @@ DEV NOTE: It is not possible to add custom locale here; already loaded into the 
   * Related *
     #rawLabel
     #getPropertyMsg
+    
+  * History *
+    Fixed inconsistent return values when missing for 1.14.5.
 -->
 <#function getLabel name resource="" msgArgs=true>
   <#if name?has_content>
@@ -1327,12 +1330,12 @@ DEV NOTE: It is not possible to add custom locale here; already loaded into the 
     </#if>
     <#if msgArgs?is_boolean>
       <#if msgArgs>
-        <#local var=(uiLabelMap[name])!false />
+        <#local var = (uiLabelMap[name])!false />
       <#else>
-        <#local var=(uiLabelMap.get(name, _NULL_PLACEHOLDER))!false />
+        <#local var = (uiLabelMap.get(name, _NULL_PLACEHOLDER))!false />
       </#if>
     <#else>
-      <#local var=(uiLabelMap.get(name, msgArgs))!false />
+      <#local var = (uiLabelMap.get(name, msgArgs))!false />
     </#if>
     <#if (!var?is_boolean) && var != name>
       <#return var>
@@ -1341,12 +1344,12 @@ DEV NOTE: It is not possible to add custom locale here; already loaded into the 
           meaning same context for args and same locale -->
       <#if msgArgs?is_boolean>
         <#if msgArgs>
-          <#return getPropertyMsg(resource, name, (uiLabelMap.getContext())!false, (uiLabelMap.getLocale())!true)>
+          <#return getPropertyMsg(resource, name, (uiLabelMap.getContext())!false, (uiLabelMap.getLocale())!true, true)>
         <#else>
-          <#return getPropertyMsg(resource, name, false, (uiLabelMap.getLocale())!true)>
+          <#return getPropertyMsg(resource, name, false, (uiLabelMap.getLocale())!true, true)>
         </#if>
       <#else>
-        <#return getPropertyMsg(resource, name, msgArgs, (uiLabelMap.getLocale())!true)>
+        <#return getPropertyMsg(resource, name, msgArgs, (uiLabelMap.getLocale())!true, true)>
       </#if>
     </#if>
   </#if>
@@ -1520,22 +1523,25 @@ TODO: implement as transform.
 * getTextLabelFromExpr
 ************
 Convenience label identifier parsing function that accepts a string in multiple formats
-that may designate a label or property as label.
+that may designate a label or property as label; if no label, returns empty string.
 
-If textExpr starts with "#LABEL:", the following name is taken from uiLabelMap.
-If textExpr starts with "#PROP:", the following location/name is passed through to getPropertyMsgFromLocExpr
+If textExpr starts with "#LABEL:", the following name is taken from uiLabelMap (using getLabel).
+If textExpr starts with "#PROP:", the following location/name is taken from a properties file (passed through to getPropertyMsgFromLocExpr
 If no such prefix in textExpr, returns the text as-is.
 
   * Parameters *
     textExpr                = (required) Label text expression 
     msgArgs                 = ((map)|(list), default: -use context-) Substitute values for message template
     locale                  = ((locale)|(boolean), default: -true / locale from context-) Explicit locale
+    
+  * History *
+    Fixed inconsistent return values when missing for 1.14.5.
 -->
 <#function getTextLabelFromExpr textExpr msgArgs=false locale=true>
   <#if textExpr?starts_with("#LABEL:")>
-    <#return getLabel(textExpr[7..])!"">
+    <#return getLabel(textExpr[7..])>
   <#elseif textExpr?starts_with("#PROP:")>
-    <#return getPropertyMsgFromLocExpr(textExpr[6..], msgArgs, locale)!"">
+    <#return getPropertyMsgFromLocExpr(textExpr[6..], msgArgs, locale, true)>
   <#else>
     <#return textExpr>
   </#if>

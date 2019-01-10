@@ -1,5 +1,5 @@
 
-<#macro breadcrumbs crumbs=true productContentWrapper="" catContentWrappers={} useTitleFallback="" showMain=true>
+<#macro breadcrumbs crumbs=true productContentWrapper="" catContentWrappers={} useTitleFallback="" showMain=true showLinks=true>
     <#if !useTitleFallback?has_content>
       <#local useTitleFallback = true>
     </#if>
@@ -7,7 +7,7 @@
       <#if showMain>
         <#-- Link to dashboard -->
         <li<@compiledClassAttribStr class=styles.nav_breadcrumb!/>>
-          <a href="<@ofbizUrl>main</@ofbizUrl>"<@compiledClassAttribStr class=styles.nav_breadcrumb_link!/>>${uiLabelMap.CommonMain}</a>
+          <#if showLinks><a href="<@ofbizUrl>main</@ofbizUrl>"<@compiledClassAttribStr class=styles.nav_breadcrumb_link!/>></#if>${uiLabelMap.CommonMain}<#if showLinks></a></#if>
         </li>
       </#if>
         
@@ -37,7 +37,7 @@
                   <#local elemClass = addClassArg(elemClass, styles.nav_breadcrumb_active!)>
                 </#if>
                 <li<@compiledClassAttribStr class=elemClass/>><#rt/>
-                   <a href="<@ofbizCatalogUrl currentCategoryId=rawCrumb previousCategoryId=(previousCategoryId!"")/>"<@compiledClassAttribStr class=(styles.nav_breadcrumb_link!)/>><#t>
+                   <#if showLinks><a href="<@ofbizCatalogUrl currentCategoryId=rawCrumb previousCategoryId=(previousCategoryId!"")/>"<@compiledClassAttribStr class=(styles.nav_breadcrumb_link!)/>></#if><#t>
                      <#local crumbText = (catContentWrapper.get("CATEGORY_NAME"))!>
                      <#if !crumbText?has_content>
                        <#local crumbText = (catContentWrapper.get("DESCRIPTION"))!>
@@ -47,7 +47,7 @@
                        </#if>
                      </#if>
                      ${crumbText}<#t>
-                   </a><#t>
+                   <#if showLinks></a></#if><#t>
                 </li><#lt/>
             <#local previousCategoryId = rawCrumb />
         </#list>
@@ -65,7 +65,7 @@
               <li<@compiledClassAttribStr class=elemClass/>>${productText}</li>
             </#if>
         </#if>
-        
+
       <#if useTitleFallback>
         <#-- If there is neither any category or product information available, display the page title -->
         <#if !crumbs?has_content && !productContentWrapper??>
@@ -80,6 +80,7 @@
     </@nav>
 </#macro>
 
-<#if (breadcrumbsLibOnly!false) != true><#-- SCIPIO: Set to true to include only the macro -->
-  <@breadcrumbs catContentWrappers=(catContentWrappers!{}) productContentWrapper=(productContentWrapper!) useTitleFallback=(useBreadcrumbsTitleFallback!"")/>
+<#if (crumbsLibOnly!false) != true><#-- SCIPIO: Set to true to include only the macro -->
+  <@breadcrumbs catContentWrappers=(catContentWrappers!{}) productContentWrapper=(productContentWrapper!)
+    useTitleFallback=(useBreadcrumbsTitleFallback!"") showMain=(crumbsShowMain!true) showLinks=(crumbsShowLinks!true)/>
 </#if>

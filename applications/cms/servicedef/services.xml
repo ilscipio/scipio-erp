@@ -781,7 +781,7 @@
         
         <attribute mode="IN" name="srcsetModeEnumId" type="String" optional="true"/>
         <attribute mode="IN" name="viewPortMediaQuery" type="List" optional="true"/>
-        <attribute mode="IN" name="viewPortLength" type="String" optional="true"/>
+        <attribute mode="IN" name="viewPortLength" type="List" optional="true"/>
     </service>
     
     <service name="cmsUpdateMediaFile" engine="java"

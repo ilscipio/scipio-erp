@@ -1348,6 +1348,10 @@ code package.
         title="Image view port" author="Ilscipio GmbH" version="1.0">
         <field name="contentId" type="id-ne"><description>Meant to be used with parent content</description></field>
         <field name="viewPortSizeId" type="id-ne"></field>
+        <field name="srcsetModeEnumId" type="id"><description><![CDATA[
+            (12/31/2018): As of now the spec allows device-pixel-ratio and viewport based selection. 
+            See https://w3c.github.io/html/semantics-embedded-content.html#embedded-content-introduction
+        ]]></description></field>
 
         <prim-key field="contentId" />
         <prim-key field="viewPortSizeId"/>
@@ -1358,21 +1362,19 @@ code package.
         <relation type="one" fk-name="IWP_VW_SZ" rel-entity-name="ImageViewPortSize">
             <key-map field-name="viewPortSizeId"/>
         </relation>
+        <relation type="one" fk-name="ISD_SRCSET" title="ImgSrcset" rel-entity-name="Enumeration">
+            <key-map field-name="srcsetModeEnumId" rel-field-name="enumId"/>
+        </relation>
     </entity>
 
     <entity entity-name="ImageViewPortSize" package-name="com.ilscipio.scipio.image"
         title="Image view port size" author="Ilscipio GmbH" version="1.0">
         <field name="viewPortSizeId" type="id-ne"></field>
-        <field name="srcsetModeEnumId" type="id"><description><![CDATA[
-            (12/31/2018): As of now the spec allows device-pixel-ratio and viewport based selection. 
-            See https://w3c.github.io/html/semantics-embedded-content.html#embedded-content-introduction
-        ]]></description></field>
         <field name="viewPortMediaQuery" type="long-varchar"><description>This is only valid for viewport based selection</description></field>
         <field name="viewPortLength" type="numeric"><description>This is only valid for viewport based selection</description></field>
         <prim-key field="viewPortSizeId"/>
-        <relation type="one" fk-name="ISD_SRCSET" title="ImgSrcset" rel-entity-name="Enumeration">
-            <key-map field-name="srcsetModeEnumId" rel-field-name="enumId"/>
-        </relation>
+        <prim-key field="viewPortMediaQuery"/>
+        <prim-key field="viewPortLength"/>
     </entity>
 
   <!-- ========================================================= -->

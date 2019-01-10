@@ -362,12 +362,29 @@ public abstract class CmsMediaServices {
             if (UtilValidate.isNotEmpty(imageVariantConfig)) {
                 context.put("imageVariantConfig", imageVariantConfig);
             }
-            
-            if (context.containsKey("srcsetModeEnumId")) {
-                
-            }
-            
+
             result = dispatcher.runSync("cmsUploadMediaFile", context);
+
+            if (result.containsKey("contentId") && context.containsKey("srcsetModeEnumId")) {
+                String viewPortSizeId = delegator.getNextSeqId("ImageViewPort");
+                GenericValue imageViewPort = delegator.makeValidValue("ImageViewPort",
+                        UtilMisc.toMap("viewPortSizeId", viewPortSizeId, "srcsetModeEnumId", context.get("srcsetModeEnumId"), "contentId", result.get("contentId")));
+                imageViewPort.create();
+                if (context.get("srcsetModeEnumId").equals("IMG_SRCSET_VW")) {
+                    List<GenericValue> imageMediaQueries = UtilMisc.newList();
+                    List<String> mediaQueries = (List<String>) context.get("viewPortMediaQuery");
+                    List<String> viewPortLength = (List<String>) context.get("viewPortLength");
+                    if (mediaQueries.size() == viewPortLength.size()) {
+                        int i = 0;
+                        for (String mediaQuery : mediaQueries) {
+                            imageMediaQueries.add(delegator.makeValidValue("ImageViewPortSize",
+                                    UtilMisc.toMap("viewPortSizeId", viewPortSizeId, "viewPortMediaQuery", mediaQuery, "viewPortLength", Long.parseLong(viewPortLength.get(i)))));
+                            i++;
+                        }
+                        delegator.storeAll(imageMediaQueries);
+                    }
+                }
+            }
         } catch (GenericServiceException e) {
             result = ServiceUtil.returnError(e.getMessageList());
         } catch (IOException e) {

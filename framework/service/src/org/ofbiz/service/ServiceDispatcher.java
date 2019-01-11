@@ -78,6 +78,8 @@ public class ServiceDispatcher {
     private static boolean enableJMS = UtilProperties.getPropertyAsBoolean("service", "enableJMS", true);
     private static boolean enableSvcs = true;
 
+    private static boolean autoMakeValidForServicesWithPermService = UtilProperties.getPropertyAsBoolean("service", "autoMakeValidForServicesWithPermService", false);
+
     protected Delegator delegator = null;
     protected GenericEngineFactory factory = null;
     protected Security security = null;
@@ -375,7 +377,7 @@ public class ServiceDispatcher {
                     isFailure = ServiceUtil.isFailure(result);
                     isError = ServiceUtil.isError(result);
 
-                    context = checkAuth(localName, context, modelService);
+                    context = checkAuth(localName, context, modelService, locale); // SCIPIO: locale
                     GenericValue userLogin = (GenericValue) context.get("userLogin");
 
                     if (modelService.auth && userLogin == null) {
@@ -728,7 +730,7 @@ public class ServiceDispatcher {
                     ServiceEcaUtil.evalRules(service.name, eventMap, "auth", ctx, context, result, isError, isFailure);
                 }
 
-                context = checkAuth(localName, context, service);
+                context = checkAuth(localName, context, service, locale); // SCIPIO: locale
                 Object userLogin = context.get("userLogin");
 
                 if (service.auth && userLogin == null) {
@@ -903,7 +905,7 @@ public class ServiceDispatcher {
     }
 
     // checks if parameters were passed for authentication
-    private Map<String, Object> checkAuth(String localName, Map<String, Object> context, ModelService origService) throws ServiceAuthException, GenericServiceException {
+    private Map<String, Object> checkAuth(String localName, Map<String, Object> context, ModelService origService, Locale locale) throws ServiceAuthException, GenericServiceException { // SCIPIO: Added locale
         String service = null;
         try {
             service = ServiceConfigUtil.getServiceEngine().getAuthorization().getServiceName();
@@ -976,6 +978,25 @@ public class ServiceDispatcher {
                 //context = origService.makeValid(context, ModelService.IN_PARAM);
                 Map<String, Object> validPermRespForContext = origService.makeValid(permResp, ModelService.IN_PARAM);
                 context.putAll(validPermRespForContext);
+                
+                // SCIPIO: 2019-01-11: In order to detect errors without breaking existing processing, let's pre-validate,
+                // and if there's an error, then use the old code so it can proceed as it used to; this will allow to safely identify the bugs.
+                if (autoMakeValidForServicesWithPermService) {
+                    if (origService.validate) {
+                        try {
+                            origService.validate(context, ModelService.IN_PARAM, locale);
+                        } catch (ServiceValidationException e) {
+                            // NOTE: DO NOT print the full exception in this case, because there may be a delay between the first
+                            // time someone sees the bug in error.log and the time someone reports it, so we don't want to flood error.log
+                            Debug.logError("Incoming context (in runSync : " + origService.name + ") does not match expected requirements"
+                                    + "; if this is a stock Scipio service, PLEASE REPORT THIS ERROR"
+                                    + "; compatibility mode for old services having permission services is enabled, so we will call makeValid"
+                                    + "and try again; the error was: " + e.getMessage(), module);
+                            context.putAll(permResp);
+                            context = origService.makeValid(context, ModelService.IN_PARAM);
+                        }
+                    }
+                }
             } else {
                 String message = (String) permResp.get("failMessage");
                 if (UtilValidate.isEmpty(message)) {

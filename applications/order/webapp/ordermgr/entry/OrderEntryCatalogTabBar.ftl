@@ -4,6 +4,8 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
+<#include "ordercommon.ftl">
+
   <#if orderHeader?has_content>
     <@section title=uiLabelMap.PageTitleLookupBulkAddProduct/>
   <#else>
@@ -17,12 +19,7 @@ code package.
             <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${rawString(product.productId)}${rawString(externalKeyParam!)}")
               target="catalog" text=uiLabelMap.ProductEditProduct class="+${styles.action_nav!} ${styles.action_update!}" />
           </#if>
-          <#-- SCIPIO: Live product link -->
-          <#assign productPageUrl = getPropertyValue("catalog", "shop.default.link.product.prefix")!>
-          <#if productPageUrl?has_content>
-            <@menuitem type="link" href=makeOfbizInterWebappUrl(productPageUrl+(product.productId)) text=uiLabelMap.CommonShopPage
-                class="+${styles.action_nav!} ${styles.action_view!}" target="_blank"/>
-          </#if>
+          <@productShopPageUrlMenuItem productId=product.productId/><#-- SCIPIO: Live product link -->
         </#if>
 
         <#if (showCategoryLinks!false) && productCategory?has_content><#-- SCIPIO: category links -->
@@ -30,12 +27,7 @@ code package.
             <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/EditCategory?productCategoryId=${rawString(productCategory.productCategoryId)}${rawString(externalKeyParam!)}")
               target="catalog" text=uiLabelMap.ProductEditCategory class="+${styles.action_nav!} ${styles.action_update!}" />
           </#if>
-          <#-- SCIPIO: Live product link -->
-          <#assign categoryPageUrl = getPropertyValue("catalog", "shop.default.link.category.prefix")!>
-          <#if categoryPageUrl?has_content>
-            <@menuitem type="link" href=makeOfbizInterWebappUrl(categoryPageUrl+(productCategory.productCategoryId)) text=uiLabelMap.CommonShopPage
-                class="+${styles.action_nav!} ${styles.action_view!}" target="_blank"/>
-          </#if>
+          <@categoryShopPageUrlMenuItem categoryId=productCategory.productCategoryId/><#-- SCIPIO: Live product link -->
         </#if>
       </@menu>
     </#macro>

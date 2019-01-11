@@ -3,6 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
+<#include "../common/common.ftl">
 <@row>
     <@cell>
     <@menu type="subtab">
@@ -24,11 +25,7 @@ code package.
             </#if>                        
         </#if>        
         <#if product?has_content>
-          <#assign productPageUrl = getPropertyValue("catalog", "shop.default.link.product.prefix")!>
-          <#if productPageUrl?has_content>
-            <#-- SCIPIO: was: text=uiLabelMap.ProductProductPage -->
-            <@menuitem type="link" href=makeOfbizInterWebappUrl(productPageUrl+(productId!)) text=uiLabelMap.CommonShopPage class="+${styles.action_nav!} ${styles.action_view!}" target="_blank"/>
-          </#if>
+          <@productShopPageUrlMenuItem productId=productId!/>
           <@menuitem type="link" href=makeOfbizUrl("ProductBarCode.pdf?productId=${productId!}") text=uiLabelMap.ProductBarcode target="_blank" class="+${styles.action_nav!} ${styles.action_export!}" />
         </#if>
         <#--

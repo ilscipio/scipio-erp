@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-
+<#include "ordercommon.ftl">
 
 <#if orderHeader?has_content>
 
@@ -275,11 +275,7 @@ code package.
                                           </@modal>
                                         </#if>
                                         <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
-                                        <#-- SCIPIO: Now points to shop -->
-                                        <#assign productPageUrl = getPropertyValue("catalog", "shop.default.link.product.prefix")!>
-                                        <#if productPageUrl?has_content>
-                                          <@menuitem type="link" href=makeOfbizInterWebappUrl(productPageUrl+(productId!)) text=getLabel("ShopShop", "ShopUiLabels") target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
-                                        </#if>
+                                        <@productShopPageUrlMenuItem productId=productId!/>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
                                             <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />
                                         </#if>

@@ -58,10 +58,6 @@ code package.
         <section>
             <actions>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/SideDeepCategory.groovy"/>
-                <!-- SCIPIO: FIXME?: Don't show links because category page is awful for now -->
-                <script lang="groovy"><![CDATA[
-                    context.crumbsShowLinks = false;
-                ]]></script>
             </actions>
             <widgets>
                 <platform-specific><html><html-template location="component://common/webcommon/includes/breadcrumbs.ftl"/></html></platform-specific>
@@ -82,13 +78,22 @@ code package.
     <screen name="category">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleCategoryPage"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/><!-- SCIPIO -->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/Category.groovy"/>
+                <set field="title" value="${uiLabelMap.CommonCategory}: ${categoryTitle}"/><!-- SCIPIO: was: value="PageTitleCategoryPage" -->
+                <!-- SCIPIO: new groovy to ensure the crumbs are set even when accessing /control/category instead of /products servlet -->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/SetTrailFromCategory.groovy"/>
+                <set field="showCategoryLinks" type="Boolean" value="true"/><!-- SCIPIO -->
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderCatalogDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
                     <decorator-section name="body">
                         <include-screen name="breadcrumbs"/>
                         <include-screen name="category-include"/>
+                        <!-- SCIPIO: TODO: REVIEW: For now this only shows non-recursive categories as there is no solr here -->
+                        <platform-specific><html><html-template><![CDATA[
+                            <@alert type="info">${uiLabelMap.OrderCategoryNonRecursiveProductsOnlyInfo}</@alert>
+                        ]]></html-template></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -97,7 +102,12 @@ code package.
     <screen name="category-include">
         <section>
             <actions>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/Category.groovy"/>
+                <if><!-- SCIPIO: don't re-include if the Category.groovy was already run -->
+                    <condition><if-empty field="detailScreen"/></condition>
+                    <then>
+                        <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/Category.groovy"/>
+                    </then>
+                </if>
             </actions>
             <widgets>
                 <section>
@@ -131,8 +141,8 @@ code package.
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="configproductdetailScreen" value="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#configproductdetail"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/Product.groovy"/>
-                <set field="title" value="${uiLabelMap.PageTitleProductPage}: ${productTitle}"/>
-                <set field="showEditProductLink" type="Boolean" value="true"/><!-- SCIPIO: use this instead of editProduct.ftl -->
+                <set field="title" value="${uiLabelMap.CommonProduct}: ${productTitle}"/><!-- SCIPIO: was using PageTitleProductPage -->
+                <set field="showProductLinks" type="Boolean" value="true"/><!-- SCIPIO: use this instead of editProduct.ftl -->
                 <!-- SCIPIO: This script is an orderentry-specific hack to enable breadcrumbs to display properly -->
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/SetTrailFromProduct.groovy"/>
             </actions>

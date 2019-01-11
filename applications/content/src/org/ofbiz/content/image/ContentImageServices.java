@@ -444,13 +444,14 @@ public abstract class ContentImageServices {
 //                imageOrigPath = FlexibleLocation.resolveFileUrlAsPathIfUrl(imageOrigPath, imageOrigPath);
 //            }
 
-            /* ImageProperties.xml */
+            
             ImageVariantConfig imgPropCfg;
+            /* ImageProperties.xml */
             if (UtilValidate.isEmpty(imagePropXmlPath)) {
                 imagePropXmlPath = ContentImageWorker.getContentImagePropertiesPath();
             }
             try {
-                // SCIPIO (17/12/2018): 
+                // SCIPIO (17/12/2018): variant config can be passed directly from the context in order to override the default XML config
                 if (context.containsKey("imageVariantConfig")) {
                     imgPropCfg = (ImageVariantConfig) context.get("imageVariantConfig");
                 } else {

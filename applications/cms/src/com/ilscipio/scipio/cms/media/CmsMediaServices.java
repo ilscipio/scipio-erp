@@ -417,7 +417,7 @@ public abstract class CmsMediaServices {
 
     @SuppressWarnings("unchecked")
     private static Map<String, Map<String, String>> getImgPropsMap(Map<String, Object> context) { 
-        Map<String, Map<String, String>> imgPropsMap = UtilMisc.newMap();    
+        Map<String, Map<String, String>> imgPropsMap = UtilMisc.newInsertOrderMap();    
         List<String> variantSizeNames = (List<String>) context.get("variantSizeName");
         List<String> variantSizeWidth = (List<String>) context.get("variantSizeWidth");
         List<String> variantSizeHeight = (List<String>) context.get("variantSizeHeight");

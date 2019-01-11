@@ -5298,6 +5298,10 @@
         <value xml:lang="de">Warnung: Diese Funktion wird gerade getestet. Bitte sichern Sie alle wichtigen Daten, bevor Sie sie verwenden.</value>
         <value xml:lang="en">Warning: This functionality is currently in testing. Please backup any important data before attempting to use.</value>
     </property>
+    <property key="CommonFunctionalityIssuesNotWorkCorrectlyInfo">
+        <value xml:lang="de">Warnung: Diese Funktion weist bekannte Probleme auf und funktioniert zu diesem Zeitpunkt möglicherweise nicht vollständig oder nicht vollständig. Weitere Informationen erhalten Sie vom Support.</value>
+        <value xml:lang="en">Warning: This functionality has known issues and may not work fully or fully correctly at this time. For more information, contact support.</value>
+    </property>
     <property key="CommonFunctionalityWorkInProgressWarning">
         <value xml:lang="de">Warnung: Diese Funktionalität ist ein Work-In-Progress. Bitte sichern Sie alle wichtigen Daten, bevor Sie sie verwenden.</value>
         <value xml:lang="en">Warning: This functionality is a Work-In-Progress. Please backup any important data before attempting to use.</value>

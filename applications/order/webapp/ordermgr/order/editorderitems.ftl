@@ -38,6 +38,8 @@ code package.
   </#macro>
   <@section title=uiLabelMap.OrderOrderItems menuContent=menuContent>
 
+    <@alert type="warning">${uiLabelMap.CommonFunctionalityIssuesNotWorkCorrectlyInfo}</@alert>
+
     <#assign nestedFormMarkup></#assign><#-- SCIPIO: fix for bad nested html forms -->
 
         <#if !orderItemList?has_content>

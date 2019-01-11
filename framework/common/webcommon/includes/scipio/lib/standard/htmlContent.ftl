@@ -1713,7 +1713,6 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
         <#default>
             <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapeVal(type, 'css-html')};</#local>
             <#local class = addClassArg(class, "scipio-image-container")>
-            ${Static["org.ofbiz.base.util.Debug"].log("is responsive =====> " + responsiveMap?has_content?string)}
             <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if> style="${imgContainer}" scipioFit="${escapeVal(type, 'html')}">
                  <#local srcset = "">
                  <#local sizes = "">

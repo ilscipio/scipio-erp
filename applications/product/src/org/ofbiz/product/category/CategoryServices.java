@@ -241,17 +241,24 @@ public class CategoryServices {
 
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         int viewIndex = 0;
-        try {
-            viewIndex = Integer.parseInt((String) context.get("viewIndexString"));
-        } catch (Exception e) {
-            viewIndex = 0;
+        if (UtilValidate.isNotEmpty((String) context.get("viewIndexString"))) { // SCIPIO: Added empty test
+            try {
+                viewIndex = Integer.parseInt((String) context.get("viewIndexString"));
+            } catch (NumberFormatException e) { // SCIPIO: Switched: Exception
+                //viewIndex = 0; // SCIPIO: redundant
+                Debug.logError("getProductCategoryAndLimitedMembers: error parsing viewIndexString: " + e.getMessage(), module); // SCIPIO
+            }
         }
 
         int viewSize = defaultViewSize;
-        try {
-            viewSize = Integer.parseInt((String) context.get("viewSizeString"));
-        } catch (NumberFormatException e) {
-            Debug.logError(e.getMessage(), module);
+        if (UtilValidate.isNotEmpty((String) context.get("viewSizeString"))) { // SCIPIO: Added empty test
+            try {
+                viewSize = Integer.parseInt((String) context.get("viewSizeString"));
+            } catch (NumberFormatException e) {
+                // SCIPIO: unhelpful
+                //Debug.logError(e.getMessage(), module);
+                Debug.logError("getProductCategoryAndLimitedMembers: error parsing viewSizeString: " + e.getMessage(), module); // SCIPIO
+            }
         }
 
         GenericValue productCategory = null;

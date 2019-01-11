@@ -11579,6 +11579,10 @@
         <value xml:lang="zh">运输</value>
         <value xml:lang="zh-TW">配送</value>
     </property>
+    <property key="CommonShopPage">
+        <value xml:lang="de">Shop-Seite</value>
+        <value xml:lang="en">Shop Page</value>
+    </property>
     <property key="CommonShoppingCart">
         <value xml:lang="ar">عربة التسوق</value>
         <value xml:lang="cs">Nákupní košík</value>

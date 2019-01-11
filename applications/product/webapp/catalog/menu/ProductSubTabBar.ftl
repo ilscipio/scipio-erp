@@ -26,7 +26,7 @@ code package.
         <#if product?has_content>
           <#assign productPageUrl = getPropertyValue("catalog", "shop.default.link.product.prefix")!>
           <#if productPageUrl?has_content>
-            <@menuitem type="link" href=makeOfbizInterWebappUrl(productPageUrl+(productId!)) text=uiLabelMap.ProductProductPage class="+${styles.action_nav!} ${styles.action_view!}" />
+            <@menuitem type="link" href=makeOfbizInterWebappUrl(productPageUrl+(productId!)) text=uiLabelMap.ProductProductPage class="+${styles.action_nav!} ${styles.action_view!}" target="_blank"/>
           </#if>
           <@menuitem type="link" href=makeOfbizUrl("ProductBarCode.pdf?productId=${productId!}") text=uiLabelMap.ProductBarcode target="_blank" class="+${styles.action_nav!} ${styles.action_export!}" />
         </#if>

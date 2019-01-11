@@ -278,7 +278,7 @@ code package.
                                         <#-- SCIPIO: Now points to shop -->
                                         <#assign productPageUrl = getPropertyValue("catalog", "shop.default.link.product.prefix")!>
                                         <#if productPageUrl?has_content>
-                                          <@menuitem type="link" href=makeOfbizInterWebappUrl(productPageUrl+(productId!)) text=getLabel("Shop", "ShopUiLabels") target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
+                                          <@menuitem type="link" href=makeOfbizInterWebappUrl(productPageUrl+(productId!)) text=getLabel("ShopShop", "ShopUiLabels") target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
                                         </#if>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
                                             <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />

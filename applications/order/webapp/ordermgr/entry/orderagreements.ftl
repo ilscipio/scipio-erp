@@ -80,7 +80,7 @@ code package.
       </#if>
 
     <#if webSiteApplies>
-      <@field type="select" label=uiLabelMap.FormFieldTitle_webSiteId name="cartWebSiteId" tooltip=uiLabelMap.OrderEntryWebSiteRequiredForEmails>
+      <@field type="select" label=uiLabelMap.FormFieldTitle_webSiteId name="cartWebSiteId" tooltip=uiLabelMap.OrderEntryPlacingWebSiteInfo>
           <option value="">(${uiLabelMap.OrderEntryWebSiteNoneNoEmails})</option>
         <#list (webSiteList![]) as webSite>
           <option value="${webSite.webSiteId}"<#if rawString(selectedWebSiteId!'') == rawString(webSite.webSiteId)> selected="selected"</#if>><#rt/>

@@ -192,22 +192,22 @@ code package.
      ================================
 -->
 <#-- Facebook Authentication Addon (required)-->
-<#if getPropertyMsg("shop.properties","facebook.enabled")== "Y">
+<#if "Y" == getPropertyValue("shop", "facebook.enabled")!>
     <#include "component://auth-facebook/webapp/facebook/fb-common.ftl"/>
     <@fbInit scope="public_profile,email"/>
 </#if>
 <#-- Google Authentication Addon (required)-->
-<#if getPropertyMsg("shop.properties","google.enabled")== "Y">
+<#if "Y" == getPropertyValue("shop", "google.enabled")!>
     <#include "component://auth-google/webapp/google/google-common.ftl"/>
     <@googleInit/>
 </#if>
 <#-- Twitter Authentication Addon (required)-->
-<#if getPropertyMsg("shop.properties","twitter.enabled")== "Y">
+<#if "Y" == getPropertyValue("shop", "twitter.enabled")!>
     <#include "component://auth-twitter/webapp/twitter/twitter-common.ftl"/>
     <@twitterInit/>
 </#if>
 <#-- LinkedIn Authentication Addon (required)-->
-<#if getPropertyMsg("shop.properties","linkedin.enabled")== "Y">
+<#if "Y" == getPropertyValue("shop", "linkedin.enabled")!>
     <#include "component://auth-linkedin/webapp/linkedin/linkedin-common.ftl"/>
     <@linkedinInit/>
 </#if>

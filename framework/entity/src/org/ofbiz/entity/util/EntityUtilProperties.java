@@ -78,6 +78,13 @@ public final class EntityUtilProperties implements Serializable {
         if (UtilValidate.isEmpty(resource) || UtilValidate.isEmpty(name)) {
             return results;
         }
+
+        if (delegator == null) { // SCIPIO: 2019-01: Although should rarely happen, there is no reason to crash here
+            Debug.logWarning("Missing delegator when querying for entity property [" + resource + "#" + name
+                    + "]; treating as not set in database", module);
+            return results;
+        }
+
         // SCIPIO: Bad, only replace at end of string
         //resource = resource.replace(".properties", "");
         if (resource.endsWith(".properties")) {

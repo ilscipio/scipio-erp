@@ -293,7 +293,7 @@ code package.
                 <parameter param-name="SEARCH_CATEGORY_ID" from-field="productCategoryId"/>
             </link>
         </menu-item>
-        <menu-item name="ProductCategoryPage" title="${uiLabelMap.ProductCategoryPage}" widget-style="+website">
+        <menu-item name="ProductCategoryPage" title="${uiLabelMap.CommonShopPage}" widget-style="+website"><!-- SCIPIO: was: title="${uiLabelMap.ProductCategoryPage}" -->
             <condition>
                 <and>
                     <not><if-empty field="productCategory"/></not>

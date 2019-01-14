@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +59,8 @@ import org.ofbiz.service.ServiceUtil;
 public final class CategoryWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    public static final List<String> TOP_TRAIL = UtilMisc.unmodifiableArrayList("TOP"); // SCIPIO
 
     private CategoryWorker () {}
 
@@ -418,6 +419,14 @@ public final class CategoryWorker {
      */
     public static List<String> setTrailIfFirstInRequest(ServletRequest request, List<String> crumb) {
         return setTrail(request, crumb, true);
+    }
+
+    /**
+     * SCIPIO: Resets the breadcrumb to the "TOP".
+     * Added 2019-01.
+     */
+    public static List<String> resetTrail(ServletRequest request) {
+        return setTrail(request, TOP_TRAIL, false);
     }
 
     public static boolean checkTrailItem(ServletRequest request, String category) {
@@ -865,7 +874,7 @@ public final class CategoryWorker {
      * TODO: REVIEW: maybe this can be optimized with a smarter algorithm?
      * Added 2017-11-09.
      */
-    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Set<String> topCategoryIds, boolean useCache) {
+    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Collection<String> topCategoryIds, boolean useCache) {
         List<List<String>> trails = getCategoryRollupTrails(delegator, productCategoryId, useCache);
         if (topCategoryIds == null) return trails;
         List<List<String>> filtered = new ArrayList<>(trails.size());

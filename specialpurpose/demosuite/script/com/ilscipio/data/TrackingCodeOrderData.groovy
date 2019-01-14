@@ -14,13 +14,12 @@ import org.ofbiz.service.ServiceUtil
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript;
 
-
-
 public class TrackingCodeOrderData extends DataGeneratorGroovyBaseScript {
+    private static final String module = "TrackingCodeOrderData.groovy";
     final String DEFAULT_WEBAPP_NAME = "shop";
 
     TrackingCodeOrderData() {
-        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TRACKING ORDER DATA-=-=-=-", "");
+        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TRACKING ORDER DATA-=-=-=-", module);
     }
 
     public void init() {

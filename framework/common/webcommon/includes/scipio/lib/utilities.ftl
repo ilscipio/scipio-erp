@@ -1279,9 +1279,10 @@ FIXME: Some of the behavior is currently hardcoded inside the renderTarget imple
 *************
 * getLabel
 ************
-Returns label from global label map or resource, or empty string if no label is found,
-with automatic screen html-escaping applied.
-This is a higher-level, abstracted function for fetching labels.
+Returns label from global label map (uiLabelMap) or resource, or empty string if no label is found,
+with automatic screen html-escaping applied (use #rawLabel instead to avoid this).
+
+This is a higher-level, abstracted function for fetching labels, compared to keying the {{{uiLabelMap}}}.
 
 By default this function tries to maintain the same behavior as {{{uiLabelMap}}} with respect to locale
 selection and the context map used for label substitutions/arguments.
@@ -1318,6 +1319,9 @@ DEV NOTE: It is not possible to add custom locale here; already loaded into the 
   * Related *
     #rawLabel
     #getPropertyMsg
+    
+  * History *
+    Fixed inconsistent return values when missing for 1.14.5.
 -->
 <#function getLabel name resource="" msgArgs=true>
   <#if name?has_content>
@@ -1327,12 +1331,12 @@ DEV NOTE: It is not possible to add custom locale here; already loaded into the 
     </#if>
     <#if msgArgs?is_boolean>
       <#if msgArgs>
-        <#local var=(uiLabelMap[name])!false />
+        <#local var = (uiLabelMap[name])!false />
       <#else>
-        <#local var=(uiLabelMap.get(name, _NULL_PLACEHOLDER))!false />
+        <#local var = (uiLabelMap.get(name, _NULL_PLACEHOLDER))!false />
       </#if>
     <#else>
-      <#local var=(uiLabelMap.get(name, msgArgs))!false />
+      <#local var = (uiLabelMap.get(name, msgArgs))!false />
     </#if>
     <#if (!var?is_boolean) && var != name>
       <#return var>
@@ -1341,30 +1345,28 @@ DEV NOTE: It is not possible to add custom locale here; already loaded into the 
           meaning same context for args and same locale -->
       <#if msgArgs?is_boolean>
         <#if msgArgs>
-          <#return getPropertyMsg(resource, name, (uiLabelMap.getContext())!false, (uiLabelMap.getLocale())!true)>
+          <#return getPropertyMsg(resource, name, (uiLabelMap.getContext())!false, (uiLabelMap.getLocale())!true, true)>
         <#else>
-          <#return getPropertyMsg(resource, name, false, (uiLabelMap.getLocale())!true)>
+          <#return getPropertyMsg(resource, name, false, (uiLabelMap.getLocale())!true, true)>
         </#if>
       <#else>
-        <#return getPropertyMsg(resource, name, msgArgs, (uiLabelMap.getLocale())!true)>
+        <#return getPropertyMsg(resource, name, msgArgs, (uiLabelMap.getLocale())!true, true)>
       </#if>
-    <#else>
-      <#return "">
     </#if>
-  <#else>
-    <#return ""> 
   </#if>
+  <#return "">
 </#function>
 
 <#-- 
 *************
 * rawLabel
 ************
-Returns label from global label map or resource, or empty string if no label is found,
-and prevents automatic html-escaping on the result.
-This is a higher-level, abstracted function for fetching labels.
+Returns label from global label map (uiLabelMap) or resource, or empty string if no label is found,
+and prevents automatic html-escaping on the result (unlike #getLabel).
 
-Shorthand for {{{rawString(getLabel(...))}}}.
+This is a higher-level, abstracted function for fetching labels, compared to keying the {{{uiLabelMap}}}.
+
+Shorthand for {{{rawString(getLabel(...))}}}. See #getLabel for more information.
 
   * Parameters *
     name                    = ((string), required) Label name
@@ -1414,15 +1416,20 @@ so the caller can perform the substitutions instead.
 *************
 * getPropertyValue
 ************
-Gets property or void/null if missing or has no content.
+Gets a property value from a *.properties resource, or void/null if missing or has no content.
 
-NOTE: Always use default value ("!") or other test operator!
+NOTE: Always use default value ("!") or other presence test operator with this function. It behaves differently
+than #getPropertyMsg, which always returns a string, for legacy and consistency reasons (UtilProperties method design).
 
-NOTE: The result from this method is '''not''' HTML-encoded, as such values are normally code and not text messages.
+NOTE: The result from this method is '''not''' HTML-encoded, as such values are normally code and not text messages,
+in other words not expected to be printed as HTML.
 
   * Parameters *
     resource                = (required) Resource name
     name                    = (required) Property name
+
+  * Related *
+    #getEntityPropertyValue
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function getPropertyValue resource name>
@@ -1435,10 +1442,51 @@ NOTE: The result from this method is '''not''' HTML-encoded, as such values are 
 
 <#-- 
 *************
+* getEntityPropertyValue
+************
+Gets a property value from a *.properties resource or its corresponding SystemProperty entity value, 
+or void/null if missing or has no content.
+
+NOTE: Always use default value ("!") or other presence test operator with this function. It behaves differently
+than #getPropertyMsg, which always returns a string, for legacy and consistency reasons (UtilProperties method design).
+
+NOTE: The result from this method is '''not''' HTML-encoded, as such values are normally code and not text messages,
+in other words not expected to be printed as HTML.
+
+  * Parameters *
+    resource                = (required) Resource name
+    name                    = (required) Property name
+
+  * Related *
+    #getPropertyValue
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function getEntityPropertyValue resource name>
+</#function>
+-->
+
+<#-- 
+*************
 * getPropertyMsg
 ************
-Gets property or empty string if missing, using behavior and rules of the {{{UtilProperties}}}
-class (low-level).
+Gets a message label from a *Labels.xml property resource, using behavior and rules of the {{{UtilProperties}}} class (low-level).
+
+NOTE: For most client templates, you probably want to use #getLabel instead of this function. If you're looking
+to read *.properties files, use #getPropertyValue instead. This function is only a bare wrapper around the 
+UtilProperties#getMessage class method and does not consult the global label map (uiLabelMap) and is not meant
+to read *.properties files.
+
+If the name does not exist in the resource, by default this returns the property name, unless {{{true}}} for {{{optional}}}
+is passed in which case it returns empty string (NOT void/missing). The default value operator ("!") is effectively useless if used
+with this function (unlike #getPropertyValue).
+
+The default value behavior differs from #getPropertyValue for legacy reasons (UtilProperties method design
+and the template code it was menat to replace), and because for label messages (as opposed to #getPropertyValue, 
+which reads .properties files) it is very rare to need a label fallback in templates.
+
+NOTE: 2019-01: This method description previously erroneously said this method by default returned empty if missing,
+which it did not (it always returned the property name, like UtilProperties#getMessage, which it was intended
+to replace in templates).
 
 NOTE: The resulting message is subject to automatic HTML encoding (by Ofbiz). 
     Use #rawString on the result to prevent escaping.
@@ -1456,8 +1504,12 @@ TODO: implement as transform.
                               If boolean: if true, uses locale from context; if false, forced to use system default.
                               NOTE: There should almost always be a locale in context or explicit.
                                   Fallback on system default usually means something is missing.
+    optional                = (boolean, default: false) If true, missing label returns empty; if false returns key name
+
+  * History *
+    Added optional flag and fixed description for 1.14.5.
 -->
-<#function getPropertyMsg resource name msgArgs=false locale=true>
+<#function getPropertyMsg resource name msgArgs=false locale=true optional=false>
   <#if locale?is_boolean>
     <#if locale>
       <#local locale = .globals.locale!Static["java.util.Locale"].getDefault()>
@@ -1466,10 +1518,10 @@ TODO: implement as transform.
     </#if>
   </#if>
   <#if msgArgs?is_sequence || msgArgs?is_hash><#-- NOTE: these will actually call different overloads -->
-    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, locale)>
+    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, locale, optional)>
   <#else>
     <#-- don't use context by default here (only uiLabelMap/getLabel should do that): context!{} -->
-    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, locale)>
+    <#return Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, locale, optional)>
   </#if>
 </#function>
 
@@ -1477,7 +1529,20 @@ TODO: implement as transform.
 *************
 * getPropertyMsgFromLocExpr
 ************
-Gets property or empty string if missing (same behavior as UtilProperties).
+Gets a message label from a *Labels.xml property resource, using behavior and rules of the {{{UtilProperties}}} class (low-level), with support
+with support for a polyvalent resource expression.
+
+NOTE: For most client templates, you probably want to use #getLabel instead of this function. If you're looking
+to read *.properties files, use #getPropertyValue instead. This function is only a bare wrapper around the 
+UtilProperties#getMessage class method and does not consult the global label map (uiLabelMap) and is not meant
+to read *.properties files.
+
+See #getPropertyMsg for more information; this is nearly the same as #getPropertyMsg but with extra support for a 
+resource expression.
+
+NOTE: 2019-01: This method description previously erroneously said this method by default returned empty if missing,
+which it did not (it always returned the property name, like UtilProperties#getMessage, which it was intended
+to replace in templates).
 
 TODO: implement as transform.
 
@@ -1486,11 +1551,15 @@ TODO: implement as transform.
                               If name alone, assumes CommonUiLabels for resource.
     msgArgs                 = ((map)|(list)|(boolean), default: -false / none-) Substitute values for message template
     locale                  = ((locale)|(boolean), default: -true / locale from context-) Explicit locale
-    
+    optional                = (boolean, default: false) If true, missing label returns empty; if false returns key name
+
   * Related *
     #getPropertyMsg
+
+  * History *
+    Added optional flag and fixed description for 1.14.5.
 -->
-<#function getPropertyMsgFromLocExpr resourceExpr msgArgs=false locale=true>
+<#function getPropertyMsgFromLocExpr resourceExpr msgArgs=false locale=true optional=false>
   <#local parts = resourceExpr?split("#")>
   <#if (parts?size >= 2)>
     <#local resource = parts[0]>
@@ -1499,7 +1568,7 @@ TODO: implement as transform.
     <#local resource = "CommonUiLabels">
     <#local name = parts[0]>
   </#if>
-  <#return getPropertyMsg(resource, name, msgArgs, locale)> 
+  <#return getPropertyMsg(resource, name, msgArgs, locale, optional)> 
 </#function>
 
 <#-- 
@@ -1507,22 +1576,25 @@ TODO: implement as transform.
 * getTextLabelFromExpr
 ************
 Convenience label identifier parsing function that accepts a string in multiple formats
-that may designate a label or property as label.
+that may designate a label or property as label; if no label, returns empty string.
 
-If textExpr starts with "#LABEL:", the following name is taken from uiLabelMap.
-If textExpr starts with "#PROP:", the following location/name is passed through to getPropertyMsgFromLocExpr
+If textExpr starts with "#LABEL:", the following name is taken from uiLabelMap (using getLabel).
+If textExpr starts with "#PROP:", the following location/name is taken from a properties file (passed through to getPropertyMsgFromLocExpr
 If no such prefix in textExpr, returns the text as-is.
 
   * Parameters *
     textExpr                = (required) Label text expression 
     msgArgs                 = ((map)|(list), default: -use context-) Substitute values for message template
     locale                  = ((locale)|(boolean), default: -true / locale from context-) Explicit locale
+    
+  * History *
+    Fixed inconsistent return values when missing for 1.14.5.
 -->
 <#function getTextLabelFromExpr textExpr msgArgs=false locale=true>
   <#if textExpr?starts_with("#LABEL:")>
-    <#return getLabel(textExpr[7..])!"">
+    <#return getLabel(textExpr[7..])>
   <#elseif textExpr?starts_with("#PROP:")>
-    <#return getPropertyMsgFromLocExpr(textExpr[6..], msgArgs, locale)!"">
+    <#return getPropertyMsgFromLocExpr(textExpr[6..], msgArgs, locale, true)>
   <#else>
     <#return textExpr>
   </#if>

@@ -13,9 +13,10 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGenerato
 
 @DataGeneratorProvider(providers=[DataGeneratorProviders.LOCAL])
 public class WorkEffortData extends DataGeneratorGroovyBaseScript {
-
+    private static final String module = "WorkEffortData.groovy";
+    
     WorkEffortData() {
-        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - WORK EFFORT DATA-=-=-=-", "");
+        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - WORK EFFORT DATA-=-=-=-", module);
     }
 
     public String getDataType() {
@@ -43,9 +44,9 @@ public class WorkEffortData extends DataGeneratorGroovyBaseScript {
                 partyGroupId = partyGroups[0].getString("partyId");
             }
         }
-        if (!partyGroupId)
+        if (!partyGroupId) {
             throw new Exception("Party group not found or invalid.");
-
+        }
         context.partyGroupId = partyGroupId;
     }
 

@@ -2883,6 +2883,10 @@
         <value xml:lang="zh">纸箱</value>
         <value xml:lang="zh-TW">紙箱</value>
     </property>
+    <property key="OrderCategoryNonRecursiveProductsOnlyInfo">
+        <value xml:lang="de">Hinweis: Diese Seite enthält möglicherweise keine Produkte aus Unterkategorien, es sei denn, sie wurden explizite Mitglieder ihrer übergeordneten Kategorien. Besuchen Sie für eine vollständige Seite die Shop-Seite für das Produkt.</value>
+        <value xml:lang="en">Note: This page may not include products from sub-categories unless they were made explicit members of their parent categories as well. For a full-featured page, visit the Shop page for the product.</value>
+    </property>
     <property key="OrderChangedByUser">
         <value xml:lang="ar">تغيرت عن طريق مستخدم</value>
         <value xml:lang="de">Von Benutzer geändert</value>

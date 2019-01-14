@@ -139,8 +139,12 @@ code package.
                             <condition>
                                 <not><if-empty field="currentValue.contentId"/></not>
                             </condition>
+                            <actions>
+                                <!-- SCIPIO: Prevent random comma -->
+                                <set field="currentValueNameSep" value="${groovy:(context.currentValue?.contentName &amp;&amp; context.currentValue?.description) ? ', ' : ''}"/>
+                            </actions>
                             <widgets>
-                                <screenlet title="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentValue.contentName},${currentValue.description} [${currentValue.contentId}]  ${${extraFunctionName}}">
+                                <screenlet title="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentValue.contentName}${currentValueNameSep}${currentValue.description} [${currentValue.contentId}]  ${${extraFunctionName}}">
                                     <decorator-section-include name="body"/>
                                 </screenlet>
                             </widgets>

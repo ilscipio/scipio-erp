@@ -192,17 +192,17 @@ public class CartUpdate implements AutoCloseable {
 
             ShoppingCart cart = status.sourceCart; // May be set manually by caller
             if (cart == null) {
-                if (createCartIfMissing) {
-                    // IMPORTANT: DO NOT MODIFY SESSION (yet; only in end())! Cannot allow session attr change until committed.
-                    // Prevent session modification using scope filter.
-                    // This will also prevent the setCartObject call done by getCartObject from calling our commit(ShoppingCart).
-                    final RequestVarScopes modifyScopesFilter = this.modifyScopesFilter.request() ?
-                            RequestVarScopes.REQUEST : RequestVarScopes.NONE;
+                //if (createCartIfMissing) {
+                // IMPORTANT: DO NOT MODIFY SESSION (yet; only in end())! Cannot allow session attr change until committed.
+                // Prevent session modification using scope filter.
+                // This will also prevent the setCartObject call done by getCartObject from calling our commit(ShoppingCart).
+                final RequestVarScopes modifyScopesFilter = this.modifyScopesFilter.request() ?
+                        RequestVarScopes.REQUEST : RequestVarScopes.NONE;
 
-                    cart = ShoppingCartEvents.getCartObject(request, checkRequestFirst, modifyScopesFilter);
-                } else {
-                    cart = ShoppingCartEvents.getCartObjectIfExists(request, checkRequestFirst);
-                }
+                cart = ShoppingCartEvents.getCartObject(request, createCartIfMissing, checkRequestFirst, modifyScopesFilter);
+                //} else {
+                //    cart = ShoppingCartEvents.getCartObjectIfExists(request, checkRequestFirst);
+                //}
             }
             if (cart != null) {
                 setCurrentCart(recordAndCopyCartForUpdate(cart));
@@ -260,8 +260,14 @@ public class CartUpdate implements AutoCloseable {
         } else { // (assuming we made a cart)
             // ROLLBACK - Restore old request attribute cart and leave session alone
             RequestVarScopes.REQUEST.setOrRemoveValue(request, modifyScopesFilter, "shoppingCart", prevRequestCart);
-            Debug.logWarning("End cart update section (depth: " + status.nestedLevel  + ") - not committed "
+            if (isDebug()) {
+                Debug.logWarning("End cart update section (depth: " + status.nestedLevel  + ") - not committed "
                     + (isTopLevel() ? "to session" : "locally") + getLogSuffix(), module);
+            } else if (Debug.infoOn()) {
+                // NOTE: This is now INFO because this already happens in some known non-problem cases
+                Debug.logInfo("End cart update section (depth: " + status.nestedLevel  + ") - not committed "
+                        + (isTopLevel() ? "to session" : "locally") + getLogSuffix(), module);
+            }
         }
         if (!isTopLevel()) {
             status.nestedLevel--;

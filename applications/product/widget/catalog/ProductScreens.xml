@@ -557,7 +557,7 @@ code package.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductQuickAdmin" />
-                <set field="activeSubMenuItem" value="EditProductQuickAdmin" />
+                <set field="activeSubMenuItem" value="EditProduct" /><!-- SCIPIO: doesn't exist currently: value="EditProductQuickAdmin" -->
                 <set field="labelTitleProperty" value="ProductQuickAdmin" />
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductQuickAdmin.groovy" />

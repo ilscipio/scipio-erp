@@ -169,6 +169,9 @@ if (product) {
         productStore = ProductStoreWorker.getProductStore(request);
         productStoreId = productStore.productStoreId;
         context.productStoreId = productStoreId;
+        if (productStore != null) { 
+            context.productStore = productStore; // SCIPIO: This may be missing in orderentry
+        }
     }
     // get a defined survey
     productSurvey = ProductStoreWorker.getProductSurveys(delegator, productStoreId, productId, "CART_ADD");

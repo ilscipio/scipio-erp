@@ -1784,7 +1784,7 @@ nextProd:
      * TODO: REVIEW: maybe this can be optimized with a smarter algorithm?
      * Added 2017-11-09.
      */
-    public static List<List<String>> getProductRollupTrails(Delegator delegator, String productId, Set<String> topCategoryIds, boolean useCache) {
+    public static List<List<String>> getProductRollupTrails(Delegator delegator, String productId, Collection<String> topCategoryIds, boolean useCache) {
         List<GenericValue> prodCatMembers;
         try {
             prodCatMembers = EntityQuery.use(delegator).from("ProductCategoryMember")
@@ -1804,7 +1804,13 @@ nextProd:
         return possibleTrails;
     }
 
-
+    /**
+     * SCIPIO: Returns all rollups for a product (any top category).
+     * Added 2019-01.
+     */
+    public static List<List<String>> getProductRollupTrails(Delegator delegator, String productId, boolean useCache) {
+        return getProductRollupTrails(delegator, productId, null, useCache);
+    }
 
     /**
      * SCIPIO: Gets the product's "original" product association. For variant, means its virtual,

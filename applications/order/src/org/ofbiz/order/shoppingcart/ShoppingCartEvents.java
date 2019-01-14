@@ -788,7 +788,7 @@ public class ShoppingCartEvents {
     public static String quickInitPurchaseOrder(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        HttpSession session = request.getSession();
+        //HttpSession session = request.getSession();
         Locale locale = UtilHttp.getLocale(request);
         String supplierPartyId = request.getParameter("supplierPartyId_o_0");
 
@@ -842,10 +842,7 @@ public class ShoppingCartEvents {
 
         cart.setOrderType("PURCHASE_ORDER");
 
-        ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
-        session.setAttribute("productStoreId", cart.getProductStoreId());
-        session.setAttribute("orderMode", cart.getOrderType());
-        session.setAttribute("orderPartyId", cart.getOrderPartyId());
+        setCartObjectAndAttr(request, cart); // SCIPIO: refactored
         }
 
         return "success";
@@ -1108,35 +1105,41 @@ public class ShoppingCartEvents {
      * NOTE: If locale or currency has changed, <code>checkRequestFirst</code> may be ignored, because cart changes
      * should always 
      */
-    static ShoppingCart getCartObject(HttpServletRequest request, boolean checkRequestFirst, RequestVarScopes modifyScopesFilter) { // SCIPIO: added checkRequestFirst, modifyScopesFilter
+    static ShoppingCart getCartObject(HttpServletRequest request, boolean createifMissing, boolean checkRequestFirst, RequestVarScopes modifyScopesFilter) { // SCIPIO: added checkRequestFirst, modifyScopesFilter
         // SCIPIO: Heavily refactored for synchronized cart updates
-        HttpSession session = request.getSession();
         ShoppingCart cart = null, requestCart = (ShoppingCart) request.getAttribute("shoppingCart");
         if (checkRequestFirst) {
             // SCIPIO: Check request attribute first, typically for pure cart reads during a request, which use
             // local request cache for consistency in the rendering
             cart = requestCart;
             if (cart == null) {
-                cart = (ShoppingCart) session.getAttribute("shoppingCart");
+                HttpSession session = request.getSession(false);
+                if (session != null) {
+                    cart = (ShoppingCart) session.getAttribute("shoppingCart");
+                }
             } else {
                 // SCIPIO: 2018-11-30: This code was destructive; do not automatically transfer the request attribute to 
                 // session anymore; instead, setCartObject and CartUpdate#close() do it, and as bonus we avoid extra sync blocks.
                 // NOTE: We now do the opposite further below and transfer session to request instead.
-                //session.setAttribute("shoppingCart", cart);
+                //request.getSession().setAttribute("shoppingCart", cart);
             }
         } else {
             // SCIPIO: Check session attributes first, typically only done at the beginning of a CartUpdate section
             // (required there to avoid lost cart updates from other threads)
-            cart = (ShoppingCart) session.getAttribute("shoppingCart");
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                cart = (ShoppingCart) session.getAttribute("shoppingCart");
+            }
             if (cart == null) {
                 cart = requestCart;
             }
         }
 
-        if (cart == null) {
+        if (createifMissing && cart == null) {
             try (CartSync cartSync = CartSync.synchronizedSection(request)) {
                 // SCIPIO: Check session cart again inside synchronized (only session might have changed)
-                ShoppingCart sessionCart = (ShoppingCart) session.getAttribute("shoppingCart");
+                HttpSession session = request.getSession(false);
+                ShoppingCart sessionCart = (session != null) ? (ShoppingCart) session.getAttribute("shoppingCart") : null;
                 cart = sessionCart;
                 if (cart == null) {
                     // NEW CART
@@ -1152,7 +1155,7 @@ public class ShoppingCartEvents {
         // This helps ensure that read-only cart accesses in the rest of this request will all use the same cart.
         // NOTE: However, cart update blocks do the opposite and read cart to modify from session first - see CartUpdate.begin().
         // NOTE: Requires that the req attr was already null; will not crush it (caller - CartUpdate - will handle that as necessary)
-        if (requestCart == null && modifyScopesFilter.request()) {
+        if (requestCart == null && modifyScopesFilter.request() && cart != null) {
             request.setAttribute("shoppingCart", cart);
         }
         return cart;
@@ -1202,7 +1205,7 @@ public class ShoppingCartEvents {
     public static ShoppingCart getCartObject(HttpServletRequest request, Locale locale, String currencyUom) {
         Debug.logWarning("DEPRECATED: getCartObject with explicit locale and currencyUom called (" + Debug.getCallerShortInfo() 
             + ") - not supported - locale and currency will not be updated in cart - please report this issue or fix calling code", module);
-        return getCartObject(request, true, RequestVarScopes.ALL); // SCIPIO: checkRequestFirst, modifyScopesFilter
+        return getCartObject(request, true, true, RequestVarScopes.ALL); // SCIPIO: checkRequestFirst, modifyScopesFilter
     }
 
     /** 
@@ -1221,19 +1224,15 @@ public class ShoppingCartEvents {
      * </ul>
      */
     public static ShoppingCart getCartObject(HttpServletRequest request) {
-        return getCartObject(request, true, RequestVarScopes.ALL); // SCIPIO: checkRequestFirst, modifyScopesFilter
+        return getCartObject(request, true, true, RequestVarScopes.ALL); // SCIPIO: checkRequestFirst, modifyScopesFilter
     }
 
     /** SCIPIO: Get cart method only if set, uses the locale and currency from the session. Added 2018-11-29.
+     * NOTE: 2019-01: This now automatically transfers 
      * @see {@link #getCartObject(HttpServletRequest)} */
     public static ShoppingCart getCartObjectIfExists(HttpServletRequest request) {
-        return (ShoppingCart) RequestVarScopes.REQUEST_AND_SESSION.getValue(request, "shoppingCart");
-    }
-
-    /** SCIPIO: Get cart method only if set, uses the locale and currency from the session. Added 2018-11-30.
-     * @see {@link #getCartObject(HttpServletRequest)} */
-    public static ShoppingCart getCartObjectIfExists(HttpServletRequest request, boolean checkRequestFirst) { // SCIPIO: specificScopeFirst
-        return (ShoppingCart) RequestVarScopes.REQUEST_AND_SESSION.getValue(request, "shoppingCart", checkRequestFirst);
+        //return (ShoppingCart) RequestVarScopes.REQUEST_AND_SESSION.getValue(request, "shoppingCart");
+        return getCartObject(request, false, true, RequestVarScopes.ALL);
     }
 
     /**
@@ -1271,6 +1270,36 @@ public class ShoppingCartEvents {
      * Added 2018-11-20. */
     public static ShoppingCart setCartObject(HttpServletRequest request, ShoppingCart cart) {
         return setCartObject(request, cart, RequestVarScopes.ALL);
+    }
+
+    /**
+     * SCIPIO: Sets the cart in session and request immediately as well as related cart attributes,
+     * WITHOUT a cart synchronized section.
+     * Added 2019-01. */
+    public static ShoppingCart setCartObjectAndAttr(HttpServletRequest request, ShoppingCart cart) {
+        cart = ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
+        HttpSession session = request.getSession();
+        if (cart != null) {
+            session.setAttribute("productStoreId", cart.getProductStoreId());
+            session.setAttribute("orderMode", cart.getOrderType());
+            session.setAttribute("orderPartyId", cart.getOrderPartyId());
+        } else {
+            session.removeAttribute("productStoreId"); // TODO: REVIEW: is this removal safe for shop? it may be essential for orderentry...
+            session.removeAttribute("orderMode");
+            session.removeAttribute("orderPartyId");
+        }
+        return cart;
+    }
+
+    /**
+     * SCIPIO: Sets the cart in session and request immediately as well as related cart attributes,
+     * all inside a cart synchronized section (convenience method).
+     * Added 2019-01. */
+    public static ShoppingCart setSyncCartObjectAndAttr(HttpServletRequest request, ShoppingCart cart) {
+        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
+            cart = setCartObjectAndAttr(request, cart);
+        }
+        return cart;
     }
 
     /**
@@ -1899,7 +1928,7 @@ public class ShoppingCartEvents {
     public static String loadCartFromShoppingList(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession();
-        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 
         String shoppingListId = request.getParameter("shoppingListId");
 
@@ -1920,12 +1949,7 @@ public class ShoppingCartEvents {
             return "error";
         }
 
-        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
-        ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
-        session.setAttribute("productStoreId", cart.getProductStoreId());
-        session.setAttribute("orderMode", cart.getOrderType());
-        session.setAttribute("orderPartyId", cart.getOrderPartyId());
-        }
+        setSyncCartObjectAndAttr(request, cart); // SCIPIO: refactored
 
         return "success";
     }
@@ -1959,12 +1983,7 @@ public class ShoppingCartEvents {
         // Make the cart read-only
         cart.setReadOnlyCart(true);
 
-        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
-        ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
-        session.setAttribute("productStoreId", cart.getProductStoreId());
-        session.setAttribute("orderMode", cart.getOrderType());
-        session.setAttribute("orderPartyId", cart.getOrderPartyId());
-        }
+        setSyncCartObjectAndAttr(request, cart); // SCIPIO: refactored
 
         return "success";
     }
@@ -2044,12 +2063,7 @@ public class ShoppingCartEvents {
         // Since we only need the cart items, so set the order id as null
         cart.setOrderId(null);
 
-        try (CartSync cartSync = CartSync.synchronizedSection(request)) { // SCIPIO
-        ShoppingCartEvents.setCartObject(request, cart); // SCIPIO: Use setter: session.setAttribute("shoppingCart", cart);
-        session.setAttribute("productStoreId", cart.getProductStoreId());
-        session.setAttribute("orderMode", cart.getOrderType());
-        session.setAttribute("orderPartyId", cart.getOrderPartyId());
-        }
+        setSyncCartObjectAndAttr(request, cart); // SCIPIO: refactored
 
         // SCIPIO: this is moved before the session.setAttribute for thread safety reasons
         //// Since we only need the cart items, so set the order id as null
@@ -2135,12 +2149,12 @@ public class ShoppingCartEvents {
 
         String productStoreId = request.getParameter("productStoreId");
 
+        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
+        ShoppingCart cart = cartUpdate.getCartForUpdate();
+
         if (UtilValidate.isNotEmpty(productStoreId)) {
             session.setAttribute("productStoreId", productStoreId);
         }
-
-        try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
-        ShoppingCart cart = cartUpdate.getCartForUpdate();
 
         // TODO: re-factor and move this inside the ShoppingCart constructor
         String orderMode = request.getParameter("orderMode");

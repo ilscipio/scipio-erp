@@ -3,6 +3,8 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
+<#include "../common/common.ftl">
+
 <#assign externalKeyParam = "&amp;externalLoginKey=" + requestAttributes.externalLoginKey!>
 <#if product?has_content>
 
@@ -41,9 +43,9 @@ function removeSelectable(typeString, productFeatureTypeId, productId) {
 
 function doPublish() {
   <#-- SCIPIO: Now points to shop -->
-  <#assign productPageUrl = getPropertyValue("catalog", "shop.default.link.product.prefix")!>    
+  <#assign productPageUrl = makeProductShopPageUrl(productId!)>
   <#if productPageUrl?has_content>
-    window.open('<@ofbizInterWebappUrl>${productPageUrl}${productId!}</@ofbizInterWebappUrl>');
+    window.open('<@ofbizInterWebappUrl uri=productPageUrl escapeAs="js"/>');
     document.publish.submit();
   </#if>
 }

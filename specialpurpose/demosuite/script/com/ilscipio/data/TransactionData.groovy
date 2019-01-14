@@ -12,9 +12,10 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGenerato
 
 @DataGeneratorProvider(providers=[DataGeneratorProviders.LOCAL])
 public class TransactionData extends DataGeneratorGroovyBaseScript {
-
+    private static final String module = "TransactionData.groovy";
+    
     TransactionData() {
-        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TX DATA-=-=-=-", "");
+        Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TX DATA-=-=-=-", module);
     }
 
     public String getDataType() {

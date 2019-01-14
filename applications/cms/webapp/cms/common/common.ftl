@@ -692,7 +692,7 @@ Common CMS editor macros and utilities
         </@cell>
       </@row>
       <@row class="+cmsmedia-customvariantsize-add-cnt">
-          <#if showSaveAsPreset>
+        <#if showSaveAsPreset>
           <@cell columns=4>
               <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCustomSizeVariantsSaveAsPreset name="saveAsPreset" id="saveAsPreset"
                                 checked=(parameters.saveAsPreset?? && ("true" == parameters.saveAsPreset))/>

@@ -64,7 +64,7 @@
       <@editMediaScripts/>
       
         <@row>
-            <@cell id="mediaUpload" columns=8>
+            <@cell id="mediaUpload" columns=10>
                 <@section title=sectionTitle>
                     <form method="post"<#if !media?has_content> enctype="multipart/form-data"</#if> action="<@ofbizUrl>${formAction}</@ofbizUrl>" name="mediaForm" id="mediaForm">                                                       
                         <#if parameters.contentName?has_content>
@@ -140,7 +140,7 @@
                             <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaUseCustomSizeVariantsSource name="customVariantSizes" id="customVariantSizes" tooltip=uiLabelMap.CmsMediaUseCustomSizeVariantsSourceDesc
                                 checked=(parameters.customVariantSizes?? && ("true" == parameters.customVariantSizes))/>
                             <@row class="cmsmedia-customvariantsize-area" style="display:none;">
-                                <@cell columns=10 class="+${styles.grid_large_offset}2">
+                                <@cell columns=11 class="+${styles.grid_large_offset}1">
                                     <@section id="customvariantsizearea" title=uiLabelMap.CmsMediaCustomSizeVariantsSource>
                                         <#assign items = [
                                             {"value":"customVariantSizesImgProps", "description": uiLabelMap.CmsMediaCustomSizeVariantsFromImgPropFile}
@@ -165,7 +165,7 @@
                                           </div>
                                     </@section>
                                 </@cell>
-                                <@cell columns=10 class="+${styles.grid_large_offset}2">
+                                <@cell columns=11 class="+${styles.grid_large_offset}1">
                                     <@section id="responsiveimgsizesarea" title=uiLabelMap.CmsMediaResponsiveImgSizesArea>
                                         <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaResponsiveImgSizes name="responsiveImgSizes" id="responsiveImgSizes" tooltip=uiLabelMap.CmsMediaResponsiveImgSizesDesc
                                             checked=(parameters.responsiveImgSizes?? && ("true" == parameters.responsiveImgSizes))/>

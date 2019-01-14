@@ -1340,7 +1340,8 @@ code package.
         <field name="sizeId" type="id-ne"></field>
         <field name="sizeName" type="name"></field>
         <field name="dimensionWidth" type="numeric"></field>
-        <field name="dimensionHeight" type="numeric"></field>        
+        <field name="dimensionHeight" type="numeric"></field>
+        <field name="sequenceNum" type="numeric"/>        
         <prim-key field="sizeId"/>        
     </entity>
 
@@ -1372,6 +1373,7 @@ code package.
         <field name="viewPortSizeId" type="id-ne"></field>
         <field name="viewPortMediaQuery" type="long-varchar"><description>This is only valid for viewport based selection</description></field>
         <field name="viewPortLength" type="numeric"><description>This is only valid for viewport based selection</description></field>
+        <field name="sequenceNum" type="numeric"/>
         <prim-key field="viewPortSizeId"/>
         <prim-key field="viewPortMediaQuery"/>
         <prim-key field="viewPortLength"/>

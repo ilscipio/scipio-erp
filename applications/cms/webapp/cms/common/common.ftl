@@ -678,14 +678,17 @@ Common CMS editor macros and utilities
 <#macro customVariantSizeForm showSaveAsPreset=false>
      <@fields type="default-manual" label=uiLabelMap.CmsMediaCustomSizeVariantsFromForm>
       <@row>
-        <@cell columns=4>
+        <@cell columns=3>
           <@field type="input" inline=true name="variantSizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true required=true value="" />
         </@cell>
-        <@cell columns=4>
+        <@cell columns=3>
           <@field type="text" inline=true name="variantSizeWidth" labelArea=true label=uiLabelMap.ImageCustomVariantSizeWidth required=true value="" />
         </@cell>
-        <@cell columns=4>
+        <@cell columns=3>
           <@field type="text" inline=true name="variantSizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight required=true value="" />
+        </@cell>
+        <@cell columns=3>
+          <@field type="number" inline=true name="sequenceNum" labelArea=true label=uiLabelMap.CommonSequence required=true value="" />
         </@cell>
       </@row>
       <@row class="+cmsmedia-customvariantsize-add-cnt">
@@ -744,11 +747,14 @@ Common CMS editor macros and utilities
 <#macro responsiveImgForm>
      <@fields type="default-manual" label=uiLabelMap.CmsMediaResponsiveImgForm>
       <@row>
-        <@cell columns=6>
+        <@cell columns=4>
           <@field type="text" inline=true name="viewPortMediaQuery" labelArea=true label=uiLabelMap.ImageViewPortMediaQuery required=true value="" />
         </@cell>
-        <@cell columns=6>
+        <@cell columns=4>
             <@field type="text" inline=true name="viewPortLength" labelArea=true label=uiLabelMap.ImageViewPortLength required=true value="" />
+        </@cell>
+        <@cell columns=4>
+          <@field type="number" inline=true name="sequenceNum" labelArea=true label=uiLabelMap.CommonSequence required=true value="" />
         </@cell>
       </@row>
       <@row class="+cmsmedia-responsiveimg-add-cnt">

@@ -1342,7 +1342,8 @@ code package.
         <field name="dimensionWidth" type="numeric"></field>
         <field name="dimensionHeight" type="numeric"></field>
         <field name="sequenceNum" type="numeric"/>        
-        <prim-key field="sizeId"/>        
+        <prim-key field="sizeId"/>
+        <prim-key field="sequenceNum"/>        
     </entity>
 
     <entity entity-name="ImageViewPort" package-name="com.ilscipio.scipio.image"
@@ -1370,13 +1371,13 @@ code package.
 
     <entity entity-name="ImageViewPortSize" package-name="com.ilscipio.scipio.image"
         title="Image view port size" author="Ilscipio GmbH" version="1.0">
+        <description>This is only valid for viewport based selection</description>
         <field name="viewPortSizeId" type="id-ne"></field>
-        <field name="viewPortMediaQuery" type="long-varchar"><description>This is only valid for viewport based selection</description></field>
-        <field name="viewPortLength" type="numeric"><description>This is only valid for viewport based selection</description></field>
+        <field name="viewPortMediaQuery" type="long-varchar"/>
+        <field name="viewPortLength" type="numeric"/>
         <field name="sequenceNum" type="numeric"/>
         <prim-key field="viewPortSizeId"/>
-        <prim-key field="viewPortMediaQuery"/>
-        <prim-key field="viewPortLength"/>
+        <prim-key field="sequenceNum"/>        
     </entity>
 
   <!-- ========================================================= -->

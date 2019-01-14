@@ -42,6 +42,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductWorker;
@@ -833,6 +834,28 @@ public final class ProductStoreWorker {
      * SCIPIO: Returns the default WebSite for the given store: if there is only one WebSite,
      * that one is always returned; if multiple websites, returns the one marked with isStoreDefault Y.
      * <p>
+     * <strong>NOTE:</strong> If there are multiple WebSites but none is marked with isStoreDefault Y,
+     * logs a warning and returns null - by design - in a frontend environment there must be no ambiguity as to which
+     * store should be used by default! (Otherwise, if ambiguous, could be picking a WebSite
+     * intended for backend usage only, e.g. cms preview!)
+     * <p>
+     * <strong>WARN:</strong> In most cases relying looking up WebSite using productStoreId (like this method) 
+     * means there is a design issue in code, and the code should be changed to pass a webSiteId around
+     * instead (with this as fallback only).
+     * <p>
+     * Added 2019-01.
+     */
+    public static GenericValue getStoreDefaultWebSite(Delegator delegator, GenericValue productStore, boolean useCache) {
+        if (productStore == null) {
+            return null;
+        }
+        return getStoreDefaultWebSite(delegator, productStore.getString("productStoreId"), useCache);
+    }
+
+    /**
+     * SCIPIO: Returns the default WebSite for the given store: if there is only one WebSite,
+     * that one is always returned; if multiple websites, returns the one marked with isStoreDefault Y.
+     * <p>
      * <strong>NOTE:</strong> If there are multiple WebSites but none is marked with isStoreDefault Y, 
      * logs a warning and returns null - by design - in a frontend environment there must be no ambiguity as to which
      * store should be used by default! (Otherwise, if ambiguous, could be picking a WebSite
@@ -843,5 +866,82 @@ public final class ProductStoreWorker {
     public static String getStoreDefaultWebSiteId(Delegator delegator, String productStoreId, boolean useCache) {
         GenericValue webSite = getStoreDefaultWebSite(delegator, productStoreId, useCache);
         return (webSite != null) ? webSite.getString("webSiteId") : null;
+    }
+
+    /**
+     * SCIPIO: Returns the default WebSite for the given store: if there is only one WebSite,
+     * that one is always returned; if multiple websites, returns the one marked with isStoreDefault Y.
+     * <p>
+     * <strong>NOTE:</strong> If there are multiple WebSites but none is marked with isStoreDefault Y, 
+     * logs a warning and returns null - by design - in a frontend environment there must be no ambiguity as to which
+     * store should be used by default! (Otherwise, if ambiguous, could be picking a WebSite
+     * intended for backend usage only, e.g. cms preview!)
+     * <p>
+     * Added 2019-01.
+     */
+    public static String getStoreDefaultWebSiteId(Delegator delegator, GenericValue productStore, boolean useCache) {
+        if (productStore == null) {
+            return null;
+        }
+        GenericValue webSite = getStoreDefaultWebSite(delegator, productStore.getString("productStoreId"), useCache);
+        return (webSite != null) ? webSite.getString("webSiteId") : null;
+    }
+    
+    /**
+     * SCIPIO: Returns the logically configured value of catalog.properties#store.email.useStoreDefaultWebSite.
+     * <p>
+     * Values: "default" or empty means should use the default WebSite only if there is no explicit webSiteId
+     * configured; "no" means never use the fallback; "force" means override the webSiteId with the default.
+     * <p>
+     * Added 2019-01.
+     */
+    public static String getUseStoreDefaultWebSiteForEmails(Delegator delegator) {
+        return EntityUtilProperties.getPropertyValue("catalog", "store.email.useStoreDefaultWebSite", delegator);
+    }
+
+    /**
+     * SCIPIO: Returns the logically appropriate webSiteId that should be used for an email sent for the given
+     * ProductStore (high-level helper method).
+     * <p>
+     * This consults the catalog.properties#store.email.useStoreDefaultWebSite configuration and the 
+     * WebSite.isStoreDefault flag.
+     * <p>
+     * Added 2019-01.
+     *
+     * @param delegator The delegator
+     * @param productStoreId The ProductStore ID
+     * @param webSiteId If the record (e.g. OrderHeader) has an explicitly-recorded webSiteId, it should be passed here
+     * @return The webSiteId of the WebSite that should be used for the email for this store
+     */
+    public static String getStoreWebSiteIdForEmail(Delegator delegator, String productStoreId, String webSiteId, boolean useCache) {
+        String useDefaultWebSite = getUseStoreDefaultWebSiteForEmails(delegator);
+        if ("never".equals(useDefaultWebSite)) {
+            return webSiteId;
+        }
+        if (!"force".equals(useDefaultWebSite) && UtilValidate.isNotEmpty(webSiteId)) {
+            return webSiteId;
+        }
+        return getStoreDefaultWebSiteId(delegator, productStoreId, useCache);
+    }
+
+    /**
+     * SCIPIO: Returns the logically appropriate webSiteId that should be used for an email sent for the given
+     * ProductStore (high-level helper method).
+     * <p>
+     * This consults the catalog.properties#store.email.useStoreDefaultWebSite configuration and the 
+     * WebSite.isStoreDefault flag.
+     * <p>
+     * Added 2019-01.
+     *
+     * @param delegator The delegator
+     * @param productStore The ProductStore entity
+     * @param webSiteId If the record (e.g. OrderHeader) has an explicitly-recorded webSiteId, it should be passed here
+     * @return The webSiteId of the WebSite that should be used for the email for this store
+     */
+    public static String getStoreWebSiteIdForEmail(Delegator delegator, GenericValue productStore, String webSiteId, boolean useCache) {
+        if (productStore == null) {
+            return null;
+        }
+        return getStoreWebSiteIdForEmail(delegator, productStore.getString("productStoreId"), webSiteId, useCache);
     }
 }

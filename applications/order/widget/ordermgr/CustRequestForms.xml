@@ -153,7 +153,8 @@ code package.
         <field name="lastModifiedDate" sort-field="true"><display/></field>
         <!--field name="statusId"><hidden value="CRQ_REJECTED"/></field-->
         <field name="rejectAction" widget-style="${styles.link_run_sys} ${styles.action_terminate}">
-            <hyperlink target="setCustRequestStatus" description="${uiLabelMap.FormFieldTitle_rejectButton}">
+            <hyperlink target="setCustRequestStatus" description="${uiLabelMap.FormFieldTitle_rejectButton}"
+                link-type="hidden-form"><!-- SCIPIO: Do POST not GET as this modifies system state -->
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="CRQ_REJECTED"/>
             </hyperlink>

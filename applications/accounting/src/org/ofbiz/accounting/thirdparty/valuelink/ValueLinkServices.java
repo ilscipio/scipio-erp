@@ -1198,6 +1198,11 @@ public class ValueLinkServices {
             } else {
                 answerMap.put("locale", locale);
 
+                // SCIPIO: Put productStoreId, orderId, currency... in bodyParameters for template context
+                answerMap.put("productStoreId", productStoreId);
+                answerMap.put("orderId", orderId);
+                answerMap.put("currencyUomId", currency);
+
                 // set the bcc address(s)
                 String bcc = productStoreEmail.getString("bccAddress");
                 if (copyMe) {
@@ -1456,6 +1461,11 @@ public class ValueLinkServices {
         } else {
             Map<String, Object> emailCtx = new HashMap<String, Object>();
             answerMap.put("locale", locale);
+
+            // SCIPIO: Put productStoreId, orderId, currency... in bodyParameters for template context
+            answerMap.put("productStoreId", productStoreId);
+            answerMap.put("orderId", orderId);
+            answerMap.put("currencyUomId", currency);
 
             String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
             if (UtilValidate.isEmpty(bodyScreenLocation)) {

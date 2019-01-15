@@ -795,7 +795,7 @@ public class GiftCertificateServices {
         }
 
         // make a map of answer info
-        Map<String, Object> answerMap = new LinkedHashMap<>();
+        Map<String, Object> answerMap = new HashMap<>();
         if (responseAnswers != null) {
             for (GenericValue answer : responseAnswers) {
                 GenericValue question = null;
@@ -888,6 +888,11 @@ public class GiftCertificateServices {
                 Debug.logError("No gift card purchase email setting found for this store; cannot send gift card information", module);
             } else {
                 answerMap.put("locale", locale);
+
+                // SCIPIO: Put productStoreId, orderId, currency... in bodyParameters for template context
+                answerMap.put("productStoreId", productStoreId);
+                answerMap.put("orderId", orderId);
+                answerMap.put("currencyUomId", currency);
 
                 // set the bcc address(s)
                 String bcc = productStoreEmail.getString("bccAddress");
@@ -1140,6 +1145,11 @@ public class GiftCertificateServices {
             Debug.logError("No gift card purchase email setting found for this store; cannot send gift card information", module);
         } else {
             answerMap.put("locale", locale);
+
+            // SCIPIO: Put productStoreId, orderId, currency... in bodyParameters for template context
+            answerMap.put("productStoreId", productStoreId);
+            answerMap.put("orderId", orderId);
+            answerMap.put("currencyUomId", currency);
 
             Map<String, Object> emailCtx = new HashMap<>();
             String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");

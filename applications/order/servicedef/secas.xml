@@ -375,6 +375,11 @@ code package.
         <action service="updateRequirementsToOrdered" mode="sync"/>
     </eca>
 
+    <!-- Ensure Quote Role -->
+    <eca service="createQuoteRole" event="invoke">
+        <action service="ensurePartyRole" mode="sync"/>
+    </eca>
+
     <!-- WorkEffort -->
     <eca service="createQuoteWorkEffort" event="in-validate">
         <condition field-name="workEffortId" operator="is-empty"/>

@@ -1223,6 +1223,17 @@ public class ValueLinkServices {
                 emailCtx.put("subject", productStoreEmail.getString("subject"));
                 emailCtx.put("userLogin", userLogin);
 
+                // SCIPIO: Determine webSiteId for store email
+                String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                        (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+                if (webSiteId != null) {
+                    emailCtx.put("webSiteId", webSiteId);
+                } else {
+                    // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                    // This is only technically an error if the email contains links back to a website.
+                    Debug.logWarning("giftCardPurchase: No webSiteId determined for store '" + productStoreId + "' email", module);
+                }
+
                 // send off the email async so we will retry on failed attempts
                 try {
                     dispatcher.runAsync("sendMailFromScreen", emailCtx);
@@ -1459,6 +1470,17 @@ public class ValueLinkServices {
             emailCtx.put("sendBcc", productStoreEmail.get("bccAddress"));
             emailCtx.put("subject", productStoreEmail.getString("subject"));
             emailCtx.put("userLogin", userLogin);
+
+            // SCIPIO: Determine webSiteId for store email
+            String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                    (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+            if (webSiteId != null) {
+                emailCtx.put("webSiteId", webSiteId);
+            } else {
+                // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                // This is only technically an error if the email contains links back to a website.
+                Debug.logWarning("giftCardReload: No webSiteId determined for store '" + productStoreId + "' email", module);
+            }
 
             // send off the email async so we will retry on failed attempts
             try {

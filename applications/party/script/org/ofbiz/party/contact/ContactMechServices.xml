@@ -284,10 +284,13 @@ code package.
             <field-map field-name="productStoreId" from-field="storeEmail.productStoreId"/>
         </entity-and>
         <first-from-list entry="webSite" list="webSites"/>-->
-        <script lang="groovy"><![CDATA[
-            context.webSite = org.ofbiz.product.store.ProductStoreWorker.getStoreDefaultWebSite(delegator, context.storeEmail?.productStoreId, false);
-        ]]></script>
         <if-not-empty field="storeEmail.bodyScreenLocation">
+            <!-- SCIPIO: Determine webSiteId for store email
+                FIXME: There is no explicit stored webSiteId retrieval here; forces default store WebSite lookup... -->
+            <script lang="groovy"><![CDATA[
+                context.webSiteId = org.ofbiz.product.store.ProductStoreWorker.getStoreWebSiteIdForEmail(delegator,
+                    context.storeEmail?.productStoreId, null, true);
+            ]]></script>
             <set field="emailParams.sendTo" from-field="parameters.emailAddress"/>
             <set field="emailParams.subject" from-field="storeEmail.subject"/>
             <set field="emailParams.sendFrom" from-field="storeEmail.fromAddress"/>
@@ -297,7 +300,7 @@ code package.
             <set field="emailParams.bodyParameters" from-field="bodyParameters"/>
             <set field="emailParams.bodyScreenUri" from-field="storeEmail.bodyScreenLocation"/>
             <map-to-map to-map="emailParams.bodyParameters" map="bodyParameters"/>
-            <set field="emailParams.webSiteId" from-field="webSite.webSiteId"/>
+            <set field="emailParams.webSiteId" from-field="webSiteId"/><!-- SCIPIO: No need: from-field="webSite.webSiteId" -->
             <call-service service-name="sendMailFromScreen" in-map-name="emailParams"/>
         </if-not-empty>
     </simple-method>

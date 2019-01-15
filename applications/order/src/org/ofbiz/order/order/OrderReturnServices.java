@@ -220,9 +220,10 @@ public class OrderReturnServices {
         // get the order header -- the first item will determine which product store to use from the order
         String productStoreId = null;
         String emailAddress = null;
+        GenericValue orderHeader = null; // SCIPIO: moved here
         if (UtilValidate.isNotEmpty(returnItems)) {
             GenericValue firstItem = EntityUtil.getFirst(returnItems);
-            GenericValue orderHeader = null;
+            //GenericValue orderHeader = null; // SCIPIO: moved outside block
             try {
                 orderHeader = firstItem.getRelatedOne("OrderHeader", false);
             } catch (GenericEntityException e) {
@@ -271,6 +272,17 @@ public class OrderReturnServices {
 
                 sendMap.put("userLogin", userLogin);
 
+                // SCIPIO: Determine webSiteId for store email
+                String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                        (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+                if (webSiteId != null) {
+                    sendMap.put("webSiteId", webSiteId);
+                } else {
+                    // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                    // This is only technically an error if the email contains links back to a website.
+                    Debug.logWarning("sendReturnNotificationScreen: No webSiteId determined for store '" + productStoreId + "' email", module);
+                }
+                
                 Map<String, Object> sendResp = null;
                 try {
                     sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);

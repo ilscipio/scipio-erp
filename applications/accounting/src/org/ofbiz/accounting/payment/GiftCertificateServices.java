@@ -913,6 +913,17 @@ public class GiftCertificateServices {
                 emailCtx.put("subject", productStoreEmail.getString("subject"));
                 emailCtx.put("userLogin", userLogin);
 
+                // SCIPIO: Determine webSiteId for store email
+                String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                        (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+                if (webSiteId != null) {
+                    emailCtx.put("webSiteId", webSiteId);
+                } else {
+                    // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                    // This is only technically an error if the email contains links back to a website.
+                    Debug.logWarning("giftCertificatePurchase: No webSiteId determined for store '" + productStoreId + "' email", module);
+                }
+
                 // send off the email async so we will retry on failed attempts
                 // SC 20060405: Changed to runSync because runAsync kept getting an error:
                 // Problem serializing service attributes (Cannot serialize object of class java.util.PropertyResourceBundle)
@@ -1144,6 +1155,17 @@ public class GiftCertificateServices {
             emailCtx.put("sendBcc", productStoreEmail.get("bccAddress"));
             emailCtx.put("subject", productStoreEmail.getString("subject"));
             emailCtx.put("userLogin", userLogin);
+
+            // SCIPIO: Determine webSiteId for store email
+            String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                    (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+            if (webSiteId != null) {
+                emailCtx.put("webSiteId", webSiteId);
+            } else {
+                // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                // This is only technically an error if the email contains links back to a website.
+                Debug.logWarning("giftCertificateReload: No webSiteId determined for store '" + productStoreId + "' email", module);
+            }
 
             // send off the email async so we will retry on failed attempts
             try {

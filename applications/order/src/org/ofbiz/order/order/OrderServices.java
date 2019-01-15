@@ -2710,7 +2710,7 @@ public class OrderServices {
                     "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), localePar));
         }
 
-        // SCIPIO: If order has no webSiteId, we can look up the default one
+        // SCIPIO: Determine webSiteId for store email
         //if (orderHeader.get("webSiteId") == null) {
         String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, orderHeader.getString("productStoreId"),
                 orderHeader.getString("webSiteId"), true);

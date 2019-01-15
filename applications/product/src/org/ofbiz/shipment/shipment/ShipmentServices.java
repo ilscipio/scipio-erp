@@ -45,6 +45,7 @@ import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.party.party.PartyWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -1130,6 +1131,19 @@ public class ShipmentServices {
         } else {
             sendMap.put("sendTo", emailString);
         }
+
+        // SCIPIO: Determine webSiteId for store email
+        String productStoreId = orderHeader.getString("productStoreId");
+        String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+        if (webSiteId != null) {
+            sendMap.put("webSiteId", webSiteId);
+        } else {
+            // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+            // This is only technically an error if the email contains links back to a website.
+            Debug.logWarning("sendShipmentCompleteNotification: No webSiteId determined for store '" + productStoreId + "' email", module);
+        }
+
         // send the notification
         Map<String, Object> sendResp = null;
         try {

@@ -52,7 +52,6 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.common.email.NotificationServices;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -526,7 +525,8 @@ public class CommunicationEventServices {
                             bodyParameters.put("fromDate", contactListPartyAndContactMech.getTimestamp("fromDate"));
                             bodyParameters.put("optInVerifyCode", contactListPartyStatus.getString("optInVerifyCode"));
                             bodyParameters.put("content", communicationEvent.getString("content"));
-                            NotificationServices.setBaseUrl(delegator, contactList.getString("verifyEmailWebSiteId"), bodyParameters);
+                            // SCIPIO: This is done by sendMailFromScreen using sendMailParams.webSiteId (set below)
+                            //NotificationServices.setBaseUrl(delegator, contactList.getString("verifyEmailWebSiteId"), bodyParameters);
 
                             GenericValue webSite = EntityQuery.use(delegator).from("WebSite").where("webSiteId", contactList.getString("verifyEmailWebSiteId")).queryOne();
                             if (webSite != null) {
@@ -539,6 +539,7 @@ public class CommunicationEventServices {
                                         sendMailParams.put("bodyScreenUri", productStoreEmailSetting.getString("bodyScreenLocation"));
                                         sendMailParams.put("bodyParameters", bodyParameters);
                                         sendMailParams.remove("body");
+                                        sendMailParams.put("webSiteId", webSite.get("webSiteId")); // SCIPIO: Pass webSiteId to service itself (not just bodyParameters for the template); may be redundant here, but safer
                                         tmpResult = dispatcher.runSync("sendMailFromScreen", sendMailParams, 360, true);
                                         if (ServiceUtil.isError(tmpResult)) {
                                             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(tmpResult));

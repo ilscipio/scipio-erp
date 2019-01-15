@@ -272,9 +272,10 @@ public final class WebAppUtil {
      */
     public static WebappInfo getWebappInfoFromPath(String serverName, String path, boolean stripQuery) throws IOException, SAXException {
         Assert.notNull("path", path);
+        final String origPath = path; // SCIPIO
         // Must be absolute (NOTE: empty path is valid, designates root-mounted "/" webapp)
         if (path.length() > 0 && !path.startsWith("/")) {
-            throw new IllegalArgumentException("Scipio: Web app for path '" + path + "' not found (must be absolute path).");
+            throw new IllegalArgumentException("Scipio: Web app for path '" + origPath + "' not found (must be absolute path).");
         }
 
         if (stripQuery) {
@@ -285,7 +286,7 @@ public final class WebAppUtil {
         }
         Map<String, WebappInfo> webappInfosByContextPath = ComponentConfig.getWebappInfosByContextRoot(serverName);
         if (webappInfosByContextPath == null) {
-            throw new IllegalArgumentException("Web app for path '" + path + "' not found by context path because server name '"
+            throw new IllegalArgumentException("Web app for path '" + origPath + "' not found by context path because server name '"
                     + serverName + "' is not registered");
         }
         while(true) {
@@ -295,7 +296,7 @@ public final class WebAppUtil {
             }
             int i = path.lastIndexOf('/');
             if (i < 0) {
-                throw new IllegalArgumentException("Web app for path '" + path + "' not found by context path.");
+                throw new IllegalArgumentException("Web app for path '" + origPath + "' not found by context path.");
             }
             path = path.substring(0, i);
         }

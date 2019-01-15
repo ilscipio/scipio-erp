@@ -676,7 +676,7 @@ Common CMS editor macros and utilities
 </#macro>
 
 <#macro customVariantSizeForm showSaveAsPreset=false>
-     <@fields type="default-manual" label=uiLabelMap.CmsMediaCustomSizeVariantsFromForm>
+  <@fields type="default-manual" label=uiLabelMap.CmsMediaCustomSizeVariantsFromForm>
       <@row>
         <@cell columns=3>
           <@field type="input" inline=true name="variantSizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true required=true value="" />
@@ -691,23 +691,25 @@ Common CMS editor macros and utilities
           <@field type="number" inline=true name="sequenceNum" labelArea=true label=uiLabelMap.CommonSequence required=true value="" />
         </@cell>
       </@row>
-      <@row class="+cmsmedia-customvariantsize-add-cnt">
-        <#if showSaveAsPreset>
-          <@cell columns=4>
-              <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCustomSizeVariantsSaveAsPreset name="saveAsPreset" id="saveAsPreset"
-                                checked=(parameters.saveAsPreset?? && ("true" == parameters.saveAsPreset))/>
-          </@cell>
-          <@cell columns=4 id="cmsmedia-customvariantsize-preset-name" style="display:none;">
-              <@field type="text" labelArea=true label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
-          </@cell>
-        <#else>
-            <@cell columns=8></@cell>
-        </#if>
-        <@cell columns=4>
+      <@row class="+cmsmedia-customvariantsize-add-cnt">        
+        <@cell class="+${styles.grid_large_offset}11" columns=1>
             <a href="javascript:void(0);" class="cmsmedia-customvariantsize-add">[+]</a>
         </@cell>
       </@row>
-     </@fields>
+      
+      <#if showSaveAsPreset>
+          <@row class="+cmsmedia-customvariantsize-save-preset">
+              <@cell columns=4>
+	              <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCustomSizeVariantsSaveAsPreset name="saveAsPreset" id="saveAsPreset"
+	                                checked=(parameters.saveAsPreset?? && ("true" == parameters.saveAsPreset))/>
+          	  </@cell>
+              <@cell columns=4 id="cmsmedia-customvariantsize-preset-name" style="display:none;">
+                  <@field type="text" labelArea=true label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
+              </@cell>
+          </@row>
+      </#if>
+     	
+  </@fields>
 </#macro>
 
 <#macro commonCustomVariantSizeScript saveAsPreset=false>
@@ -727,9 +729,9 @@ Common CMS editor macros and utilities
         var addCustomVariantSize = function() {
             <#assign customVariantSizeForm><@customVariantSizeForm showSaveAsPreset=saveAsPreset /></#assign>
             var customVariantSizeForm = '${escapeVal(customVariantSizeForm, 'js')}';
-            jQuery('.cmsmedia-customvariantsize-area').find('.cmsmedia-customvariantsize-add-cnt').remove();
-            jQuery('.cmsmedia-customvariantsize-area .customVariantSizesForm').append(customVariantSizeForm);
-            jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
+            // jQuery('.cmsmedia-customvariantsize-area').find('.cmsmedia-customvariantsize-add-cnt').remove();
+            jQuery('.cmsmedia-customvariantsize-area .customVariantSizesForm .cmsmedia-customvariantsize-add-cnt').prepend(customVariantSizeForm);
+            // jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
             <#if saveAsPreset>
                 jQuery('#saveAsPreset').click(saveAsPreset);
             </#if>
@@ -758,7 +760,7 @@ Common CMS editor macros and utilities
         </@cell>
       </@row>
       <@row class="+cmsmedia-responsiveimg-add-cnt">
-        <@cell columns=4>
+        <@cell columns=1 class="+${styles.grid_large_offset}11">
             <a href="javascript:void(0);" class="cmsmedia-responsiveimg-add">[+]</a>
         </@cell>
       </@row>

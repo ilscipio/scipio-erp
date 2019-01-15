@@ -68,7 +68,7 @@ Map processResults() {
     def dateIntv = dateIntervals;
     // Loop intervals until reach iCount (if set) or until pass thruDate (if set) (NOTE: thruDate is inclusive)
     int i = 0;
-    while ((iCount < 0 || i < iCount) && !(thruDateTimestamp && dateIntv.getDateBegin().after(thruDateTimestamp))) {
+    while ((iCount > 0 && i < iCount) && !(thruDateTimestamp && dateIntv.getDateBegin().after(thruDateTimestamp))) {
         dateEnd = dateIntv.getDateEnd();
         if (thruDateTimestamp && thruDateTimestamp.before(dateIntv.getDateEnd()))
             dateEnd = thruDateTimestamp;

@@ -142,8 +142,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     	</@cell>
 	</@row>
 	<@row>
-    	<@cell columns=4 id="responsiveImgContentIdContainer">
-    		aaa
+    	<@cell columns=4 id="responsiveImgContentIdContainer">    		
     	</@cell>
     </@row> 
 </@section>

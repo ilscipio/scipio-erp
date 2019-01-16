@@ -140,6 +140,12 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
         final String isoCode = OfbizCurrencyTransform.getArg(arguments, "isoCode");
         final String locale = OfbizCurrencyTransform.getArg(arguments, "locale");
 
+        // SCIPIO: This is practically always an error...
+        if (UtilValidate.isEmpty(isoCode)) {
+            Debug.logWarning("@ofbizCurrency called without an isoCode= parameter (amount: " + amount
+                    + "); system default will be used (usually an error)", module);
+        }
+
         // check the rounding -- DEFAULT is 10 to not round for display, only use this when necessary
         // rounding should be handled by the code, however some times the numbers are coming from
         // someplace else (i.e. an integration)

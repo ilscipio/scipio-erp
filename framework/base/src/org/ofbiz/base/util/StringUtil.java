@@ -822,4 +822,70 @@ public class StringUtil {
             buffer.append(str);
         }
     }
+
+    /**
+     * SCIPIO: Replaces the first characters of the string by the given character.
+     * <p>
+     * If maskLength is greater than zero, it determines the number of characters to mask from the left;
+     * if negative, the number of characters to leave unmasked from the right;
+     * if zero, returns the original string.
+     * <p>
+     * If maskLength is greater than zero and the string is less than maskLength,
+     * returns a string of maskLength masked characters; if maskLength is negative and
+     * the string is less than the absolute value of maskLength, returns the original string.
+     */
+    public static String maskLeft(String str, int maskLength, char maskChar) {
+        if (str == null || str.length() == 0 || maskLength == 0) {
+            return str;
+        }
+        StringBuilder sb = new StringBuilder(str.length());
+        if (maskLength < 0) {
+            maskLength = (str.length() - (-maskLength));
+            if (maskLength <= 0) {
+                return str;
+            }
+        }
+        for(int i = 0; i < maskLength; i++) {
+            sb.append(maskChar);
+        }
+        if (str.length() > maskLength) {
+            sb.append(str, maskLength, str.length());
+        }
+        return sb.toString();
+    }
+
+    /**
+     * SCIPIO: Replaces the last characters of the string by the given character.
+     * <p>
+     * If maskLength is greater than zero, it determines the number of characters to mask from the right;
+     * if negative, the number of characters to leave unmasked from the left;
+     * if zero, returns the original string.
+     * <p>
+     * If maskLength is greater than zero and the string is less than maskLength,
+     * returns a string of maskLength masked characters; if maskLength is negative and
+     * the string is less than the absolute value of maskLength, returns the original string.
+     */
+    public static String maskRight(String str, int maskLength, char maskChar) {
+        if (str == null || str.length() == 0 || maskLength == 0) {
+            return str;
+        }
+        StringBuilder sb = new StringBuilder(str.length());
+        int unmaskLength;
+        if (maskLength < 0) {
+            unmaskLength = -maskLength;
+            maskLength = (str.length() - unmaskLength);
+            if (maskLength <= 0) {
+                return str;
+            }
+        } else {
+            unmaskLength = (str.length() - maskLength);
+        }
+        if (unmaskLength > 0) {
+            sb.append(str, 0, unmaskLength);
+        }
+        for(int i = 0; i < maskLength; i++) {
+            sb.append(maskChar);
+        }
+        return sb.toString();
+    }
 }

@@ -1160,6 +1160,11 @@ public class GiftCertificateServices {
         answerMap.put("responseCode", reloadGcResult.get("responseCode"));
         answerMap.put("previousAmount", reloadGcResult.get("previousBalance"));
         answerMap.put("amount", reloadGcResult.get("amount"));
+        // SCIPIO: Pass card number as both "cardNumber" (used by purchase email) AND
+        // as explicit "giftCardNumber" (used by original reload email); the second is important
+        // because the field name is otherwise dynamically configured in payment.properties (see above)
+        answerMap.put("cardNumber", cardNumber);
+        answerMap.put("giftCardNumber", cardNumber);
 
         // get the email setting for this email type
         GenericValue productStoreEmail = null;

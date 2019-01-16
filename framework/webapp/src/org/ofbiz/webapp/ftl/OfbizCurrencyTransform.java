@@ -137,14 +137,8 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
 
         Map<String, Object> arguments = UtilGenerics.cast(args);
         final BigDecimal amount = OfbizCurrencyTransform.getAmount(arguments, "amount");
-        final String isoCode = OfbizCurrencyTransform.getArg(arguments, "isoCode");
+        final String isoCodeParam = OfbizCurrencyTransform.getArg(arguments, "isoCode"); // SCIPIO: Renamed var (not param name)
         final String locale = OfbizCurrencyTransform.getArg(arguments, "locale");
-
-        // SCIPIO: This is practically always an error...
-        if (UtilValidate.isEmpty(isoCode)) {
-            Debug.logWarning("@ofbizCurrency called without an isoCode= parameter (amount: " + amount
-                    + "); system default will be used (usually an error)", module);
-        }
 
         // check the rounding -- DEFAULT is 10 to not round for display, only use this when necessary
         // rounding should be handled by the code, however some times the numbers are coming from
@@ -191,8 +185,28 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
 
             @Override
             public void close() throws IOException {
+                String isoCode = isoCodeParam;
+
+                // SCIPIO: This is practically always an error...
+                if (UtilValidate.isEmpty(isoCode)) {
+                    // SCIPIO: As emergency fallback, check context for a currencyUomId...
+                    try {
+                        isoCode = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) env.getVariable("currencyUomId"));
+                    } catch (Exception e) {
+                        Debug.logError("Could not get currencyUomId as String from environment", module);
+                    }
+                    if (UtilValidate.isNotEmpty(isoCode)) {
+                        Debug.logWarning("@ofbizCurrency called without an isoCode= parameter (amount: " + amount
+                            + ") (usually an error); using currencyUomId found in context instead (" + isoCode + ")", module);
+                    } else {
+                        isoCode = null;
+                        Debug.logWarning("@ofbizCurrency called without an isoCode= parameter (amount: " + amount
+                                + ") (usually an error); system default will be used", module);
+                    }
+                }
+
                 try {
-                    if (Debug.verboseOn()) Debug.logVerbose("parms: " + amount + " " + isoCode + " " + locale, module);
+                    if (Debug.verboseOn()) Debug.logVerbose("params: " + amount + " " + isoCode + " " + locale, module);
                     if (locale.length() < 1) {
                         // Load the locale from the session
                         Environment env = FreeMarkerWorker.getCurrentEnvironment();

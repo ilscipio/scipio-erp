@@ -875,10 +875,13 @@ code package.
             <field-map field-name="productStoreId" from-field="storeEmail.productStoreId"/>
         </entity-and>
         <first-from-list list="webSites" entry="webSite"/>-->
-        <script lang="groovy"><![CDATA[
-            context.webSite = org.ofbiz.product.store.ProductStoreWorker.getStoreDefaultWebSite(delegator, context.storeEmail?.productStoreId, false);
-        ]]></script>
         <if-not-empty field="storeEmail.bodyScreenLocation">
+            <!-- SCIPIO: Determine webSiteId for store email
+                FIXME: There is no explicit stored webSiteId retrieval here; forces default store WebSite lookup... -->
+            <script lang="groovy"><![CDATA[
+                context.webSiteId = org.ofbiz.product.store.ProductStoreWorker.getStoreWebSiteIdForEmail(delegator,
+                    context.storeEmail?.productStoreId, null, true);
+            ]]></script>
             <entity-one entity-name="Person" value-field="person"/>
             <set field="bodyParameters.person" from-field="person"/>
             <set field="emailParams.bodyParameters" from-field="bodyParameters"/>
@@ -890,7 +893,7 @@ code package.
             <set field="emailParams.sendBcc" from-field="storeEmail.bccAddress"/>
             <set field="emailParams.contentType" from-field="storeEmail.contentType"/>
             <set field="emailParams.bodyScreenUri" from-field="storeEmail.bodyScreenLocation"/>
-            <set field="emailParams.webSiteId" from-field="webSite.webSiteId"/>
+            <set field="emailParams.webSiteId" from-field="webSiteId"/><!-- SCIPIO: No need: from-field="webSite.webSiteId" -->
             <set field="emailParams.emailType" from-field="emailType"/>
             <call-service service-name="sendMailFromScreen" in-map-name="emailParams"/>
         </if-not-empty>
@@ -912,10 +915,13 @@ code package.
             <field-map field-name="productStoreId" from-field="storeEmail.productStoreId"/>
         </entity-and>
         <first-from-list list="webSites" entry="webSite"/>-->
-        <script lang="groovy"><![CDATA[
-            context.webSite = org.ofbiz.product.store.ProductStoreWorker.getStoreDefaultWebSite(delegator, context.storeEmail?.productStoreId, false);
-        ]]></script>
         <if-not-empty field="storeEmail.bodyScreenLocation">
+            <!-- SCIPIO: Determine webSiteId for store email
+                FIXME: There is no explicit stored webSiteId retrieval here; forces default store WebSite lookup... -->
+            <script lang="groovy"><![CDATA[
+                context.webSiteId = org.ofbiz.product.store.ProductStoreWorker.getStoreWebSiteIdForEmail(delegator,
+                    context.storeEmail?.productStoreId, null, true);
+            ]]></script>
             <if-not-empty field="parameters.updatedUserLogin.partyId">
                 <set field="partyId" from-field="parameters.updatedUserLogin.partyId"/>
             <else>
@@ -941,7 +947,7 @@ code package.
             <set field="emailParams.contentType" from-field="storeEmail.contentType"/>
             <set field="emailParams.bodyParameters" from-field="bodyParameters"/>
             <set field="emailParams.bodyScreenUri" from-field="storeEmail.bodyScreenLocation"/>
-            <set field="emailParams.webSiteId" from-field="webSite.webSiteId"/>
+            <set field="emailParams.webSiteId" from-field="webSiteId"/><!-- SCIPIO: No need: from-field="webSite.webSiteId" -->
 
             <if-not-empty field="emailParams.sendTo">
                 <call-service service-name="sendMailFromScreen" in-map-name="emailParams"/>
@@ -1050,10 +1056,13 @@ code package.
             <field-map field-name="productStoreId" from-field="storeEmail.productStoreId"/>
         </entity-and>
         <first-from-list list="webSites" entry="webSite"/>-->
-        <script lang="groovy"><![CDATA[
-            context.webSite = org.ofbiz.product.store.ProductStoreWorker.getStoreDefaultWebSite(delegator, context.storeEmail?.productStoreId, false);
-        ]]></script>
         <if-not-empty field="storeEmail.bodyScreenLocation">
+            <!-- SCIPIO: Determine webSiteId for store email
+                FIXME: There is no explicit stored webSiteId retrieval here; forces default store WebSite lookup... -->
+            <script lang="groovy"><![CDATA[
+                context.webSiteId = org.ofbiz.product.store.ProductStoreWorker.getStoreWebSiteIdForEmail(delegator,
+                    context.storeEmail?.productStoreId, null, true);
+            ]]></script>
             <entity-one entity-name="UserLogin" value-field="userLoginParty"/>
             <set field="parameters.partyId" from-field="userLoginParty.partyId"/>
             <entity-condition entity-name="PartyContactDetailByPurpose" list="partyContactDetailByPurposes" filter-by-date="true">
@@ -1075,7 +1084,7 @@ code package.
             <set field="emailParams.sendBcc" from-field="storeEmail.bccAddress"/>
             <set field="emailParams.contentType" from-field="storeEmail.contentType"/>
             <set field="emailParams.bodyScreenUri" from-field="storeEmail.bodyScreenLocation"/>
-            <set field="emailParams.webSiteId" from-field="webSite.webSiteId"/>
+            <set field="emailParams.webSiteId" from-field="webSiteId"/><!-- SCIPIO: No need: from-field="webSite.webSiteId" -->
             <set field="emailParams.emailType" from-field="emailType"/>
             <call-service service-name="sendMailFromScreen" in-map-name="emailParams"/>
         </if-not-empty>

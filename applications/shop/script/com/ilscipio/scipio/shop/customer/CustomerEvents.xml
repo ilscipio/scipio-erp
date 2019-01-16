@@ -426,6 +426,8 @@ code package.
                 <set field="emailParams.contentType" from-field="storeEmail.contentType"/>
                 <set field="emailParams.bodyScreenUri" from-field="storeEmail.bodyScreenLocation"/>
                 <set field="emailParams.emailType" from-field="storeEmailLookup.emailType"/>
+                <!-- SCIPIO: Determine webSiteId for store email -->
+                <set field="emailParams.webSiteId" value="${groovy:org.ofbiz.webapp.website.WebSiteWorker.getWebSiteId(request)}"/>
                 <call-service-asynch service-name="sendMailFromScreen" in-map-name="emailParams" include-user-login="true"/>
             </if-not-empty>
         </if-not-empty>

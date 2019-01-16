@@ -97,8 +97,15 @@ code package.
         <attribute name="xslfoAttachScreenLocationList" type="List" mode="IN" optional="true"/>
         <attribute name="attachmentNameList" type="List" mode="IN" optional="true"/>
         <attribute name="bodyParameters" type="Map" mode="IN" optional="true"/>
-        <!-- FIXME: webSiteId should not be optional, async service can't construct valid URLs without it -->
-        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true">
+            <description>
+                The webSiteId of the WebSite this email should appear to be from, or
+                in other words - from the point of view of the screen - the "current" WebSite.
+                Used for building links to the web site, themeing, etc.
+                NOTE: This is REQUIRED for store frontend emails (WARNING: Cannot be enforced! Caller must ensure).
+                Backend emails can leave this empty.
+            </description><!-- SCIPIO: Added description (and removed the old fix-me) -->
+        </attribute>
         <attribute name="subject" type="String" mode="OUT" optional="true"/>
         <attribute name="body" type="String" mode="OUT" optional="false"/>
     </service>

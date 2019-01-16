@@ -32,6 +32,7 @@ code package.
                 <include-screen-actions name="CommonAnalyticsActions" />
                 
                 <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="month"/> <!-- day|week|month|year -->
+                <set field="chartIntervalCount" value="6"/>
                 
                 <entity-condition entity-name="Enumeration" list="salesChannelList">
                     <condition-expr field-name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
@@ -114,6 +115,7 @@ code package.
                 <include-screen-actions name="CommonAnalyticsActions" />
                 
                 <set field="chartIntervalScope" value="${parameters.intervalScope}" default-value="week"/> <!-- day|week|month|year -->
+                <set field="chartIntervalCount" value="6"/>
                 
                 <!-- <script location="component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsTracking.groovy"/> -->
                 <entity-condition list="marketingCampaignList" entity-name="MarketingCampaign" filter-by-date="true"/>

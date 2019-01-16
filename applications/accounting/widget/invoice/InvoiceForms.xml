@@ -445,9 +445,18 @@ code package.
         <field name="subject"><text default-value="Please find attached invoice."/></field>
         <field name="otherCurrency" entry-name="parameters.other" parameter-name="other"><check/></field>
         <field name="bodyText"><textarea/></field>
+        <!-- SCIPIO: Added webSiteId, because it is logically conditionally required by sendMailFromScreen
+            when sending email concerning or linking to frontend -->
+        <field name="webSiteId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="WebSite" key-field-name="webSiteId" description="${siteName} [${webSiteId}]">
+                    <entity-order-by field-name="siteName"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_send}"><submit button-type="button"/></field>
     </form>
-    
+
     <form name="EditTimeEntries" type="list" list-name="timeEntries"
         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <auto-fields-service service-name="updateTimeEntry" default-field-type="display"/>

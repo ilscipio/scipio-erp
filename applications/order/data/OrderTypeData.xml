@@ -366,12 +366,12 @@ code package.
     <EmailTemplateSetting
         emailTemplateSettingId="CUST_REQ_ACCEPTED"
         bodyScreenLocation="component://order/widget/ordermgr/CustRequestScreens.xml#CreateCustRequestNotification"
-        subject="OFBiz - Your Request is received: '${custRequestName}' #CR${custRequestId}"/>
+        subject="SCIPIO ERP - Your Request is received: '${custRequestName}' #CR${custRequestId}"/>
     <EmailTemplateSetting emailTemplateSettingId="CUST_REQ_COMPLETED"
         bodyScreenLocation="component://order/widget/ordermgr/CustRequestScreens.xml#CompletedCustRequestNotification"
-        subject="OFBiz - Your Request is complete: '${custRequestName}' #CR${custRequestId}"/>
+        subject="SCIPIO ERP - Your Request is complete: '${custRequestName}' #CR${custRequestId}"/>
     <EmailTemplateSetting emailTemplateSettingId="CUST_REQ_NOTE_ADDED"
         bodyScreenLocation="component://order/widget/ordermgr/CustRequestScreens.xml#AddNoteCustRequestNotification"
-        subject="OFBiz - A Note has been added to your request: '${custRequestName}' #CR${custRequestId}"/>
+        subject="SCIPIO ERP - A Note has been added to your request: '${custRequestName}' #CR${custRequestId}"/>
     
 </entity-engine-xml>

@@ -2710,7 +2710,11 @@ public class OrderServices {
                     "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), localePar));
         }
 
-        if (orderHeader.get("webSiteId") == null) {
+        // SCIPIO: Determine webSiteId for store email
+        //if (orderHeader.get("webSiteId") == null) {
+        String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, orderHeader.getString("productStoreId"),
+                orderHeader.getString("webSiteId"), true);
+        if (webSiteId == null) {
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
                     "OrderOrderWithoutWebSite", UtilMisc.toMap("orderId", orderId), localePar));
         }
@@ -2746,7 +2750,7 @@ public class OrderServices {
         }
 
         // website
-        sendMap.put("webSiteId", orderHeader.get("webSiteId"));
+        sendMap.put("webSiteId", webSiteId); // SCIPIO: webSiteId: orderHeader.get("webSiteId")
 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         String emailString = orh.getOrderEmailString();

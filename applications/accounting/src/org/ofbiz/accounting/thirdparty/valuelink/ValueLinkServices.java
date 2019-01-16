@@ -1004,8 +1004,10 @@ public class ValueLinkServices {
             paymentConfig = paymentSetting.getString("paymentPropertiesPath");
         }
         if (paymentConfig == null) {
+            // SCIPIO: Added logError
+            Debug.logError("Unable to get Product Store [" + productStoreId + "] FinAccount settings for GIFT_CARD", module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "AccountingFinAccountSetting",
+                    "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
                     UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", "GIFT_CARD"), locale));
         }
 
@@ -1198,6 +1200,11 @@ public class ValueLinkServices {
             } else {
                 answerMap.put("locale", locale);
 
+                // SCIPIO: Put productStoreId, orderId, currency... in bodyParameters for template context
+                answerMap.put("productStoreId", productStoreId);
+                answerMap.put("orderId", orderId);
+                answerMap.put("currencyUomId", currency);
+
                 // set the bcc address(s)
                 String bcc = productStoreEmail.getString("bccAddress");
                 if (copyMe) {
@@ -1222,6 +1229,17 @@ public class ValueLinkServices {
                 emailCtx.put("sendBcc", bcc);
                 emailCtx.put("subject", productStoreEmail.getString("subject"));
                 emailCtx.put("userLogin", userLogin);
+
+                // SCIPIO: Determine webSiteId for store email
+                String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                        (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+                if (webSiteId != null) {
+                    emailCtx.put("webSiteId", webSiteId);
+                } else {
+                    // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                    // This is only technically an error if the email contains links back to a website.
+                    Debug.logWarning("giftCardPurchase: No webSiteId determined for store '" + productStoreId + "' email", module);
+                }
 
                 // send off the email async so we will retry on failed attempts
                 try {
@@ -1446,6 +1464,11 @@ public class ValueLinkServices {
             Map<String, Object> emailCtx = new HashMap<String, Object>();
             answerMap.put("locale", locale);
 
+            // SCIPIO: Put productStoreId, orderId, currency... in bodyParameters for template context
+            answerMap.put("productStoreId", productStoreId);
+            answerMap.put("orderId", orderId);
+            answerMap.put("currencyUomId", currency);
+
             String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
             if (UtilValidate.isEmpty(bodyScreenLocation)) {
                 bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
@@ -1459,6 +1482,17 @@ public class ValueLinkServices {
             emailCtx.put("sendBcc", productStoreEmail.get("bccAddress"));
             emailCtx.put("subject", productStoreEmail.getString("subject"));
             emailCtx.put("userLogin", userLogin);
+
+            // SCIPIO: Determine webSiteId for store email
+            String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                    (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+            if (webSiteId != null) {
+                emailCtx.put("webSiteId", webSiteId);
+            } else {
+                // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                // This is only technically an error if the email contains links back to a website.
+                Debug.logWarning("giftCardReload: No webSiteId determined for store '" + productStoreId + "' email", module);
+            }
 
             // send off the email async so we will retry on failed attempts
             try {

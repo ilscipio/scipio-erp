@@ -469,6 +469,20 @@ public class EmailServices {
         NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
         String contentType = (String) serviceContext.remove("contentType");
 
+        // SCIPIO: For debugging and development reasons, note whether a webSiteId is present,
+        // and also whether bodyParameters was outfitted with a productStoreId.
+        // TODO?: In future, switch this to verbose when confidence is higher there are no more issues left from this.
+        if (Debug.infoOn()) {
+            Debug.logInfo("sendMailFromScreen:"
+                    + " [sendTo=" + serviceContext.get("sendTo")
+                    + ", partyId=" + partyId
+                    + ", bodyScreenUri=" + bodyScreenUri
+                    + ", webSiteId=" + webSiteId
+                    + ", bodyParameters.productStoreId=" + bodyParameters.get("productStoreId")
+                    + ", locale=" + locale
+                    + "]", module);
+        }
+
         StringWriter bodyWriter = new StringWriter();
 
         MapStack<String> screenContext = MapStack.create();

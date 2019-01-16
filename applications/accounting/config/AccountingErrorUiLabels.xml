@@ -94,6 +94,14 @@
         <value xml:lang="zh">会员标识 ${partyId} 不是支付方法 ${paymentMethodId} 的拥有者，无权修改它。</value>
         <value xml:lang="zh-TW">團體標識 ${partyId} 不是支付方法 ${paymentMethodId} 的擁有者,無權修改它.</value>
     </property>
+    <property key="AccountingErrorProcessingPayment">
+        <value xml:lang="de">Bei der Verarbeitung der Zahlung ist ein Fehler aufgetreten.</value>
+        <value xml:lang="en">An error occurred processing payment.</value>
+    </property>
+    <property key="AccountingErrorProcessingPaymentSupport">
+        <value xml:lang="de">Bei der Verarbeitung der Zahlung ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Support.</value>
+        <value xml:lang="en">An error occurred processing payment. Please contact support.</value>
+    </property>
     <property key="AccountingFailedToProcessCaptureResult">
         <value xml:lang="de">Capture-Ergebnis konnte nicht verarbeitet werden: Die Rechnung ${invoiceId} wurde aufgrund eines Entitätsfehlers nicht gefunden: ${errorString}</value>
         <value xml:lang="en">Failed to process capture result: Could not find invoice ${invoiceId} due to entity error: ${errorString}</value>
@@ -751,6 +759,10 @@
     <property key="AccountingReturnTypeCannotBeNull">
         <value xml:lang="de">Der Rückgabetyp darf nicht null sein</value>
         <value xml:lang="en">Return type cannot be null</value>
+    </property>
+    <property key="AccountingStoreNotAcceptPaymentType">
+        <value xml:lang="de">Dieser Shop ist nicht für die Annahme dieser Zahlungsart konfiguriert.</value>
+        <value xml:lang="en">This store is not configured to accept this payment type.</value>
     </property>
     <property key="AccountingTaxAuthGlAccountAlreadyExists">
         <value xml:lang="de">Ein GL-Konto (${glAccountId}) existiert bereits für die Steuerbehörde '${taxAuthPartyId}/${taxAuthGeoId}' und die Organisation '${organizationPartyId}'. Höchstens ein GL-Konto kann pro Organisation und Steuerbehörde eingestellt werden.</value>

@@ -4414,9 +4414,9 @@
         <value xml:lang="de">Keine - keine E-Mails</value>
         <value xml:lang="en">None - no emails</value>
     </property>
-    <property key="OrderEntryWebSiteRequiredForEmails">
-        <value xml:lang="de">Eine Website ist erforderlich, um Benachrichtigungs-E-Mails senden zu können. Bleibt das Feld leer, werden keine E-Mails an den Client gesendet.</value>
-        <value xml:lang="en">A WebSite is required in order to send notification emails; if left empty, no emails will be sent to the client.</value>
+    <property key="OrderEntryPlacingWebSiteInfo">
+        <value xml:lang="de">Die WebSite, von der die Bestellung aufgegeben zu werden scheint - die WebSite, die verwendet wird (für Links, Design, Konfiguration usw.), wenn Benachrichtigungs-E-Mails erstellt und gesendet werden. Hinweis: 2019: Wenn dieses Feld leer bleibt, können E-Mails immer noch mit der Standard-WebSite des Geschäfts gesendet werden (siehe catalog.properties # store.email.useStoreDefaultWebSite); Wenn Sie also leer bleiben, werden E-Mail-Benachrichtigungen möglicherweise nicht verhindert.</value>
+        <value xml:lang="en">The WebSite that the order will appear to be placed from - the WebSite that will be used (for links, theme, configuration, etc.) when generating and sending notification emails. Note: 2019: If this is left empty, emails may still be sent using the store's default WebSite (see catalog.properties#store.email.useStoreDefaultWebSite); in other words, leaving empty may not necessarily prevent email notifications.</value>
     </property>
     <property key="OrderErrorFacilityHaveNoAdress">
         <value xml:lang="ar">خطأ: المنشأة ليس لها عناوين</value>

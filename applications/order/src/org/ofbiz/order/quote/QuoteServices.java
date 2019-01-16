@@ -33,6 +33,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -120,6 +121,23 @@ public class QuoteServices {
             sendMap.put("sendCc", sendCc);
         } else {
             sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
+        }
+
+        // SCIPIO: Determine webSiteId for store email
+        String productStoreId = quote.getString("productStoreId");
+        if (productStoreId != null) {
+            // SCIPIO: FIXME: There is no explicit stored webSiteId retrieval here; forces default store WebSite lookup...
+            String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                    null, true);
+            if (webSiteId != null) {
+                sendMap.put("webSiteId", webSiteId);
+            } else {
+                // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                // This is only technically an error if the email contains links back to a website.
+                Debug.logWarning("sendQuoteReportMail: No webSiteId determined for store '" + productStoreId + "' email", module);
+            }
+        } else {
+            Debug.logWarning("sendQuoteReportMail: Quote '" + quoteId + "' has no productStoreId set; cannot determine WebSite for email", module);
         }
 
         // send the notification

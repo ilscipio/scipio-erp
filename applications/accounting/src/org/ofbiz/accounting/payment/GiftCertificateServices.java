@@ -189,6 +189,13 @@ public class GiftCertificateServices {
             GenericValue giftCertSettings = EntityQuery.use(delegator).from("ProductStoreFinActSetting")
                     .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
                     .cache().queryOne();
+            if (giftCertSettings == null) { // SCIPIO: Added null check
+                Debug.logError("Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
+                        UtilMisc.toMap("productStoreId", productStoreId,
+                                "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale));
+            }
             if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
                 if (!validatePin(delegator, cardNumber, pinNumber)) {
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
@@ -202,8 +209,10 @@ public class GiftCertificateServices {
                 }
             }
         } catch (GenericEntityException e) {
+            // SCIPIO: Added logError
+            Debug.logError(e, "Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "AccountingFinAccountSetting",
+                    "AccountingErrorProcessingPaymentSupport", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
                     UtilMisc.toMap("productStoreId", productStoreId,
                             "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale));
         }
@@ -283,13 +292,22 @@ public class GiftCertificateServices {
             GenericValue giftCertSettings = EntityQuery.use(delegator).from("ProductStoreFinActSetting")
                     .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
                     .cache().queryOne();
+            if (giftCertSettings == null) { // SCIPIO: Added null check
+                Debug.logError("Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
+                        UtilMisc.toMap("productStoreId", productStoreId,
+                                "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale));
+            }
             if ("Y".equals(giftCertSettings.getString("requirePinCode")) && !validatePin(delegator, cardNumber, pinNumber)) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingGiftCerticateNumberPinNotValid", locale));
             }
-        } catch (GenericEntityException ex) {
+        } catch (GenericEntityException e) {
+            // SCIPIO: Added logError
+            Debug.logError(e, "Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "AccountingFinAccountSetting",
+                    "AccountingErrorProcessingPaymentSupport", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
                     UtilMisc.toMap("productStoreId", productStoreId,
                             "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale));
         }
@@ -486,7 +504,7 @@ public class GiftCertificateServices {
                     .cache().queryOne();
             GenericValue finAccount = null;
             String finAccountId = null;
-            if (UtilValidate.isNotEmpty(giftCertSettings)) {
+            if (giftCertSettings != null) { // SCIPIO: Fixed empty check, should be null check
                 if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
                     if (validatePin(delegator, giftCard.getString("cardNumber"), giftCard.getString("pinNumber"))) {
                         finAccountId = giftCard.getString("cardNumber");
@@ -502,8 +520,10 @@ public class GiftCertificateServices {
                         finAccountId = finAccount.getString("finAccountId");
                 }
             } else {
+                // SCIPIO: Added logError
+                Debug.logError("Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                        "AccountingFinAccountSetting",
+                        "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
                         UtilMisc.toMap("productStoreId", productStoreId,
                                 "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale));
             }
@@ -754,12 +774,20 @@ public class GiftCertificateServices {
             giftCertSettings = EntityQuery.use(delegator).from("ProductStoreFinActSetting")
                     .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
                     .cache().queryOne();
+            if (giftCertSettings == null) { // SCIPIO: Added null check
+                Debug.logError("Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
+                        UtilMisc.toMap("productStoreId", productStoreId,
+                                "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale));
+            }
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Unable to get Product Store FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+            // SCIPIO: Fixed message
+            Debug.logError(e, "Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "AccountingFinAccountSetting",
+                    "AccountingErrorProcessingPaymentSupport", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
                     UtilMisc.toMap("productStoreId", productStoreId,
-                            "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale) + ": " + e.getMessage());
+                            "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId), locale)); // SCIPIO: Do not print exception:  + ": " + e.getMessage()
         }
 
         // survey information
@@ -795,7 +823,7 @@ public class GiftCertificateServices {
         }
 
         // make a map of answer info
-        Map<String, Object> answerMap = new LinkedHashMap<>();
+        Map<String, Object> answerMap = new HashMap<>();
         if (responseAnswers != null) {
             for (GenericValue answer : responseAnswers) {
                 GenericValue question = null;
@@ -889,6 +917,11 @@ public class GiftCertificateServices {
             } else {
                 answerMap.put("locale", locale);
 
+                // SCIPIO: Put productStoreId, orderId, currency... in bodyParameters for template context
+                answerMap.put("productStoreId", productStoreId);
+                answerMap.put("orderId", orderId);
+                answerMap.put("currencyUomId", currency);
+
                 // set the bcc address(s)
                 String bcc = productStoreEmail.getString("bccAddress");
                 if (copyMe) {
@@ -912,6 +945,17 @@ public class GiftCertificateServices {
                 emailCtx.put("sendBcc", bcc);
                 emailCtx.put("subject", productStoreEmail.getString("subject"));
                 emailCtx.put("userLogin", userLogin);
+
+                // SCIPIO: Determine webSiteId for store email
+                String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                        (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+                if (webSiteId != null) {
+                    emailCtx.put("webSiteId", webSiteId);
+                } else {
+                    // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                    // This is only technically an error if the email contains links back to a website.
+                    Debug.logWarning("giftCertificatePurchase: No webSiteId determined for store '" + productStoreId + "' email", module);
+                }
 
                 // send off the email async so we will retry on failed attempts
                 // SC 20060405: Changed to runSync because runAsync kept getting an error:
@@ -1130,6 +1174,11 @@ public class GiftCertificateServices {
         } else {
             answerMap.put("locale", locale);
 
+            // SCIPIO: Put productStoreId, orderId, currency... in bodyParameters for template context
+            answerMap.put("productStoreId", productStoreId);
+            answerMap.put("orderId", orderId);
+            answerMap.put("currencyUomId", currency);
+
             Map<String, Object> emailCtx = new HashMap<>();
             String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
             if (UtilValidate.isEmpty(bodyScreenLocation)) {
@@ -1144,6 +1193,17 @@ public class GiftCertificateServices {
             emailCtx.put("sendBcc", productStoreEmail.get("bccAddress"));
             emailCtx.put("subject", productStoreEmail.getString("subject"));
             emailCtx.put("userLogin", userLogin);
+
+            // SCIPIO: Determine webSiteId for store email
+            String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                    (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+            if (webSiteId != null) {
+                emailCtx.put("webSiteId", webSiteId);
+            } else {
+                // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                // This is only technically an error if the email contains links back to a website.
+                Debug.logWarning("giftCertificateReload: No webSiteId determined for store '" + productStoreId + "' email", module);
+            }
 
             // send off the email async so we will retry on failed attempts
             try {

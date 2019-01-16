@@ -190,7 +190,7 @@ public class GiftCertificateServices {
                     .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
                     .cache().queryOne();
             if (giftCertSettings == null) { // SCIPIO: Added null check
-                Debug.logError("Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+                Debug.logError("addFundsToGiftCertificate: Product Store [" + productStoreId + "] has no FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
                         UtilMisc.toMap("productStoreId", productStoreId,
@@ -293,7 +293,7 @@ public class GiftCertificateServices {
                     .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
                     .cache().queryOne();
             if (giftCertSettings == null) { // SCIPIO: Added null check
-                Debug.logError("Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+                Debug.logError("redeemGiftCertificate: Product Store [" + productStoreId + "] has no FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
                         UtilMisc.toMap("productStoreId", productStoreId,
@@ -521,7 +521,7 @@ public class GiftCertificateServices {
                 }
             } else {
                 // SCIPIO: Added logError
-                Debug.logError("Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+                Debug.logError("giftCertificateAuthorize: Product Store [" + productStoreId + "] has no FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
                         UtilMisc.toMap("productStoreId", productStoreId,
@@ -775,7 +775,7 @@ public class GiftCertificateServices {
                     .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId)
                     .cache().queryOne();
             if (giftCertSettings == null) { // SCIPIO: Added null check
-                Debug.logError("Unable to get Product Store [" + productStoreId + "] FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
+                Debug.logError("giftCertificatePurchase: Product Store [" + productStoreId + "] has no FinAccount settings for " + FinAccountHelper.giftCertFinAccountTypeId, module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                         "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
                         UtilMisc.toMap("productStoreId", productStoreId,
@@ -823,7 +823,7 @@ public class GiftCertificateServices {
         }
 
         // make a map of answer info
-        Map<String, Object> answerMap = new HashMap<>();
+        Map<String, Object> answerMap = new LinkedHashMap<>(); // SCIPIO: LinkedHashMap to preserve answer iteration order
         if (responseAnswers != null) {
             for (GenericValue answer : responseAnswers) {
                 GenericValue question = null;
@@ -1069,7 +1069,7 @@ public class GiftCertificateServices {
         }
 
         // make a map of answer info
-        Map<String, Object> answerMap = new LinkedHashMap<>();
+        Map<String, Object> answerMap = new LinkedHashMap<>(); // SCIPIO: LinkedHashMap to preserve answer iteration order
         if (responseAnswers != null) {
             for (GenericValue answer : responseAnswers) {
                 GenericValue question = null;

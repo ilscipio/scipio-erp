@@ -1005,7 +1005,7 @@ public class ValueLinkServices {
         }
         if (paymentConfig == null) {
             // SCIPIO: Added logError
-            Debug.logError("Unable to get Product Store [" + productStoreId + "] FinAccount settings for GIFT_CARD", module);
+            Debug.logError("giftCardPurchase: Product Store [" + productStoreId + "] has no FinAccount settings for GIFT_CARD", module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
                     UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", "GIFT_CARD"), locale));
@@ -1088,7 +1088,7 @@ public class ValueLinkServices {
         }
 
         // make a map of answer info
-        Map<String, Object> answerMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> answerMap = new LinkedHashMap<String, Object>(); // SCIPIO: LinkedHashMap to preserve answer iteration order
         if (responseAnswers != null) {
             for (GenericValue answer : responseAnswers) {
                 GenericValue question = null;

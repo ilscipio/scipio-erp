@@ -675,7 +675,7 @@ Common CMS editor macros and utilities
     </@field>
 </#macro>
 
-<#macro customVariantSizeForm showSaveAsPreset=false>
+<#macro customVariantSizeForm>
   <@fields type="default-manual" label=uiLabelMap.CmsMediaCustomSizeVariantsFromForm>
       <@row>
         <@cell columns=3>
@@ -688,27 +688,9 @@ Common CMS editor macros and utilities
           <@field type="text" inline=true name="variantSizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight required=true value="" />
         </@cell>
         <@cell columns=3>
-          <@field type="number" inline=true name="sequenceNum" labelArea=true label=uiLabelMap.CommonSequence required=true value="" />
+          <@field type="hidden" inline=true name="sequenceNum" labelArea=true required=true value="" />
         </@cell>
-      </@row>
-      <@row class="+cmsmedia-customvariantsize-add-cnt">        
-        <@cell class="+${styles.grid_large_offset}11" columns=1>
-            <a href="javascript:void(0);" class="cmsmedia-customvariantsize-add">[+]</a>
-        </@cell>
-      </@row>
-      
-      <#if showSaveAsPreset>
-          <@row class="+cmsmedia-customvariantsize-save-preset">
-              <@cell columns=4>
-	              <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCustomSizeVariantsSaveAsPreset name="saveAsPreset" id="saveAsPreset"
-	                                checked=(parameters.saveAsPreset?? && ("true" == parameters.saveAsPreset))/>
-          	  </@cell>
-              <@cell columns=4 id="cmsmedia-customvariantsize-preset-name" style="display:none;">
-                  <@field type="text" labelArea=true label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
-              </@cell>
-          </@row>
-      </#if>
-     	
+      </@row>	
   </@fields>
 </#macro>
 
@@ -726,12 +708,12 @@ Common CMS editor macros and utilities
          jQuery('#saveAsPreset').click(saveAsPreset);
         </#if>
 
+		var customVariantSizeCount = 0;
         var addCustomVariantSize = function() {
-            <#assign customVariantSizeForm><@customVariantSizeForm showSaveAsPreset=saveAsPreset /></#assign>
-            var customVariantSizeForm = '${escapeVal(customVariantSizeForm, 'js')}';
-            // jQuery('.cmsmedia-customvariantsize-area').find('.cmsmedia-customvariantsize-add-cnt').remove();
-            jQuery('.cmsmedia-customvariantsize-area .customVariantSizesForm .cmsmedia-customvariantsize-add-cnt').prepend(customVariantSizeForm);
-            // jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
+            <#assign customVariantSizeForm><@customVariantSizeForm /></#assign>
+            var customVariantSizeForm = '${escapeVal(customVariantSizeForm, 'js')}';        
+            jQuery(customVariantSizeForm).find('input[name=sequenceNum]').val(customVariantSizeCount++);    
+            jQuery('.cmsmedia-customvariantsize-add-cnt').before(customVariantSizeForm);            
             <#if saveAsPreset>
                 jQuery('#saveAsPreset').click(saveAsPreset);
             </#if>
@@ -756,12 +738,7 @@ Common CMS editor macros and utilities
             <@field type="text" inline=true name="viewPortLength" labelArea=true label=uiLabelMap.ImageViewPortLength required=true value="" />
         </@cell>
         <@cell columns=4>
-          <@field type="number" inline=true name="sequenceNum" labelArea=true label=uiLabelMap.CommonSequence required=true value="" />
-        </@cell>
-      </@row>
-      <@row class="+cmsmedia-responsiveimg-add-cnt">
-        <@cell columns=1 class="+${styles.grid_large_offset}11">
-            <a href="javascript:void(0);" class="cmsmedia-responsiveimg-add">[+]</a>
+          <@field type="hidden" inline=true name="sequenceNum" labelArea=true required=true value="" />
         </@cell>
       </@row>
      </@fields>
@@ -771,23 +748,21 @@ Common CMS editor macros and utilities
     <@script>
     	<#assign customResponsiveImgForm><@responsiveImgForm /></#assign>
         var customResponsiveImgForm = '${escapeVal(customResponsiveImgForm, 'js')}';
+        var responsiveImgCount = 0;
         var addResponsiveImgSize = function() {
-            jQuery('.cmsmedia-responsiveimg-mode').find('.cmsmedia-responsiveimg-add-cnt').remove();
-            jQuery('.cmsmedia-responsiveimg-mode.responsiveImgSizesForm').append(customResponsiveImgForm);
-            jQuery('.cmsmedia-responsiveimg-add').click(addResponsiveImgSize);
+        	jQuery(customResponsiveImgForm).find('input[name=sequenceNum]').val(responsiveImgCount++);
+            jQuery('.cmsmedia-responsiveimg-add-cnt').before(customResponsiveImgForm);
         };
 
         $('select[name=srcsetModeEnumId]').change(function() {
            if ($(this).val() != "IMG_SRCSET_VW") {
-             jQuery('.cmsmedia-responsiveimg-mode').remove();
-             jQuery('.cmsmedia-responsiveimg-add').click(addResponsiveImgSize);
+           	 jQuery('.cmsmedia-responsiveimg-mode').hide();             
            } else {
-           	jQuery('.cmsmedia-responsiveimg-mode').html(customResponsiveImgForm).show();
-           	jQuery('.cmsmedia-responsiveimg-add').click(addResponsiveImgSize);
+           	 jQuery('.cmsmedia-responsiveimg-mode').show();           	
            }
         });
 
-       //jQuery('.cmsmedia-responsiveimg-add').click(addResponsiveImgSize);
+       jQuery('.cmsmedia-responsiveimg-add').click(addResponsiveImgSize);
     </@script>
 </#macro>
 

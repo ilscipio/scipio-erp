@@ -161,7 +161,23 @@
                                               </@field>
                                           </div>
                                           <div class="cmsmedia-customvariantsize-method customVariantSizesForm" style="display:none;">
-                                              <@customVariantSizeForm showSaveAsPreset=true/>
+                                              <@customVariantSizeForm />
+                                              <@row class="+cmsmedia-customvariantsize-add-cnt">        
+										        <@cell class="+${styles.grid_large_offset}11" columns=1>
+										            <a href="javascript:void(0);" class="cmsmedia-customvariantsize-add">[+]</a>
+										        </@cell>
+										      </@row>
+									          <@row class="+cmsmedia-customvariantsize-save-preset">
+									              <@cell columns=3>
+										              <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCustomSizeVariantsSaveAsPreset name="saveAsPreset" id="saveAsPreset"
+										                                checked=(parameters.saveAsPreset?? && ("true" == parameters.saveAsPreset))/>
+									          	  </@cell>
+									              <@cell columns=4 id="cmsmedia-customvariantsize-preset-name" style="display:none;">
+									                  <@field type="text" labelArea=true label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
+									              </@cell>
+									              <@cell columns=1 class="+${styles.grid_large_offset}4">
+									              </@cell>
+									          </@row>
                                           </div>
                                     </@section>
                                 </@cell>
@@ -176,8 +192,13 @@
                                                       <option value="${srcsetMode.enumId}">${srcsetMode.description}</option>
                                                   </#list>
                                             </@field>
-                                            <div class="cmsmedia-responsiveimg-mode responsiveImgSizesForm" style="display:none;">
-                                                <@responsiveImgForm />
+                                            <div class="cmsmedia-responsiveimg-mode" style="display:none;">
+                                                <@responsiveImgForm />    
+                                                <@row class="+cmsmedia-responsiveimg-add-cnt">
+											        <@cell columns=1 class="+${styles.grid_large_offset}11">
+											            <a href="javascript:void(0);" class="cmsmedia-responsiveimg-add">[+]</a>
+											        </@cell>
+											    </@row>                                            
                                             </div>
                                         </div>
                                     </@section>

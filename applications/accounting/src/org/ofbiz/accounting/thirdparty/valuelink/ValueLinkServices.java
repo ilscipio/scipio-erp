@@ -1004,8 +1004,10 @@ public class ValueLinkServices {
             paymentConfig = paymentSetting.getString("paymentPropertiesPath");
         }
         if (paymentConfig == null) {
+            // SCIPIO: Added logError
+            Debug.logError("Unable to get Product Store [" + productStoreId + "] FinAccount settings for GIFT_CARD", module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "AccountingFinAccountSetting",
+                    "AccountingStoreNotAcceptPaymentType", // SCIPIO: Inappropriate message (info logged instead): AccountingFinAccountSetting
                     UtilMisc.toMap("productStoreId", productStoreId, "finAccountTypeId", "GIFT_CARD"), locale));
         }
 

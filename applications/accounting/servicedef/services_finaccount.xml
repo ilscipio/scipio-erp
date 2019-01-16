@@ -426,12 +426,12 @@ code package.
     <!-- Gift Certificate Fulfillment Services -->
     <service name="ofbGcPurchase" engine="java"
             location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificatePurchase" auth="true">
-        <description>Automatic CG Purchase Fulfillment Service</description>
+        <description>Automatic Gift Certificate Purchase Fulfillment Service</description><!-- SCIPIO: Fixed description -->
         <implements service="itemFulfillmentInterface"/>
     </service>
     <service name="ofbGcReload" engine="java"
             location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="giftCertificateReload" auth="true">
-        <description>Automatic GC Reload Service</description>
+        <description>Automatic Gift Certificate Reload Service</description><!-- SCIPIO: Fixed description -->
         <implements service="itemFulfillmentInterface"/>
     </service>
 

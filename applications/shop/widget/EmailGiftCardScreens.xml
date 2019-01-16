@@ -8,16 +8,31 @@ code package.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="GiftCardPurchase">
+    <!-- SCIPIO: GiftCardDecorator, for common globals -->
+    <screen name="GiftCardDecorator">
         <section>
             <actions>
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
+                <!-- TODO: REVIEW: Let the screens set this as non-global for now, because global is not tested for this field...
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control" global="true"/>-->
                 <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="GiftCardPurchase">
+        <section>
+            <actions>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
+                <!-- SCIPIO: TODO: REVIEW: Templates may want this...
+                <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>-->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonEmailStoreInfo.groovy"/><!-- SCIPIO -->
+            </actions>
+            <widgets>
+                <decorator-screen name="GiftCardDecorator">
                     <decorator-section name="body">
                         <platform-specific><email><html-template location="component://shop/templates/email/giftcardpurchase.ftl"/></email></platform-specific>
                     </decorator-section>
@@ -29,11 +44,12 @@ code package.
         <section>
             <actions>
                 <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
-                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <!-- SCIPIO: TODO: REVIEW: Templates may want this...
+                <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>-->
+                <script location="component://shop/webapp/shop/WEB-INF/actions/common/CommonEmailStoreInfo.groovy"/><!-- SCIPIO -->
             </actions>
             <widgets>
-                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                <decorator-screen name="GiftCardDecorator">
                     <decorator-section name="body">
                         <platform-specific><email><html-template location="component://shop/templates/email/giftcardreload.ftl"/></email></platform-specific>
                     </decorator-section>

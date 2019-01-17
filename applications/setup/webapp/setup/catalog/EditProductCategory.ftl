@@ -151,7 +151,7 @@
                     });
                 });
             </@script>
-            <@catalogStcLocFields objectType="category" params=params/>
+            <@cataloglib.catalogStcLocFields objectType="category" params=params/>
         </@fieldset>
       </#if>
     </@form>

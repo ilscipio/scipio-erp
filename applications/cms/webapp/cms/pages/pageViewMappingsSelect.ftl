@@ -1,4 +1,4 @@
-<#include "pagescommon.ftl">
+<#include "component://cms/webapp/cms/common/common.ftl">
 
 <#assign pageId = pvmsPageId!pageId>
 <#assign webSiteId = pvmsWebSiteId!webSiteId>

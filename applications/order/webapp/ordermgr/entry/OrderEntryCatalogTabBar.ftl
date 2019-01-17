@@ -4,7 +4,8 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#include "ordercommon.ftl">
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+<#import "component://product/webapp/catalog/common/cataloglib.ftl" as cataloglib>
 
   <#if orderHeader?has_content>
     <@section title=uiLabelMap.PageTitleLookupBulkAddProduct/>
@@ -19,7 +20,7 @@ code package.
             <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${rawString(product.productId)}${rawString(externalKeyParam!)}")
               target="catalog" text=uiLabelMap.ProductEditProduct class="+${styles.action_nav!} ${styles.action_update!}" />
           </#if>
-          <@productShopPageUrlMenuItem productId=product.productId/><#-- SCIPIO: Live product link -->
+          <@cataloglib.productShopPageUrlMenuItem productId=product.productId/><#-- SCIPIO: Live product link -->
         </#if>
 
         <#if (showCategoryLinks!false) && productCategory?has_content><#-- SCIPIO: category links -->
@@ -27,7 +28,7 @@ code package.
             <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/EditCategory?productCategoryId=${rawString(productCategory.productCategoryId)}${rawString(externalKeyParam!)}")
               target="catalog" text=uiLabelMap.ProductEditCategory class="+${styles.action_nav!} ${styles.action_update!}" />
           </#if>
-          <@categoryShopPageUrlMenuItem categoryId=productCategory.productCategoryId/><#-- SCIPIO: Live product link -->
+          <@cataloglib.categoryShopPageUrlMenuItem categoryId=productCategory.productCategoryId/><#-- SCIPIO: Live product link -->
         </#if>
       </@menu>
     </#macro>

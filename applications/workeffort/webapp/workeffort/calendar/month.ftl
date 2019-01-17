@@ -3,14 +3,14 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<#include 'calendarcommon.ftl'>
+<#include "component://workeffort/webapp/workeffort/common/common.ftl">
 
 <#-- SCIPIO:
 <#assign styleTdVal = "height: 8em; width: 10em; vertical-align: top; padding: 0.5em;">-->
 
 <#-- SCIPIO: FTL now includes the title -->
 <#macro menuContent menuArgs={}>
-    <@calendarDateSwitcher period="month"/>
+    <@workefflib.calendarDateSwitcher period="month"/>
 </#macro>
 <@section title=Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'MMMM yyyy', timeZone, locale)
     menuContent=menuContent menuLayoutTitle="inline-title"> <#--${uiLabelMap.WorkEffortMonthView}: -->

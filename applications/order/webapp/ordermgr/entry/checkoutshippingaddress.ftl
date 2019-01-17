@@ -10,7 +10,7 @@ they may need to be duplicated to:
   component://shop/webapp/shop/order/checkoutshippingaddress.ftl
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -->
-<#include "ordercommon.ftl">
+<#include "component://order/webapp/ordermgr/common/common.ftl">
 
 <@script>
 function submitForm(form, mode, value) {
@@ -84,9 +84,9 @@ function toggleBillingAccount(box) {
                 <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
             </#assign>
-            <@checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
+            <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                <@field type="radio" widgetOnly=true name="shipping_contact_mech_id" value=(shippingAddress.contactMechId) checked=checkThisAddress />
-            </@checkoutInvField>
+            </@>
             <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
          </#list>
        </#if>
@@ -111,7 +111,7 @@ function toggleBillingAccount(box) {
       <#else>
         <#list agreements as agreement>
           <#-- SCIPIO: I don't know why this was the condition: checked=checkThisAddress -->
-          <@checkoutInvField type="radio" name="agreementId" value=(agreement.agreementId!) checked=true labelContent="${agreement.description!} will be used for this order." />
+          <@orderlib.checkoutInvField type="radio" name="agreementId" value=(agreement.agreementId!) checked=true labelContent="${agreement.description!} will be used for this order." />
         </#list>
       </#if>
     </@section>

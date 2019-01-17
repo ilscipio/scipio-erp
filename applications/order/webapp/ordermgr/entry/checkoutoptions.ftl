@@ -8,7 +8,8 @@ code package.
     This is the nearest equivalent of shop OnePageCheckout for orderentry.
     NOTE: In the past this was shared by shop, but is no longer supported in shop in Scipio (OnePageCheckout superior). -->
 
-<#include "ordercommon.ftl">
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
 
 <@script>
 function submitForm(form, mode, value) {
@@ -391,7 +392,7 @@ function submitForm(form, mode, value) {
                     <#elseif paymentMethod.paymentMethodTypeId == "GIFT_CARD">
                      <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
                       <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)!>
-                      <#assign giftCardNumber = getPayMethDisplayNumber(giftCard, paymentMethod)!><#-- SCIPIO: Refactored -->
+                      <#assign giftCardNumber = acctlib.getPayMethDisplayNumber(giftCard, paymentMethod)!><#-- SCIPIO: Refactored -->
                       <@tr>
                         <@td width="1%">
                           <@field type="radio" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(shoppingCart.isPaymentSelected(paymentMethod.paymentMethodId))/>

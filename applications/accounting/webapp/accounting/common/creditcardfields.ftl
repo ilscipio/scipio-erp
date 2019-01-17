@@ -3,6 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
 
 <#-- SCIPIO: NOTE: do NOT wrap in @fields, so that caller may specify his own -->
 
@@ -57,7 +58,7 @@ code package.
     <#if cardNumber?has_content>
         <#if cardNumberMinDisplay?has_content>
             <#-- create a display version of the card where all but the last four digits are * -->
-            <#assign cardNumberDisplay = getCreditCardDisplayNumber(cardNumber!)><#-- SCIPIO: Refactored -->
+            <#assign cardNumberDisplay = acctlib.getCreditCardDisplayNumber(cardNumber!)><#-- SCIPIO: Refactored -->
             <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value=(cardNumberDisplay!) label=uiLabelMap.AccountingCardNumber required=true />
         <#else>
             <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value=(cardNumber!) label=uiLabelMap.AccountingCardNumber required=true/>

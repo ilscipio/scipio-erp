@@ -1,4 +1,3 @@
-
-<#-- SCIPIO: common partymgr-wide helper definitions and macros -->
-
-<#include "component://accounting/webapp/accounting/common/commonlib.ftl">
+<#-- SCIPIO: Common Party templates utilities and definitions include
+    NOTE: For reuse from other applications, please import *lib.ftl instead. -->
+<#import "component://party/webapp/partymgr/common/partylib.ftl" as partylib>

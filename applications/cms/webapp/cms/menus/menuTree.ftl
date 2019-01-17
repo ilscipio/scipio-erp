@@ -1,4 +1,4 @@
-<#include "../common/common.ftl">
+<#include "component://cms/webapp/cms/common/common.ftl">
 
 <#-- 
 DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)=Y

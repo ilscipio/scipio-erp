@@ -5,8 +5,9 @@ code package.
 -->
 
 <#include "component://party/webapp/partymgr/common/common.ftl">
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
 
-<#-- SCIPIO: MOVED TO: common.ftl
+<#-- SCIPIO: MOVED TO: component://accounting/webapp/accounting/common/acctlib.ftl
 <#macro maskSensitiveNumber cardNumber paymentMethod= cardNumberMask=>
 </#macro>-->
 
@@ -51,7 +52,7 @@ code package.
                   &nbsp;-&nbsp;
                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                     ${creditCard.cardType}
-                    <@maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
+                    <@acctlib.maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                     ${creditCard.expireDate}
                   <#else>
                     ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
@@ -79,7 +80,7 @@ code package.
                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                     ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                   <#else>
-                    <@maskSensitiveNumber cardNumber=giftCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
+                    <@acctlib.maskSensitiveNumber cardNumber=giftCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                     <#if !cardNumberDisplay?has_content>${uiLabelMap.CommonNA}</#if>
                   </#if>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>

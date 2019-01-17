@@ -3,6 +3,8 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
 
 <#-- 
 ToDo: Update menu with Authorize and Capture transaction actions 
@@ -22,9 +24,8 @@ ToDo: Update menu with Authorize and Capture transaction actions
     </#if>
 </#if>
 -->
-<#include "ordercommon.ftl">
 
-<#-- SCIPIO: MOVED TO: ../common/common.ftl
+<#-- SCIPIO: MOVED TO: component://accounting/webapp/accounting/common/acctlib.ftl
 <#macro maskSensitiveNumber cardNumber paymentMethod= cardNumberMask=>
 </#macro>-->
 
@@ -333,7 +334,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                               <br />
                               <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                                 ${creditCard.cardType}
-                                <@maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
+                                <@acctlib.maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                                 ${creditCard.expireDate}
                                 &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               <#else>
@@ -455,7 +456,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                 ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                                 &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               <#else>
-                              <@maskSensitiveNumber cardNumber=giftCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
+                              <@acctlib.maskSensitiveNumber cardNumber=giftCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                               <#if !cardNumberDisplay?has_content>${uiLabelMap.CommonNA}</#if>
                                 &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               </#if>
@@ -571,7 +572,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                              <#assign creditCard = paymentMethodValueMap.creditCard/>
                                              <#if (creditCard?has_content)>
                                                <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
-                                                 ${creditCard.cardType!} <@maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/> ${creditCard.expireDate!}<#-- SCIPIO: Pass payment method -->
+                                                 ${creditCard.cardType!} <@acctlib.maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/> ${creditCard.expireDate!}<#-- SCIPIO: Pass payment method -->
                                                <#else>
                                                  ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                                </#if>

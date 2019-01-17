@@ -4,11 +4,11 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#include 'calendarcommon.ftl'>
+<#include "component://workeffort/webapp/workeffort/common/common.ftl">
 
 <#-- SCIPIO: FTL now includes the title -->
 <#macro menuContent menuArgs={}>
-    <@calendarDateSwitcher period="day"/>
+    <@workefflib.calendarDateSwitcher period="day"/>
 </#macro>
 <@section title=Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'EEEE MMMM d, yyyy', timeZone, locale)
     menuContent=menuContent menuLayoutTitle="inline-title"><#--${uiLabelMap.WorkEffortDayView}: -->

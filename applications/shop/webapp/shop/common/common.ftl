@@ -1,7 +1,10 @@
+<#-- SCIPIO: Common Shop templates utilities and definitions include -->
 
-<#-- SCIPIO: common shop-wide helper definitions and macros -->
-
-<#include "component://accounting/webapp/accounting/common/commonlib.ftl">
+<#-- acctlib: getGiftCardDisplayNumber, getCreditCardDisplayNumber, ... -->
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
+<#-- For now, for compatibility and ease of use, dump acctlib into main namespace...
+    TODO: REVIEW: This might become less appropriate later... -->
+<#include "component://accounting/webapp/accounting/common/acctlib.ftl">
 
 <#-- 2018-11-29: Returns shopping cart IF exists (for shop, almost always does)
     Templates that are not sure if cart is in context or not MUST use this; do NOT access sessionAttributes.shoppingCart anymore! -->

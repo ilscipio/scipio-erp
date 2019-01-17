@@ -133,7 +133,7 @@
                     });
                 });
             </@script>
-            <@catalogStcLocFields objectType="product" params=params/>
+            <@cataloglib.catalogStcLocFields objectType="product" params=params/>
         </@fieldset>
         
         <@alert type="info">${uiLabelMap.SetupProductEditNotice} (<@setupExtAppLink uri="/catalog/control/EditProduct" text=uiLabelMap.ProductNewProduct/>)</@alert>

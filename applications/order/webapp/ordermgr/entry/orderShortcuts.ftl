@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<#include "ordercommon.ftl">
+<#include "component://order/webapp/ordermgr/common/common.ftl">
 
 <#-- SCIPIO: Must use context or accessor
 <#assign shoppingCart = sessionAttributes.shoppingCart!>-->

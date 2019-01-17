@@ -1,4 +1,4 @@
-<#include "../common/common.ftl">
+<#include "component://cms/webapp/cms/common/common.ftl">
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>

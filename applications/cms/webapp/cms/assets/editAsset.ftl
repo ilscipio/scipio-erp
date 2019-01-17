@@ -1,5 +1,5 @@
 <#-- Scipio Asset Editor  -->
-<#include "../common/common.ftl">
+<#include "component://cms/webapp/cms/common/common.ftl">
 
 <#-- 
 2016-12-02: TODO?: UI CURRENTLY DOES NOT SUPPORT VERSIONING ON ASSET TEMPLATES (BUT SCHEMA DOES)

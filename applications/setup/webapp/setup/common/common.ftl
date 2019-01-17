@@ -1,4 +1,7 @@
-<#-- Common setup macros, definitions, etc. -->
+<#-- SCIPIO: Common Setup templates utilities and definitions include
+    NOTE: For reuse from other applications, please import *lib.ftl instead. -->
+
+<#import "component://setup/webapp/setup/common/setuplib.ftl" as setuplib>
 
 <#-- TODO: REVIEW: this validate flag is a workaround for the loss of validate going from
     form widget to link-triggered forms -->

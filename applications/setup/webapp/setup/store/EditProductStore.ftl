@@ -1,6 +1,6 @@
 <#include "component://common/webcommon/includes/listLocalesMacros.ftl">
 <#include "component://setup/webapp/setup/common/common.ftl">
-<#include "component://product/webapp/catalog/store/storecommon.ftl">
+<#include "component://product/webapp/catalog/store/storelib.ftl">
 
 <@section>
     <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
@@ -8,7 +8,7 @@
                 "productStoreId", <#-- ProductStore excludes -->
                 "partyId", "webSiteId"  <#-- WebSite excludes -->
                 ]/>
-    
+
     <#-- 
       ProductStore parameters
     -->

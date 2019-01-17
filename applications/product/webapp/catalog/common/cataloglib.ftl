@@ -1,7 +1,41 @@
-<#-- SCIPIO: Common catalog catalog macros and definitions -->
+<#-- SCIPIO: Common Catalog utilities and definitions library
+    May be imported by other applications' templates, preferably using:
+      <#import "component://content/webapp/content/common/contentlib.ftl" as contentlib>
+    NOTE: For this application's own templates, please include common.ftl instead (which includes this). -->
 
-<#include "component://content/webapp/content/common/common.ftl"><#-- @stdLocField -->
-<#include "component://product/webapp/catalog/common/common.ftl">
+<#import "component://content/webapp/content/common/contentlib.ftl" as contentlib><#-- @stdLocField dependency -->
+
+<#-- NOTE: Always use !"#" or other missing value operator when calling this -->
+<#function makeProductShopPageUrl productId>
+  <#local productPageUrl = getPropertyValue("catalog", "shop.default.link.product.prefix")!>
+  <#if productPageUrl?has_content && productId?has_content>
+    <#return makeOfbizInterWebappUrl(productPageUrl+(escapeVal(productId, 'url')))>
+  </#if>
+</#function>
+
+<#-- NOTE: Always use !"#" or other missing value operator when calling this -->
+<#function makeCategoryShopPageUrl categoryId>
+  <#local categoryPageUrl = getPropertyValue("catalog", "shop.default.link.category.prefix")!>
+  <#if categoryPageUrl?has_content && categoryId?has_content>
+    <#return makeOfbizInterWebappUrl(categoryPageUrl+(escapeVal(categoryId, 'url')))>
+  </#if>
+</#function>
+
+<#macro productShopPageUrlMenuItem productId text=uiLabelMap.CommonShopPage class="+${styles.action_nav!} ${styles.action_view!}"
+    target="_blank">
+  <#local productPageUrl = makeProductShopPageUrl(productId)>
+  <#if productPageUrl?has_content>
+    <@menuitem type="link" href=productPageUrl text=text class=class target=target/>
+  </#if>
+</#macro>
+
+<#macro categoryShopPageUrlMenuItem categoryId text=uiLabelMap.CommonShopPage class="+${styles.action_nav!} ${styles.action_view!}"
+    target="_blank">
+  <#local categoryPageUrl = makeCategoryShopPageUrl(categoryId)>
+  <#if categoryPageUrl?has_content>
+    <@menuitem type="link" href=categoryPageUrl text=text class=class target=target/>
+  </#if>
+</#macro>
 
 <#-- Catalog category/product simple text content localized fields
     Composed using @stcLocField.
@@ -19,7 +53,7 @@
     </#if>
     <#if values?is_boolean>
       <#-- pre-read the params, otherwise @stcLocField will reparse them several times. -->
-      <#local values = getStcLocFieldParsedParams(params, parsedParamName, paramNamePrefix)!{}>
+      <#local values = contentlib.getStcLocFieldParsedParams(params, parsedParamName, paramNamePrefix)!{}>
     </#if>
     <#list fieldsInfo.typeNames as typeName>
       <#local fieldName = fieldsInfo.fieldNames[typeName?index]>
@@ -36,7 +70,7 @@
         <#local altTooltip = getLabel("ContentAltStcLocFieldInfo", "ContentUiLabels", tooltipVars)!>
       </#if>
       <#-- @stcLocField from content common.ftl -->
-      <@stcLocField values=values inputType=inputType typeName=typeName entityFieldName=fieldName paramNamePrefix=paramNamePrefix params=params 
+      <@contentlib.stcLocField values=values inputType=inputType typeName=typeName entityFieldName=fieldName paramNamePrefix=paramNamePrefix params=params 
         label=getCatalogLocFieldLabel(typeName, fieldName, typeInfoMap) tooltip="" mainTooltip=mainTooltip altTooltip=altTooltip localeOpts=localeOpts/>
     </#list>
   </#if>
@@ -57,3 +91,4 @@
 <#function getCatalogLocFieldLabel typeName fieldName typeInfoMap>
   <#return uiLabelMap[(typeInfoMap.label)!("FormFieldTitle_"+fieldName)]>
 </#function>
+

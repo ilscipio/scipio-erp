@@ -8,7 +8,7 @@ code package.
 
     WARNING: 2019: Many of these macros are duplicated in the shop webapp (FIXME?) -->
 
-<#include "../ordercommon.ftl">
+<#include "component://order/webapp/ordermgr/common/common.ftl">
 
 <#-- TODO: params instead of context vars -->
 <#macro productDetailImages>

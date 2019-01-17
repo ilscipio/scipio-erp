@@ -1,4 +1,4 @@
-<#include "pagescommon.ftl">
+<#include "component://cms/webapp/cms/common/common.ftl">
 
 <#assign debugMode = false>
 

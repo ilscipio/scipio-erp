@@ -5,7 +5,7 @@ code package.
 -->
 <#-- SCIPIO: WARNING: 2019: This entire page and its macros are duplicated in the shop webapp (FIXME?) -->
 
-<#include "catalogcommon.ftl">
+<#include "component://order/webapp/ordermgr/entry/catalog/catalogcommon.ftl">
 
 <#-- SCIPIO: TODO: reorganize the code sharing with productdetail, very similar -->
 <#-- SCIPIO: TODO: does not currently support virtual config products (none in demo data) (only supports virtual options) -->

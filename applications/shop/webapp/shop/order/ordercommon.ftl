@@ -1,7 +1,7 @@
 <#--
 SCIPIO: Local order template common defs
 -->
-<#include "../common/common.ftl">
+<#include "component://shop/webapp/shop/common/common.ftl">
 
 <#macro checkoutActionsMenu text="" formName="" directLinks=true>
     <#if !formName?has_content>

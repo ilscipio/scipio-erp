@@ -1,4 +1,7 @@
-<#-- SCIPIO: Common Accounting utilities library. May be included by other applications. -->
+<#-- SCIPIO: Common Accounting utilities and definitions library
+    May be imported by other applications' templates, preferably using:
+      <#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
+    NOTE: For this application's own templates, please include common.ftl instead (which includes this). -->
 
 <#function getGiftCardDisplayNumber gc mask=-4>
   <#if isObjectType("map", gc)>

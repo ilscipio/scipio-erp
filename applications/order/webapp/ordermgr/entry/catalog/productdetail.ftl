@@ -6,7 +6,7 @@ code package.
 
 <#-- SCIPIO: WARNING: 2019: This entire page and its macros are duplicated in the shop webapp (FIXME?) -->
 
-<#include "catalogcommon.ftl">
+<#include "component://order/webapp/ordermgr/entry/catalog/catalogcommon.ftl">
 
 <#-- variable setup -->
 <#assign price = priceMap! />

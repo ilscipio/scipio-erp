@@ -2,7 +2,7 @@
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("editPage") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreatePage/>
+        <@menuitem type="link" href=makeOfbizUrl("editPage") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsCreatePage/>
     </@menu>  
 </#macro>
 <@section title=uiLabelMap.CommonPages menuContent=menuContent>

@@ -45,12 +45,12 @@
 <#macro menuContent menuArgs={}>
     <#if media?has_content>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editMedia") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreateMedia/>
+            <@menuitem type="link" href=makeOfbizUrl("editMedia") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsCreateMedia/>
             <@menuitem type="link" href="javascript:deleteMediaAsset(); void(0);" class="+${styles.action_run_sys!} ${styles.action_remove!} action_delete" text=uiLabelMap.CommonDelete/>
             
             <#-- FIXME: labels -->
             <#-- DEV NOTE: these functions _could_ need extra parameters (a modal) in the future, but just need them to work for now -->
-            <@menuitem type="link" href="javascript:jQuery('#mediaresizeform').submit(); void(0);" class="+${styles.action_run_sys!} ${styles.action_create!}" text="${rawLabel('CmsMediaVariants')}: ${rawLabel(hasVariantContent?string('CommonRecreate','CommonCreate'))}"/>
+            <@menuitem type="link" href="javascript:jQuery('#mediaresizeform').submit(); void(0);" class="+${styles.action_run_sys!} ${styles.action_add!}" text="${rawLabel('CmsMediaVariants')}: ${rawLabel(hasVariantContent?string('CommonRecreate','CommonCreate'))}"/>
             <@menuitem type="link" href="javascript:jQuery('#mediaresizeremoveform').submit(); void(0);" class="+${styles.action_run_sys!} ${styles.action_remove!}" text="${rawLabel('CmsMediaVariants')}: ${rawLabel('CommonRemove')}"/>
         </@menu>
     </#if>
@@ -157,7 +157,7 @@
                         <#if !media?has_content>                       
                             <@field type="file" name="uploadedFile" label=uiLabelMap.CommonMedia required=true />
                             <@field type="submitarea">
-                                <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_create!}" />
+                                <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_add!}" />
                             </@field>
                         <#else>
                             <@field type="submitarea">

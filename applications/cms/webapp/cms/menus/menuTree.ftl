@@ -390,7 +390,7 @@ function($node) {
             </#list>
         </@field>
         <@menuitem type="generic">
-            <@modal id="create-menu-dialog" label=uiLabelMap.CmsWebSiteAddMenu linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_create!}">
+            <@modal id="create-menu-dialog" label=uiLabelMap.CmsWebSiteAddMenu linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.CmsWebSiteAddMenu}</@heading>
                     <@form id="create_menu_form">
                         <@field type="input" id="menuname" name="menuName" value="" label=uiLabelMap.CmsMenuName placeholder="menu name" required=true/>

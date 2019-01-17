@@ -2,7 +2,7 @@
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("editScript") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreateScript/>
+        <@menuitem type="link" href=makeOfbizUrl("editScript") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsCreateScript/>
         <@menuitem type="link" href=makeOfbizUrl(("Y" == showStandaloneOnly)?string("scripts", "scripts?showStandaloneOnly=Y")) class="+${styles.action_run_sys!} ${styles.action_show!}" 
             text=("Y" == showStandaloneOnly)?string(uiLabelMap.CommonShowAll, uiLabelMap.CmsShowStandaloneOnly)/>
     </@menu>  

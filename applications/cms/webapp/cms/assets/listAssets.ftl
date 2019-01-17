@@ -2,7 +2,7 @@
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("editAsset") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreateAsset/>
+        <@menuitem type="link" href=makeOfbizUrl("editAsset") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsCreateAsset/>
     </@menu>  
 </#macro>
 <@section title=uiLabelMap.CmsAssets menuContent=menuContent>

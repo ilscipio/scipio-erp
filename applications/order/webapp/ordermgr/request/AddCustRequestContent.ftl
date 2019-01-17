@@ -34,7 +34,7 @@
 		        <@field type="file" name="uploadedFile" label=uiLabelMap.CommonMedia required=true />	
 				 
 			    <@field type="submitarea">
-			        <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_create!}" />
+			        <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_add!}" />
 			    </@field>
 		</@form>
 	</@section>

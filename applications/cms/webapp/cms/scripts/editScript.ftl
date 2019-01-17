@@ -168,7 +168,7 @@ NOTES: 2016-12:
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editScript") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreateScript/>
+            <@menuitem type="link" href=makeOfbizUrl("editScript") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsCreateScript/>
             <@cmsCopyMenuItem target="copyScript" title=uiLabelMap.CmsCopyScript>
                 <@field type="hidden" name="scriptTemplateId" value=(scriptTemplateModel.id!)/><#-- for browsing, on error -->
                 <@field type="hidden" name="srcScriptTemplateId" value=(scriptTemplateModel.id!)/>
@@ -286,7 +286,7 @@ NOTES: 2016-12:
                         
                         <@field type="input" name="templateLocation" value="" id="templateLocation" label=uiLabelMap.CmsTemplateLocation placeholder="component://cms/cms-templates/scripts/xxx.ftl"/>
                         
-                        <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_create!}"/>
+                        <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_add!}"/>
                       </@fields>
                     </@section>
                 </@form>

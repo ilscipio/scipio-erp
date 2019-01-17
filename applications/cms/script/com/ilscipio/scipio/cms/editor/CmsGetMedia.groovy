@@ -19,6 +19,7 @@ final String module = "CmsGetMedia.groovy";
 media = null;
 fileSizeAttr = null;
 variantList = null;
+responsiveImgList = null;
 if (parameters.contentId) { // needless?: && parameters.dataResourceTypeId && context.validMediaDataResourceTypeIdSet.contains(parameters.dataResourceTypeId)
     try {
         //media = delegator.findOne("DataResource", ["dataResourceId": parameters.dataResourceId], false);
@@ -27,6 +28,7 @@ if (parameters.contentId) { // needless?: && parameters.dataResourceTypeId && co
             if (mediaList.size() == 1) {
                 media = mediaList[0];
                 variantList = com.ilscipio.scipio.cms.media.CmsMediaWorker.getVariantContentMapKeys(delegator, media.contentId);
+                responsiveImgList = delegator.findByAnd("ImageViewPort", ["contentId": media.contentId], ["sequenceNum"], false);
                 fileSizeAttr = EntityUtil.getFirst(media.getRelated("DataResourceAttribute", ["attrName": FileTypeUtil.FILE_SIZE_ATTRIBUTE_NAME], null, false));
             } else {
                 errMsg = "Schema error while reading media: several results found for contentId '" + parameters.contentId + "'";// TODO: localize
@@ -45,6 +47,7 @@ context.imageSizePresets = imageSizePresets;
 context.media = media;
 context.fileSizeAttr = fileSizeAttr;
 context.variantList = variantList;
+context.responsiveImgList = responsiveImgList;
 context.hasVariantContent = variantList ? true : false;
 if (CmsUtil.verboseOn()) {
     if (parameters.contentId) {

@@ -329,7 +329,7 @@ code package.
         </sort-order>
     </form>
 
-    <form name="findCommEvents" type="single" target="FindCommunicationEvents" paginate="true" focus-field-name="submitAction"
+    <form name="FindCommEvents" type="single" target="FindCommunicationEvents" paginate="true" focus-field-name="submitAction"
         header-row-style="header-row" default-position-span="1"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="communicationEventId" position="1"><text-find/></field>

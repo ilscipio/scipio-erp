@@ -22,23 +22,11 @@ ToDo: Update menu with Authorize and Capture transaction actions
     </#if>
 </#if>
 -->
+<#include "ordercommon.ftl">
 
-<#macro maskSensitiveNumber cardNumber>
-  <#assign cardNumberDisplay = "">
-  <#if cardNumber?has_content>
-    <#assign size = cardNumber?length - 4>
-    <#if (size > 0)>
-      <#list 0 .. size-1 as foo>
-        <#assign cardNumberDisplay = cardNumberDisplay + "*">
-      </#list>
-      <#assign cardNumberDisplay = cardNumberDisplay + cardNumber[size .. size + 3]>
-    <#else>
-      <#-- but if the card number has less than four digits (ie, it was entered incorrectly), display it in full -->
-      <#assign cardNumberDisplay = cardNumber>
-    </#if>
-  </#if>
-  ${cardNumberDisplay!}
-</#macro>
+<#-- SCIPIO: MOVED TO: ../common/common.ftl
+<#macro maskSensitiveNumber cardNumber paymentMethod= cardNumberMask=>
+</#macro>-->
 
 <@section title=uiLabelMap.AccountingPaymentInformation>
    <#assign orderTypeId = orderReadHelper.getOrderTypeId()>
@@ -345,7 +333,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                               <br />
                               <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                                 ${creditCard.cardType}
-                                <@maskSensitiveNumber cardNumber=(creditCard.cardNumber!)/>
+                                <@maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                                 ${creditCard.expireDate}
                                 &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               <#else>
@@ -449,8 +437,8 @@ ToDo: Update menu with Authorize and Capture transaction actions
                 </@row>
               </#if>
             <#elseif (paymentMethod.paymentMethodTypeId!) == "GIFT_CARD">
-              <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)>
-              <#if giftCard??>
+              <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)!>
+              <#if giftCard?has_content>
                 <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress", false)!>
               </#if>
               <@tr>
@@ -467,7 +455,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                 ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                                 &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               <#else>
-                              <@maskSensitiveNumber cardNumber=(giftCard.cardNumber!)/>
+                              <@maskSensitiveNumber cardNumber=giftCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                               <#if !cardNumberDisplay?has_content>${uiLabelMap.CommonNA}</#if>
                                 &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               </#if>
@@ -583,7 +571,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                              <#assign creditCard = paymentMethodValueMap.creditCard/>
                                              <#if (creditCard?has_content)>
                                                <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
-                                                 ${creditCard.cardType!} <@maskSensitiveNumber cardNumber=(creditCard.cardNumber!)/> ${creditCard.expireDate!}
+                                                 ${creditCard.cardType!} <@maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/> ${creditCard.expireDate!}<#-- SCIPIO: Pass payment method -->
                                                <#else>
                                                  ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                                </#if>

@@ -1,6 +1,8 @@
 
 <#-- SCIPIO: common shop-wide helper definitions and macros -->
 
+<#include "component://accounting/webapp/accounting/common/commonlib.ftl">
+
 <#-- 2018-11-29: Returns shopping cart IF exists (for shop, almost always does)
     Templates that are not sure if cart is in context or not MUST use this; do NOT access sessionAttributes.shoppingCart anymore! -->
 <#function getShoppingCart>
@@ -148,27 +150,6 @@
     ${uiLabelMap.AccountingBillingAccount} #: ${billingAccount.billingAccountId!} - ${billingAccount.description!}
   </#if>
 </#macro>
-
-<#-- Migrated from checkoutpayment.ftl -->
-<#function getGiftCardDisplayNumber giftCard>
-    <#if giftCard?has_content && giftCard.cardNumber?has_content>
-      <#local giftCardNumber = "" />
-      <#local pcardNumber = giftCard.cardNumber />
-      <#if pcardNumber?has_content>
-        <#local psize = pcardNumber?length - 4 />
-        <#if (0 < psize)>
-          <#list 0 .. psize-1 as foo>
-            <#local giftCardNumber = giftCardNumber + "*" />
-          </#list>
-          <#local giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3] />
-        <#else>
-          <#local giftCardNumber = pcardNumber />
-        </#if>
-        <#return giftCardNumber>
-      </#if>
-    </#if>
-</#function>
-
 
 <#-- Generic javascript for radios that have a "new item" option that should display content when radio selected 
     WARN: JS callbacks are highly coupled with macro -->

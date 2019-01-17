@@ -134,23 +134,8 @@ var issuerId = "";
               
                 <#if paymentMethod.paymentMethodTypeId == "GIFT_CARD">
                  <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-                  <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false) />
-
-                  <#if giftCard?has_content && giftCard.cardNumber?has_content>
-                    <#assign giftCardNumber = "" />
-                    <#assign pcardNumber = giftCard.cardNumber />
-                    <#if pcardNumber?has_content>
-                      <#assign psize = pcardNumber?length - 4 />
-                      <#if (0 < psize)>
-                        <#list 0 .. psize-1 as foo>
-                          <#assign giftCardNumber = giftCardNumber + "*" />
-                        </#list>
-                        <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3] />
-                      <#else>
-                        <#assign giftCardNumber = pcardNumber />
-                      </#if>
-                    </#if>
-                  </#if>
+                  <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)! />
+                  <#assign giftCardNumber = getPayMethDisplayNumber(giftCard, paymentMethod)!/><#-- SCIPIO: Refactored using function -->
 
                   <#macro payMethContent args={}>
                     <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}: ${giftCardNumber}</label>

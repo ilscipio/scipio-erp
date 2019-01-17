@@ -55,29 +55,17 @@ code package.
         <@render resource="component://common/widget/CommonScreens.xml#cctypes" />
     </@field>
    
-    <#assign cardNumber = ccfParams["${fieldNamePrefix}cardNumber"]!(creditCard.cardNumber)!(ccfFallbacks.cardNumber)!>
+    <#assign cardNumber = rawString(ccfParams["${fieldNamePrefix}cardNumber"]!(creditCard.cardNumber)!(ccfFallbacks.cardNumber)!)>
     <#if cardNumber?has_content>
         <#if cardNumberMinDisplay?has_content>
             <#-- create a display version of the card where all but the last four digits are * -->
-            <#assign cardNumberDisplay = "">
-            <#if cardNumber?has_content>
-                <#assign size = cardNumber?length - 4>
-                <#if (size > 0)>
-                    <#list 0 .. size-1 as foo>
-                        <#assign cardNumberDisplay = cardNumberDisplay + "*">
-                    </#list>
-                    <#assign cardNumberDisplay = cardNumberDisplay + cardNumber[size .. size + 3]>
-                <#else>
-                    <#-- but if the card number has less than four digits (ie, it was entered incorrectly), display it in full -->
-                    <#assign cardNumberDisplay = cardNumber>
-                </#if>
-            </#if>
+            <#assign cardNumberDisplay = getCreditCardDisplayNumber(cardNumber!)><#-- SCIPIO: Refactored -->
             <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value=(cardNumberDisplay!) label=uiLabelMap.AccountingCardNumber required=true />
         <#else>
             <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value=(cardNumber!) label=uiLabelMap.AccountingCardNumber required=true/>
         </#if>
     <#else>
-        <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value=(cardNumber) label=uiLabelMap.AccountingCardNumber required=true/>
+        <@field type="input" size="20" maxlength="30" name="${fieldNamePrefix}cardNumber" value="" label=uiLabelMap.AccountingCardNumber required=true/>
     </#if>
     
   <#-- SCIPIO: This was commented by someone else, for reasons unclear... use a bool instead. but don't display any current value: ${creditCard.cardSecurityCode!} -->

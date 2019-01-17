@@ -4,22 +4,11 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#macro maskSensitiveNumber cardNumber>
-  <#assign cardNumberDisplay = "">
-  <#if cardNumber?has_content>
-    <#assign size = cardNumber?length - 4>
-    <#if (size > 0)>
-      <#list 0 .. size-1 as foo>
-        <#assign cardNumberDisplay = cardNumberDisplay + "*">
-      </#list>
-      <#assign cardNumberDisplay = cardNumberDisplay + cardNumber[size .. size + 3]>
-    <#else>
-      <#-- but if the card number has less than four digits (ie, it was entered incorrectly), display it in full -->
-      <#assign cardNumberDisplay = cardNumber>
-    </#if>
-  </#if>
-  ${cardNumberDisplay!}
-</#macro>
+<#include "component://party/webapp/partymgr/common/common.ftl">
+
+<#-- SCIPIO: MOVED TO: common.ftl
+<#macro maskSensitiveNumber cardNumber paymentMethod= cardNumberMask=>
+</#macro>-->
 
   <#-- SCIPIO: Removed
   <#macro menuContent menuArgs={}>
@@ -62,7 +51,7 @@ code package.
                   &nbsp;-&nbsp;
                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                     ${creditCard.cardType}
-                    <@maskSensitiveNumber cardNumber=(creditCard.cardNumber!)/>
+                    <@maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                     ${creditCard.expireDate}
                   <#else>
                     ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
@@ -90,7 +79,7 @@ code package.
                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                     ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                   <#else>
-                    <@maskSensitiveNumber cardNumber=(giftCard.cardNumber!)/>
+                    <@maskSensitiveNumber cardNumber=giftCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                     <#if !cardNumberDisplay?has_content>${uiLabelMap.CommonNA}</#if>
                   </#if>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>

@@ -71,11 +71,11 @@ code package.
     <screen name="editgiftcard">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditGiftCard"/>
+                
                 <set field="activeSubMenuItem" value="editgiftcard"/>
-
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/HasPartyPermissions.groovy"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/EditPaymentMethod.groovy"/>
+                <set field="titleProperty" value="${groovy:context.giftCard ? 'PageTitleEditGiftCard' : 'AccountingCreateNewGiftCard'}"/><!-- SCIPIO: New gift card title -->
             </actions>
             <widgets>
                 <decorator-screen name="PaymentMethodDecorator">

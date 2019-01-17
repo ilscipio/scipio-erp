@@ -39,24 +39,9 @@ code package.
     <#if giftCard??>
       <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
-
-    <#if giftCardData?has_content && giftCardData.cardNumber?has_content>
-      <#assign pcardNumberDisplay = "">
-      <#assign pcardNumber = giftCardData.cardNumber!>
-      <#if pcardNumber?has_content>
-        <#assign psize = pcardNumber?length - 4>
-        <#if (0 < psize)>
-          <#list 0..(psize-1) as foo>
-            <#assign pcardNumberDisplay = pcardNumberDisplay + "*">
-          </#list>
-          <#assign pcardNumberDisplay = pcardNumberDisplay + pcardNumber[psize .. psize + 3]>
-        <#else>
-          <#assign pcardNumberDisplay = pcardNumber>
-        </#if>
-      </#if>
-    </#if>
-    <@field type="input" label=uiLabelMap.AccountingCardNumber size="20" maxlength="60" name="cardNumber" value=(pcardNumberDisplay!) />
-    <@field type="password" label=uiLabelMap.AccountingPINNumber size="10" maxlength="60" name="pinNumber" value=((giftCardData.pinNumber)!) />
+    <#assign pcardNumberDisplay = (giftCardData.cardNumber)!><#-- SCIPIO: Refactored; this should NOT be hidden: getGiftCardDisplayNumber(giftCardData!)! -->
+    <@field type="input" label=uiLabelMap.AccountingCardNumber size="20" maxlength="60" name="cardNumber" value=(pcardNumberDisplay!)/>
+    <@field type="password" label=uiLabelMap.AccountingPINNumber size="10" maxlength="60" name="pinNumber" value=((giftCardData.pinNumber)!)/>
 
     <@field type="generic" label=uiLabelMap.AccountingExpirationDate>
         <#assign expMonth = "">

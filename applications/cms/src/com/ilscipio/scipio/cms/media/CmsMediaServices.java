@@ -345,7 +345,7 @@ public abstract class CmsMediaServices {
                     }
                     imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap(imagePreset.getString("presetName"), "", "", imgPropsMap);
                 } else {
-                    Debug.logWarning("Cusomt image size dimension preset not found.", module);
+                    Debug.logWarning("Custom image size dimension preset not found.", module);
                 }
             } else if (customVariantSizeMethod.equals("customVariantSizesForm")) {
                 if (context.containsKey("variantSizeName") && context.containsKey("variantSizeWidth") && context.containsKey("variantSizeHeight") && context.containsKey("variantSizeSequenceNum")) {
@@ -374,11 +374,12 @@ public abstract class CmsMediaServices {
                     List<GenericValue> imageMediaQueries = UtilMisc.newList();
                     List<String> mediaQueries = (List<String>) context.get("viewPortMediaQuery");
                     List<String> viewPortLength = (List<String>) context.get("viewPortLength");
+                    List<String> viewPortSequenceNum = (List<String>) context.get("viewPortSequenceNum");
                     if (mediaQueries.size() == viewPortLength.size()) {
                         int i = 0;
                         for (String mediaQuery : mediaQueries) {
-                            imageMediaQueries.add(delegator.makeValidValue("ImageViewPortSize",
-                                    UtilMisc.toMap("viewPortSizeId", viewPortSizeId, "viewPortMediaQuery", mediaQuery, "viewPortLength", Long.parseLong(viewPortLength.get(i)))));
+                            imageMediaQueries.add(delegator.makeValidValue("ImageViewPortSize", UtilMisc.toMap("viewPortSizeId", viewPortSizeId, "viewPortMediaQuery", mediaQuery,
+                                    "viewPortLength", Long.parseLong(viewPortLength.get(i)), "sequenceNum", Long.parseLong(viewPortSequenceNum.get(i)))));
                             i++;
                         }
                         delegator.storeAll(imageMediaQueries);
@@ -439,7 +440,7 @@ public abstract class CmsMediaServices {
         for (String sizeName : imgPropsMap.keySet()) {
             Map<String, String> sizes = imgPropsMap.get(sizeName);
             GenericValue imageSizeDimension = delegator.makeValidValue("ImageSizeDimension", UtilMisc.toMap("sizeId", delegator.getNextSeqId("ImageSizeDimension"), "sizeName",
-                    sizeName, "dimensionWidth", Long.parseLong(sizes.get("width")), "dimensionHeight", Long.parseLong(sizes.get("height")), "sequenceNum", sequenceNums.get(i)));
+                    sizeName, "dimensionWidth", Long.parseLong(sizes.get("width")), "dimensionHeight", Long.parseLong(sizes.get("height")), "sequenceNum", Long.parseLong(sequenceNums.get(i))));
             toStore.add(imageSizeDimension);
             toStore.add(delegator.makeValidValue("ImageSize",
                     UtilMisc.toMap("presetId", imageSizePreset.get("presetId"), "sizeId", imageSizeDimension.get("sizeId"))));

@@ -776,12 +776,14 @@
         <attribute mode="IN" name="variantSizeName" type="List" optional="true"/>
         <attribute mode="IN" name="variantSizeWidth" type="List" optional="true"/>
         <attribute mode="IN" name="variantSizeHeight" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeSequenceNum" type="List" optional="true"/>
         <attribute mode="IN" name="saveAsPreset" type="Boolean" optional="true"/>
         <attribute mode="IN" name="presetName" type="String" optional="true"/>
         
         <attribute mode="IN" name="srcsetModeEnumId" type="String" optional="true"/>
         <attribute mode="IN" name="viewPortMediaQuery" type="List" optional="true"/>
         <attribute mode="IN" name="viewPortLength" type="List" optional="true"/>
+        <attribute mode="IN" name="viewPortSequenceNum" type="List" optional="true"/>
     </service>
     
     <service name="cmsUpdateMediaFile" engine="java"

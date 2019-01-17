@@ -679,16 +679,22 @@ Common CMS editor macros and utilities
   <@fields type="default-manual" label=uiLabelMap.CmsMediaCustomSizeVariantsFromForm>
       <@row>
         <@cell columns=3>
-          <@field type="input" inline=true name="variantSizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true required=true value="" />
+          <label class="form-field-label">${uiLabelMap.ImageCustomVariantSizeName}</label>
+          <input type="text" name="variantSizeName" class="field-inline required" size="20" required="required">
+          <#-- <@field type="input" inline=true name="variantSizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true required=true value="" id=""/> -->
         </@cell>
         <@cell columns=3>
-          <@field type="text" inline=true name="variantSizeWidth" labelArea=true label=uiLabelMap.ImageCustomVariantSizeWidth required=true value="" />
+          <label class="form-field-label">${uiLabelMap.ImageCustomVariantSizeWidth}</label>
+          <input type="text" name="variantSizeWidth" class="field-inline required" size="20" required="required">
+          <#-- <@field type="text" inline=true name="variantSizeWidth" labelArea=true label=uiLabelMap.ImageCustomVariantSizeWidth required=true value="" id=""/> -->
         </@cell>
         <@cell columns=3>
-          <@field type="text" inline=true name="variantSizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight required=true value="" />
+          <label class="form-field-label">${uiLabelMap.ImageCustomVariantSizeHeight}</label>
+          <input type="text" name="variantSizeHeight" class="field-inline required" size="20" required="required">
+          <#-- <@field type="text" inline=true name="variantSizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight required=true value="" id=""/> -->
         </@cell>
         <@cell columns=3>
-          <@field type="hidden" inline=true name="sequenceNum" labelArea=true required=true value="" />
+          <input type="hidden" name="variantSizeSequenceNum" required=true value=""/>
         </@cell>
       </@row>	
   </@fields>
@@ -709,21 +715,32 @@ Common CMS editor macros and utilities
         </#if>
 
 		var customVariantSizeCount = 0;
+		var customVariantSizeFieldCount = 0;
         var addCustomVariantSize = function() {
+        	customVariantSizeCount++;
             <#assign customVariantSizeForm><@customVariantSizeForm /></#assign>
-            var customVariantSizeForm = '${escapeVal(customVariantSizeForm, 'js')}';        
-            jQuery(customVariantSizeForm).find('input[name=sequenceNum]').val(customVariantSizeCount++);    
-            jQuery('.cmsmedia-customvariantsize-add-cnt').before(customVariantSizeForm);            
-            <#if saveAsPreset>
-                jQuery('#saveAsPreset').click(saveAsPreset);
-            </#if>
+            var customVariantSizeForm = $('${escapeVal(customVariantSizeForm, 'js')}');
+            var variantSizeSequenceNum = customVariantSizeForm.find('input').each(function() {
+            	$(this, customVariantSizeForm).attr('id', 'customvariantsize-field-' + customVariantSizeFieldCount);
+            	if ($(this).attr('name') == 'variantSizeSequenceNum') {
+            		$(this, customVariantSizeForm).val(customVariantSizeCount);
+            	}
+            	customVariantSizeFieldCount++;
+            	console.log('input #' + $(this).attr('id') + ' name[' + $(this).attr('name') + '] = ' + $(this).val());             	
+            });
+               
+            jQuery('.cmsmedia-customvariantsize-add-cnt').before(customVariantSizeForm);
         };
         jQuery('.cmsmedia-customvariantsize-add').click(addCustomVariantSize);
 
         var customVariantSizeMethodElem = jQuery('#mediaForm input[name=customVariantSizeMethod]');
         jQuery(customVariantSizeMethodElem).click(function() {
+        	customVariantSizeMethod = $(this).val();
+        	if (customVariantSizeMethod == "customVariantSizesForm") {
+        		addCustomVariantSize();
+        	}
             jQuery('.cmsmedia-customvariantsize-method').hide();
-            jQuery('.' + $(this).val()).show();
+            jQuery('.' + customVariantSizeMethod).show();
         });
     </@script>
 </#macro>
@@ -732,13 +749,18 @@ Common CMS editor macros and utilities
      <@fields type="default-manual" label=uiLabelMap.CmsMediaResponsiveImgForm>
       <@row>
         <@cell columns=4>
-          <@field type="text" inline=true name="viewPortMediaQuery" labelArea=true label=uiLabelMap.ImageViewPortMediaQuery required=true value="" />
+          <label class="form-field-label">${uiLabelMap.ImageViewPortMediaQuery}</label>
+          <input type="text" name="viewPortMediaQuery" class="field-inline required" size="20" required="required">
+          <#-- <@field type="text" inline=true name="viewPortMediaQuery" labelArea=true label=uiLabelMap.ImageViewPortMediaQuery required=true value="" id=""/> -->
         </@cell>
         <@cell columns=4>
-            <@field type="text" inline=true name="viewPortLength" labelArea=true label=uiLabelMap.ImageViewPortLength required=true value="" />
+          <label class="form-field-label">${uiLabelMap.ImageViewPortLength}</label>
+          <input type="text" name="viewPortLength" class="field-inline required" size="20" required="required">
+          <#-- <@field type="text" inline=true name="viewPortLength" labelArea=true label=uiLabelMap.ImageViewPortLength required=true value="" id=""/> -->
         </@cell>
         <@cell columns=4>
-          <@field type="hidden" inline=true name="sequenceNum" labelArea=true required=true value="" />
+          <input type="hidden" name="viewPortSequenceNum" required="required">
+          <#-- <@field type="hidden" inline=true name="viewPortSequenceNum" labelArea=true required=true value="" id=""/> -->
         </@cell>
       </@row>
      </@fields>
@@ -746,11 +768,20 @@ Common CMS editor macros and utilities
 
 <#macro responsiveImgScript>
     <@script>
-    	<#assign customResponsiveImgForm><@responsiveImgForm /></#assign>
-        var customResponsiveImgForm = '${escapeVal(customResponsiveImgForm, 'js')}';
+    	<#assign customResponsiveImgForm><@responsiveImgForm /></#assign>        
         var responsiveImgCount = 0;
+        var responsiveImgFieldCount = 0;
         var addResponsiveImgSize = function() {
-        	jQuery(customResponsiveImgForm).find('input[name=sequenceNum]').val(responsiveImgCount++);
+        	responsiveImgCount++;
+        	var customResponsiveImgForm = $('${escapeVal(customResponsiveImgForm, 'js')}');
+        	var viewPortSequenceNum = jQuery(customResponsiveImgForm).find('input').each(function() {
+        		$(this, customResponsiveImgForm).attr('id', 'responsiveimg-field-' + responsiveImgFieldCount);
+            	if ($(this).attr('name') == 'viewPortSequenceNum') {
+            		$(this, customResponsiveImgForm).val(responsiveImgCount);
+            	}
+            	responsiveImgFieldCount++;
+            	console.log('input #' + $(this).attr('id') + ' name[' + $(this).attr('name') + '] = ' + $(this).val());             	
+        	});
             jQuery('.cmsmedia-responsiveimg-add-cnt').before(customResponsiveImgForm);
         };
 
@@ -758,7 +789,8 @@ Common CMS editor macros and utilities
            if ($(this).val() != "IMG_SRCSET_VW") {
            	 jQuery('.cmsmedia-responsiveimg-mode').hide();             
            } else {
-           	 jQuery('.cmsmedia-responsiveimg-mode').show();           	
+           	 jQuery('.cmsmedia-responsiveimg-mode').show();           
+           	 addResponsiveImgSize();	
            }
         });
 

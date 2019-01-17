@@ -64,7 +64,11 @@
       <@editMediaScripts/>
       
         <@row>
-            <@cell id="mediaUpload" columns=10>
+        	<#assign mediaUploadColumns = 8>
+        	<#if !media?has_content>
+        		<#assign mediaUploadColumns = 10>
+        	</#if>
+            <@cell id="mediaUpload" columns=mediaUploadColumns>
                 <@section title=sectionTitle>
                     <form method="post"<#if !media?has_content> enctype="multipart/form-data"</#if> action="<@ofbizUrl>${formAction}</@ofbizUrl>" name="mediaForm" id="mediaForm">                                                       
                         <#if parameters.contentName?has_content>
@@ -108,7 +112,7 @@
                             <#if media.dataResourceTypeId == "IMAGE_OBJECT">
                                 <@field type="generic" label=uiLabelMap.CmsMediaResizedVariants>
                                   <#if hasVariantContent>
-                                    <#list variantList?sort as variant>
+                                    <#list variantList as variant>
                                         <#assign variantMediaUrl=makeOfbizWebappUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&variant=" + rawString(variant)}) />
                                         <a href="${escapeFullUrl(variantMediaUrl, 'html')}">${variant}</a> <#t/>
                                     </#list>
@@ -160,8 +164,7 @@
                                                   </#list>
                                               </@field>
                                           </div>
-                                          <div class="cmsmedia-customvariantsize-method customVariantSizesForm" style="display:none;">
-                                              <@customVariantSizeForm />
+                                          <div class="cmsmedia-customvariantsize-method customVariantSizesForm" style="display:none;">                                              
                                               <@row class="+cmsmedia-customvariantsize-add-cnt">        
 										        <@cell class="+${styles.grid_large_offset}11" columns=1>
 										            <a href="javascript:void(0);" class="cmsmedia-customvariantsize-add">[+]</a>
@@ -192,8 +195,7 @@
                                                       <option value="${srcsetMode.enumId}">${srcsetMode.description}</option>
                                                   </#list>
                                             </@field>
-                                            <div class="cmsmedia-responsiveimg-mode" style="display:none;">
-                                                <@responsiveImgForm />    
+                                            <div class="cmsmedia-responsiveimg-mode" style="display:none;">                                                    
                                                 <@row class="+cmsmedia-responsiveimg-add-cnt">
 											        <@cell columns=1 class="+${styles.grid_large_offset}11">
 											            <a href="javascript:void(0);" class="cmsmedia-responsiveimg-add">[+]</a>

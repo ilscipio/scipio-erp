@@ -1,7 +1,7 @@
 <#include "component://cms/webapp/cms/common/common.ftl">
 
 <#assign formAction="createMedia">
-<#assign sectionTitle=uiLabelMap.CmsCreateMedia>
+<#assign sectionTitle=uiLabelMap.CmsNewMedia>
 <#if media?has_content>
     <#assign formAction="updateMedia">
     <#assign sectionTitle=uiLabelMap.CmsEditMedia>
@@ -45,10 +45,9 @@
 <#macro menuContent menuArgs={}>
     <#if media?has_content>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editMedia") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsCreateMedia/>
+            <@menuitem type="link" href=makeOfbizUrl("editMedia") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewMedia/>
             <@menuitem type="link" href="javascript:deleteMediaAsset(); void(0);" class="+${styles.action_run_sys!} ${styles.action_remove!} action_delete" text=uiLabelMap.CommonDelete/>
-            
-            <#-- FIXME: labels -->
+
             <#-- DEV NOTE: these functions _could_ need extra parameters (a modal) in the future, but just need them to work for now -->
             <@menuitem type="link" href="javascript:jQuery('#mediaresizeform').submit(); void(0);" class="+${styles.action_run_sys!} ${styles.action_add!}" text="${rawLabel('CmsMediaVariants')}: ${rawLabel(hasVariantContent?string('CommonRecreate','CommonCreate'))}"/>
             <@menuitem type="link" href="javascript:jQuery('#mediaresizeremoveform').submit(); void(0);" class="+${styles.action_run_sys!} ${styles.action_remove!}" text="${rawLabel('CmsMediaVariants')}: ${rawLabel('CommonRemove')}"/>

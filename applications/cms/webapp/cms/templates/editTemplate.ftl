@@ -145,7 +145,7 @@
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editTemplate") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsCreateTemplate/>
+            <@menuitem type="link" href=makeOfbizUrl("editTemplate") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewTemplate/>
             <@cmsCopyMenuItem target="copyTemplate" title=uiLabelMap.CmsCopyTemplate>
                 <@field type="hidden" name="pageTemplateId" value=(pageTemplate.pageTemplateId!)/><#-- for browsing, on error -->
                 <@field type="hidden" name="versionId" value=(versionId!)/><#-- for browsing, on error -->
@@ -465,7 +465,7 @@
         <@row>
             <@cell columns=6 last=true>
                 <@form method="post" id="editorForm" action=makeOfbizUrl("createTemplate")>
-                    <@section title=uiLabelMap.CmsCreateTemplate>
+                    <@section title=uiLabelMap.CmsNewTemplate>
                       <@fields type="default-compact">
                         <input type="hidden" name="isCreate" value="Y"/>
                         <@field type="input" name="templateName" value=(parameters.templateName!) id="templateName" label=uiLabelMap.CmsTemplateName placeholder="My Template Name" required=true/>

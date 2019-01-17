@@ -370,7 +370,7 @@
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editPage") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsCreatePage/>
+            <@menuitem type="link" href=makeOfbizUrl("editPage") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewPage/>
             <@cmsCopyMenuItem target="copyPage" title=uiLabelMap.CmsCopyPage>
                  <@field type="hidden" name="pageId" value=(pageId!)/><#-- for browsing, on error -->
                  <@field type="hidden" name="versionId" value=(versionId!)/><#-- for browsing, on error -->
@@ -658,7 +658,7 @@
         <@row>
             <@cell columns=6 last=true>
                 <@form method="post" id="editorForm" action=makeOfbizUrl("createPage")>
-                    <@section title=uiLabelMap.CmsCreatePage>
+                    <@section title=uiLabelMap.CmsNewPage>
                       <@fields type="default-compact">
                          <input type="hidden" name="isCreate" value="Y"/>
                          <@webSiteSelectField name="webSiteId" value=(parameters.webSiteId!) valueUnsafe=true required=true 

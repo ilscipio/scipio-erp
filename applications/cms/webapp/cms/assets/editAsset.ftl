@@ -73,7 +73,7 @@
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editAsset") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsCreateAsset/>
+            <@menuitem type="link" href=makeOfbizUrl("editAsset") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsCreateAsset/>
             <@cmsCopyMenuItem target="copyAsset" title=uiLabelMap.CmsCopyAsset>
                 <@field type="hidden" name="assetTemplateId" value=(assetTemplateModel.id!)/><#-- for browsing, on error -->
                 <@field type="hidden" name="srcAssetTemplateId" value=(assetTemplateModel.id!)/>

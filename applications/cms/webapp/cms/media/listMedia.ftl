@@ -11,7 +11,7 @@
     <@row>
         <@cell columns=6>
             <@menu args=menuArgs>
-                <@menuitem type="link" href=makeOfbizUrl("editMedia") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsCreateMedia/>
+                <@menuitem type="link" href=makeOfbizUrl("editMedia") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewMedia/>
                 
                 <@menuitem type="generic">
                     <@modal id="modal_new_script" label="${rawLabel('CmsMediaVariants')}: ${rawLabel('CommonRecreate')}" linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_update!}">

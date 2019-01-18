@@ -834,15 +834,15 @@ public class StringUtil {
      * returns a string of maskLength masked characters; if maskLength is negative and
      * the string is less than the absolute value of maskLength, returns the original string.
      */
-    public static String maskLeft(String str, int maskLength, char maskChar) {
+    public static String maskLeft(CharSequence str, int maskLength, char maskChar) {
         if (str == null || str.length() == 0 || maskLength == 0) {
-            return str;
+            return str.toString();
         }
         StringBuilder sb = new StringBuilder(str.length());
         if (maskLength < 0) {
             maskLength = (str.length() - (-maskLength));
             if (maskLength <= 0) {
-                return str;
+                return str.toString();
             }
         }
         for(int i = 0; i < maskLength; i++) {
@@ -865,9 +865,9 @@ public class StringUtil {
      * returns a string of maskLength masked characters; if maskLength is negative and
      * the string is less than the absolute value of maskLength, returns the original string.
      */
-    public static String maskRight(String str, int maskLength, char maskChar) {
+    public static String maskRight(CharSequence str, int maskLength, char maskChar) {
         if (str == null || str.length() == 0 || maskLength == 0) {
-            return str;
+            return str.toString();
         }
         StringBuilder sb = new StringBuilder(str.length());
         int unmaskLength;
@@ -875,7 +875,7 @@ public class StringUtil {
             unmaskLength = -maskLength;
             maskLength = (str.length() - unmaskLength);
             if (maskLength <= 0) {
-                return str;
+                return str.toString();
             }
         } else {
             unmaskLength = (str.length() - maskLength);
@@ -887,5 +887,132 @@ public class StringUtil {
             sb.append(maskChar);
         }
         return sb.toString();
+    }
+
+    /**
+     * SCIPIO: Checks if the two strings match, ignoring any number of mask characters to the left.
+     */
+    public static boolean matchesMaskedLeft(CharSequence plainStr, CharSequence maskedStr, char[] maskChars) {
+        if (maskedStr == null || plainStr == null || maskedStr.length() != plainStr.length()) {
+            return false;
+        }
+        int i = 0;
+        while(i < maskedStr.length() && indexOf(maskChars, maskedStr.charAt(i)) >= 0) {
+            i++;
+        }
+        return substringsEqual(plainStr, maskedStr, i, maskedStr.length());
+    }
+
+    /**
+     * SCIPIO: Checks if the two strings match, ignoring any number of mask characters to the left.
+     */
+    public static boolean matchesMaskedLeft(CharSequence plainStr, CharSequence maskedStr, char maskChar) {
+        if (maskedStr == null || plainStr == null || maskedStr.length() != plainStr.length()) {
+            return false;
+        }
+        int i = 0;
+        while(i < maskedStr.length() && maskedStr.charAt(i) == maskChar) {
+            i++;
+        }
+        return substringsEqual(plainStr, maskedStr, i, maskedStr.length());
+    }
+
+    /**
+     * SCIPIO: Checks if the two strings match, ignoring any number of mask characters  to the right.
+     */
+    public static boolean matchesMaskedRight(CharSequence plainStr, CharSequence maskedStr, char[] maskChars) {
+        if (maskedStr == null || plainStr == null || maskedStr.length() != plainStr.length()) {
+            return false;
+        }
+        int i = maskedStr.length();
+        while(i > 0 && indexOf(maskChars, maskedStr.charAt(i - 1)) >= 0) {
+            i--;
+        }
+        return substringsEqual(plainStr, maskedStr, 0, i);
+    }
+
+    /**
+     * SCIPIO: Checks if the two strings match, ignoring any number of mask characters  to the right.
+     */
+    public static boolean matchesMaskedRight(CharSequence plainStr, CharSequence maskedStr, char maskChar) {
+        if (maskedStr == null || plainStr == null || maskedStr.length() != plainStr.length()) {
+            return false;
+        }
+        int i = maskedStr.length();
+        while(i > 0 && maskedStr.charAt(i - 1) == maskChar) {
+            i--;
+        }
+        return substringsEqual(plainStr, maskedStr, 0, i);
+    }
+
+    /**
+     * SCIPIO: Checks if the two strings match, ignoring any mask characters at any place in the masked string.
+     */
+    public static boolean matchesMaskedAny(CharSequence plainStr, CharSequence maskedStr, char[] maskChars) {
+        if (maskedStr == null || plainStr == null || maskedStr.length() != plainStr.length()) {
+            return false;
+        }
+        for(int i = 0; i < maskedStr.length(); i++) {
+            if (indexOf(maskChars, maskedStr.charAt(i)) < 0) {
+                if (maskedStr.charAt(i) != plainStr.charAt(i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * SCIPIO: Checks if the two strings match, ignoring any mask characters at any place in the masked string.
+     */
+    public static boolean matchesMaskedAny(CharSequence plainStr, CharSequence maskedStr, char maskChar) {
+        if (maskedStr == null || plainStr == null || maskedStr.length() != plainStr.length()) {
+            return false;
+        }
+        for(int i = 0; i < maskedStr.length(); i++) {
+            if (maskedStr.charAt(i) != maskChar) {
+                if (maskedStr.charAt(i) != plainStr.charAt(i)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * SCIPIO: Unsafe version of Apache commons ArrayUtils.indexOf (unsafe).
+     */
+    @SuppressWarnings("unused")
+    private static int indexOf(final char[] array, final char valueToFind, int startIndex) {
+        for (int i = startIndex; i < array.length; i++) {
+            if (valueToFind == array[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * SCIPIO: Unsafe version of Apache commons ArrayUtils.indexOf (unsafe).
+     */
+    private static int indexOf(final char[] array, final char valueToFind) {
+        for (int i = 0; i < array.length; i++) {
+            if (valueToFind == array[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    /**
+     * SCIPIO: Checks if two strings of same size have same characters between the given indices (unsafe).
+     */
+    private static boolean substringsEqual(CharSequence str1, CharSequence str2, int startIndex, int endIndex) {
+        for(int i = startIndex; i < endIndex; i++) {
+            if (str1.charAt(i) != str2.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

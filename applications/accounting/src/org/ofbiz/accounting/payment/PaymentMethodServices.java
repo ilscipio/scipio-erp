@@ -290,6 +290,8 @@ public class PaymentMethodServices {
 
         // first remove all spaces from the credit card number
         String updatedCardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
+        /* SCIPIO: This test was too strict; prevented the UI from deciding masking behavior
+         * and needlessly accepted mask characters in different positions as numbers
         if (updatedCardNumber.startsWith("*")) {
             // get the masked card number from the db
             String origCardNumber = creditCard.getString("cardNumber");
@@ -304,6 +306,16 @@ public class PaymentMethodServices {
 
             // compare the two masked numbers
             if (updatedCardNumber.equals(origMaskedNumber)) {
+                updatedCardNumber = origCardNumber;
+            }
+        }
+        */
+        Character maskChar = PaymentWorker.getNumberMaskChar(delegator);
+        if (maskChar != null && updatedCardNumber.indexOf(maskChar) >= 0) {
+            // get the masked card number from the db
+            String origCardNumber = creditCard.getString("cardNumber");
+            // compare the two masked numbers
+            if (StringUtil.matchesMaskedAny(origCardNumber, updatedCardNumber, maskChar)) {
                 updatedCardNumber = origCardNumber;
             }
         }
@@ -566,6 +578,8 @@ public class PaymentMethodServices {
 
         // card number (masked)
         String cardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
+        /* SCIPIO: This test was too strict; prevented the UI from deciding masking behavior
+         * and needlessly accepted mask characters in different positions as numbers
         if (cardNumber.startsWith("*")) {
             // get the masked card number from the db
             String origCardNumber = giftCard.getString("cardNumber");
@@ -582,6 +596,16 @@ public class PaymentMethodServices {
 
             // compare the two masked numbers
             if (cardNumber.equals(origMaskedNumber.toString())) {
+                cardNumber = origCardNumber;
+            }
+        }
+        */
+        Character maskChar = PaymentWorker.getNumberMaskChar(delegator);
+        if (maskChar != null && cardNumber.indexOf(maskChar) >= 0) {
+            // get the masked card number from the db
+            String origCardNumber = giftCard.getString("cardNumber");
+            // compare the two masked numbers
+            if (StringUtil.matchesMaskedAny(origCardNumber, cardNumber, maskChar)) {
                 cardNumber = origCardNumber;
             }
         }

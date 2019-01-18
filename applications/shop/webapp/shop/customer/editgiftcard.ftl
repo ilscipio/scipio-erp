@@ -46,7 +46,7 @@ function makeExpDate() {<#-- SCIPIO: Copied from ordermgr billsettings.ftl -->
       <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
     <input type="hidden" name="expireDate" value="${(giftCardData.expireDate)!}"/><#-- SCIPIO -->
-    <#assign pcardNumberDisplay = (giftCardData.cardNumber)!><#-- SCIPIO: Refactored; this should NOT be hidden: getGiftCardDisplayNumber(giftCardData!)! -->
+    <#assign pcardNumberDisplay = getGiftCardDisplayNumber(giftCardData!)!>
     <@field type="input" label=uiLabelMap.AccountingCardNumber size="20" maxlength="60" name="cardNumber" value=(pcardNumberDisplay!)/>
     <@field type="password" label=uiLabelMap.AccountingPINNumber size="10" maxlength="60" name="pinNumber" value=((giftCardData.pinNumber)!)/>
 

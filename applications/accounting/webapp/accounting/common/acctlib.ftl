@@ -25,7 +25,7 @@
     payMeth can be a paymentMethodTypeId or a PaymentMethod entity value.
     NOTE: Always pass the entity rather than a string, if available! Give this function as much information as possible. -->
 <#function getPayMethDisplayNumber val payMeth args={}>
-  <#if isObjectType(map, payMeth)>
+  <#if isObjectType("map", payMeth)>
     <#local payMeth = payMeth.paymentMethodTypeId!"">
   </#if>
   <#switch payMeth>

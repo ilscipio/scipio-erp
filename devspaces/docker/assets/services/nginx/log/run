@@ -1,0 +1,6 @@
+#!/bin/bash
+
+while read line
+do
+  echo "nginx: $line"
+done < "${1:-/dev/stdin}"

@@ -1,0 +1,102 @@
+--- # devspaces.yml
+name: scipio-erp
+description:  Development environment for scipio-erp
+
+# If you want to use a different Dockerfile for your DevSpace, provide the path
+# here.
+docker-file: Dockerfile
+
+# If you need additional files when building your Dockerfile, such as some
+# application binaries that your Dockerfile references, list the glob paths to
+# include here. They are relative to this devspaces.yml file.
+docker-build-includes: |
+  **/*
+ports:
+- protocol: http # can be udp|tcp|http
+  port-number: 8080
+  description: web app http port
+- protocol: tcp # can be udp|tcp|http
+  port-number: 8443
+  description: admin web app
+- protocol: http # can be udp|tcp|http
+  port-number: 8983
+  description: solr search service port
+- protocol: http # can be udp|tcp|http
+  port-number: 80
+  description: nginx app
+- protocol: tcp # can be udp|tcp|http
+  port-number: 443
+  description: nginx https
+
+sync-ignore: |
+  .git
+  .idea
+  **/node_modules
+  **/bin
+  **/out
+  .DS_Store
+  .data
+  applications/accounting/build
+  applications/cms/build
+  applications/content/build
+  applications/humanres/build
+  applications/manufacturing/build
+  applications/marketing/build
+  applications/order/build
+  applications/party/build
+  applications/product/build
+  applications/securityext/build
+  applications/setup/build
+  applications/shop/build
+  applications/solr/build
+  applications/solr/configsets/product_configs/conf/_schema_analysis_*.json
+  applications/solr/configsets/product_configs/conf/_rest_managed.json
+  applications/solr/webapp/WEB-INF/lib/*.jar
+  applications/workeffort/build
+  framework/base/build
+  !framework/base/lib/oro-*.jar
+  framework/base/lib/*.jar
+  framework/base/lib/ant-ext/*.jar
+  framework/base/lib/ant-opt/*.jar
+  framework/base/lib/ant-opt/activemq/*.jar
+  framework/base/lib/ant-opt/cobertura/*.jar
+  framework/base/lib/ant-opt/jacoco/*.jar
+  framework/base/lib/ant-opt/sonar-ant-task/*.jar
+  framework/base/lib/commons/*.jar
+  framework/base/lib/j2eespecs/*.jar
+  framework/base/lib/j2eespecs-ref/*.jar
+  framework/base/lib/media/*.jar
+  framework/base/lib/scripting/*.jar
+  framework/catalina/build
+  framework/common/build
+  framework/datafile/build
+  framework/entity/build
+  framework/entity/lib/*.jar
+  framework/entity/lib/jdbc/derby-*.jar
+  framework/entity/lib/jdbc/unused/*.jar
+  framework/entityext/build
+  framework/minilang/build
+  framework/security/build
+  framework/service/build
+  framework/start/build
+  framework/testtools/build
+  framework/webapp/build
+  framework/webtools/build
+  framework/widget/build
+  ivy/resolutionCache/resolutionCache/
+  ivy/resolutionCache/repositoryCache/
+  ivy/resolutionCache/ivy-status.txt
+  ivy/resolutionCache/ivy-last.txt
+  /runtime/logs
+  /runtime/data
+  /runtime/tempfiles
+  /runtime/catalina
+  /runtime/indexes
+  /runtime/tmp
+  /runtime/tempfiles
+  /runtime/output
+  /runtime/uploads
+  /runtime/analysis
+  specialpurpose/assetmaint/build
+  specialpurpose/demosuite/build
+  tools/misc/scipio-build-tools.jar

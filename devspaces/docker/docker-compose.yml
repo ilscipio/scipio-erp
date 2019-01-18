@@ -1,0 +1,23 @@
+version: '3.2'
+services:
+  scipio-erp-devspaces:
+    build:
+      context: ""
+      dockerfile: Dockerfile
+    entrypoint: /opt/scripts/entrypoint.sh
+    volumes:
+    - type: bind
+      source: ../../
+      target: /data
+    ports:
+    - "80:80" # web app http port
+    - "443:443" # web app http port
+    - "8080:8080" # web app http port
+    - "8443:8443" # admin app http port
+    - "9090:9090" # admin app http port
+    networks:
+    - default
+    container_name: scipio-erp-devspaces
+
+networks:
+  default:

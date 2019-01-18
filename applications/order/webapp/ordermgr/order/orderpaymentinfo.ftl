@@ -332,15 +332,15 @@ ToDo: Update menu with Authorize and Capture transaction actions
                               ${creditCard.lastNameOnCard!(uiLabelMap.CommonNA)}
                               <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
                               <br />
+                              <#-- SCIPIO: Here, re-inverted the permission logic the right way -->
                               <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
+                                ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                              <#else>
                                 ${creditCard.cardType}
                                 <@acctlib.maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                                 ${creditCard.expireDate}
-                                &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
-                              <#else>
-                                ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
-                                &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                               </#if>
+                              &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description", locale)}<#else>${orderPaymentPreference.statusId!}</#if>]
                               <#else>
                               ${uiLabelMap.CommonInformation} ${uiLabelMap.CommonNot} ${uiLabelMap.CommonAvailable}
                             </#if>
@@ -571,10 +571,11 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                            <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
                                              <#assign creditCard = paymentMethodValueMap.creditCard/>
                                              <#if (creditCard?has_content)>
+                                               <#-- SCIPIO: Here, re-inverted the permission logic the right way -->
                                                <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
-                                                 ${creditCard.cardType!} <@acctlib.maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/> ${creditCard.expireDate!}<#-- SCIPIO: Pass payment method -->
-                                               <#else>
                                                  ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                                               <#else>
+                                                 ${creditCard.cardType!} <@acctlib.maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/> ${creditCard.expireDate!}<#-- SCIPIO: Pass payment method -->
                                                </#if>
                                              </#if>
                                            <#else>

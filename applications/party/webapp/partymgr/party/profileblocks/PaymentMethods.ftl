@@ -50,12 +50,13 @@ code package.
                   ${creditCard.lastNameOnCard}
                   <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
                   &nbsp;-&nbsp;
+                  <#-- SCIPIO: Here, re-inverted the permission logic the right way -->
                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
+                    ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                  <#else>
                     ${creditCard.cardType}
                     <@acctlib.maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                     ${creditCard.expireDate}
-                  <#else>
-                    ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                   </#if>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                   <#if paymentMethod.glAccountId?has_content>(for GL Account ${paymentMethod.glAccountId})</#if>

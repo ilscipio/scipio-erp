@@ -1341,43 +1341,44 @@ code package.
         <field name="sizeName" type="name"></field>
         <field name="dimensionWidth" type="numeric"></field>
         <field name="dimensionHeight" type="numeric"></field>
-        <field name="sequenceNum" type="numeric"/>        
-        <prim-key field="sizeId"/>
-        <prim-key field="sequenceNum"/>        
+        <field name="sequenceNum" type="numeric" not-null="true"/>        
+        <prim-key field="sizeId"/>                
     </entity>
 
-    <entity entity-name="ImageViewPort" package-name="com.ilscipio.scipio.image"
-        title="Image view port" author="Ilscipio GmbH" version="1.0">
+    <entity entity-name="ResponsiveImage" package-name="com.ilscipio.scipio.image"
+        title="Responsive Image" author="Ilscipio GmbH" version="1.0">
         <field name="contentId" type="id-ne"><description>Meant to be used with parent content</description></field>
-        <field name="viewPortSizeId" type="id-ne"></field>
+        <!-- <field name="viewPortSizeId" type="id-ne"></field> -->
         <field name="srcsetModeEnumId" type="id"><description><![CDATA[
             (12/31/2018): As of now the spec allows device-pixel-ratio and viewport based selection. 
             See https://w3c.github.io/html/semantics-embedded-content.html#embedded-content-introduction
         ]]></description></field>
 
         <prim-key field="contentId" />
-        <prim-key field="viewPortSizeId"/>
+        <!-- <prim-key field="viewPortSizeId"/> -->
 
         <relation type="one" fk-name="CONTENT_VP" rel-entity-name="Content">
             <key-map field-name="contentId"/>
         </relation>
-        <relation type="one" fk-name="IWP_VW_SZ" rel-entity-name="ImageViewPortSize">
+       <!--  <relation type="one" fk-name="IWP_VW_SZ" rel-entity-name="ImageViewPortSize">
             <key-map field-name="viewPortSizeId"/>
-        </relation>
+        </relation> -->
         <relation type="one" fk-name="ISD_SRCSET" title="ImgSrcset" rel-entity-name="Enumeration">
             <key-map field-name="srcsetModeEnumId" rel-field-name="enumId"/>
         </relation>
     </entity>
 
-    <entity entity-name="ImageViewPortSize" package-name="com.ilscipio.scipio.image"
-        title="Image view port size" author="Ilscipio GmbH" version="1.0">
+    <entity entity-name="ResponsiveImageVP" package-name="com.ilscipio.scipio.image"
+        title="Responsive Image view port size" author="Ilscipio GmbH" version="1.0">
         <description>This is only valid for viewport based selection</description>
-        <field name="viewPortSizeId" type="id-ne"></field>
+        <field name="contentId" type="id-ne"></field>
         <field name="viewPortMediaQuery" type="long-varchar"/>
         <field name="viewPortLength" type="numeric"/>
-        <field name="sequenceNum" type="numeric"/>
-        <prim-key field="viewPortSizeId"/>
-        <prim-key field="sequenceNum"/>        
+        <field name="sequenceNum" type="numeric" not-null="true"/>
+        <prim-key field="contentId"/>
+        <relation type="one" fk-name="RESIMG_C" rel-entity-name="ResponsiveImage">
+            <key-map field-name="contentId"/>
+        </relation>
     </entity>
 
   <!-- ========================================================= -->

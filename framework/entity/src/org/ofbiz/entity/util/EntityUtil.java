@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -731,5 +732,22 @@ public final class EntityUtil {
     public static List<GenericValue> getRelatedByAndCache(String relationName, Map<String, ? extends Object> fields, List<GenericValue> values) throws GenericEntityException {
         Debug.logWarning("Scipio: highly deprecated EntityUtil method called, please replace call: getRelatedByAndCache(String, Map, List)", module);
         return getRelated(relationName, fields, values, true);
+    }
+    
+    /**
+     * SCIPIO: An utility method used to filter a list of mixed entities by entityName
+     * 
+     * @param originalList
+     * @param entityName
+     * @return
+     */
+    public static List<GenericValue> filterByEntityName(List<GenericValue> originalList, String entityName) {
+        List<GenericValue> filteredList = UtilMisc.newList();
+        for (GenericValue value : originalList ) {
+            if (value.getEntityName().equals(entityName)) {
+                filteredList.add(value);
+            }
+        }
+        return filteredList;
     }
 }

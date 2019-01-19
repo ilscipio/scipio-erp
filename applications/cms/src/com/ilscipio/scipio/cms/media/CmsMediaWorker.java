@@ -23,6 +23,9 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.webapp.OfbizUrlBuilder;
+import org.ofbiz.webapp.control.WebAppConfigurationException;
 
 public abstract class CmsMediaWorker {
 
@@ -82,6 +85,16 @@ public abstract class CmsMediaWorker {
         }
         return content;
     }
+    
+    public static GenericValue getDataResourceForMedia(Delegator delegator, String contentId, String dataResourceId) throws GenericEntityException, IllegalArgumentException {
+        if (UtilValidate.isNotEmpty(dataResourceId) || UtilValidate.isNotEmpty(contentId)) {
+            GenericValue content = getContentForMedia(delegator, contentId, dataResourceId);
+            return content.getRelatedOne("DataResource", false);
+        } else {
+            throw new IllegalArgumentException("Invalid media file - dataResourceId '" + dataResourceId + "' has no Content record"
+                    + " - either invalid media file ID or schema error - please contact your administrator");
+        }
+    }
 
     /**
      * Returns as ContentDataResourceRequiredView values (NOTE: the DataResource fields have "dr" prefix).
@@ -137,7 +150,7 @@ public abstract class CmsMediaWorker {
     
     public static List<GenericValue> getVariantContentAssocTo(HttpServletRequest request, String contentId) throws GenericEntityException {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        return getVariantContentAssocTo(request, contentId);
+        return getVariantContentAssocTo(delegator, contentId);
     }
     
     
@@ -184,6 +197,86 @@ public abstract class CmsMediaWorker {
                 EntityOperator.AND,
                 EntityCondition.makeCondition("contentTypeId", "SCP_MEDIA_VARIANT")); // alternative: EntityCondition.makeCondition("caContentAssocTypeId", EntityOperator.LIKE, "IMGSZ_%")
         return delegator.findCountByCondition("ContentAssocViewTo", cond, null, null) > 0;
+    }
+    
+    // Responsive image utilities
+    /**
+     * 
+     * @param responsiveImage
+     * @return
+     * @throws GenericEntityException
+     */
+    public static List<GenericValue> getResponsiveImageViewPorts(GenericValue responsiveImage) throws GenericEntityException  {
+        if (responsiveImage.get("srcsetModeEnumId").equals("IMG_SRCSET_VW"))
+            return responsiveImage.getRelated("ResponsiveImageVP", null, UtilMisc.toList("sequenceNum"), false);
+        return null;
+    }
+    
+    
+    /**
+     * 
+     * @param delegator
+     * @param contentId
+     * @return
+     * @throws GenericEntityException
+     */
+    public static List<GenericValue> getResponsiveImageViewPorts(Delegator delegator, String contentId) throws GenericEntityException  {
+       return getResponsiveImageViewPorts(getResponsiveImage(delegator, contentId));
+    }
+    
+    /**
+     * 
+     * @param delegator
+     * @param contentId
+     * @return
+     * @throws GenericEntityException
+     */
+    public static GenericValue getResponsiveImage(Delegator delegator, String contentId) throws GenericEntityException {
+        return delegator.findOne("ResponsiveImage", UtilMisc.toMap("contentId", contentId), false);
+    }
+    
+    /**
+     * 
+     * @param request
+     * @param contentId
+     * @return
+     * @throws GenericEntityException
+     * @throws WebAppConfigurationException
+     * @throws IOException
+     */
+    public static Map<String, Integer> buildSrcsetMap(HttpServletRequest request, String contentId)
+            throws GenericEntityException, WebAppConfigurationException, IOException {
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        Map<String, Integer> srcsetEntry = UtilMisc.newMap();
+
+        List<GenericValue> imageSizeDimensionList = UtilMisc.newList();
+        List<Integer> scpWidthList = UtilMisc.newList();
+
+        EntityListIterator contentDataResourceList = getMediaContentDataResourceRequiredByContentId(delegator, "IMAGE_OBJECT",
+                getVariantContentAssocContentIdTo(delegator, contentId), null);
+        GenericValue contentDataResource;
+        Map<String, GenericValue> dataResourceBySizeIdMap = UtilMisc.newMap();
+        while ((contentDataResource = contentDataResourceList.next()) != null) {
+            String sizeId = contentDataResource.getString("sizeId");
+            GenericValue imageSizeDimension = delegator.findOne("ImageSizeDimension", UtilMisc.toMap("sizeId", sizeId), false);
+            if (UtilValidate.isNotEmpty(imageSizeDimension)) {
+                imageSizeDimensionList.add(imageSizeDimension);
+            } else {
+                // TODO: Let's see what do in this case
+                scpWidthList.add(contentDataResource.getInteger("scpWidth"));
+            }
+            dataResourceBySizeIdMap.put(sizeId, contentDataResource);
+        }
+        imageSizeDimensionList = EntityUtil.orderBy(imageSizeDimensionList, UtilMisc.toList("sequenceNum"));
+
+        for (GenericValue imageSizeDimension : imageSizeDimensionList) {
+            GenericValue dataResource = dataResourceBySizeIdMap.get(imageSizeDimension.getString("sizeId"));
+            StringBuilder variantUrl = new StringBuilder();
+            OfbizUrlBuilder.from(request).buildFullUrl(variantUrl, "/media?contentId=" + contentId + "&variant=" + dataResource.get("mapKey"), true);
+            srcsetEntry.put(variantUrl.toString(), imageSizeDimension.getInteger("dimensionWidth"));
+        }
+
+        return srcsetEntry;
     }
 
 }

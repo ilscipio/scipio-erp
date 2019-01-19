@@ -272,9 +272,19 @@
                     <@section title=uiLabelMap.CmsMediaPreview>
                         <#assign dataFile = makeOfbizWebappUrl({"uri": "/media?contentId=" + rawString(media.contentId)})!>
                         <#if media.dataResourceTypeId == "IMAGE_OBJECT">
+                        	<#if responsiveImage?has_content>
+                        		<#if responsiveImageViewPortList?has_content>
+	                        		<#assign sizesMap = {}>                        		
+	                        		<#list responsiveImageViewPortList as viewPort>
+	                        			<#assign sizesMap += { viewPort.viewPortMediaQuery + " : " + viewPort.viewPortLength + "px" : "100vw" }><#-- TODO: Viewport size is also needed -->
+	                        		</#list>
+                        		</#if>	
+                        		<#assign srcsetMap = toSimpleMap(Static["com.ilscipio.scipio.cms.media.CmsMediaWorker"].buildSrcsetMap(request, media.contentId))>
+								<#assign responsiveMap = {"srcset" : srcsetMap!, "sizes" : sizesMap!}>                        	
+                        	</#if>
                             <#assign imageFile = delegator.findOne("ImageDataResource", false, {"dataResourceId" : media.dataResourceId})!>
                             <#if imageFile?has_content>
-                                <@img src=dataFile/>
+                                <@img src=dataFile responsiveMap=responsiveMap!/>
                             </#if>
                         <#elseif media.dataResourceTypeId == "VIDEO_OBJECT">
                             <#assign videoFile = delegator.findOne("VideoDataResource", false, {"dataResourceId" : media.dataResourceId})!>                    

@@ -749,6 +749,8 @@
         <attribute mode="IN" name="localeString" type="String" optional="true"/>
         <attribute mode="IN" name="isPublic" type="Boolean" optional="true"/>
         <attribute mode="IN" name="autoVariants" type="Boolean" optional="true"/>
+        <attribute mode="IN" name="customImageSizes" type="List" optional="true"/>
+        
         <!-- SCIPIO (17/12/2018): Allowing custom image variant sizes config -->
         <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>
         <attribute mode="OUT" name="contentId" type="String" optional="true"/>
@@ -817,8 +819,10 @@
         <attribute name="createdDate" mode="IN" type="Timestamp" optional="true">
             <description>Optional createdDate for Content and DataResource</description>
         </attribute>
-        <!-- SCIPIO (17/12/2018): Allowing custom image variant sizes config -->
+        <!-- SCIPIO (12/17/2018): Allowing custom image variant sizes config -->
         <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>
+        <!-- SCIPIO (01/19/2019): Passing custom image sizes for responsive images -->
+        <attribute mode="IN" name="customImageSizes" type="List" optional="true"/>
     </service>
     <service name="cmsRemoveMediaVariants" engine="java"
         location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="removeMediaVariants" auth="true" transaction-timeout="14400">

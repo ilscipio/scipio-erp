@@ -748,8 +748,7 @@
         <attribute mode="IN" name="statusId" type="String" optional="true"/>
         <attribute mode="IN" name="localeString" type="String" optional="true"/>
         <attribute mode="IN" name="isPublic" type="Boolean" optional="true"/>
-        <attribute mode="IN" name="autoVariants" type="Boolean" optional="true"/>
-        <attribute mode="IN" name="customImageSizes" type="List" optional="true"/>
+        <attribute mode="IN" name="autoVariants" type="Boolean" optional="true"/>        
         
         <!-- SCIPIO (17/12/2018): Allowing custom image variant sizes config -->
         <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>

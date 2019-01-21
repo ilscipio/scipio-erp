@@ -1721,15 +1721,16 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                     <#if responsiveKeys?contains('srcset')>
                         <#local srcsetMap=toSimpleMap(responsiveMap)['srcset']>
                         <#list srcsetMap?keys as srcsetEntry>
-                            <#if !srcsetEntry?is_first><#local srcset=srcset + ", "></#if>
-                            <#local srcset=srcset + (srcsetEntry + " " + srcsetMap[srcsetEntry] + "w")>
+                            <#local srcset=srcset + escapeFullUrl(srcsetMap[srcsetEntry], 'html') + rawString(' ' + srcsetEntry + 'w')>
+                            ${Static["org.ofbiz.base.util.Debug"].log("srcset ===> " + srcset)}
+                            <#if !srcsetEntry?is_last><#local srcset=srcset + ", "></#if>
                         </#list>
                     </#if>
                     <#if responsiveKeys?contains('sizes')>
                         <#local sizesMap=toSimpleMap(responsiveMap)['sizes']>
                         <#list sizesMap?keys as sizesEntry>
-                            <#if !sizesEntry?is_first><#local sizes=sizes + ", "></#if>
                             <#local sizes=sizes + ("(" + sizesEntry + ") " + sizesMap[sizesEntry])>
+                            <#if !sizesEntry?is_last><#local sizes=sizes + ", "></#if>
                         </#list>
                         
                     </#if>

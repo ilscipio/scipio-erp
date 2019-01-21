@@ -107,7 +107,8 @@ public abstract class CmsMediaWorker {
         return delegator.find("ContentDataResourceRequiredView", EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, orderBy, null);
     }
 
-    public static EntityListIterator getMediaContentDataResourceRequiredByContentId(Delegator delegator, String dataResourceTypeId, Collection<String> contentIdList, List<String> orderBy) throws GenericEntityException {
+    public static EntityListIterator getMediaContentDataResourceRequiredByContentId(Delegator delegator, String dataResourceTypeId, Collection<String> contentIdList,
+            List<String> orderBy) throws GenericEntityException {
         List<EntityCondition> condList = new ArrayList<>();
         condList.add(EntityCondition.makeCondition("contentTypeId", "SCP_MEDIA"));
         if (dataResourceTypeId != null) condList.add(EntityCondition.makeCondition("drDataResourceTypeId", dataResourceTypeId));
@@ -119,7 +120,21 @@ public abstract class CmsMediaWorker {
         return delegator.find("ContentDataResourceRequiredView",
                 EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, null);
     }
-
+    
+    
+    public static EntityListIterator getMediaContentDataResourceViewTo(Delegator delegator, String dataResourceTypeId, Collection<String> contentIdList, List<String> orderBy)
+            throws GenericEntityException {
+        List<EntityCondition> condList = new ArrayList<>();
+        condList.add(EntityCondition.makeCondition("contentTypeId", "SCP_MEDIA_VARIANT"));
+        if (dataResourceTypeId != null) condList.add(EntityCondition.makeCondition("drDataResourceTypeId", dataResourceTypeId));
+        List<EntityCondition> contentIdCondList = new ArrayList<>();
+        for(String contentId : contentIdList) {
+            contentIdCondList.add(EntityCondition.makeCondition("contentId", contentId));
+        }
+        condList.add(EntityCondition.makeCondition(contentIdCondList, EntityOperator.OR));
+        return delegator.find("ContentAssocDataResourceViewTo",
+                EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, null);
+    }
 
     /**
      * SCIPIO: Returns the full path to the ImageProperties.xml file to use for cms image size definitions.
@@ -244,36 +259,45 @@ public abstract class CmsMediaWorker {
      * @throws WebAppConfigurationException
      * @throws IOException
      */
-    public static Map<String, Integer> buildSrcsetMap(HttpServletRequest request, String contentId)
+    public static Map<String, String> buildSrcsetMap(HttpServletRequest request, String contentId)
             throws GenericEntityException, WebAppConfigurationException, IOException {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String, Integer> srcsetEntry = UtilMisc.newMap();
+        Map<String, String> srcsetEntry = UtilMisc.newInsertOrderMap();
 
         List<GenericValue> imageSizeDimensionList = UtilMisc.newList();
         List<Integer> scpWidthList = UtilMisc.newList();
 
-        EntityListIterator contentDataResourceList = getMediaContentDataResourceRequiredByContentId(delegator, "IMAGE_OBJECT",
-                getVariantContentAssocContentIdTo(delegator, contentId), null);
-        GenericValue contentDataResource;
-        Map<String, GenericValue> dataResourceBySizeIdMap = UtilMisc.newMap();
-        while ((contentDataResource = contentDataResourceList.next()) != null) {
-            String sizeId = contentDataResource.getString("sizeId");
-            GenericValue imageSizeDimension = delegator.findOne("ImageSizeDimension", UtilMisc.toMap("sizeId", sizeId), false);
-            if (UtilValidate.isNotEmpty(imageSizeDimension)) {
-                imageSizeDimensionList.add(imageSizeDimension);
-            } else {
-                // TODO: Let's see what do in this case
-                scpWidthList.add(contentDataResource.getInteger("scpWidth"));
+        EntityListIterator contentDataResourceList = null;
+        try {
+            contentDataResourceList = getMediaContentDataResourceViewTo(delegator, "IMAGE_OBJECT", getVariantContentAssocContentIdTo(delegator, contentId), null);
+            GenericValue contentDataResource;
+            Map<String, GenericValue> dataResourceBySizeIdMap = UtilMisc.newMap();
+            while ((contentDataResource = contentDataResourceList.next()) != null) {
+                String sizeId = contentDataResource.getString("drSizeId");
+                GenericValue imageSizeDimension = delegator.findOne("ImageSizeDimension", UtilMisc.toMap("sizeId", sizeId), false);
+                if (UtilValidate.isNotEmpty(imageSizeDimension)) {
+                    imageSizeDimensionList.add(imageSizeDimension);
+                } else {
+                    // TODO: Let's see what do in this case
+                    scpWidthList.add(contentDataResource.getInteger("scpWidth"));
+                }
+                dataResourceBySizeIdMap.put(sizeId, contentDataResource);
             }
-            dataResourceBySizeIdMap.put(sizeId, contentDataResource);
-        }
-        imageSizeDimensionList = EntityUtil.orderBy(imageSizeDimensionList, UtilMisc.toList("sequenceNum"));
+            imageSizeDimensionList = EntityUtil.orderBy(imageSizeDimensionList, UtilMisc.toList("sequenceNum"));
 
-        for (GenericValue imageSizeDimension : imageSizeDimensionList) {
-            GenericValue dataResource = dataResourceBySizeIdMap.get(imageSizeDimension.getString("sizeId"));
-            StringBuilder variantUrl = new StringBuilder();
-            OfbizUrlBuilder.from(request).buildFullUrl(variantUrl, "/media?contentId=" + contentId + "&variant=" + dataResource.get("mapKey"), true);
-            srcsetEntry.put(variantUrl.toString(), imageSizeDimension.getInteger("dimensionWidth"));
+            for (GenericValue imageSizeDimension : imageSizeDimensionList) {
+                GenericValue dataResource = dataResourceBySizeIdMap.get(imageSizeDimension.getString("sizeId"));
+                StringBuilder variantUrl = new StringBuilder();
+                OfbizUrlBuilder.from(request).buildFullUrlWithContextPath(variantUrl, "/media?contentId=" + contentId + "&variant=" + dataResource.get("caMapKey"), true);
+                srcsetEntry.put(String.valueOf(imageSizeDimension.getLong("dimensionWidth")), variantUrl.toString());
+            }
+
+        } catch (GenericEntityException e) {
+            throw e;
+        } finally {
+            if (UtilValidate.isNotEmpty(contentDataResourceList)) {
+                contentDataResourceList.close();
+            }
         }
 
         return srcsetEntry;

@@ -359,8 +359,8 @@ public abstract class CmsMediaServices {
                     imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap("CustomDimension", "", "", imgPropsMap);
                     if (context.containsKey("saveAsPreset") && ((boolean) context.get("saveAsPreset"))) {
                         String presetName = (context.containsKey("presetName")) ? (String) context.get("presetName") : "Preset " + UtilDateTime.nowDateString();
-						customImageSizes = EntityUtil.filterByEntityName(saveCustomImageSizePreset(delegator, presetName, getImgPropsMap(context),
-								(List<String>) context.get("variantSizeSequenceNum")), "ImageSizeDimension");
+                        customImageSizes = EntityUtil.filterByEntityName(saveCustomImageSizePreset(delegator, presetName, getImgPropsMap(context),
+                                (List<String>) context.get("variantSizeSequenceNum")), "ImageSizeDimension");
                     }
                 } else {
                     Debug.logWarning("Custom image size dimensions not found.", module);
@@ -370,55 +370,64 @@ public abstract class CmsMediaServices {
                 context.put("imageVariantConfig", imageVariantConfig);
             }
 
-			result = dispatcher.runSync("cmsUploadMediaFile",
-					ServiceUtil.setServiceFields(dispatcher, "cmsUploadMediaFile", context,
-							(GenericValue) context.get("userLogin"), (TimeZone) context.get("timeZone"),
-							(Locale) context.get("locale")));
+            result = dispatcher.runSync("cmsUploadMediaFile",
+                    ServiceUtil.setServiceFields(dispatcher, "cmsUploadMediaFile", context,
+                            (GenericValue) context.get("userLogin"), (TimeZone) context.get("timeZone"),
+                            (Locale) context.get("locale")));
 
-			if (result.containsKey("contentId")) {
-				String contentId = (String) result.get("contentId");
+            if (result.containsKey("contentId")) {
+                String contentId = (String) result.get("contentId");
 
-				if (!customImageSizes.isEmpty()) {
-					EntityListIterator eli = CmsMediaWorker.getMediaContentDataResourceRequiredByContentId(delegator,
-							"IMAGE_OBJECT", CmsMediaWorker.getVariantContentAssocContentIdTo(delegator, contentId),
-							null);
-					List<GenericValue> variantContentDataResources = eli.getCompleteList();
-					if (UtilValidate.isNotEmpty(variantContentDataResources)) {
-						for (GenericValue customImageSize : customImageSizes) {
-							GenericValue variantContentDataResource = EntityUtil.getFirst(EntityUtil.filterByAnd(
-									variantContentDataResources, UtilMisc.toList(EntityCondition.makeCondition("mapKey",
-											EntityOperator.EQUALS, customImageSize.getString("sizeName")))));
-							GenericValue varDataResource = variantContentDataResource.getRelatedOne("DataResource",
-									false);
-							varDataResource.put("sizeId", customImageSize.get("sizeId"));
-						}
-					}
-					eli.close();
+                if (!customImageSizes.isEmpty()) {
+                    EntityListIterator eli = null;
+                    try {
+                        eli = CmsMediaWorker.getMediaContentDataResourceViewTo(delegator,
+                                "IMAGE_OBJECT",  CmsMediaWorker.getVariantContentAssocContentIdTo(delegator, contentId),
+                                null);
+                        List<GenericValue> variantContentDataResources = eli.getCompleteList();
+                        if (UtilValidate.isNotEmpty(variantContentDataResources)) {
+                            for (GenericValue customImageSize : customImageSizes) {
+                                GenericValue variantContentDataResource = EntityUtil.getFirst(EntityUtil.filterByAnd(
+                                        variantContentDataResources, UtilMisc.toList(EntityCondition.makeCondition("caMapKey",
+                                                EntityOperator.EQUALS, customImageSize.getString("sizeName")))));
+                                variantContentDataResource.put("drSizeId", customImageSize.get("sizeId"));
+                                GenericValue dataResource = variantContentDataResource.extractViewMember("DataResource");
+                                dataResource.store();
+                            }
+                        }
+                    } catch (GenericEntityException e) {
+                        throw e;
+                    } finally {
+                        if (UtilValidate.isNotEmpty(eli)) {
+                            eli.close();
+                        }
+                    }
+                    
 
-					if (context.containsKey("srcsetModeEnumId")) {
-						GenericValue imageViewPort = delegator.makeValidValue("ResponsiveImage", UtilMisc
-								.toMap("srcsetModeEnumId", context.get("srcsetModeEnumId"), "contentId", contentId));
-						imageViewPort.create();
-						if (context.get("srcsetModeEnumId").equals("IMG_SRCSET_VW")) {
-							List<GenericValue> imageMediaQueries = UtilMisc.newList();
-							List<String> mediaQueries = (List<String>) context.get("viewPortMediaQuery");
-							List<String> viewPortLength = (List<String>) context.get("viewPortLength");
-							List<String> viewPortSequenceNum = (List<String>) context.get("viewPortSequenceNum");
-							if (mediaQueries.size() == viewPortLength.size()) {
-								int i = 0;
-								for (String mediaQuery : mediaQueries) {
-									imageMediaQueries.add(delegator.makeValidValue("ResponsiveImageVP",
-											UtilMisc.toMap("contentId", contentId, "viewPortMediaQuery", mediaQuery,
-													"viewPortLength", Long.parseLong(viewPortLength.get(i)),
-													"sequenceNum", Long.parseLong(viewPortSequenceNum.get(i)))));
-									i++;
-								}
-								delegator.storeAll(imageMediaQueries);
-							}
-						}
-					}
-				}
-			}
+                    if (context.containsKey("srcsetModeEnumId")) {
+                        GenericValue imageViewPort = delegator.makeValidValue("ResponsiveImage", UtilMisc
+                                .toMap("srcsetModeEnumId", context.get("srcsetModeEnumId"), "contentId", contentId));
+                        imageViewPort.create();
+                        if (context.get("srcsetModeEnumId").equals("IMG_SRCSET_VW")) {
+                            List<GenericValue> imageMediaQueries = UtilMisc.newList();
+                            List<String> mediaQueries = (List<String>) context.get("viewPortMediaQuery");
+                            List<String> viewPortLength = (List<String>) context.get("viewPortLength");
+                            List<String> viewPortSequenceNum = (List<String>) context.get("viewPortSequenceNum");
+                            if (mediaQueries.size() == viewPortLength.size()) {
+                                int i = 0;
+                                for (String mediaQuery : mediaQueries) {
+                                    imageMediaQueries.add(delegator.makeValidValue("ResponsiveImageVP",
+                                            UtilMisc.toMap("contentId", contentId, "viewPortMediaQuery", mediaQuery,
+                                                    "viewPortLength", Long.parseLong(viewPortLength.get(i)),
+                                                    "sequenceNum", Long.parseLong(viewPortSequenceNum.get(i)))));
+                                    i++;
+                                }
+                                delegator.storeAll(imageMediaQueries);
+                            }
+                        }
+                    }
+                }
+            }
         } catch (GenericServiceException e) {
             result = ServiceUtil.returnError(e.getMessageList());
         } catch (IOException e) {

@@ -1357,7 +1357,7 @@ code package.
         <prim-key field="contentId" />
         <!-- <prim-key field="viewPortSizeId"/> -->
 
-        <relation type="one" fk-name="CONTENT_VP" rel-entity-name="Content">
+        <relation type="many" fk-name="CONTENT_VP" rel-entity-name="Content">
             <key-map field-name="contentId"/>
         </relation>
        <!--  <relation type="one" fk-name="IWP_VW_SZ" rel-entity-name="ImageViewPortSize">
@@ -1376,6 +1376,7 @@ code package.
         <field name="viewPortLength" type="numeric"/>
         <field name="sequenceNum" type="numeric" not-null="true"/>
         <prim-key field="contentId"/>
+        <prim-key field="sequenceNum"/>
         <relation type="one" fk-name="RESIMG_C" rel-entity-name="ResponsiveImage">
             <key-map field-name="contentId"/>
         </relation>

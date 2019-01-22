@@ -15,18 +15,12 @@ ports:
 - protocol: http # can be udp|tcp|http
   port-number: 8080
   description: web app http port
-- protocol: tcp # can be udp|tcp|http
-  port-number: 8443
-  description: admin web app
 - protocol: http # can be udp|tcp|http
   port-number: 8983
   description: solr search service port
 - protocol: http # can be udp|tcp|http
   port-number: 80
   description: nginx app
-- protocol: tcp # can be udp|tcp|http
-  port-number: 443
-  description: nginx https
 
 sync-ignore: |
   .git

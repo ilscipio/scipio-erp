@@ -60,14 +60,9 @@ COPY assets/configs /opt/configs
 RUN rm /etc/nginx/sites-enabled/default && \
     ln -s /opt/configs/nginx/scipio.conf /etc/nginx/sites-enabled/default
 
-# self signed certificate
-ENV SSL_CN localhost
-RUN openssl req -subj '/CN=${SSL_CN}' -x509 -newkey rsa:4096 -nodes \
-    -keyout /etc/nginx/conf.d/key.pem -out /etc/nginx/conf.d/cert.pem -days 365
-
 WORKDIR /data
 
-EXPOSE 8080 8443 8983 80 443
+EXPOSE 8080 8443 8983 80
 
 ENTRYPOINT /opt/scripts/entrypoint.sh
 

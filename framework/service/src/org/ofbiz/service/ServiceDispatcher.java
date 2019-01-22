@@ -78,7 +78,7 @@ public class ServiceDispatcher {
     private static boolean enableJMS = UtilProperties.getPropertyAsBoolean("service", "enableJMS", true);
     private static boolean enableSvcs = true;
 
-    private static boolean autoMakeValidForServicesWithPermService = UtilProperties.getPropertyAsBoolean("service", "autoMakeValidForServicesWithPermService", false);
+    private static boolean autoMakeValidForServicesWithPermService = UtilProperties.getPropertyAsBoolean("service", "autoMakeValidForServicesWithPermService", true);
 
     protected Delegator delegator = null;
     protected GenericEngineFactory factory = null;

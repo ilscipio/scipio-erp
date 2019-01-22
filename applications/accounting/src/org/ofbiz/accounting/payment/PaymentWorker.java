@@ -32,6 +32,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -51,6 +52,15 @@ public final class PaymentWorker {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
     private static final RoundingMode rounding = UtilNumber.getRoundingMode("invoice.rounding");
+
+    private static final Character NUMBER_MASK_CHAR; // SCIPIO
+    static {
+        String maskCharStr = UtilProperties.getPropertyValue("payment", "payment.general.number.maskChar");
+        NUMBER_MASK_CHAR = maskCharStr.isEmpty() ? null : maskCharStr.charAt(0);
+        Debug.logInfo("payment.general.number.maskChar: " + NUMBER_MASK_CHAR, module);
+    }
+    private static final int NUMBER_MASK_LENGTH = UtilProperties.getPropertyAsInteger("payment",
+            "payment.general.number.maskLength", -4); // SCIPIO
 
     private PaymentWorker() {}
 
@@ -344,5 +354,43 @@ public final class PaymentWorker {
             throw new IllegalArgumentException("The paymentId passed does not match an existing payment");
         }
         return payment.getBigDecimal("amount").subtract(getPaymentApplied(delegator,paymentId, actual)).setScale(decimals,rounding);
+    }
+
+    /**
+     * SCIPIO: Returns the general account/card masking character, as configured in
+     * payment.properties#payment.general.number.maskChar.
+     * NOTE: This may return null for testing purposes, in which case there should be no masking.
+     */
+    public static Character getNumberMaskChar(Delegator delegator) {
+        return NUMBER_MASK_CHAR;
+    }
+
+    /**
+     * SCIPIO: Returns the general account/card masking character, as configured in
+     * payment.properties#payment.general.number.maskChar.
+     * NOTE: This may return null for testing purposes, in which case there should be no masking.
+     * NOTE: If a delegator is available, please call {@link #getNumberMaskChar(Delegator)} instead.
+     */
+    public static Character getNumberMaskChar() {
+        return NUMBER_MASK_CHAR;
+    }
+
+    /**
+     * SCIPIO: Returns the general account/card masking length, as configured in
+     * payment.properties#payment.general.number.maskLength,
+     * as the number of characters to mask (negative value means how many to leave unmasked).
+     */
+    public static int getNumberMaskLength(Delegator delelegator) {
+        return NUMBER_MASK_LENGTH;
+    }
+
+    /**
+     * SCIPIO: Returns the general account/card masking length, as configured in
+     * payment.properties#payment.general.number.maskLength,
+     * as the number of characters to mask (negative value means how many to leave unmasked).
+     * NOTE: If a delegator is available, please call {@link #getNumberMaskLength(Delegator)} instead.
+     */
+    public static int getNumberMaskLength() {
+        return NUMBER_MASK_LENGTH;
     }
 }

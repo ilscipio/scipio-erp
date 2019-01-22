@@ -4125,6 +4125,67 @@ Adds a string with optional delimiter to a string that supports boolean values.
   </#if>
 </#function>
 
+<#--
+*************
+* maskValueLeft
+************
+Replaces the first part of the string with a masking character (default "*").
+
+NOTE: The result is automatically HTML-escaped, so you may need to use #rawString in some cases.
+
+  * Usage Examples *
+    ${maskValueLeft("123456781234", -4)} // 
+    ${maskValueLeft("123456781234", 8, "X")}
+
+  * Parameters *
+    value                   = ((object), required) Value, usually a string; if not string, coerced to string first
+    maskLength              = ((int), required) If greater than zero, the number of characters to mask from the left;
+                              if negative, the number of characters to leave unmasked from the right;
+                              if zero, returns the original string.
+                              If maskLength is greater than zero and the string is less than maskLength, returns
+                              a string of maskLength masked characters; if maskLength is negative and the string
+                              is less than the absolute value of maskLength, returns the original string.
+                              Thus, negative values depend on the value's size as a string.
+    maskChar                = ((string), default: "*") The mask character (should be length 1)
+
+  * History *
+    Added for 1.14.5.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function maskValueLeft value maskLength maskChar>
+</#function>
+-->
+
+<#--
+*************
+* maskValueRight
+************
+Replaces the last part of the string with a masking character (default "*").
+
+NOTE: The result is automatically HTML-escaped, so you may need to use #rawString in some cases.
+
+  * Usage Examples *
+    ${maskValueRight("123456781234", 4)}
+    ${maskValueRight("123456781234", -8, "X")}
+
+  * Parameters *
+    value                   = ((object), required) Value, usually a string; if not string, coerced to string first
+    maskLength              = ((int), required) If greater than zero, the number of characters to mask from the right;
+                              if negative, the number of characters to leave unmasked from the left;
+                              if zero, returns the original string.
+                              If maskLength is greater than zero and the string is less than maskLength, returns
+                              a string of maskLength masked characters; if maskLength is negative and the string
+                              is less than the absolute value of maskLength, returns the original string.
+                              Thus, negative values depend on the value's size as a string.
+    maskChar                = ((string), default: "*") The mask character (should be length 1)
+
+  * History *
+    Added for 1.14.5.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function maskValueRight value maskLength maskChar>
+</#function>
+-->
 
 <#-- 
 *************

@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<#include 'calendarcommon.ftl'>
+<#include "component://workeffort/webapp/workeffort/common/common.ftl">
 
 <#-- SCIPIO: modified to show workEffortIds only if workEffortName missing -->
 <#assign workEffortLinkLabel = workEffort.workEffortName!"">

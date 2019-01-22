@@ -1898,6 +1898,40 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   </@container>
 </@section>
 
+<@section title="String tests">
+  <ul>
+    <li>maskValueLeft("123456781234", 8, "X"): ${maskValueLeft("123456781234", 8, "X")}</li>
+    <li>maskValueLeft("12345678123456", 8): ${maskValueLeft("12345678123456", 8)}</li>
+    <li>maskValueLeft("12345678", 8): ${maskValueLeft("12345678", 8)}</li>
+    <li>maskValueLeft("123", 8): ${maskValueLeft("123", 8)}</li>
+    <li>maskValueLeft(12345, 2): ${maskValueLeft(12345, 2)}</li>
+
+    <li>maskValueLeft("123445671234", -4, "X"): ${maskValueLeft("123445671234", -4, "X")}</li>
+    <li>maskValueLeft("12344567123434", -4): ${maskValueLeft("12344567123434", -4)}</li>
+    <li>maskValueLeft("1234", -4): ${maskValueLeft("1234", -4)}</li>
+    <li>maskValueLeft("123", -4): ${maskValueLeft("123", -4)}</li>
+    <li>maskValueLeft(12345, -2): ${maskValueLeft(12345, -2)}</li>
+
+    <li>maskValueLeft("123445671234", 0, "X"): ${maskValueLeft("123445671234", 0, "X")}</li>
+    <li>maskValueLeft("1234", 0): ${maskValueLeft("1234", 0)}</li>
+
+    <li>maskValueRight("123456781234", 8, "X"): ${maskValueRight("123456781234", 8, "X")}</li>
+    <li>maskValueRight("12345678123456", 8): ${maskValueRight("12345678123456", 8)}</li>
+    <li>maskValueRight("12345678", 8): ${maskValueRight("12345678", 8)}</li>
+    <li>maskValueRight("123", 8): ${maskValueRight("123", 8)}</li>
+    <li>maskValueRight(12345, 2): ${maskValueRight(12345, 2)}</li>
+
+    <li>maskValueRight("123445671234", -4, "X"): ${maskValueRight("123445671234", -4, "X")}</li>
+    <li>maskValueRight("12344567123434", -4): ${maskValueRight("12344567123434", -4)}</li>
+    <li>maskValueRight("1234", -4): ${maskValueRight("1234", -4)}</li>
+    <li>maskValueRight("123", -4): ${maskValueRight("123", -4)}</li>
+    <li>maskValueRight(12345, -2): ${maskValueRight(12345, -2)}</li>
+
+    <li>maskValueRight("123445671234", 0, "X"): ${maskValueRight("123445671234", 0, "X")}</li>
+    <li>maskValueRight("1234", 0): ${maskValueRight("1234", 0)}</li>
+  </ul>
+</@section>
+
 <@section title="URL generation">
   <#assign shopWebSiteId = rawString(shopInfo.webSiteId!)>
   <#assign shopMountPoint = rawString(shopInfo.mountPoint!)>

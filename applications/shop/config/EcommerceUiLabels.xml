@@ -1321,22 +1321,22 @@
         <value xml:lang="zh-TW">來自站台:</value>
     </property>
     <property key="EcommerceGiftAmount">
-        <value xml:lang="da">Gavebeløb:</value>
-        <value xml:lang="de">Gutschein Betrag:</value>
-        <value xml:lang="en">Gift Amount:</value>
-        <value xml:lang="es">Cantidad de regalo :</value>
-        <value xml:lang="fr">Montant du cadeau : </value>
+        <value xml:lang="da">Gavebeløb</value>
+        <value xml:lang="de">Gutschein Betrag</value>
+        <value xml:lang="en">Gift Amount</value>
+        <value xml:lang="es">Cantidad de regalo</value>
+        <value xml:lang="fr">Montant du cadeau</value>
         <value xml:lang="hi-IN">उपहार कुल:</value>
-        <value xml:lang="it">Importo omaggio:</value>
-        <value xml:lang="ja">ギフト金額:</value>
-        <value xml:lang="nl">Geschenk saldo:</value>
+        <value xml:lang="it">Importo omaggio</value>
+        <value xml:lang="ja">ギフト金額</value>
+        <value xml:lang="nl">Geschenk saldo</value>
         <value xml:lang="pt-BR">Quantidade de presente</value>
-        <value xml:lang="ro">Valoare Omagiu :</value>
-        <value xml:lang="ru">Сумма подарков:</value>
+        <value xml:lang="ro">Valoare Omagiu</value>
+        <value xml:lang="ru">Сумма подарков</value>
         <value xml:lang="th">จำนวนของขวัญ</value>
-        <value xml:lang="vi">Giá trị quà tặng:</value>
-        <value xml:lang="zh">礼品金额     :</value>
-        <value xml:lang="zh-TW">禮物金額:</value>
+        <value xml:lang="vi">Giá trị quà tặng</value>
+        <value xml:lang="zh">礼品金额</value>
+        <value xml:lang="zh-TW">禮物金額</value>
     </property>
     <property key="EcommerceGiftCardFrom">
         <value xml:lang="da">Gavekort fra</value>
@@ -1360,19 +1360,19 @@
         <value xml:lang="da">Ny saldo for gavekort</value>
         <value xml:lang="de">Gutschein neuer Kontostand</value>
         <value xml:lang="en">Gift Card New Balance</value>
-        <value xml:lang="es">El nuevo balance es :</value>
+        <value xml:lang="es">El nuevo balance es</value>
         <value xml:lang="fr">Nouveau solde de la carte cadeau</value>
         <value xml:lang="hi-IN">आपका नया शेष है:</value>
-        <value xml:lang="it">Il nuovo saldo è:</value>
-        <value xml:lang="ja">お買い上げ後の残高:</value>
-        <value xml:lang="nl">Het nieuwe saldo is :</value>
-        <value xml:lang="pt-BR">Novo saldo de cartão de presente:</value>
-        <value xml:lang="ro">Noul bilant este :</value>
-        <value xml:lang="ru">Новый баланс :</value>
+        <value xml:lang="it">Il nuovo saldo è</value>
+        <value xml:lang="ja">お買い上げ後の残高</value>
+        <value xml:lang="nl">Het nieuwe saldo is</value>
+        <value xml:lang="pt-BR">Novo saldo de cartão de presente</value>
+        <value xml:lang="ro">Noul bilant este</value>
+        <value xml:lang="ru">Новый баланс</value>
         <value xml:lang="th">ยอดใหม่ของบัตรของขวัญ</value>
         <value xml:lang="vi">Tài khoản thẻ quà tặng mới</value>
-        <value xml:lang="zh">新的余额是：</value>
-        <value xml:lang="zh-TW">禮物卡新餘額是:</value>
+        <value xml:lang="zh">新的余额是</value>
+        <value xml:lang="zh-TW">禮物卡新餘額是</value>
     </property>
     <property key="EcommerceGiftCardRefunded">
         <value xml:lang="da">Gavekortet er refunderet</value>
@@ -4182,6 +4182,18 @@
         <value xml:lang="zh">你已经发送了一个</value>
         <value xml:lang="zh-TW">你已發送</value>
     </property>
+    <property key="EcommerceYouHaveBeenSentGiftCard">
+        <value xml:lang="de">Ihnen wurde eine ${storeName}-Gutscheinkarte!</value>
+        <value xml:lang="en">You have been sent a ${storeName} gift card!</value>
+        <value xml:lang="es">Se le ha enviado una tarjeta de regalo de ${storeName}!</value>
+        <value xml:lang="fr">Vous avez reçu une carte-cadeau ${storeName}!</value>
+    </property>
+    <property key="EcommerceYouHaveBeenSentGiftCardFrom">
+        <value xml:lang="de">Ihnen wurde eine ${storeName}-Gutscheinkarte von ${senderName} gesendet!</value>
+        <value xml:lang="en">You have been sent a ${storeName} gift card from ${senderName}!</value>
+        <value xml:lang="es">Se le ha enviado una tarjeta de regalo de ${storeName} de ${senderName}!</value>
+        <value xml:lang="fr">Vous avez reçu une carte-cadeau ${storeName} de ${senderName}!</value>
+    </property>
     <property key="EcommerceYouMightAlsoIntrested">
         <value xml:lang="cs">Měli byste také zájem o</value>
         <value xml:lang="da">De er måske også interesseret i</value>
@@ -4238,21 +4250,21 @@
     </property>
     <property key="EcommerceYourCardNumber">
         <value xml:lang="da">Deres kortnummer</value>
-        <value xml:lang="de">Ihre Kartennummer:</value>
+        <value xml:lang="de">Ihre Kartennummer</value>
         <value xml:lang="en">Your Card Number</value>
-        <value xml:lang="es">Su # de tarjeta:</value>
+        <value xml:lang="es">Su # de tarjeta</value>
         <value xml:lang="fr">Votre n° de carte</value>
         <value xml:lang="hi-IN">आपका कार्ड नम्बर:</value>
-        <value xml:lang="it">La tua carta numero:</value>
+        <value xml:lang="it">La tua carta numero</value>
         <value xml:lang="ja">カード番号</value>
-        <value xml:lang="nl">Uw kaartnummer:</value>
-        <value xml:lang="pt-BR">O número de seu cartão:</value>
-        <value xml:lang="ro">Numarul Cartii tale:</value>
-        <value xml:lang="ru">Номер вашей карты:</value>
+        <value xml:lang="nl">Uw kaartnummer</value>
+        <value xml:lang="pt-BR">O número de seu cartão</value>
+        <value xml:lang="ro">Numarul Cartii tale</value>
+        <value xml:lang="ru">Номер вашей карты</value>
         <value xml:lang="th">หมายเลขบัตรของคุณ</value>
         <value xml:lang="vi">Số thẻ của bạn</value>
-        <value xml:lang="zh">你的卡号：</value>
-        <value xml:lang="zh-TW">你的卡號:</value>
+        <value xml:lang="zh">你的卡号</value>
+        <value xml:lang="zh-TW">你的卡號</value>
     </property>
     <property key="EcommerceYourGiftCard">
         <value xml:lang="da">Deres gavekort</value>
@@ -4285,6 +4297,12 @@
         <value xml:lang="zh">你充值的礼品卡有</value>
         <value xml:lang="zh-TW">你儲值禮物卡有</value>
     </property>
+    <property key="EcommerceYourGiftCardHasBeenReloaded">
+        <value xml:lang="de">Ihre Geschenkkarte ${cardNumber} wurde neu geladen.</value>
+        <value xml:lang="en">Your Giftcard ${cardNumber} has been reloaded.</value>
+        <value xml:lang="es">Tu tarjeta de regalo ${cardNumber} ha sido recargada.</value>
+        <value xml:lang="fr">Votre carte cadeau ${cardNumber} a été rechargée.</value>
+    </property>
     <property key="EcommerceYourOrderIsBeingProcessed">
         <value xml:lang="de">Ihre Bestellung wird verarbeitet, dies kann einige Minuten dauern...</value>
         <value xml:lang="en">Your order is being processed, this may take a moment...</value>
@@ -4308,15 +4326,15 @@
         <value xml:lang="es">Su número Pin</value>
         <value xml:lang="fr">Votre n° PIN</value>
         <value xml:lang="hi-IN">आपका पिन नम्बर</value>
-        <value xml:lang="it">Il tuo numero di Pin :</value>
+        <value xml:lang="it">Il tuo numero di Pin</value>
         <value xml:lang="ja">PIN番号</value>
-        <value xml:lang="nl">Uw pinnummer :</value>
-        <value xml:lang="pt-BR">Seu número de Pin é:</value>
-        <value xml:lang="ro">Numarul tau de Pin :</value>
-        <value xml:lang="ru">Ваш ПИК код :</value>
+        <value xml:lang="nl">Uw pinnummer</value>
+        <value xml:lang="pt-BR">Seu número de Pin é</value>
+        <value xml:lang="ro">Numarul tau de Pin</value>
+        <value xml:lang="ru">Ваш ПИК код</value>
         <value xml:lang="th">หมายเลขรหัสส่วนตัวของคุณ</value>
         <value xml:lang="vi">Mã Pin của bạn</value>
-        <value xml:lang="zh">你的密码：</value>
+        <value xml:lang="zh">你的密码</value>
         <value xml:lang="zh-TW">你的PIN碼</value>
     </property>
     <property key="EcommerceYourShoppingCartEmpty">

@@ -1,5 +1,5 @@
 <#-- Scipio Asset Editor  -->
-<#include "../common/common.ftl">
+<#include "component://cms/webapp/cms/common/common.ftl">
 
 <#-- 
 2016-12-02: TODO?: UI CURRENTLY DOES NOT SUPPORT VERSIONING ON ASSET TEMPLATES (BUT SCHEMA DOES)
@@ -73,7 +73,7 @@
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editAsset") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreateAsset/>
+            <@menuitem type="link" href=makeOfbizUrl("editAsset") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsCreateAsset/>
             <@cmsCopyMenuItem target="copyAsset" title=uiLabelMap.CmsCopyAsset>
                 <@field type="hidden" name="assetTemplateId" value=(assetTemplateModel.id!)/><#-- for browsing, on error -->
                 <@field type="hidden" name="srcAssetTemplateId" value=(assetTemplateModel.id!)/>
@@ -274,7 +274,7 @@
                         </@field>
                             
                         <@field type="textarea" name="description" value=(parameters.description!) label=uiLabelMap.CommonDescription required=false/>
-                        <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_create!}"/>
+                        <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_add!}"/>
                       </@fields>
                     </@section>
                 </@form>

@@ -11,7 +11,8 @@ they may need to be duplicated to:
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 -->
 
-<#include "ordercommon.ftl">
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
 <#-- SCIPIO: TODO: convert template (maybe wait until after updates from branch) - this is not yet part of orderentry... -->
 <#-- TODO : Need formatting -->
 <@script>
@@ -91,23 +92,23 @@ var issuerId = "";
 
             <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
               <#macro payMethContent args={}><label for="checkOutPaymentId_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label></#macro><#-- SCIPIO: Use full so clearer: OrderMoneyOrder -->
-              <@checkoutInvField type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" checked=("EXT_OFFLINE" == checkOutPaymentId) labelContent=payMethContent/>
+              <@orderlib.checkoutInvField type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" checked=("EXT_OFFLINE" == checkOutPaymentId) labelContent=payMethContent/>
             </#if>
             <#if productStorePaymentMethodTypeIdMap.EXT_COD??>
               <#macro payMethContent args={}><label for="checkOutPaymentId_COD">${uiLabelMap.OrderCOD}</label></#macro>
-              <@checkoutInvField type="radio" type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" checked=("EXT_COD" == checkOutPaymentId) labelContent=payMethContent />
+              <@orderlib.checkoutInvField type="radio" type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" checked=("EXT_COD" == checkOutPaymentId) labelContent=payMethContent />
             </#if>
             <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY??>
               <#macro payMethContent args={}><label for="checkOutPaymentId_WORLDPAY">${uiLabelMap.AccountingPayWithWorldPay}</label></#macro>
-              <@checkoutInvField type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" checked=("EXT_WORLDPAY" == checkOutPaymentId) labelContent=payMethContent/>
+              <@orderlib.checkoutInvField type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" checked=("EXT_WORLDPAY" == checkOutPaymentId) labelContent=payMethContent/>
             </#if>
             <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
               <#macro payMethContent args={}><label for="checkOutPaymentId_PAYPAL">${uiLabelMap.AccountingPayWithPayPal}</label></#macro>
-              <@checkoutInvField type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" checked=("EXT_PAYPAL" == checkOutPaymentId) labelContent=payMethContent />
+              <@orderlib.checkoutInvField type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" checked=("EXT_PAYPAL" == checkOutPaymentId) labelContent=payMethContent />
             </#if>
             <#if productStorePaymentMethodTypeIdMap.EXT_LIGHTNING??>
               <#macro payMethContent args={}><label for="checkOutPaymentId_PAYPAL">${uiLabelMap.AccountingPayWithBitcoinl}</label></#macro>
-              <@checkoutInvField type="radio" id="checkOutPaymentId_LIGHTNING" name="checkOutPaymentId" value="EXT_LIGHTNING" checked=("EXT_LIGHTNING" == checkOutPaymentId) labelContent=payMethContent />
+              <@orderlib.checkoutInvField type="radio" id="checkOutPaymentId_LIGHTNING" name="checkOutPaymentId" value="EXT_LIGHTNING" checked=("EXT_LIGHTNING" == checkOutPaymentId) labelContent=payMethContent />
             </#if>
             <#if productStorePaymentMethodTypeIdMap.EXT_IDEAL??>
               <#macro payMethContent args={}>
@@ -122,7 +123,7 @@ var issuerId = "";
                   </#if>
                 </div>
               </#macro>
-              <@checkoutInvField type="radio" id="checkOutPaymentId_IDEAL" name="checkOutPaymentId" value="EXT_IDEAL" checked=("EXT_IDEAL" == checkOutPaymentId) labelContent=payMethContent />
+              <@orderlib.checkoutInvField type="radio" id="checkOutPaymentId_IDEAL" name="checkOutPaymentId" value="EXT_IDEAL" checked=("EXT_IDEAL" == checkOutPaymentId) labelContent=payMethContent />
             </#if>
 
             <#if !paymentMethodList?has_content>
@@ -134,23 +135,8 @@ var issuerId = "";
               
                 <#if paymentMethod.paymentMethodTypeId == "GIFT_CARD">
                  <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-                  <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false) />
-
-                  <#if giftCard?has_content && giftCard.cardNumber?has_content>
-                    <#assign giftCardNumber = "" />
-                    <#assign pcardNumber = giftCard.cardNumber />
-                    <#if pcardNumber?has_content>
-                      <#assign psize = pcardNumber?length - 4 />
-                      <#if (0 < psize)>
-                        <#list 0 .. psize-1 as foo>
-                          <#assign giftCardNumber = giftCardNumber + "*" />
-                        </#list>
-                        <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3] />
-                      <#else>
-                        <#assign giftCardNumber = pcardNumber />
-                      </#if>
-                    </#if>
-                  </#if>
+                  <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)! />
+                  <#assign giftCardNumber = acctlib.getPayMethDisplayNumber(giftCard, paymentMethod)!/><#-- SCIPIO: Refactored using function -->
 
                   <#macro payMethContent args={}>
                     <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}: ${giftCardNumber}</label>
@@ -159,7 +145,7 @@ var issuerId = "";
                     <#assign fieldValue><#if ((cart.getPaymentAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
                     <@field type="input" label=uiLabelMap.OrderBillUpTo size="5" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue />
                   </#macro>
-                  <@checkoutInvField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=payMethContent />
+                  <@orderlib.checkoutInvField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=payMethContent />
                  </#if>
                 <#elseif paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                   <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
@@ -171,7 +157,7 @@ var issuerId = "";
                       <#assign fieldValue><#if ((cart.getPaymentAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
                       <@field type="input" label=uiLabelMap.OrderBillUpTo size="5" id="amount_${paymentMethod.paymentMethodId}" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue />
                     </#macro>
-                    <@checkoutInvField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=payMethContent/>
+                    <@orderlib.checkoutInvField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=payMethContent/>
                   </#if>
                 <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                   <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
@@ -181,7 +167,7 @@ var issuerId = "";
                       <#if paymentMethod.description?has_content><p>(${paymentMethod.description})</p></#if>
                       <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                     </#macro>
-                    <@checkoutInvField type="radio" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=(paymentMethod.paymentMethodId == checkOutPaymentId) labelContent=payMethContent/>
+                    <@orderlib.checkoutInvField type="radio" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=(paymentMethod.paymentMethodId == checkOutPaymentId) labelContent=payMethContent/>
                   </#if>
                 </#if>
               </#list>
@@ -213,7 +199,7 @@ var issuerId = "";
                 </#if>
                 <@field type="input" size="6" id="giftCardAmount" name="giftCardAmount" value=((requestParameters.giftCardAmount)!) onFocus="document.getElementById('addGiftCard').checked=true;" label=uiLabelMap.AccountingAmount/>
               </#macro>
-              <@checkoutInvField type="checkbox" id="addGiftCard" name="addGiftCard" value="Y" labelContent=payMethContent/>
+              <@orderlib.checkoutInvField type="checkbox" id="addGiftCard" name="addGiftCard" value="Y" labelContent=payMethContent/>
             </#if>
 
             <@menu type="button">

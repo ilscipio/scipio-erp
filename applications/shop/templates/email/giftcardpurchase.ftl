@@ -12,18 +12,20 @@ code package.
 <#if recipientName??>${recipientName},</#if>
 <br />
 
-<#-- MyCompany.com (not a variable why?) must be adapted - JLR 1/6/5 -->
-${uiLabelMap.EcommerceYouHaveBeenSent} MyCompany.com <#if senderName??> ${uiLabelMap.EcommerceGiftCardFrom} ${senderName}</#if>!
+<#-- SCIPIO: Rewrote and unhardcoded
+${uiLabelMap.EcommerceYouHaveBeenSent} MyCompany.com (FIXME) <#if senderName??> ${uiLabelMap.EcommerceGiftCardFrom} ${senderName}</#if>! -->
+${getLabel((senderName??)?then('EcommerceYouHaveBeenSentGiftCardFrom', 'EcommerceYouHaveBeenSentGiftCard'),
+    {'storeName': rawString((productStore.storeName)!), 'senderName': senderName!})}
 <br /><br />
 <#if giftMessage?has_content>
-  ${uiLabelMap.OrderGiftMessage}
+  ${getLabel('OrderGiftMessage')}:
   <br /><br />
-  ${giftMessage}
+  "${giftMessage}"
   <br /><br />
 </#if>
 
 <pre>
-  ${uiLabelMap.EcommerceYourCardNumber} ${cardNumber!}
-  ${uiLabelMap.EcommerceYourPinNumber} ${pinNumber!}
-  ${uiLabelMap.EcommerceGiftAmount} ${amount!}
+  ${uiLabelMap.EcommerceYourCardNumber}: ${cardNumber!}
+  ${uiLabelMap.EcommerceYourPinNumber}: ${pinNumber!}
+  ${uiLabelMap.EcommerceGiftAmount}: <@ofbizCurrency amount=(amount!) isoCode=(currencyUomId!)/>
 </pre>

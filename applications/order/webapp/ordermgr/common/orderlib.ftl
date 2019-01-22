@@ -1,8 +1,7 @@
-<#--
-SCIPIO: Local order template common defs
--->
-
-<#include "../common/common.ftl">
+<#-- SCIPIO: Common Order utilities and definitions library
+    May be imported by other applications' templates, preferably using:
+      <#import "component://order/webapp/ordermgr/common/orderlib.ftl" as orderlib>
+    NOTE: For this application's own templates, please include common.ftl instead (which includes this). -->
 
 <#-- SCIPIO: local macro where cells of label and widget areas are inverted and tweaked 
     NOTE: the labelContent bypasses the regular @field parent-child field relation; set markup with labelContentFieldsType-->
@@ -44,4 +43,3 @@ SCIPIO: Local order template common defs
     <@contentArgRender content=args.labelContent args=args.labelContentArgs />
   </@fields>
 </#macro>
-

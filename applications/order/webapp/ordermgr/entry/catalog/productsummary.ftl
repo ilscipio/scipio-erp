@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#include "catalogcommon.ftl">
+<#include "component://order/webapp/ordermgr/entry/catalog/catalogcommon.ftl">
 
 <#if requestAttributes.solrProduct??>
     <#assign solrProduct = requestAttributes.solrProduct>

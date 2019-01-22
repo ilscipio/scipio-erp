@@ -149,7 +149,7 @@ code package.
                 <#if productCategory?has_content>
                     <@field type="submit" name="Update" text=uiLabelMap.CommonUpdate class="+${styles.link_run_sys!} ${styles.action_update!}"/>
                 <#else>
-                    <@field type="submit" name="Create" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_create!}"/>
+                    <@field type="submit" name="Create" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_add!}"/>
                 </#if>
             </@cell>
         </@row>

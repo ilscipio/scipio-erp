@@ -1,4 +1,4 @@
-<#include "pagescommon.ftl">
+<#include "component://cms/webapp/cms/common/common.ftl">
 
 <#assign debugMode = false>
 
@@ -370,7 +370,7 @@
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editPage") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreatePage/>
+            <@menuitem type="link" href=makeOfbizUrl("editPage") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewPage/>
             <@cmsCopyMenuItem target="copyPage" title=uiLabelMap.CmsCopyPage>
                  <@field type="hidden" name="pageId" value=(pageId!)/><#-- for browsing, on error -->
                  <@field type="hidden" name="versionId" value=(versionId!)/><#-- for browsing, on error -->
@@ -425,7 +425,7 @@
                 <@menuitem type="link" disabled=true class="+${styles.action_run_sys!} ${styles.action_show!}" text=previewLabel/>
               </#if>
             </#if>
-            <@menuitem type="link" href="javascript:addAndActivateVersion(); void(0);" class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsSaveAndPublish/>
+            <@menuitem type="link" href="javascript:addAndActivateVersion(); void(0);" class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsSaveAndPublish/>
             <#if liveUrl?has_content>
               <@menuitem type="link" href=liveUrl class="+${styles.action_run_sys!} ${styles.action_show!}" target="_blank" text=uiLabelMap.CmsViewLive/>
             <#else>
@@ -658,7 +658,7 @@
         <@row>
             <@cell columns=6 last=true>
                 <@form method="post" id="editorForm" action=makeOfbizUrl("createPage")>
-                    <@section title=uiLabelMap.CmsCreatePage>
+                    <@section title=uiLabelMap.CmsNewPage>
                       <@fields type="default-compact">
                          <input type="hidden" name="isCreate" value="Y"/>
                          <@webSiteSelectField name="webSiteId" value=(parameters.webSiteId!) valueUnsafe=true required=true 
@@ -692,7 +692,7 @@
                          <@field type="input" name="pageName" value=(parameters.pageName!) id="pageName" label=uiLabelMap.CommonName required=false/>
                          <@field type="textarea" name="description" value=(parameters.description!) label=uiLabelMap.CommonDescription required=false/>
 
-                         <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_create!}"/>
+                         <@field type="submit" text=uiLabelMap.CommonCreate class="+${styles.link_run_sys!} ${styles.action_add!}"/>
                        </@fields>
                     </@section>
                 </@form>

@@ -217,6 +217,10 @@
         <value xml:lang="de">Seite Editieren</value>
         <value xml:lang="en">Edit Page</value>
     </property>
+    <property key="CmsNewPage">
+        <value xml:lang="de">Neue Seite</value>
+        <value xml:lang="en">New Page</value>
+    </property>
     <property key="CmsSaveAndPublish">
         <value xml:lang="de">Speichern &amp; Publizieren</value>
         <value xml:lang="en">Save &amp; Publish</value>
@@ -246,8 +250,8 @@
         <value xml:lang="en">All Templates</value>
     </property>
     <property key="CmsCreateTemplate">
-        <value xml:lang="de">Neue Vorlage</value>
-        <value xml:lang="en">New Template</value>
+        <value xml:lang="de">Vorlage erstellen</value>
+        <value xml:lang="en">Create Template</value>
     </property>
     <property key="CmsCopyTemplate">
         <value xml:lang="de">Vorlage kopieren</value>
@@ -256,6 +260,10 @@
     <property key="CmsEditTemplate">
         <value xml:lang="de">Vorlage Editieren</value>
         <value xml:lang="en">Edit Template</value>
+    </property>
+    <property key="CmsNewTemplate">
+        <value xml:lang="de">Neue Vorlage</value>
+        <value xml:lang="en">New Template</value>
     </property>
     <property key="CmsTemplateBody">
         <value xml:lang="de">Vorlagen Body</value>
@@ -318,6 +326,10 @@
         <value xml:lang="en">All Media</value>
     </property>
     <property key="CmsCreateMedia">
+        <value xml:lang="de">Medien erstellen</value>
+        <value xml:lang="en">Create Media</value>
+    </property>
+    <property key="CmsNewMedia">
         <value xml:lang="de">Neues Medium</value>
         <value xml:lang="en">New Media</value>
     </property>
@@ -422,8 +434,12 @@
         <value xml:lang="en">Scripts</value>
     </property>
     <property key="CmsCreateScript">
-        <value xml:lang="de">Neues Script</value>
+        <value xml:lang="de">Script erstellen</value>
         <value xml:lang="en">Create Script</value>
+    </property>
+    <property key="CmsNewScript">
+        <value xml:lang="de">Neues Script</value>
+        <value xml:lang="en">New Script</value>
     </property>
     <property key="CmsEditScript">
         <value xml:lang="de">Script editieren</value>

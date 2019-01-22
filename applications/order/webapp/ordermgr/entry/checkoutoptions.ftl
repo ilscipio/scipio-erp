@@ -8,6 +8,9 @@ code package.
     This is the nearest equivalent of shop OnePageCheckout for orderentry.
     NOTE: In the past this was shared by shop, but is no longer supported in shop in Scipio (OnePageCheckout superior). -->
 
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
+
 <@script>
 function submitForm(form, mode, value) {
     if (mode == "DN") {
@@ -117,7 +120,7 @@ function submitForm(form, mode, value) {
                              <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                              <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                              <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                             <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                             <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${escapeVal(shippingAddress.contactMechId, 'js-html')}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                            </@td>
                        </@tr>
                        <#if shippingContactMech_has_next>
@@ -253,6 +256,7 @@ function submitForm(form, mode, value) {
     </@section>
 
     <@section title="3) ${rawLabel('OrderHowShallYouPay')}?">
+        <#assign subFieldType = "default"><#-- SCIPIO: for sub-fields --><#-- "default-compact" -->
         <@fields type="default-manual">
                 <@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
                   <@tr>
@@ -342,7 +346,7 @@ function submitForm(form, mode, value) {
                   <#list finAccounts as finAccount>
                       <@tr>
                         <@td width="1%">
-                          <@field type="radio" name="checkOutPaymentId" value="FIN_ACCOUNT|${finAccount.finAccountId}" checked=("FIN_ACCOUNT" == checkOutPaymentId)/>
+                          <@field type="radio" name="checkOutPaymentId" value="FIN_ACCOUNT|${rawString(finAccount.finAccountId)}" checked=("FIN_ACCOUNT" == checkOutPaymentId)/>
                         </@td>
                         <@td width="50%">${uiLabelMap.AccountingFinAccount} #${finAccount.finAccountId}
                         </@td>
@@ -359,60 +363,46 @@ function submitForm(form, mode, value) {
                   <#list paymentMethodList as paymentMethod>
                     <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                      <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
-                      <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>
+                      <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)!>
                       <@tr>
                         <@td width="1%">
                           <@field type="radio" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(shoppingCart.isPaymentSelected(paymentMethod.paymentMethodId))/>
                         </@td>
                         <@td width="50%">
                           <span>CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${escapeVal(paymentMethod.paymentMethodId, 'js-html')}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                           <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
-                          &nbsp;${uiLabelMap.OrderCardSecurityCode}&nbsp;<@field type="input" size="5" maxlength="10" name="securityCode_${paymentMethod.paymentMethodId}" value=""/>
+                          <@fields type=subFieldType ignoreParentField=true>
+                            <@field type="input" label=uiLabelMap.OrderCardSecurityCode size="5" maxlength="10" name="securityCode_${rawString(paymentMethod.paymentMethodId)}" value=""/>
+                          </@fields>
                         </@td>
                       </@tr>
                      </#if>
                     <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                      <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
-                      <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
+                      <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)!>
                       <@tr>
                         <@td width="1%">
                           <@field type="radio" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(shoppingCart.isPaymentSelected(paymentMethod.paymentMethodId))/>
                         </@td>
                         <@td width="50%">
                           <span>${uiLabelMap.AccountingEFTAccount}:&nbsp;${eftAccount.bankName!}: ${eftAccount.accountNumber!}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${escapeVal(paymentMethod.paymentMethodId, 'js-html')}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                           <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
                         </@td>
                       </@tr>
                      </#if>
                     <#elseif paymentMethod.paymentMethodTypeId == "GIFT_CARD">
                      <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-                      <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)>
-
-                      <#if giftCard?has_content && giftCard.cardNumber?has_content>
-                        <#assign giftCardNumber = "">
-                        <#assign pcardNumber = giftCard.cardNumber>
-                        <#if pcardNumber?has_content>
-                          <#assign psize = pcardNumber?length - 4>
-                          <#if 0 < psize>
-                            <#list 0 .. psize-1 as foo>
-                              <#assign giftCardNumber = giftCardNumber + "*">
-                            </#list>
-                            <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
-                          <#else>
-                            <#assign giftCardNumber = pcardNumber>
-                          </#if>
-                        </#if>
-                      </#if>
-
+                      <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)!>
+                      <#assign giftCardNumber = acctlib.getPayMethDisplayNumber(giftCard, paymentMethod)!><#-- SCIPIO: Refactored -->
                       <@tr>
                         <@td width="1%">
                           <@field type="radio" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(shoppingCart.isPaymentSelected(paymentMethod.paymentMethodId))/>
                         </@td>
                         <@td width="50%">
                           <span>${uiLabelMap.AccountingGift}:&nbsp;${giftCardNumber}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_run_session!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${escapeVal(paymentMethod.paymentMethodId, 'js-html')}');" class="${styles.link_run_session!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>
                           <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
                         </@td>
                       </@tr>
@@ -455,29 +445,35 @@ function submitForm(form, mode, value) {
                   <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                   <@tr>
                     <@td width="1%">
-                      <@field type="checkbox" name="addGiftCard" value="Y"/>
+                      <@field type="checkbox" name="addGiftCard" value="Y" checkboxType="simple-standard"/>
                     </@td>
                     <@td width="50%">${uiLabelMap.AccountingUseGiftCardNotOnFile}
                     </@td>
                   </@tr>
                   <@tr>
-                    <@td width="1%">${uiLabelMap.AccountingNumber}</@td>
+                    <@td width="1%"></@td>
                     <@td width="50%">
-                      <@field type="input" size="15" name="giftCardNumber" value=((requestParameters.giftCardNumber)!) onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
+                      <@fields type=subFieldType ignoreParentField=true>
+                        <@field type="input" label=uiLabelMap.AccountingNumber size="15" name="giftCardNumber" value=((requestParameters.giftCardNumber)!) onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
+                      </@fields>
                     </@td>
                   </@tr>
                   <#if shoppingCart.isPinRequiredForGC(delegator)>
                   <@tr>
-                    <@td width="1%">${uiLabelMap.AccountingPIN}</@td>
+                    <@td width="1%"></@td>
                     <@td width="50%">
-                      <@field type="input" type="text" size="10" name="giftCardPin" value=((requestParameters.giftCardPin)!) onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
+                      <@fields type=subFieldType ignoreParentField=true>
+                        <@field type="input" label=uiLabelMap.AccountingPIN type="text" size="10" name="giftCardPin" value=((requestParameters.giftCardPin)!) onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
+                      </@fields>
                     </@td>
                   </@tr>
                   </#if>
                   <@tr>
-                    <@td width="1%">${uiLabelMap.AccountingAmount}</@td>
+                    <@td width="1%"></@td>
                     <@td width="50%">
-                      <@field type="input" size="6" name="giftCardAmount" value=((requestParameters.giftCardAmount)!) onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
+                      <@fields type=subFieldType ignoreParentField=true>
+                        <@field type="input" label=uiLabelMap.AccountingAmount size="6" name="giftCardAmount" value=((requestParameters.giftCardAmount)!) onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
+                      </@fields>
                     </@td>
                   </@tr>
                 </#if>

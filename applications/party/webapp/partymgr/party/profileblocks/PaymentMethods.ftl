@@ -4,22 +4,12 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#macro maskSensitiveNumber cardNumber>
-  <#assign cardNumberDisplay = "">
-  <#if cardNumber?has_content>
-    <#assign size = cardNumber?length - 4>
-    <#if (size > 0)>
-      <#list 0 .. size-1 as foo>
-        <#assign cardNumberDisplay = cardNumberDisplay + "*">
-      </#list>
-      <#assign cardNumberDisplay = cardNumberDisplay + cardNumber[size .. size + 3]>
-    <#else>
-      <#-- but if the card number has less than four digits (ie, it was entered incorrectly), display it in full -->
-      <#assign cardNumberDisplay = cardNumber>
-    </#if>
-  </#if>
-  ${cardNumberDisplay!}
-</#macro>
+<#include "component://party/webapp/partymgr/common/common.ftl">
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
+
+<#-- SCIPIO: MOVED TO: component://accounting/webapp/accounting/common/acctlib.ftl
+<#macro maskSensitiveNumber cardNumber paymentMethod= cardNumberMask=>
+</#macro>-->
 
   <#-- SCIPIO: Removed
   <#macro menuContent menuArgs={}>
@@ -60,12 +50,13 @@ code package.
                   ${creditCard.lastNameOnCard}
                   <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
                   &nbsp;-&nbsp;
+                  <#-- SCIPIO: Here, re-inverted the permission logic the right way -->
                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
-                    ${creditCard.cardType}
-                    <@maskSensitiveNumber cardNumber=(creditCard.cardNumber!)/>
-                    ${creditCard.expireDate}
-                  <#else>
                     ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                  <#else>
+                    ${creditCard.cardType}
+                    <@acctlib.maskSensitiveNumber cardNumber=creditCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
+                    ${creditCard.expireDate}
                   </#if>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                   <#if paymentMethod.glAccountId?has_content>(for GL Account ${paymentMethod.glAccountId})</#if>
@@ -90,7 +81,7 @@ code package.
                   <#if security.hasEntityPermission("PAY_INFO", "_VIEW", request) || security.hasEntityPermission("ACCOUNTING", "_VIEW", request)>
                     ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                   <#else>
-                    <@maskSensitiveNumber cardNumber=(giftCard.cardNumber!)/>
+                    <@acctlib.maskSensitiveNumber cardNumber=giftCard paymentMethod=paymentMethod/><#-- SCIPIO: Pass payment method -->
                     <#if !cardNumberDisplay?has_content>${uiLabelMap.CommonNA}</#if>
                   </#if>
                   <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>

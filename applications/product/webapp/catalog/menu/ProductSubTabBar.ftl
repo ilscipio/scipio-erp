@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<#include "../common/common.ftl">
+<#include "component://product/webapp/catalog/common/common.ftl">
 <@row>
     <@cell>
     <@menu type="subtab">
@@ -25,7 +25,7 @@ code package.
             </#if>                        
         </#if>        
         <#if product?has_content>
-          <@productShopPageUrlMenuItem productId=productId!/>
+          <@cataloglib.productShopPageUrlMenuItem productId=productId!/>
           <@menuitem type="link" href=makeOfbizUrl("ProductBarCode.pdf?productId=${productId!}") text=uiLabelMap.ProductBarcode target="_blank" class="+${styles.action_nav!} ${styles.action_export!}" />
         </#if>
         <#--

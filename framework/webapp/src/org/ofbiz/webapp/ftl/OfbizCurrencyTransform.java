@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -52,7 +53,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private static String getArg(@SuppressWarnings("rawtypes") Map args, String key) {
+    private static String getArg(Map<String, Object> args, String key) {
         String  result = "";
         Object o = args.get(key);
         if (o != null) {
@@ -72,7 +73,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
         return result;
     }
 
-    private static BigDecimal getAmount(@SuppressWarnings("rawtypes") Map args, String key) {
+    private static BigDecimal getAmount(Map<String, Object> args, String key) {
         if (args.containsKey(key)) {
             Object o = args.get(key);
 
@@ -97,7 +98,7 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
         return BigDecimal.ZERO;
     }
 
-    private static Integer getInteger(@SuppressWarnings("rawtypes") Map args, String key) {
+    private static Integer getInteger(Map<String, Object> args, String key) {
         if (args.containsKey(key)) {
             Object o = args.get(key);
             if (Debug.verboseOn()) Debug.logVerbose("Amount Object : " + o.getClass().getName(), module);
@@ -130,17 +131,19 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
         return null;
     }
 
+    @Override
     public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
         final StringBuilder buf = new StringBuilder();
 
-        final BigDecimal amount = OfbizCurrencyTransform.getAmount(args, "amount");
-        final String isoCode = OfbizCurrencyTransform.getArg(args, "isoCode");
-        final String locale = OfbizCurrencyTransform.getArg(args, "locale");
+        Map<String, Object> arguments = UtilGenerics.cast(args);
+        final BigDecimal amount = OfbizCurrencyTransform.getAmount(arguments, "amount");
+        final String isoCodeParam = OfbizCurrencyTransform.getArg(arguments, "isoCode"); // SCIPIO: Renamed var (not param name)
+        final String locale = OfbizCurrencyTransform.getArg(arguments, "locale");
 
         // check the rounding -- DEFAULT is 10 to not round for display, only use this when necessary
         // rounding should be handled by the code, however some times the numbers are coming from
         // someplace else (i.e. an integration)
-        Integer roundingNumber = getInteger(args, "rounding");
+        Integer roundingNumber = getInteger(arguments, "rounding");
         String scaleEnabled = "N";
         Environment env = FreeMarkerWorker.getCurrentEnvironment();
         BeanModel req = null;
@@ -182,8 +185,28 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
 
             @Override
             public void close() throws IOException {
+                String isoCode = isoCodeParam;
+
+                // SCIPIO: This is practically always an error...
+                if (UtilValidate.isEmpty(isoCode)) {
+                    // SCIPIO: As emergency fallback, check context for a currencyUomId...
+                    try {
+                        isoCode = LangFtlUtil.getAsStringNonEscaping((TemplateScalarModel) env.getVariable("currencyUomId"));
+                    } catch (Exception e) {
+                        Debug.logError("Could not get currencyUomId as String from environment", module);
+                    }
+                    if (UtilValidate.isNotEmpty(isoCode)) {
+                        Debug.logWarning("@ofbizCurrency called without an isoCode= parameter (amount: " + amount
+                            + ") (usually an error); using currencyUomId found in context instead (" + isoCode + ")", module);
+                    } else {
+                        isoCode = null;
+                        Debug.logWarning("@ofbizCurrency called without an isoCode= parameter (amount: " + amount
+                                + ") (usually an error); system default will be used", module);
+                    }
+                }
+
                 try {
-                    if (Debug.verboseOn()) Debug.logVerbose("parms: " + amount + " " + isoCode + " " + locale, module);
+                    if (Debug.verboseOn()) Debug.logVerbose("params: " + amount + " " + isoCode + " " + locale, module);
                     if (locale.length() < 1) {
                         // Load the locale from the session
                         Environment env = FreeMarkerWorker.getCurrentEnvironment();

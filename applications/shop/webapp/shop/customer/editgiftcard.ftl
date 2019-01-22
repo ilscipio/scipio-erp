@@ -28,6 +28,12 @@ code package.
   </@menu>
 </#macro>
 
+<@script>
+function makeExpDate() {<#-- SCIPIO: Copied from ordermgr billsettings.ftl -->
+    document.editgiftcardform.expireDate.value = document.editgiftcardform.expMonth.options[document.editgiftcardform.expMonth.selectedIndex].value + "/" + document.editgiftcardform.expYear.options[document.editgiftcardform.expYear.selectedIndex].value;
+}
+</@script>
+
 <#if !giftCard??>
   <#assign sectionTitle = uiLabelMap.AccountingAddNewGiftCard/>
 <#else>
@@ -39,54 +45,40 @@ code package.
     <#if giftCard??>
       <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
-
-    <#if giftCardData?has_content && giftCardData.cardNumber?has_content>
-      <#assign pcardNumberDisplay = "">
-      <#assign pcardNumber = giftCardData.cardNumber!>
-      <#if pcardNumber?has_content>
-        <#assign psize = pcardNumber?length - 4>
-        <#if (0 < psize)>
-          <#list 0..(psize-1) as foo>
-            <#assign pcardNumberDisplay = pcardNumberDisplay + "*">
-          </#list>
-          <#assign pcardNumberDisplay = pcardNumberDisplay + pcardNumber[psize .. psize + 3]>
-        <#else>
-          <#assign pcardNumberDisplay = pcardNumber>
-        </#if>
-      </#if>
-    </#if>
-    <@field type="input" label=uiLabelMap.AccountingCardNumber size="20" maxlength="60" name="cardNumber" value=(pcardNumberDisplay!) />
-    <@field type="password" label=uiLabelMap.AccountingPINNumber size="10" maxlength="60" name="pinNumber" value=((giftCardData.pinNumber)!) />
+    <input type="hidden" name="expireDate" value="${(giftCardData.expireDate)!}"/><#-- SCIPIO -->
+    <#assign pcardNumberDisplay = getGiftCardDisplayNumber(giftCardData!)!>
+    <@field type="input" label=uiLabelMap.AccountingCardNumber size="20" maxlength="60" name="cardNumber" value=(pcardNumberDisplay!)/>
+    <@field type="password" label=uiLabelMap.AccountingPINNumber size="10" maxlength="60" name="pinNumber" value=((giftCardData.pinNumber)!)/>
 
     <@field type="generic" label=uiLabelMap.AccountingExpirationDate>
         <#assign expMonth = "">
         <#assign expYear = "">
-        <#if giftCardData?? && giftCardData.expireDate??>
-          <#assign expDate = giftCard.expireDate!?string>
+        <#if (giftCardData.expireDate)??>
+          <#assign expDate = rawString(giftCardData.expireDate)>
           <#if (expDate?? && (expDate?index_of("/") > 0))>
             <#assign expMonth = expDate?substring(0, expDate?index_of("/"))>
             <#assign expYear = expDate?substring(expDate?index_of("/")+1)>
           </#if>
         </#if>
         <@field type="select" inline=true name="expMonth" onChange="javascript:makeExpDate();" tooltip=uiLabelMap.CommonMonth>
-          <#if giftCardData?has_content && expMonth?has_content>
+          <#if expMonth?has_content>
             <#assign ccExprMonth = expMonth>
           <#else>
             <#assign ccExprMonth = requestParameters.expMonth!>
           </#if>
           <#if ccExprMonth?has_content>
-            <option value="${ccExprMonth!}">${ccExprMonth!}</option>
+            <option value="${ccExprMonth}">${ccExprMonth}</option>
           </#if>
           <@render resource="component://common/widget/CommonScreens.xml#ccmonths" />
         </@field>
         <@field type="select" inline=true name="expYear" onChange="javascript:makeExpDate();" tooltip=uiLabelMap.CommonYear>
-          <#if giftCard?has_content && expYear?has_content>
+          <#if expYear?has_content>
             <#assign ccExprYear = expYear>
           <#else>
             <#assign ccExprYear = requestParameters.expYear!>
           </#if>
           <#if ccExprYear?has_content>
-            <option value="${ccExprYear!}">${ccExprYear!}</option>
+            <option value="${ccExprYear}">${ccExprYear}</option>
           </#if>
           <@render resource="component://common/widget/CommonScreens.xml#ccyears" />
         </@field>

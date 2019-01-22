@@ -3,7 +3,8 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<#include "ordercommon.ftl">
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+<#import "component://product/webapp/catalog/common/cataloglib.ftl" as cataloglib>
 
 <#if orderHeader?has_content>
 
@@ -275,7 +276,7 @@ code package.
                                           </@modal>
                                         </#if>
                                         <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${escapeVal(productId, 'url')}${rawString(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
-                                        <@productShopPageUrlMenuItem productId=productId!/>
+                                        <@cataloglib.productShopPageUrlMenuItem productId=productId!/>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
                                             <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${escapeVal(orderId, 'url')}&orderItemSeqId=${escapeVal(orderItem.orderItemSeqId, 'url')}&orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />
                                         </#if>

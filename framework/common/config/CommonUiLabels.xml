@@ -8178,6 +8178,10 @@
         <value xml:lang="zh-CN">当前没有任务，需要你的关注。</value>
         <value xml:lang="zh-TW">現在沒有任務需要處理.</value>
     </property>
+    <property key="CommonNoTitle">
+        <value xml:lang="de">Kein Titel</value>
+        <value xml:lang="en">No title</value>
+    </property>
     <property key="CommonNoUomConversionFound">
         <value xml:lang="ar">علاقة تحويل وحدات القياس غير موجودة</value>
         <value xml:lang="cs">Nenalezena vhodná konverze jednotek</value>

@@ -133,7 +133,7 @@
                             <#if notification.fromPartyId?has_content> <span class="message_user"><small>${notification.fromPartyId!""}</small></span></#if>
                         </div>-->
                         <div class="message_header">
-                            ${notification.title!"No Title"} <span class="message_time float-right">${notification.createdStamp?string.short}</span>
+                            ${notification.title!getLabel("CommonNoTitle", "CommonUiLabels")!} <span class="message_time float-right">${notification.createdStamp?string.short}</span>
                         </div>
                         <div class="message_body">${notification.description!""}</div>
                     </div>

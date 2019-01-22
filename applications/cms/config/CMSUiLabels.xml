@@ -314,6 +314,10 @@
         <value xml:lang="de">Alle Assets</value>
     </property>
     <property key="CmsCreateAsset">
+        <value xml:lang="de">Asset erstellen</value>
+        <value xml:lang="en">Create Asset</value>
+    </property>
+    <property key="CmsNewAsset">
         <value xml:lang="de">Neues Asset</value>
         <value xml:lang="en">New Asset</value>
     </property>

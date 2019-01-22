@@ -22,6 +22,7 @@ ports:
   port-number: 80
   description: nginx app
 
+# generic `build` filter cannot be used once we have a source package named `build`.
 sync-ignore: |
   .git
   .idea
@@ -81,16 +82,17 @@ sync-ignore: |
   ivy/resolutionCache/repositoryCache/
   ivy/resolutionCache/ivy-status.txt
   ivy/resolutionCache/ivy-last.txt
-  /runtime/logs
-  /runtime/data
-  /runtime/tempfiles
-  /runtime/catalina
-  /runtime/indexes
-  /runtime/tmp
-  /runtime/tempfiles
-  /runtime/output
-  /runtime/uploads
-  /runtime/analysis
+  runtime/logs
+  runtime/data
+  runtime/tempfiles
+  runtime/catalina
+  runtime/indexes
+  runtime/tmp
+  runtime/tempfiles
+  runtime/output
+  runtime/uploads
+  runtime/analysis
   specialpurpose/assetmaint/build
   specialpurpose/demosuite/build
   tools/misc/scipio-build-tools.jar
+  ofbiz.jar

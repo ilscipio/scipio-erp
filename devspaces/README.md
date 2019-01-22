@@ -1,98 +1,101 @@
 # Development with Devspaces
 
-## Minimum Requirements
+### Devspaces 
 
-* Python3 (>= 3.5)
-* pip3 (>=9.0.1)
-* Docker
-* Docker-compose
-* Virtualenv
+Manage your Devspaces https://www.devspaces.io/.
 
-## Devspaces Configuration
+Read up-to-date documentation about cli installation and operation in https://www.devspaces.io/devspaces/help.
 
-Verify that you have access to https://devspaces.ey.devfactory.com (it requires "jira-users" access into AD).
+Here follows the main commands used in Devspaces cli. 
 
-Follow the steps in Devspaces Installation Guide for detailed instructions: http://devspaces-docs.ey.devfactory.com/installation/index.html. Windows 10 users may use the quick install guide below.
+|action   |Description                                                                                   |
+|---------|----------------------------------------------------------------------------------------------|
+|`devspaces --help`                    |Check the available command names.                               |
+|`devspaces create [options]`          |Creates a DevSpace using your local DevSpaces configuration file |
+|`devspaces start <devSpace>`          |Starts the DevSpace named \[devSpace\]                           |
+|`devspaces bind <devSpace>`           |Syncs the DevSpace with the current directory                    |
+|`devspaces info <devSpace> [options]` |Displays configuration info about the DevSpace.                  |
 
-### Quick Install Guide For Windows 10 Users
-
-1. Please begin with [Ubuntu WSL install on Windows](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/). (*choose Ubuntu 18.04+*)
-1.1. Have a little guidance on [Ubuntu WSL File Access](https://www.howtogeek.com/261383/how-to-access-your-ubuntu-bash-files-in-windows-and-your-windows-system-drive-in-bash/)
-2. Inside Ubuntu WSL Install `python`, `pip3` and `virtualenv`. [(Detailed Python installation - if needed)](https://linoxide.com/linux-how-to/setup-python-virtual-environment-ubuntu/):
-    1. `sudo apt update`
-    2. `sudo apt install python3`
-    3. `sudo apt install python3-pip`
-    4. `sudo apt install python3-venv`
-3. Install `docker` inside Ubuntu WSL using [latest docker intallation reference](https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-docker-ce)
-4. Install `docker-compose` inside Ubuntu WSL using [latest docker-compose installation reference](https://docs.docker.com/compose/install/)
-
-If you want to setup your custom Devspaces:
-
-* http://devspaces-docs.ey.devfactory.com/quickstart.html
-
-## Devspaces Operation
-
-### Devspaces Script Manager (CLI)
-
-Currently, we have these command available to work with Devspaces
-
-```bash
-devspaces/devspaces <command>
-```
-
-|action   |Description                                                               |
-|---------|--------------------------------------------------------------------------|
-|`help`   |Check the available command names.                                        |
-|`start`  |Setup Devspaces in case it's not installed and start the complete infrastructure required to work with Devspaces |
-|`exec`   |Get into the container                                                    |
-|`reset`  |Reset the data.                                                           |
-|`info`   |Retrieve the URLs to access each of the deployed products.                |
-|`stop`   |Shutdown the Devspaces infrastructure and unbind all the bound folders.   |
+Use `devspaces --help` to know about updated commands.
 
 #### Development flow
 
-1 - Start containers
+You should have Devspaces cli services started and logged to develop with Devspaces.
+The following commands should be issued from **project directory**.
+
+1 - Create Devspaces
 
 ```bash
-devspaces/devspaces start
+$ cd devspaces/docker
+$ devspaces create
+$ cd ../../
+
 ```
 
-2 - Grab some container info
+2 - Start containers
 
 ```bash
-devspaces/devspaces info
+devspaces start scipio-erp
 ```
 
-3 - Connect to development container
+3 - Start containers synchronization
 
 ```bash
-devspaces/devspaces exec
+devspaces bind scipio-erp
 ```
 
-4 - Install theme in running background SICM instance (From `/data` dir in container)
+4 - Grab some container info
 
 ```bash
-gradle themeDev
+devspaces info scipio-erp
 ```
 
-**Obs.:** It may some  minutes until SICM instance finishes all pre-installed themes compilation when run by first time. Before theme installation, you may test the availability of SICM port by running this command inside container: `curl 127.0.0.1:9000`.
+Retrieve published DNS and endpoints using this command
 
-5 - Insert this entry in your local workstation `/etc/hosts` file replacing the `SCIM_IP` value with IP given by `devspaces/devspaces info` and the `THEME_NAME` value by theme installed in SICM:
+5 - Connect to development container
 
 ```bash
-<SCIM_IP>  <THEME_NAME>.127-0-0-1.org.uk
+devspaces exec scipio-erp
 ```
 
-**Obs.:** Besides this hosts configuration you should use the PORT published by Devspaces. Use `devspaces/devspaces info` to get the published port.
-
-**Obs. 2:** **Windows** users should update this file: `c:\Windows\System32\Drivers\etc\hosts` (requires admin rights). Alternatively, Google **Chrome** users can use a `DNS Overrider` plugin (Use **Google Web Store** search tool to install it).
-
-6 - Restart SICM process if needed
+6 - Configure Scipio Development environment
 
 ```bash
-supervisorctl stop play
-supervisorctl start play
+./install.sh
 ```
+
+
+Select option `1` in install menu.
+
+7 - Run Scipio
+
+```bash
+./start.sh
+```
+
+Access application URLs:
+
+Using information retrieved in step 4, access the following URL's:
+
+* Application (bound to port 80): 
+    * http://scipio-erp.<devspaces-user>.devspaces.io:<published-ports>/shop
+    * http://scipio-erp.<devspaces-user>.devspaces.io:<published-ports>/
+    
+
+8 - Stop Scipio
+
+```bash 
+./stop.sh
+```
+
+In a second terminal window.
+
+9 - Clean 
+
+```bash
+./ant clean-all
+```
+
 
 ### Docker Script Manager (CLI)
 
@@ -104,7 +107,7 @@ devspaces/docker-cli.sh <command>
 
 |action    |Description                                                               |
 |----------|--------------------------------------------------------------------------|
-|`build`   |Builds all images                                                         |
+|`build`   |Builds images                                                             |                                      
 |`deploy`  |Deploy Docker compose containers                                          |
 |`undeploy`|Undeploy Docker compose containers                                        |
 |`start`   |Starts Docker compose containers                                          |
@@ -127,23 +130,54 @@ devspaces/docker-cli.sh start
 devspaces/docker-cli.sh exec
 ```
 
-4 - Install theme in running background SICM instance (From `/data` dir in container)
+4 - Configure Scipio Development environment
 
 ```bash
-gradle themeDev
+./install.sh
 ```
 
-**Obs.:** it's not required to change `/etc/hosts`
 
-**Obs. 2:** It may some  minutes until SICM instance finishes all pre-installed themes compilation when run by first time. Before theme installation, you may test the availability of SICM port by running this command inside container: `curl 127.0.0.1:9000`.
+Select option `1` in install menu.
 
+5 - Run Scipio
+
+```bash
+./start.sh
+```
+
+Access application URLs:
+
+* Application: 
+    * http://localhost/
+    * http://localhost/shop
+    * http://localhost:8080/shop
+* Admin:
+    * https://localhost:8443/admin
+
+6 - Stop Scipio
+
+```bash 
+./stop.sh
+```
+
+In a second terminal window.
+
+7 - Clean
+
+```bash
+./ant clean-all
+```
+
+**Obs.:** Clean script ran in docker compose may leave some files behind, that may result in files owned by `root`user in your host OS. 
+You may complement the cleanup with the scripts below:
+```bash
+ # seek 
+ls -dl `find . -type d` | grep root | awk '{print $(NF)}'
+
+ # seek and destroy
+ ls -dl `find . -type d` | grep root | awk '{print $(NF)}' | xargs sudo rm -rf
+```
+ 
 ### Entrypoint Actions
 
-When a new Placeable Pages (SICM) container is launched whether by CN Devspaces collections or by provided Docker-compose the following actions are performed once:
-
-    1 - SICM PLAY application is started up in background
-
-### Docker Image
-
- `registry2.swarm.devfactory.com/ignite/placeable-pages-sicm-themes-buildenv:0.1`
-
+    1 - NGINX is started up in background

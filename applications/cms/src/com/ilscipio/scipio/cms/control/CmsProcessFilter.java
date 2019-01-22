@@ -114,6 +114,11 @@ public class CmsProcessFilter implements Filter {
 
         CmsControlState controlState = CmsControlState.fromRequest(request);
         
+        // IMPORTANT: 2019-01-22: We will NOT do this at current time because it breaks controller "view-last":
+        // When view-last is encountered and the last page was a CMS page, we need get back the control
+        // state from the PREVIOUS request, so we must not exclude it from session.
+        //RequestHandler.addNoSaveRequestAttr(request, CmsControlState.ATTR);
+
         boolean cmsRequestForwarded = Boolean.TRUE.equals(controlState.getRequestForwarded());
         boolean cmsRequestChained = Boolean.TRUE.equals(controlState.getRequestChained());
         boolean cmsRequestVisited = (cmsRequestForwarded || cmsRequestChained);

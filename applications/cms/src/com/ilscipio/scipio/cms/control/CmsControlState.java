@@ -12,7 +12,6 @@ import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
 
 /**
  * Object stored in request that records the current CMS control/render state.
- * WORK-IN-PROGRESS.
  * <p>
  * Not thread-safe. Although serializable, this is intended for single requests.
  */

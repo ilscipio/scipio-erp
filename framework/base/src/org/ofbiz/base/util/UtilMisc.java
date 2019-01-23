@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1467,6 +1468,19 @@ public final class UtilMisc {
         List<T> out = new ArrayList<>(mapList.size());
         for(Map<K, V> map : mapList) {
             out.add((T) map.get(key));
+        }
+        return out;
+    }
+    
+    /**
+     * SCIPIO: A small helper method for dealing with enumerations.
+     */
+    public static <T, C extends Collection<T>> C addToCollection(Enumeration<T> enumeration, C out) {
+        if (enumeration == null) {
+            return null;
+        }
+        while(enumeration.hasMoreElements()) {
+            out.add(enumeration.nextElement());
         }
         return out;
     }

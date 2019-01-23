@@ -88,7 +88,9 @@ import com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper;
 import com.ilscipio.scipio.ce.webapp.filter.urlrewrite.ScipioUrlRewriter;
 
 /**
- * RequestHandler - Request Processor Object
+ * RequestHandler - XML webapp controller logic implementation for "*controller.xml" files.
+ * <p>
+ * SCIPIO: This class has been extensively revamped and may bear no resemblance to its original.
  */
 public class RequestHandler {
 

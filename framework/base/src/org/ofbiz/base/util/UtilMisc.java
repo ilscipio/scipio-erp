@@ -45,6 +45,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Supplier;
 
+import org.apache.commons.collections4.iterators.EnumerationIterator;
 import org.ofbiz.base.util.collections.MapComparator;
 
 /**
@@ -1471,17 +1472,101 @@ public final class UtilMisc {
         }
         return out;
     }
-    
+
     /**
-     * SCIPIO: A small helper method for dealing with enumerations.
+     * SCIPIO: Wraps an Enumeration in an Iterator.
      */
-    public static <T, C extends Collection<T>> C addToCollection(Enumeration<T> enumeration, C out) {
-        if (enumeration == null) {
+    public static <T> Iterator<T> toIterator(Enumeration<T> enumeration) {
+        return new EnumerationIterator<T>(enumeration);
+    }
+
+    /**
+     * SCIPIO: Wraps an Iterator in an Iterable.
+     * Useful when you have an API that returns only Iterator.
+     */
+    public static <T> Iterable<T> toIterable(Iterator<T> iterator) {
+        return new Iterable<T>() {
+            @Override
+            public Iterator<T> iterator() {
+                return iterator;
+            }
+        };
+    }
+
+    /**
+     * SCIPIO: Wraps an Enumeration in an Iterable.
+     * NOTE: This could become inefficient if you are dealing with a large number of collections.
+     */
+    public static <T> Iterable<T> toIterable(Enumeration<T> enumeration) {
+        return toIterable(toIterator(enumeration));
+    }
+
+    /**
+     * SCIPIO: Adds the given enumeration's elements to the given out collection.
+     * @param outCollection The collection to add the inEnumeration values to
+     * @param inEnumeration The source enumeration
+     * @return The outCollection, for convenience
+     */
+    public static <T, C extends Collection<T>> C addAll(C outCollection, Enumeration<T> inEnumeration) {
+        if (inEnumeration == null) {
             return null;
         }
-        while(enumeration.hasMoreElements()) {
-            out.add(enumeration.nextElement());
+        while(inEnumeration.hasMoreElements()) {
+            outCollection.add(inEnumeration.nextElement());
         }
-        return out;
+        return outCollection;
     }
+
+    /**
+     * SCIPIO: Returns a new List containing the enumeration's elements.
+     */
+    public static <T> List<T> toList(Enumeration<T> enumeration) {
+        return Collections.list(enumeration);
+    }
+
+    /**
+     * SCIPIO: Returns a new Set containing the enumeration's elements.
+     */
+    public static <T> Set<T> toSet(Enumeration<T> enumeration) {
+        return addAll(new HashSet<>(), enumeration);
+    }
+
+    /**
+     * SCIPIO: Returns a new HashSet containing the enumeration's elements.
+     */
+    public static <T> Set<T> toHashSet(Enumeration<T> enumeration) {
+        return addAll(new HashSet<>(), enumeration);
+    }
+
+    /**
+     * SCIPIO: Returns a new LinkedHashSet containing the enumeration's elements.
+     */
+    public static <T> Set<T> toLinkedHashSet(Enumeration<T> enumeration) {
+        return addAll(new HashSet<>(), enumeration);
+    }
+
+    /**
+     * SCIPIO: Checks if the given enumeration contains the given object
+     * using the {@link #equals(Object)} method.
+     */
+    public static boolean contains(Enumeration<?> enumeration, Object object) {
+        if (enumeration == null) {
+            return false;
+        }
+        if (object != null) {
+            while(enumeration.hasMoreElements()) {
+                if (object.equals(enumeration.nextElement())) {
+                    return true;
+                }
+            }
+        } else {
+            while(enumeration.hasMoreElements()) {
+                if (enumeration.nextElement() == null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

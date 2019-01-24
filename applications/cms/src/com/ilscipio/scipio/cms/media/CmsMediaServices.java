@@ -499,7 +499,6 @@ public abstract class CmsMediaServices {
      * @param context
      * @return
      */
-    @SuppressWarnings("unchecked")
     public static Map<String, Object> updateMediaFile(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
         //LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -689,6 +688,7 @@ public abstract class CmsMediaServices {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     public static Map<String, Object> rebuildMediaVariants(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();

@@ -415,7 +415,7 @@ public final class UtilMisc {
         }
         theList.add(element);
     }
-    
+
     public static <K, V> void addToSetInMap(V element, Map<K, Set<V>> theMap, K setKey) {
         Set<V> theSet = UtilGenerics.checkSet(theMap.get(setKey));
         if (theSet == null) {
@@ -445,7 +445,7 @@ public final class UtilMisc {
         }
         theSet.add(element);
     }
-    
+
     /** Converts an <code>Object</code> to a <code>double</code>. Returns
      * zero if conversion is not possible.
      * @param obj Object to convert
@@ -1377,7 +1377,7 @@ public final class UtilMisc {
         }
         return outValueMap;
     }
-    
+
     /**
      * SCIPIO: Returns true if and only if all of the test values are in the given collection.
      * Added 2018-09-26.
@@ -1393,16 +1393,190 @@ public final class UtilMisc {
         }
         return true;
     }
-    
+
     /**
-     * SCIPIO: If the given list is not already an ArrayList, creates a copy as an ArrayList.
+     * SCIPIO: If the given value is already an ArrayList or null, returns it as-is; otherwise returns a copy as an ArrayList.
      * Added 2018-11-23.
      */
-    public static <T> List<T> asArrayList(List<T> list) {
-        if (list instanceof ArrayList || list == null) {
-            return list;
-        }
-        return new ArrayList<>(list);
+    public static <T> List<T> asArrayList(Collection<T> value) {
+        return (value instanceof ArrayList || value == null) ? (List<T>) value : new ArrayList<>(value);
+    }
+
+    /**
+     * SCIPIO: If the given value is an ArrayList, returns it as-is; if Collection, returns a new
+     * ArrayList copy from it; if null, returns null; if other type, throws ClassCastException.
+     * Added 2019-01-23.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> asArrayList(Object value) {
+        return (value instanceof ArrayList || value == null) ? (List<T>) value : new ArrayList<T>((Collection<T>) value);
+    }
+
+    /**
+     * SCIPIO: If the given value is not already a HashSet or null, returns it as-is; otherwise returns a copy as a HashSet.
+     * Added 2019-01-23.
+     */
+    public static <T> Set<T> asHashSet(Collection<T> value) {
+        return (value instanceof HashSet || value == null) ? (Set<T>) value : new HashSet<>(value);
+    }
+
+    /**
+     * SCIPIO: If the given value is an HashSet, returns it as-is; if Collection, returns a new
+     * HashSet copy from it; if null, returns null; if other type, throws ClassCastException.
+     * Added 2019-01-23.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Set<T> asHashSet(Object value) {
+        return (value instanceof HashSet || value == null) ? (Set<T>) value : new HashSet<T>((Collection<T>) value);
+    }
+
+    /**
+     * SCIPIO: If the given value is not already a LinkedHashSet or null, returns it as-is; otherwise returns a copy as a LinkedHashSet.
+     * Added 2019-01-23.
+     */
+    public static <T> Set<T> asLinkedHashSet(Collection<T> value) {
+        return (value instanceof LinkedHashSet || value == null) ? (Set<T>) value : new LinkedHashSet<>(value);
+    }
+
+    /**
+     * SCIPIO: If the given value is an LinkedHashSet, returns it as-is; if Collection, returns a new
+     * LinkedHashSet copy from it; if null, returns null; if other type, throws ClassCastException.
+     * Added 2019-01-23.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Set<T> asLinkedHashSet(Object value) {
+        return (value instanceof LinkedHashSet || value == null) ? (Set<T>) value : new LinkedHashSet<T>((Collection<T>) value);
+    }
+
+    /**
+     * SCIPIO: If the given value is not already a HashMap or null, returns it as-is; otherwise returns a copy as a HashMap.
+     * Added 2019-01-23.
+     */
+    public static <K, V> Map<K, V> asHashMap(Map<K, V> value) {
+        return (value instanceof HashMap || value == null) ? (Map<K, V>) value : new HashMap<>(value);
+    }
+
+    /**
+     * SCIPIO: If the given value is an HashMap, returns it as-is; if another Map, returns a new
+     * HashMap copy from it; if null, returns null; if other type, throws ClassCastException.
+     * Added 2019-01-23.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> asHashMap(Object value) {
+        return (value instanceof HashMap || value == null) ? (Map<K, V>) value : new HashMap<K, V>((Map<K, V>) value);
+    }
+
+    /**
+     * SCIPIO: If the given value is not already a LinkedHashMap or null, returns it as-is; otherwise returns a copy as a LinkedHashMap.
+     * Added 2019-01-23.
+     */
+    public static <K, V> Map<K, V> asLinkedHashMap(Map<K, V> value) {
+        return (value instanceof LinkedHashMap || value == null) ? (Map<K, V>) value : new LinkedHashMap<>(value);
+    }
+
+    /**
+     * SCIPIO: If the given value is an LinkedHashMap, returns it as-is; if another Map, returns a new
+     * LinkedHashMap copy from it; if null, returns null; if other type, throws ClassCastException.
+     * Added 2019-01-23.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> asLinkedHashMap(Object value) {
+        return (value instanceof LinkedHashMap || value == null) ? (Map<K, V>) value : new LinkedHashMap<K, V>((Map<K, V>) value);
+    }
+
+    /**
+     * SCIPIO: If the given value is not already an ArrayList, returns it as-is; otherwise creates a copy as an ArrayList;
+     * if null, returns empty.
+     * Added 2018-11-23.
+     */
+    public static <T> List<T> asArrayListNonNull(Collection<T> value) {
+        return (value instanceof ArrayList) ? (List<T>) value : ((value == null) ? new ArrayList<>() : new ArrayList<>(value));
+    }
+
+    /**
+     * SCIPIO: If the given value is an ArrayList, returns it as-is; if Collection, returns a new
+     * ArrayList copy from it; if null, returns empty; if other type, throws ClassCastException.
+     * Added 2019-01-23.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> asArrayListNonNull(Object value) {
+        return (value instanceof ArrayList) ? (List<T>) value : ((value == null) ? new ArrayList<>() : new ArrayList<>((Collection<T>) value));
+    }
+
+    /**
+     * SCIPIO: If the given value is not already a HashSet, returns it as-is; otherwise returns a copy as a HashSet;
+     * if null, returns empty.
+     * Added 2019-01-23.
+     */
+    public static <T> Set<T> asHashSetNonNull(Collection<T> value) {
+        return (value instanceof HashSet) ? (Set<T>) value : ((value == null) ? new HashSet<>() : new HashSet<>(value));
+    }
+
+    /**
+     * SCIPIO: If the given value is an HashSet, returns it as-is; if Collection, returns a new
+     * HashSet copy from it; if null, returns empty; if other type, throws ClassCastException.
+     * Added 2019-01-23.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Set<T> asHashSetNonNull(Object value) {
+        return (value instanceof HashSet) ? (Set<T>) value : ((value == null) ? new HashSet<>() : new HashSet<>((Collection<T>) value));
+    }
+
+    /**
+     * SCIPIO: If the given value is not already a LinkedHashSet, returns it as-is; otherwise returns a copy as a HashSet;
+     * if null, returns empty.
+     * Added 2019-01-23.
+     */
+    public static <T> Set<T> asLinkedHashSetNonNull(Collection<T> value) {
+        return (value instanceof LinkedHashSet) ? (Set<T>) value : ((value == null) ? new LinkedHashSet<>() : new LinkedHashSet<>(value));
+    }
+
+    /**
+     * SCIPIO: If the given value is an LinkedHashSet, returns it as-is; if Collection, returns a new
+     * LinkedHashSet copy from it; if null, returns empty; if other type, throws ClassCastException.
+     * Added 2019-01-23.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Set<T> asLinkedHashSetNonNull(Object value) {
+        return (value instanceof LinkedHashSet) ? (Set<T>) value : ((value == null) ? new LinkedHashSet<>() : new LinkedHashSet<>((Collection<T>) value));
+    }
+
+    /**
+     * SCIPIO: If the given value is not already a HashMap, returns it as-is; otherwise returns a copy as a HashMap;
+     * if null, returns empty.
+     * Added 2019-01-23.
+     */
+    public static <K, V> Map<K, V> asHashMapNonNull(Map<K, V> value) {
+        return (value instanceof HashMap) ? (Map<K, V>) value : ((value == null) ? new HashMap<>() : new HashMap<>(value));
+    }
+
+    /**
+     * SCIPIO: If the given value is an HashMap, returns it as-is; if another Map, returns a new
+     * HashMap copy from it; if null, returns empty; if other type, throws ClassCastException.
+     * Added 2019-01-23.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> asHashMapNonNull(Object value) {
+        return (value instanceof HashMap) ? (Map<K, V>) value : ((value == null) ? new HashMap<>() : new HashMap<>((Map<K, V>) value));
+    }
+
+    /**
+     * SCIPIO: If the given value is not already a LinkedHashMap, returns it as-is; otherwise returns a copy as a LinkedHashMap;
+     * if null, returns empty.
+     * Added 2019-01-23.
+     */
+    public static <K, V> Map<K, V> asLinkedHashMapNonNull(Map<K, V> value) {
+        return (value instanceof LinkedHashMap) ? (Map<K, V>) value : ((value == null) ? new LinkedHashMap<>() : new LinkedHashMap<>(value));
+    }
+
+    /**
+     * SCIPIO: If the given value is an LinkedHashMap, returns it as-is; if another Map, returns a new
+     * LinkedHashMap copy from it; if null, returns empty; if other type, throws ClassCastException.
+     * Added 2019-01-23.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> asLinkedHashMapNonNull(Object value) {
+        return (value instanceof LinkedHashMap) ? (Map<K, V>) value : ((value == null) ? new LinkedHashMap<>() : new LinkedHashMap<>((Map<K, V>) value));
     }
 
     /**
@@ -1437,7 +1611,7 @@ public final class UtilMisc {
         }
         return out;
     }
-    
+
     /**
      * SCIPIO: A small helper to extra all the values for a given field from each map, as a list of same length.
      * Convenience method to avoid null pointers and stream API.

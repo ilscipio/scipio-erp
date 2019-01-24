@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.cms.control;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,15 +9,23 @@ import javax.servlet.http.HttpServletRequest;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.Delegator;
 
+import org.ofbiz.webapp.control.RequestAttrPolicy.RedirectAttrPolicy;
+import org.ofbiz.webapp.control.RequestAttrPolicy.ViewLastAttrPolicy;
 import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
 
 /**
  * Object stored in request that records the current CMS control/render state.
  * <p>
  * Not thread-safe. Although serializable, this is intended for single requests.
+ * <p>
+ * This class now implements {@link org.ofbiz.webapp.control.RequestAttrPolicy} classes in order to:
+ * <ul>
+ * <li>Prevent it from entering controller <code>_REQ_ATTR_MAP_</code> completely</li>
+ * <li>Thread safety: Anything coming out of the <code>_VIEW_LAST_PARAMS_</code> must be cloned!</li>
+ * </ul>
  */
 @SuppressWarnings("serial")
-public class CmsControlState implements Serializable {
+public class CmsControlState implements Serializable, RedirectAttrPolicy.NotStorable, ViewLastAttrPolicy.Restorable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -50,6 +59,32 @@ public class CmsControlState implements Serializable {
     protected CmsControlState() {
     }
 
+    protected CmsControlState(CmsControlState other, Set<String> controlUris) {
+        this.requestForwarded = other.requestForwarded;
+        this.requestChained = other.requestChained;
+
+        this.processMappingId = other.processMappingId;
+        // DON'T, re-look it up in DB to make an copy
+        //this.processMapping = other.processMapping; // will be null if deserialized
+
+        this.requestServletPath = other.requestServletPath;
+        this.requestPath = other.requestPath;
+
+        this.pageRenderMode = other.pageRenderMode;
+
+        this.processFullForwardPath = other.processFullForwardPath;
+        this.processExtraPathInfo = other.processExtraPathInfo;
+        this.processSourcePath = other.processSourcePath;
+        this.processSourcePathMatch = other.processSourcePathMatch;
+
+        this.origRequestUri = other.origRequestUri;
+        this.origRequestContextPath = other.origRequestContextPath;
+        this.origRequestSourcePath = other.origRequestSourcePath;
+        this.origRequestQueryString = other.origRequestQueryString;
+
+        this.controlUris = controlUris;
+    }
+    
     /**
      * Gets CMS control state from request, or if does not exist yet, creates it.
      * <p>
@@ -224,5 +259,12 @@ public class CmsControlState implements Serializable {
                 + origRequestUri + ", origRequestContextPath=" + origRequestContextPath + ", origRequestSourcePath="
                 + origRequestSourcePath + ", origRequestQueryString=" + origRequestQueryString + ", controlUris="
                 + controlUris + "]";
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object doViewLastAttrRestore(HttpServletRequest request, String attrName, Map<String, Object> saveAttrMap) {
+        // Clone the state, for thread safety
+        return new CmsControlState(this, (Set<String>) request.getAttribute("_SCP_FWDROOTURIS_"));
     }
 }

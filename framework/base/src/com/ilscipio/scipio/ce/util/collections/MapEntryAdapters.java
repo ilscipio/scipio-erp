@@ -36,6 +36,11 @@ public final class MapEntryAdapters {
         public V setValue(V value) {
             return map.put(key, value);
         }
+
+        @Override
+        public V removeValue() {
+            return map.remove(getKey());
+        }
     }
 
     public static <K, V> MapEntryAdapter<K, V> getAdapter(Map<K, V> map, K key) {

@@ -87,6 +87,10 @@ public final class ServletMapEntryAdapters {
         public default void setValueOnly(Object value) {
             setAttribute(getKey(), value);
         }
+        @Override
+        public default void removeValueOnly() {
+            removeAttribute(getKey());
+        }
     }
 
     public interface RequestMapEntryAdapter extends ServletMapEntryAdapter {
@@ -108,6 +112,13 @@ public final class ServletMapEntryAdapters {
         public default Object setValue(Object value) {
             Object oldValue = getAttribute(getKey());
             setValueOnly(value);
+            return oldValue;
+        }
+
+        @Override
+        public default Object removeValue() {
+            Object oldValue = getAttribute(getKey());
+            removeValueOnly();
             return oldValue;
         }
     }
@@ -178,6 +189,12 @@ public final class ServletMapEntryAdapters {
             setValueOnly(value);
             return null;
         }
+
+        @Override
+        public default Object removeValue() {
+            removeValueOnly();
+            return null;
+        }
     }
 
     public static class FastRequestMapEntryAdapter extends StdRequestMapEntryAdapter implements FastServletMapEntryAdapter {
@@ -188,6 +205,12 @@ public final class ServletMapEntryAdapters {
         @Override
         public Object setValue(Object value) {
             setValueOnly(value);
+            return null;
+        }
+
+        @Override
+        public Object removeValue() {
+            removeValueOnly();
             return null;
         }
     }
@@ -202,6 +225,12 @@ public final class ServletMapEntryAdapters {
             setValueOnly(value);
             return null;
         }
+
+        @Override
+        public Object removeValue() {
+            removeValueOnly();
+            return null;
+        }
     }
 
     public static class FastServletContextMapEntryAdapter extends StdServletContextMapEntryAdapter implements FastServletMapEntryAdapter {
@@ -212,6 +241,12 @@ public final class ServletMapEntryAdapters {
         @Override
         public Object setValue(Object value) {
             setValueOnly(value);
+            return null;
+        }
+
+        @Override
+        public Object removeValue() {
+            removeValueOnly();
             return null;
         }
     }

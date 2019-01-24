@@ -7,6 +7,12 @@ import java.util.Map;
  */
 public interface MapEntryAdapter<K, V> extends Map.Entry<K, V> {
 
+    /**
+     * Sets the value, without returning the old one.
+     * <p>
+     * NOTE: The reason why this matters is that not all adapted collections
+     * can efficiently return the old value (e.g. servlet attributes).
+     */
     public default void setValueOnly(V value) {
         setValue(value);
     }
@@ -22,9 +28,12 @@ public interface MapEntryAdapter<K, V> extends Map.Entry<K, V> {
     /**
      * Optional operation: tries to remove the entry from the containing collection;
      * by default, only sets the value to null.
+     * <p>
+     * NOTE: The reason why this matters is that not all adapted collections
+     * can efficiently return the old value (e.g. servlet attributes).
      */
     public default void removeValueOnly() {
-        setValueOnly(null);
+        removeValue(null);
     }
 
     /**
@@ -80,9 +89,10 @@ public interface MapEntryAdapter<K, V> extends Map.Entry<K, V> {
     public static <K, V> V removeValue(Map.Entry<K, V> entry) {
         if (entry instanceof MapEntryAdapter) {
             return ((MapEntryAdapter<K, V>) entry).removeValue();
-        } else {
+        } else if (entry != null) {
             return entry.setValue(null);
         }
+        return null;
     }
 
     /**
@@ -101,7 +111,7 @@ public interface MapEntryAdapter<K, V> extends Map.Entry<K, V> {
     public static <K, V> void removeValueOnly(Map.Entry<K, V> entry) {
         if (entry instanceof MapEntryAdapter) {
             ((MapEntryAdapter<K, V>) entry).removeValueOnly();
-        } else {
+        } else if (entry != null) {
             entry.setValue(null);
         }
     }

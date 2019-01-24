@@ -82,7 +82,7 @@ public final class ServletMapEntryAdapters {
         return new FastServletContextMapEntryAdapter(servletContext, key);
     }
 
-    public interface ServletMapEntryAdapter extends MapEntryAdapter<String, Object>, ServletAttributeContainer {
+    public interface ServletMapEntryAdapter extends MapEntryAdapter<String, Object>, ServletAttrContainer {
         @Override
         public default void setValueOnly(Object value) {
             setAttribute(getKey(), value);
@@ -112,7 +112,7 @@ public final class ServletMapEntryAdapters {
         }
     }
 
-    public static class StdRequestMapEntryAdapter implements StdServletMapEntryAdapter, ServletAttributeContainer.RequestAdapter, RequestMapEntryAdapter {
+    public static class StdRequestMapEntryAdapter implements StdServletMapEntryAdapter, ServletAttrContainer.RequestAdapter, RequestMapEntryAdapter {
         private final ServletRequest request;
         private final String key;
 
@@ -132,7 +132,7 @@ public final class ServletMapEntryAdapters {
         }
     }
 
-    public static class StdSessionMapEntryAdapter implements StdServletMapEntryAdapter, ServletAttributeContainer.SessionAdapter, SessionMapEntryAdapter {
+    public static class StdSessionMapEntryAdapter implements StdServletMapEntryAdapter, ServletAttrContainer.SessionAdapter, SessionMapEntryAdapter {
         private final HttpSession session;
         private final String key;
 
@@ -152,7 +152,7 @@ public final class ServletMapEntryAdapters {
         }
     }
 
-    public static class StdServletContextMapEntryAdapter implements StdServletMapEntryAdapter, ServletAttributeContainer.ServletContextAdapter, ServletContextMapEntryAdapter {
+    public static class StdServletContextMapEntryAdapter implements StdServletMapEntryAdapter, ServletAttrContainer.ServletContextAdapter, ServletContextMapEntryAdapter {
         private final ServletContext servletContext;
         private final String key;
 

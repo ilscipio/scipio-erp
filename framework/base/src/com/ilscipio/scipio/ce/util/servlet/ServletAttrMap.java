@@ -23,7 +23,7 @@ import com.ilscipio.scipio.ce.util.collections.ExtendedMap;
 /**
  * SCIPIO: A convenient combination of the ServletAttributeContainer and ExtendedMap interfaces.
  */
-public interface ServletAttributeMap extends ExtendedMap<String, Object>, ServletAttributeContainer {
+public interface ServletAttrMap extends ExtendedMap<String, Object>, ServletAttrContainer {
 
     /*
      * ******************************************************************************
@@ -31,16 +31,16 @@ public interface ServletAttributeMap extends ExtendedMap<String, Object>, Servle
      * ******************************************************************************
      */
 
-    public interface ServletMapAdapter extends ServletAttributeMap, ServletAttributeContainer.Adapter {
+    public interface ServletMapAdapter extends ServletAttrMap, ServletAttrContainer.Adapter {
     }
 
-    public interface RequestMapAdapter extends ServletMapAdapter, ServletAttributeContainer.RequestAdapter {
+    public interface RequestMapAdapter extends ServletMapAdapter, ServletAttrContainer.RequestAdapter {
     }
 
-    public interface SessionMapAdapter extends ServletMapAdapter, ServletAttributeContainer.SessionAdapter {
+    public interface SessionMapAdapter extends ServletMapAdapter, ServletAttrContainer.SessionAdapter {
     }
 
-    public interface ServletContextMapAdapter extends ServletMapAdapter, ServletAttributeContainer.ServletContextAdapter {
+    public interface ServletContextMapAdapter extends ServletMapAdapter, ServletAttrContainer.ServletContextAdapter {
     }
 
     /*
@@ -145,22 +145,22 @@ public interface ServletAttributeMap extends ExtendedMap<String, Object>, Servle
         @Override
         public T getAdapted() { return adapted; }
         @Override
-        protected ServletAttributeContainer getContainer() { return this; }
+        protected ServletAttrContainer getContainer() { return this; }
     }
 
-    public static class StdRequestMapAdapter extends StdServletMapAdapter<ServletRequest> implements ServletAttributeContainer.RequestAdapter, RequestMapAdapter {
+    public static class StdRequestMapAdapter extends StdServletMapAdapter<ServletRequest> implements ServletAttrContainer.RequestAdapter, RequestMapAdapter {
         StdRequestMapAdapter(ServletRequest adapted) {
             super(adapted);
         }
     }
 
-    public static class StdSessionMapAdapter extends StdServletMapAdapter<HttpSession> implements ServletAttributeContainer.SessionAdapter, SessionMapAdapter {
+    public static class StdSessionMapAdapter extends StdServletMapAdapter<HttpSession> implements ServletAttrContainer.SessionAdapter, SessionMapAdapter {
         StdSessionMapAdapter(HttpSession adapted) {
             super(adapted);
         }
     }
 
-    public static class StdServletContextMapAdapter extends StdServletMapAdapter<ServletContext> implements ServletAttributeContainer.ServletContextAdapter, ServletContextMapAdapter {
+    public static class StdServletContextMapAdapter extends StdServletMapAdapter<ServletContext> implements ServletAttrContainer.ServletContextAdapter, ServletContextMapAdapter {
         StdServletContextMapAdapter(ServletContext adapted) {
             super(adapted);
         }
@@ -175,22 +175,22 @@ public interface ServletAttributeMap extends ExtendedMap<String, Object>, Servle
         @Override
         public T getAdapted() { return adapted; }
         @Override
-        protected ServletAttributeContainer getContainer() { return this; }
+        protected ServletAttrContainer getContainer() { return this; }
     }
 
-    public static class FastRequestMapAdapter extends FastServletMapAdapter<ServletRequest> implements ServletAttributeContainer.RequestAdapter, RequestMapAdapter {
+    public static class FastRequestMapAdapter extends FastServletMapAdapter<ServletRequest> implements ServletAttrContainer.RequestAdapter, RequestMapAdapter {
         protected FastRequestMapAdapter(ServletRequest adapted) {
             super(adapted);
         }
     }
 
-    public static class FastSessionMapAdapter extends FastServletMapAdapter<HttpSession> implements ServletAttributeContainer.SessionAdapter, SessionMapAdapter {
+    public static class FastSessionMapAdapter extends FastServletMapAdapter<HttpSession> implements ServletAttrContainer.SessionAdapter, SessionMapAdapter {
         protected FastSessionMapAdapter(HttpSession adapted) {
             super(adapted);
         }
     }
 
-    public static class FastServletContextMapAdapter extends FastServletMapAdapter<ServletContext> implements ServletAttributeContainer.ServletContextAdapter, ServletContextMapAdapter {
+    public static class FastServletContextMapAdapter extends FastServletMapAdapter<ServletContext> implements ServletAttrContainer.ServletContextAdapter, ServletContextMapAdapter {
         protected FastServletContextMapAdapter(ServletContext adapted) {
             super(adapted);
         }
@@ -207,7 +207,7 @@ public interface ServletAttributeMap extends ExtendedMap<String, Object>, Servle
      */
     static abstract class StdServletExtendedMapAdapter extends AbstractMap<String, Object> implements ExtendedMap<String, Object> {
 
-        protected abstract ServletAttributeContainer getContainer();
+        protected abstract ServletAttrContainer getContainer();
 
         @Override
         public int size() {

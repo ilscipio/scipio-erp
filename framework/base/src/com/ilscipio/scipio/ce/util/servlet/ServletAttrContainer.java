@@ -20,7 +20,7 @@ import org.ofbiz.base.util.UtilMisc;
  * NOTE: Unlike most Maps, servlet attribute cannot contain the value <code>null</code> (setting to
  * null removes the attribute).
  */
-public interface ServletAttributeContainer {
+public interface ServletAttrContainer {
 
     /*
      * ******************************************************************************
@@ -48,7 +48,6 @@ public interface ServletAttributeContainer {
     public static ServletContextAdapter getAdapter(ServletContext servletContext) {
         return new StdServletContextAdapter(servletContext);
     }
-
 
     /*
      * ******************************************************************************
@@ -93,7 +92,7 @@ public interface ServletAttributeContainer {
      * and are slightly faster.
      */
 
-    public interface Adapter extends ServletAttributeContainer {
+    public interface Adapter extends ServletAttrContainer {
         Object getAdapted();
     }
 
@@ -205,10 +204,9 @@ public interface ServletAttributeContainer {
 
     /*
      * ******************************************************************************
-     * Static helpers
+     * Static helpers for instance methods
      * ******************************************************************************
-     * NOTE: These are convenience functions that performs the default operations, avoid null
-     * and are slightly faster.
+     * These all return null (or false) if null passed.
      */
 
     public static boolean containsAttribute(Enumeration<String> attrNames, String name) { return UtilMisc.contains(attrNames, name); }
@@ -216,14 +214,14 @@ public interface ServletAttributeContainer {
     public static Set<String> getAttributeNamesSet(Enumeration<String> attrNames) { return UtilMisc.toSet(attrNames); }
     public static List<String> getAttributeNamesList(Enumeration<String> attrNames) { return UtilMisc.toList(attrNames); }
 
-    public static Object getAttribute(ServletAttributeContainer container, String name) { return (container != null) ? container.getAttribute(name) : null; }
-    public static void setAttribute(ServletAttributeContainer container, String name, Object o) { if (container != null) { container.setAttribute(name, o); } }
-    public static void removeAttribute(ServletAttributeContainer container, String name) { if (container != null) { container.removeAttribute(name); } }
-    public static Enumeration<String> getAttributeNames(ServletAttributeContainer container) { return (container != null) ? container.getAttributeNames() : null; }
-    public static Iterator<String> getAttributeNamesIterator(ServletAttributeContainer container) { return (container != null) ? container.getAttributeNamesIterator() : null; }
-    public static Set<String> getAttributeNamesSet(ServletAttributeContainer container) { return (container != null) ? container.getAttributeNamesSet() : null; }
-    public static List<String> getAttributeNamesList(ServletAttributeContainer container) { return (container != null) ? container.getAttributeNamesList() : null; }
-    public static boolean containsAttribute(ServletAttributeContainer container, String name) { return (container != null) ? container.containsAttribute(name) : false; }
+    public static Object getAttribute(ServletAttrContainer container, String name) { return (container != null) ? container.getAttribute(name) : null; }
+    public static void setAttribute(ServletAttrContainer container, String name, Object o) { if (container != null) { container.setAttribute(name, o); } }
+    public static void removeAttribute(ServletAttrContainer container, String name) { if (container != null) { container.removeAttribute(name); } }
+    public static Enumeration<String> getAttributeNames(ServletAttrContainer container) { return (container != null) ? container.getAttributeNames() : null; }
+    public static Iterator<String> getAttributeNamesIterator(ServletAttrContainer container) { return (container != null) ? container.getAttributeNamesIterator() : null; }
+    public static Set<String> getAttributeNamesSet(ServletAttrContainer container) { return (container != null) ? container.getAttributeNamesSet() : null; }
+    public static List<String> getAttributeNamesList(ServletAttrContainer container) { return (container != null) ? container.getAttributeNamesList() : null; }
+    public static boolean containsAttribute(ServletAttrContainer container, String name) { return (container != null) ? container.containsAttribute(name) : false; }
 
     public static Object getAttribute(ServletRequest container, String name) { return (container != null) ? container.getAttribute(name) : null; }
     public static void setAttribute(ServletRequest container, String name, Object o) { if (container != null) { container.setAttribute(name, o); } }
@@ -252,4 +250,11 @@ public interface ServletAttributeContainer {
     public static List<String> getAttributeNamesList(ServletContext container) { return (container != null) ? getAttributeNamesList(container.getAttributeNames()) : null; }
     public static boolean containsAttribute(ServletContext container, String name) { return (container != null) ? containsAttribute(container.getAttributeNames(), name) : false; }
 
+    /*
+     * ******************************************************************************
+     * Tri-mode static helpers
+     * ******************************************************************************
+     * These convenience methods accept this, null, VALUE_IGNORE or VALUE_UNSET and
+     * avoid object creation overhead.
+     */
 }

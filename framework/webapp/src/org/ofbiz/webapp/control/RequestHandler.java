@@ -686,7 +686,9 @@ public class RequestHandler {
                     //if ("_ERROR_MESSAGE_LIST_".equals(key) || "_ERROR_MESSAGE_MAP_".equals(key) || "_ERROR_MESSAGE_".equals(key) ||
                     //        "_EVENT_MESSAGE_LIST_".equals(key) || "_EVENT_MESSAGE_".equals(key)) {
                     if (EventUtil.isEventErrorMsgAttrName(key)) {
-                        request.setAttribute(key, entry.getValue());
+                        // SCIPIO: New RequestAttrPolicy callbacks
+                        //request.setAttribute(key, entry.getValue());
+                        RequestAttrPolicy.RedirectAttrPolicy.RestorePolicy.INVOKER.restoreToRequest(request, entry, preRequestMap);
                     }
                 }
             }
@@ -915,7 +917,9 @@ public class RequestHandler {
                         // Don't overwrite messages coming from the current event
                         if (!("_EVENT_MESSAGE_".equals(key) || "_ERROR_MESSAGE_".equals(key)
                                 || "_EVENT_MESSAGE_LIST_".equals(key) || "_ERROR_MESSAGE_LIST_".equals(key))) {
-                            request.setAttribute(key, urlParamEntry.getValue());
+                            // SCIPIO: New RequestAttrPolicy callbacks
+                            //request.setAttribute(key, urlParamEntry.getValue());
+                            RequestAttrPolicy.ViewLastAttrPolicy.RestorePolicy.INVOKER.restoreToRequest(request, urlParamEntry, urlParams); 
                         }
                     }
                 }
@@ -1194,20 +1198,22 @@ public class RequestHandler {
         if (!saveAttrMap.isNone()) { // SCIPIO: not for all redirects!
             // set the attributes in the session so we can access it.
             Enumeration<String> attributeNameEnum = UtilGenerics.cast(req.getAttributeNames());
-            Map<String, Object> reqAttrMap = new HashMap<String, Object>();
+            Map<String, Object> reqAttrMap = new HashMap<>();
             while (attributeNameEnum.hasMoreElements()) {
                 String name = attributeNameEnum.nextElement();
                 Object obj = req.getAttribute(name);
                 if (obj instanceof Serializable) {
                     if (saveAttrMap.includeAttribute(name)) { // SCIPIO: includeRequestAttribute filter
-                        reqAttrMap.put(name, obj);
+                        // SCIPIO: New RequestAttrPolicy callbacks
+                        //reqAttrMap.put(name, obj);
+                        RequestAttrPolicy.RedirectAttrPolicy.StorePolicy.INVOKER.storeToMap(req, reqAttrMap, name, obj); 
                     }
                 }
             }
             // SCIPIO: 2018-07-10: Do not include multiPartMap, to prevent storing uploaded files in session;
             // NOTE: This is a heuristic based on most common usage of multiPartMap - may be tweaked in future.
             reqAttrMap.remove("multiPartMap");
-            removeNoSaveRequestAttr(req, reqAttrMap); // SCIPIO: Explicit excludes
+            removeNoSaveNamedRequestAttr(req, reqAttrMap); // SCIPIO: Explicit excludes
             if (reqAttrMap.size() > 0) {
                 reqAttrMap.remove("_REQUEST_HANDLER_");  // RequestHandler is not serializable and must be removed first.  See http://issues.apache.org/jira/browse/OFBIZ-750
                 byte[] reqAttrMapBytes = UtilObject.getBytes(reqAttrMap);
@@ -1284,7 +1290,9 @@ public class RequestHandler {
             paramMap.putAll(UtilHttp.getAttributeMap(req));
             // SCIPIO: 2017-10-04: NEW VIEW-SAVE ATTRIBUTE EXCLUDES - these can be set by event to prevent cached and volatile results from going into session
             // NOTE: These also must prevent request parameters with same name, so just remove all these names from the map
-            removeNoSaveRequestAttr(req, paramMap);
+            removeNoSaveNamedRequestAttr(req, paramMap);
+            paramMap.entrySet().stream().forEach(attrEntry ->
+                RequestAttrPolicy.ViewLastAttrPolicy.StorePolicy.INVOKER.storeToMapEntryInPlace(req, attrEntry, paramMap)); // SCIPIO: New RequestAttrPolicy callbacks
             UtilMisc.makeMapSerializable(paramMap);
             if (paramMap.containsKey("_LAST_VIEW_NAME_")) { // Used by lookups to keep the real view (request)
                 req.getSession().setAttribute("_LAST_VIEW_NAME_", paramMap.get("_LAST_VIEW_NAME_"));
@@ -2952,7 +2960,8 @@ public class RequestHandler {
         return defaultNoSaveRequestAttributes;
     }
 
-    private static void removeNoSaveRequestAttr(HttpServletRequest request, Map<String, ?> map) { // SCIPIO
+    private static void removeNoSaveNamedRequestAttr(HttpServletRequest request, Map<String, ?> map) { // SCIPIO
+        // NOTE: This does not apply RequestAttrPolicy-based checks, they are handled independently at this time
         Collection<String> excludes = UtilGenerics.checkCollection(request.getAttribute("_SCP_NOSAVEREQATTR_"));
         if (excludes != null) {
             for(String exclude : excludes) {

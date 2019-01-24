@@ -178,7 +178,9 @@ public class ContextFilter implements Filter {
             Map<String, Object> reqAttrMap = checkMap(UtilObject.getObject(reqAttrMapBytes), String.class, Object.class);
             if (reqAttrMap != null) {
                 for (Map.Entry<String, Object> entry: reqAttrMap.entrySet()) {
-                    httpRequest.setAttribute(entry.getKey(), entry.getValue());
+                    // SCIPIO: New ControlPlugins callbacks
+                    //httpRequest.setAttribute(entry.getKey(), entry.getValue());
+                    RequestAttrPolicy.RedirectAttrPolicy.RestorePolicy.INVOKER.restoreToRequest(httpRequest, entry, reqAttrMap);
                 }
             }
             httpRequest.getSession().removeAttribute("_REQ_ATTR_MAP_");

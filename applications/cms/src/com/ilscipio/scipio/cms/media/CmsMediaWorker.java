@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -24,7 +25,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.webapp.OfbizUrlBuilder;
+import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 
 public abstract class CmsMediaWorker {
@@ -259,13 +260,15 @@ public abstract class CmsMediaWorker {
      * @throws WebAppConfigurationException
      * @throws IOException
      */
-    public static Map<String, String> buildSrcsetMap(HttpServletRequest request, String contentId)
+    public static Map<String, String> buildSrcsetMap(HttpServletRequest request, HttpServletResponse response, String contentId)
             throws GenericEntityException, WebAppConfigurationException, IOException {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
+//        Locale locale = (Locale) request.getAttribute("locale");
+        String webSiteId = (String) request.getAttribute("webSiteId");
         Map<String, String> srcsetEntry = UtilMisc.newInsertOrderMap();
 
         List<GenericValue> imageSizeDimensionList = UtilMisc.newList();
-        List<Integer> scpWidthList = UtilMisc.newList();
+        List<Long> scpWidthList = UtilMisc.newList();
 
         EntityListIterator contentDataResourceList = null;
         try {
@@ -279,7 +282,7 @@ public abstract class CmsMediaWorker {
                     imageSizeDimensionList.add(imageSizeDimension);
                 } else {
                     // TODO: Let's see what do in this case
-                    scpWidthList.add(contentDataResource.getInteger("scpWidth"));
+                    scpWidthList.add(contentDataResource.getLong("scpWidth"));
                 }
                 dataResourceBySizeIdMap.put(sizeId, contentDataResource);
             }
@@ -287,9 +290,12 @@ public abstract class CmsMediaWorker {
 
             for (GenericValue imageSizeDimension : imageSizeDimensionList) {
                 GenericValue dataResource = dataResourceBySizeIdMap.get(imageSizeDimension.getString("sizeId"));
-                StringBuilder variantUrl = new StringBuilder();
-                OfbizUrlBuilder.from(request).buildFullUrlWithContextPath(variantUrl, "/media?contentId=" + contentId + "&variant=" + dataResource.get("caMapKey"), true);
-                srcsetEntry.put(String.valueOf(imageSizeDimension.getLong("dimensionWidth")), variantUrl.toString());
+                String variantUrl = RequestHandler.makeLinkAuto(request, response, "media?contentId=" + contentId + "&variant=" + dataResource.get("caMapKey"), false, false,
+                        webSiteId, false, true, true, false);
+//                OfbizUrlBuilder.from(request).buildFullUrlWithContextPath(variantUrl, "/media?contentId=" + contentId + "&variant=" + dataResource.get("caMapKey"), true);
+                if (UtilValidate.isNotEmpty(variantUrl)) {
+                    srcsetEntry.put(String.valueOf(imageSizeDimension.getLong("dimensionWidth")), variantUrl);
+                }
             }
 
         } catch (GenericEntityException e) {

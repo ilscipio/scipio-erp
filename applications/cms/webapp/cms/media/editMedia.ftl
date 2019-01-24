@@ -63,10 +63,10 @@
       <@editMediaScripts/>
       
         <@row>
-        	<#assign mediaUploadColumns = 8>
-        	<#if !media?has_content>
-        		<#assign mediaUploadColumns = 10>
-        	</#if>
+            <#assign mediaUploadColumns = 8>
+            <#if !media?has_content>
+                <#assign mediaUploadColumns = 10>
+            </#if>
             <@cell id="mediaUpload" columns=mediaUploadColumns>
                 <@section title=sectionTitle>
                     <form method="post"<#if !media?has_content> enctype="multipart/form-data"</#if> action="<@ofbizUrl>${formAction}</@ofbizUrl>" name="mediaForm" id="mediaForm">                                                       
@@ -165,21 +165,21 @@
                                           </div>
                                           <div class="cmsmedia-customvariantsize-method customVariantSizesForm" style="display:none;">                                              
                                               <@row class="+cmsmedia-customvariantsize-add-cnt">        
-										        <@cell class="+${styles.grid_large_offset}11" columns=1>
-										            <a href="javascript:void(0);" class="cmsmedia-customvariantsize-add">[+]</a>
-										        </@cell>
-										      </@row>
-									          <@row class="+cmsmedia-customvariantsize-save-preset">
-									              <@cell columns=3>
-										              <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCustomSizeVariantsSaveAsPreset name="saveAsPreset" id="saveAsPreset"
-										                                checked=(parameters.saveAsPreset?? && ("true" == parameters.saveAsPreset))/>
-									          	  </@cell>
-									              <@cell columns=4 id="cmsmedia-customvariantsize-preset-name" style="display:none;">
-									                  <@field type="text" labelArea=true label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
-									              </@cell>
-									              <@cell columns=1 class="+${styles.grid_large_offset}4">
-									              </@cell>
-									          </@row>
+                                                <@cell class="+${styles.grid_large_offset}11" columns=1>
+                                                    <a href="javascript:void(0);" class="cmsmedia-customvariantsize-add">[+]</a>
+                                                </@cell>
+                                              </@row>
+                                              <@row class="+cmsmedia-customvariantsize-save-preset">
+                                                  <@cell columns=3>
+                                                      <@field type="checkbox" value="true" altValue="false" label=uiLabelMap.CmsMediaCustomSizeVariantsSaveAsPreset name="saveAsPreset" id="saveAsPreset"
+                                                                        checked=(parameters.saveAsPreset?? && ("true" == parameters.saveAsPreset))/>
+                                                    </@cell>
+                                                  <@cell columns=4 id="cmsmedia-customvariantsize-preset-name" style="display:none;">
+                                                      <@field type="text" labelArea=true label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
+                                                  </@cell>
+                                                  <@cell columns=1 class="+${styles.grid_large_offset}4">
+                                                  </@cell>
+                                              </@row>
                                           </div>
                                     </@section>
                                 </@cell>
@@ -196,10 +196,10 @@
                                             </@field>
                                             <div class="cmsmedia-responsiveimg-mode" style="display:none;">                                                    
                                                 <@row class="+cmsmedia-responsiveimg-add-cnt">
-											        <@cell columns=1 class="+${styles.grid_large_offset}11">
-											            <a href="javascript:void(0);" class="cmsmedia-responsiveimg-add">[+]</a>
-											        </@cell>
-											    </@row>                                            
+                                                    <@cell columns=1 class="+${styles.grid_large_offset}11">
+                                                        <a href="javascript:void(0);" class="cmsmedia-responsiveimg-add">[+]</a>
+                                                    </@cell>
+                                                </@row>                                            
                                             </div>
                                         </div>
                                     </@section>
@@ -271,16 +271,16 @@
                     <@section title=uiLabelMap.CmsMediaPreview>
                         <#assign dataFile = makeOfbizWebappUrl({"uri": "/media?contentId=" + rawString(media.contentId)})!>
                         <#if media.dataResourceTypeId == "IMAGE_OBJECT">
-                        	<#if responsiveImage?has_content>
-                        		<#if responsiveImageViewPortList?has_content>
-	                        		<#assign sizesMap = {}>                        		
-	                        		<#list responsiveImageViewPortList as viewPort>
-	                        			<#assign sizesMap += { viewPort.viewPortMediaQuery + " : " + viewPort.viewPortLength + "px" : "100vw" }><#-- TODO: Viewport size is also needed -->
-	                        		</#list>
-                        		</#if>	
-                        		<#assign srcsetMap = toSimpleMap(Static["com.ilscipio.scipio.cms.media.CmsMediaWorker"].buildSrcsetMap(request, media.contentId))>
-								<#assign responsiveMap = {"srcset" : srcsetMap!, "sizes" : sizesMap!}>                        	
-                        	</#if>
+                            <#if responsiveImage?has_content>
+                                <#if responsiveImageViewPortList?has_content>
+                                    <#assign sizesMap = {}>
+                                    <#list responsiveImageViewPortList as viewPort>
+                                        <#assign sizesMap += { viewPort.viewPortMediaQuery + " : " + viewPort.viewPortLength + "px" : "100vw" }><#-- TODO: Viewport size is also needed -->
+                                    </#list>
+                                </#if>    
+                                <#assign srcsetMap = toSimpleMap(Static["com.ilscipio.scipio.cms.media.CmsMediaWorker"].buildSrcsetMap(request, response, media.contentId))>
+                                <#assign responsiveMap = {"srcset" : srcsetMap!, "sizes" : sizesMap!}>                            
+                            </#if>
                             <#assign imageFile = delegator.findOne("ImageDataResource", false, {"dataResourceId" : media.dataResourceId})!>
                             <#if imageFile?has_content>
                                 <@img src=dataFile responsiveMap=responsiveMap!/>

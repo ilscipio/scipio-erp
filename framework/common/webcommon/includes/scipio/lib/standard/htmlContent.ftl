@@ -1722,7 +1722,6 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                         <#local srcsetMap=toSimpleMap(responsiveMap)['srcset']>
                         <#list srcsetMap?keys as srcsetEntry>
                             <#local srcset=srcset + escapeFullUrl(srcsetMap[srcsetEntry], 'html') + rawString(' ' + srcsetEntry + 'w')>
-                            ${Static["org.ofbiz.base.util.Debug"].log("srcset ===> " + srcset)}
                             <#if !srcsetEntry?is_last><#local srcset=srcset + ", "></#if>
                         </#list>
                     </#if>

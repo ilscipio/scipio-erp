@@ -291,7 +291,7 @@ public abstract class CmsMediaWorker {
             for (GenericValue imageSizeDimension : imageSizeDimensionList) {
                 GenericValue dataResource = dataResourceBySizeIdMap.get(imageSizeDimension.getString("sizeId"));
                 String variantUrl = RequestHandler.makeLinkAuto(request, response, "media?contentId=" + contentId + "&variant=" + dataResource.get("caMapKey"), false, false,
-                        webSiteId, false, true, true, false);
+                        webSiteId, false, true, true, true);
 //                OfbizUrlBuilder.from(request).buildFullUrlWithContextPath(variantUrl, "/media?contentId=" + contentId + "&variant=" + dataResource.get("caMapKey"), true);
                 if (UtilValidate.isNotEmpty(variantUrl)) {
                     srcsetEntry.put(String.valueOf(imageSizeDimension.getLong("dimensionWidth")), variantUrl);

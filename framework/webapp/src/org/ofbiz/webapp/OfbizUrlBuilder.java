@@ -43,6 +43,12 @@ import org.xml.sax.SAXException;
 /**
  * OFBiz URL builder.
  * <p>
+ * SCIPIO: WARNING: This is a lower-level link building utility that does not perform
+ * HttpServletRequest.encodeURL, URL rewriting, and other high-level logic such as that
+ * normally performed by the Freemarker link-building macros.
+ * For common webapp/control link-building from applications, the higher-level RequestLinkUtil
+ * and RequestHandle makeLink(Auto) utilities may be used instead.
+ * <p>
  * SCIPIO: Some noteworthy changes:
  * <ul>
  * <li>Controller is now optional (no exceptions for webapps with no controller) (added 2017-11-18).</li>

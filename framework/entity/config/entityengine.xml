@@ -272,8 +272,15 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             drop-fk-use-foreign-key-keyword="true"
             table-type="InnoDB"
             character-set="utf8mb4"
-            collate="utf8mb4_general_ci"><!-- SCIPIO: Set to UTF8 for compatibility with UTF8 datasets -->
+            collate="utf8mb4_general_ci"
+            row-format="none">
+            <!-- SCIPIO: Set to UTF8 for compatibility with UTF8 datasets -->
             <!-- SCIPIO (2018/01/15): Changed the collation from utf8mb4_col to ut8mb4_general_ci  -->
+            <!-- SCIPIO: If row-format is set to dynamic fixes the 'Specified key was too long; max key length is 767 bytes' issue (only for MySQL 5.6+ and MariaDB 10.1+)
+                You also have to issue these commands in mysql CLI:
+                set global innodb_large_prefix=on;
+                set global innodb_file_format=Barracuda;
+             -->
         <read-data reader-name="tenant"/>
         <read-data reader-name="seed"/>
         <read-data reader-name="seed-initial"/>
@@ -306,8 +313,15 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             drop-fk-use-foreign-key-keyword="true"
             table-type="InnoDB"
             character-set="utf8mb4"
-            collate="utf8mb4_general_ci"><!-- SCIPIO: Set to UTF8 for compatibility with UTF8 datasets -->
+            collate="utf8mb4_general_ci"
+            row-format="none">
+            <!-- SCIPIO: Set to UTF8 for compatibility with UTF8 datasets -->
             <!-- SCIPIO (2018/01/15): Changed the collation from utf8mb4_col to ut8mb4_general_ci  -->
+            <!-- SCIPIO: If row-format is set to dynamic fixes the 'Specified key was too long; max key length is 767 bytes' issue (only for MySQL 5.6+ and MariaDB 10.1+)
+                You also have to issue these commands in mysql CLI:
+                set global innodb_large_prefix=on;
+                set global innodb_file_format=Barracuda;
+             -->
         <read-data reader-name="tenant"/>
         <read-data reader-name="seed"/>
         <read-data reader-name="seed-initial"/>
@@ -340,8 +354,15 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             drop-fk-use-foreign-key-keyword="true"
             table-type="InnoDB"
             character-set="utf8mb4"
-            collate="utf8mb4_general_ci"><!-- SCIPIO: Set to UTF8 for compatibility with UTF8 datasets -->
+            collate="utf8mb4_general_ci"
+            row-format="none">
+            <!-- SCIPIO: Set to UTF8 for compatibility with UTF8 datasets -->
             <!-- SCIPIO (2018/01/15): Changed the collation from utf8mb4_col to ut8mb4_general_ci  -->
+            <!-- SCIPIO: If row-format is set to dynamic fixes the 'Specified key was too long; max key length is 767 bytes' issue (only for MySQL 5.6+ and MariaDB 10.1+)
+                You also have to issue these commands in mysql CLI:
+                set global innodb_large_prefix=on;
+                set global innodb_file_format=Barracuda;
+             -->
         <read-data reader-name="tenant"/>
         <read-data reader-name="seed"/>
         <read-data reader-name="seed-initial"/>
@@ -836,7 +857,14 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             drop-fk-use-foreign-key-keyword="true"
             table-type="InnoDB"
             character-set="utf8mb4"
-            collate="utf8mb4_general_ci"> <!-- Default character set is latin1_swedish_ci but throws errors with seed data -->
+            collate="utf8mb4_general_ci" 
+            row-format="none"> 
+            <!-- Default character set is latin1_swedish_ci but throws errors with seed data -->
+            <!-- SCIPIO: If row-format is set to dynamic fixes the 'Specified key was too long; max key length is 767 bytes' issue (only for MySQL 5.6+ and MariaDB 10.1+)
+                You also have to issue these commands in mysql CLI:
+                set global innodb_large_prefix=on;
+                set global innodb_file_format=Barracuda;
+             -->
         <read-data reader-name="tenant"/>
         <read-data reader-name="seed"/>
         <read-data reader-name="seed-initial"/>
@@ -847,8 +875,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <inline-jdbc
                 jdbc-driver="org.mariadb.jdbc.Driver"
                 jdbc-uri="jdbc:mariadb://127.0.0.1/scipio?autoReconnect=true"
-                jdbc-username="scipio"
-                jdbc-password="scipio"
+                jdbc-username="ofbiz"
+                jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="100"

@@ -74,6 +74,7 @@ public final class Datasource {
     private final String tableType; // type = xs:string
     private final String characterSet; // type = xs:string
     private final String collate; // type = xs:string
+    private final String rowFormat;
     private final int maxWorkerPoolSize; // type = xs:integer
     private final List<SqlLoadPath> sqlLoadPathList; // <sql-load-path>
     private final List<ReadData> readDataList; // <read-data>
@@ -161,6 +162,9 @@ public final class Datasource {
         this.tableType = element.getAttribute("table-type").intern();
         this.characterSet = element.getAttribute("character-set").intern();
         this.collate = element.getAttribute("collate").intern();
+        
+        this.rowFormat = element.getAttribute("row-format");
+        
         String maxWorkerPoolSize = element.getAttribute("max-worker-pool-size").intern();
         if (maxWorkerPoolSize.isEmpty()) {
             this.maxWorkerPoolSize = 1;
@@ -382,6 +386,11 @@ public final class Datasource {
     /** Returns the value of the <code>collate</code> attribute. */
     public String getCollate() {
         return this.collate;
+    }
+    
+    /** Returns the value of the <code>useDynamicRowFormat</code> attribute. */
+    public String getRowFormat() {
+        return this.rowFormat;
     }
 
     /** Returns the value of the <code>max-worker-pool-size</code> attribute. */

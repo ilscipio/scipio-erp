@@ -1674,6 +1674,12 @@ public class DatabaseUtil {
             sqlBuf.append(this.datasourceInfo.getCollate());
         }
 
+        // if there is a rowFormat, add the ROW_FORMAT arg here (only intended for MariaDB and MySQL)
+        if (UtilValidate.isNotEmpty(this.datasourceInfo.getRowFormat()) && !this.datasourceInfo.getRowFormat().equals("none")) {
+            sqlBuf.append(" ROW_FORMAT ");
+            sqlBuf.append(this.datasourceInfo.getRowFormat());
+        }
+
         if (Debug.verboseOn()) Debug.logVerbose("[createTable] sql=" + sqlBuf.toString(), module);
         try (Connection connection = getConnection(); Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(sqlBuf.toString());

@@ -277,6 +277,19 @@ under the License.
         <xs:attribute type="xs:string" name="character-set"/>
         <xs:attribute type="xs:string" name="collate"/>
         <xs:attribute type="xs:integer" name="max-worker-pool-size" default="1"/>
+        <!-- SCIPIO: If set to dynamic fixes the 'Specified key was too long; max key length is 767 bytes' issue (only for MySQL 5.6+ and MariaDB 10.1+) -->
+        <!-- check https://dev.mysql.com/doc/refman/8.0/en/innodb-row-format.html & https://answers.launchpad.net/maria/+question/241612 for further info -->
+        <xs:attribute name="row-format" default="none">
+            <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="none"/>
+                        <xs:enumeration value="redundant"/>
+                        <xs:enumeration value="compact"/>
+                        <xs:enumeration value="dynamic"/>
+                        <xs:enumeration value="compressed"/>
+                    </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="sql-load-path">
         <xs:complexType>

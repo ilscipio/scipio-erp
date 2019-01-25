@@ -26,7 +26,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.control.RequestAttrPolicy.RequestAttrNamePolicy;
+import org.ofbiz.webapp.control.RequestAttrPolicy.RequestSavingAttrPolicy;
 
 import com.ilscipio.scipio.setup.SetupWorker.StaticSetupWorker.StaticStepState;
 
@@ -871,7 +872,8 @@ public abstract class SetupWorker implements Serializable {
                     request.setAttribute(STATIC_WORKER_ATTR, staticWorker);
 
                     // SPECIAL: this prevents the cached data from getting saved into the session
-                    RequestHandler.addNoSaveRequestAttr(request, STATIC_WORKER_ATTR);
+                    RequestAttrNamePolicy.from(request).addExclude(RequestSavingAttrPolicy.NotSaveable.class,
+                            STATIC_WORKER_ATTR);
                 }
                 return staticWorker;
             } else {

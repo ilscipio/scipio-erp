@@ -25,7 +25,7 @@ import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
  * </ul>
  */
 @SuppressWarnings("serial")
-public class CmsControlState implements Serializable, RedirectAttrPolicy.NotStorable, ViewLastAttrPolicy.Restorable {
+public class CmsControlState implements Serializable, RedirectAttrPolicy.NotSaveable, ViewLastAttrPolicy.Restorable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -84,7 +84,7 @@ public class CmsControlState implements Serializable, RedirectAttrPolicy.NotStor
 
         this.controlUris = controlUris;
     }
-    
+
     /**
      * Gets CMS control state from request, or if does not exist yet, creates it.
      * <p>
@@ -263,7 +263,7 @@ public class CmsControlState implements Serializable, RedirectAttrPolicy.NotStor
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object doViewLastAttrRestore(HttpServletRequest request, String attrName, Map<String, Object> saveAttrMap) {
+    public Object doViewLastRestoreAttr(HttpServletRequest request, String attrName, Map<String, Object> saveAttrMap) {
         // Clone the state, for thread safety
         return new CmsControlState(this, (Set<String>) request.getAttribute("_SCP_FWDROOTURIS_"));
     }

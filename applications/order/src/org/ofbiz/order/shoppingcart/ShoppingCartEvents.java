@@ -66,6 +66,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.control.RequestAttrPolicy.RequestAttrNamePolicy;
+import org.ofbiz.webapp.control.RequestAttrPolicy.RequestSavingAttrPolicy;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestVarScopes;
 
@@ -1401,7 +1403,7 @@ public class ShoppingCartEvents {
     /** SCIPIO: Preliminary setup to prepare cart for request. Added 2018-12-03. */
     public static String prepareCartForRequest(HttpServletRequest request, HttpServletResponse response) {
         // Prevent shoppingCart from being cached in view-last cached parameters
-        RequestHandler.addNoSaveRequestAttr(request, "shoppingCart");
+        RequestAttrNamePolicy.from(request).addExclude(RequestSavingAttrPolicy.NotSaveable.class, "shoppingCart");
         return "success";
     }
 

@@ -60,6 +60,8 @@ import org.ofbiz.security.SecurityConfigurationException;
 import org.ofbiz.security.SecurityFactory;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
+import org.ofbiz.webapp.control.RequestAttrPolicy.RedirectAttrPolicy;
+import org.ofbiz.webapp.control.RequestAttrPolicy.RestoreAttrPolicyInvoker;
 import org.ofbiz.webapp.event.RequestBodyMapHandlerFactory;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
@@ -177,10 +179,11 @@ public class ContextFilter implements Filter {
             byte[] reqAttrMapBytes = StringUtil.fromHexString(reqAttrMapHex);
             Map<String, Object> reqAttrMap = checkMap(UtilObject.getObject(reqAttrMapBytes), String.class, Object.class);
             if (reqAttrMap != null) {
+                RestoreAttrPolicyInvoker<?> attrPolicyInvoker = RedirectAttrPolicy.RestorePolicy.getInvoker(httpRequest);
                 for (Map.Entry<String, Object> entry: reqAttrMap.entrySet()) {
                     // SCIPIO: New ControlPlugins callbacks
                     //httpRequest.setAttribute(entry.getKey(), entry.getValue());
-                    RequestAttrPolicy.RedirectAttrPolicy.RestorePolicy.INVOKER.restoreToRequest(httpRequest, entry, reqAttrMap);
+                    attrPolicyInvoker.filterRestoreAttrToRequest(entry, reqAttrMap);
                 }
             }
             httpRequest.getSession().removeAttribute("_REQ_ATTR_MAP_");

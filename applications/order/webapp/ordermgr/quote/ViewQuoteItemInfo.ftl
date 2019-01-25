@@ -61,7 +61,7 @@ code package.
                             ${quoteItem.quoteItemSeqId}
                         </#if>
                         </div>
-                        <#assign quoteTerms = delegator.findByAnd("QuoteTerm", {"quoteId" : quoteItem.quoteId, "quoteItemSeqId" : quoteItem.quoteItemSeqId})>
+                        <#assign quoteTerms = delegator.findByAnd("QuoteTerm", {"quoteId" : quoteItem.quoteId, "quoteItemSeqId" : quoteItem.quoteItemSeqId},[], true)>
                     </@td>
                     <@td valign="top">
                             <#if showQuoteManagementLinks??>
@@ -85,19 +85,21 @@ code package.
                     <@td class="amount"><@ofbizCurrency amount=totalQuoteItemAdjustmentAmount isoCode=quote.currencyUomId/></@td>
                     <@td class="amount"><@ofbizCurrency amount=totalQuoteItemAmount isoCode=quote.currencyUomId/></@td>
                 </@tr>
-                <#list quoteTerms as quoteTerm>
-                <#assign termDescription = delegator.findOne("TermType",{"termTypeId":quoteTerm.termTypeId}, false)>
-                <@tr groupLast=true>
-                    <@td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${termDescription.description!}</@td>
-                    <@td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quoteTerm.termValue!}</@td>
-                    <@td valign="top"><#if quoteTerm.termDays??>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quoteTerm.termDays!}</#if></@td>
-                    <@td valign="top"><#if quoteTerm.description??>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quoteTerm.description}</#if></@td>
-                    <@td align="right" valign="top"></@td>
-                    <@td align="right" valign="top"></@td>
-                    <@td align="right" valign="top"></@td>
-                    <@td align="right" valign="top"></@td>
-                </@tr>
-                </#list>
+                <#if quoteTerms?has_content>
+                    <#list quoteTerms as quoteTerm>
+                    <#assign termDescription = delegator.findOne("TermType",{"termTypeId":quoteTerm.termTypeId}, false)>
+                    <@tr groupLast=true>
+                        <@td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${termDescription.description!}</@td>
+                        <@td valign="top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quoteTerm.termValue!}</@td>
+                        <@td valign="top"><#if quoteTerm.termDays??>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quoteTerm.termDays!}</#if></@td>
+                        <@td valign="top"><#if quoteTerm.description??>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${quoteTerm.description}</#if></@td>
+                        <@td align="right" valign="top"></@td>
+                        <@td align="right" valign="top"></@td>
+                        <@td align="right" valign="top"></@td>
+                        <@td align="right" valign="top"></@td>
+                    </@tr>
+                    </#list>
+                </#if>
                 <#-- now show adjustment details per line item -->
                 <#list quoteItemAdjustments as quoteItemAdjustment>
                     <#assign adjustmentType = quoteItemAdjustment.getRelatedOne("OrderAdjustmentType", false)>

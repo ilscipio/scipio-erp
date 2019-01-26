@@ -651,6 +651,7 @@
         <description>Creates a new asset</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <attribute name="scriptTemplateId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="scriptLang" type="String" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
@@ -679,6 +680,7 @@
         location="com.ilscipio.scipio.cms.template.CmsScriptTemplateServices" invoke="updateScriptTemplateInfo">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <attribute name="scriptTemplateId" mode="IN" type="String" optional="false"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>

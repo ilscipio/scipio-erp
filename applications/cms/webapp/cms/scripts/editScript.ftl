@@ -246,6 +246,11 @@ NOTES: 2016-12:
                         <@field type="display" label=uiLabelMap.CommonLanguageTitle><strong>${resolvedScriptLang}</strong></@field>
                         <@field type="display" value=(scriptTemplateModel.standalone?string("Y", "N")) label=uiLabelMap.CmsStandalone tooltip=uiLabelMap.CmsStandaloneDescription/>
 
+                        <#-- NOTE: 2019: this WebSite field has NO rendering impact; for organization purposes only 
+                            DEV NOTE: Questionable whether this switch should really be here anymore -->
+                        <@webSiteSelectField name="webSiteId" value=(scriptTemplateModel.webSiteId!) required=false
+                            tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
+
                         <@menu type="button">
                             <@menuitem type="link" href="javascript:updateScriptInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
                         </@menu> 
@@ -271,6 +276,10 @@ NOTES: 2016-12:
                       <input type="hidden" name="isCreate" value="Y"/>
                       <@fields type="default-compact">
                         <@field type="input" name="templateName" value=(parameters.templateName!) id="templateName" label=uiLabelMap.CmsTemplateName placeholder=uiLabelMap.CmsMyTemplateName required=true/>
+                        <#-- NOTE: 2019: this WebSite field has NO rendering impact; for organization purposes only 
+                            DEV NOTE: Questionable whether this switch should really be here anymore -->
+                        <@webSiteSelectField name="webSiteId" value=(parameters.webSiteId!) required=false
+                            tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
                         <@field type="textarea" name="description" value=(parameters.description!) label=uiLabelMap.CommonDescription required=false/>
                       </@fields>
                       <@fields type="default">

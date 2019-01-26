@@ -66,7 +66,7 @@
     <!-- Basic Template Actions - Dedicated self-titled script (also provides test for multiple script includes) -->
     <DataResource dataResourceId="CMSPGSCR_BASICTMPL" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/BasicTemplate.groovy"/>
     <Content contentId="CMSPGSCR_BASICTMPL" dataResourceId="CMSPGSCR_BASICTMPL" contentTypeId="DOCUMENT" />
-    <CmsScriptTemplate scriptTemplateId="BASICTMPL" contentId="CMSPGSCR_BASICTMPL" templateName="BasicTemplateActions" standalone="N"/>
+    <CmsScriptTemplate scriptTemplateId="BASICTMPL" webSiteId="cmsSite" contentId="CMSPGSCR_BASICTMPL" templateName="BasicTemplateActions" standalone="N"/>
 
     <!-- Basic Template -->
     <DataResource dataResourceId="CMSPG_BASICTMPL" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/basicTemplate.ftl"/>
@@ -84,7 +84,7 @@
     <!-- Advance Template Global (Backend) Actions - Dedicated self-titled script  -->
     <DataResource dataResourceId="CMSPGSCR_ADVTMPLGLBL" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/AdvancedTemplateGlobal.groovy"/>
     <Content contentId="CMSPGSCR_ADVTMPLGLBL" dataResourceId="CMSPGSCR_ADVTMPLGLBL" contentTypeId="DOCUMENT" />
-    <CmsScriptTemplate scriptTemplateId="ADVTMPLGLBL" contentId="CMSPGSCR_ADVTMPLGLBL" templateName="AdvancedGlobalTemplateActions" standalone="N" />
+    <CmsScriptTemplate scriptTemplateId="ADVTMPLGLBL" webSiteId="" contentId="CMSPGSCR_ADVTMPLGLBL" templateName="AdvancedGlobalTemplateActions" standalone="N" />
 
     <!-- Advanced Template Global (Backend), based on and reflects component://common/widget/CommonScreens.xml#GlobalDecorator 
         Implements and reflects the same responsibilities as GlobalDecorator and its actions;
@@ -116,10 +116,9 @@
     <!-- Shop Category Script, standalone for multi-page reuse -->
     <DataResource dataResourceId="CMSSCR_SHOPCATEG" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
     <Content contentId="CMSSCR_SHOPCATEG" dataResourceId="CMSSCR_SHOPCATEG" contentTypeId="DOCUMENT" />
-    <CmsScriptTemplate scriptTemplateId="SHOPCATEG" contentId="CMSSCR_SHOPCATEG" templateName="ShopCategory" standalone="Y" 
+    <CmsScriptTemplate scriptTemplateId="SHOPCATEG" webSiteId="ScipioWebStore" contentId="CMSSCR_SHOPCATEG" templateName="ShopCategory" standalone="Y" 
         description="Shop Category Script"/>    
-    
-
+ 
     <!-- Shop sidebar category menu asset (use global, association not needed) 
         DEV NOTE: to make everyone's lives easier, we link directly to the original sidedeepcategory. the UI will automatically create a copy on the first change. everybody wins. -->
     <DataResource dataResourceId="CMSAS_CATMENU" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://shop/webapp/shop/catalog/sidedeepcategory.ftl"/>
@@ -132,7 +131,7 @@
     <!-- Category Menu Script + assoc -->
     <DataResource dataResourceId="CMSSCR_CATMENU" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://shop/webapp/shop/WEB-INF/actions/shop/SideDeepCategory.groovy"/>
     <Content contentId="CMSSCR_CATMENU" dataResourceId="CMSSCR_CATMENU" contentTypeId="DOCUMENT" />
-    <CmsScriptTemplate scriptTemplateId="CATMENU" contentId="CMSSCR_CATMENU" templateName="CategoryMenu" standalone="N" 
+    <CmsScriptTemplate scriptTemplateId="CATMENU" webSiteId="ScipioWebStore" contentId="CMSSCR_CATMENU" templateName="CategoryMenu" standalone="N" 
         description="Category menu script"/>
     <CmsAssetTemplateScriptAssoc scriptAssocId="CATMENU_MAIN" assetTemplateId="CATMENU" scriptTemplateId="CATMENU" inputPosition="10" />
     
@@ -157,7 +156,7 @@
     <!-- Advanced Template Shop (Frontend) Actions - Dedicated self-titled script (also provides test for multiple script includes) -->
     <DataResource dataResourceId="CMSPGSCR_ADVTMPLSHOP" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/AdvancedTemplateShop.groovy"/>
     <Content contentId="CMSPGSCR_ADVTMPLSHOP" dataResourceId="CMSPGSCR_ADVTMPLSHOP" contentTypeId="DOCUMENT" />
-    <CmsScriptTemplate scriptTemplateId="ADVTMPLSHOP" contentId="CMSPGSCR_ADVTMPLSHOP" templateName="AdvancedTemplateShopActions" standalone="N" />
+    <CmsScriptTemplate scriptTemplateId="ADVTMPLSHOP" webSiteId="ScipioWebStore" contentId="CMSPGSCR_ADVTMPLSHOP" templateName="AdvancedTemplateShopActions" standalone="N" />
 
     <!-- Advanced Template Shop (Frontend), based on and reflects component://shop/widget/CommonScreens.xml#ShopDecorator 
         Indirectly derives from ADVTMPLGLBL and overrides some of its behavior (as ShopDecorator derives from and overrides GlobalDecorator). -->
@@ -203,7 +202,7 @@
     <!-- Demo Asset Template Actions - Dedicated self-titled script -->
     <DataResource dataResourceId="CMSASSCR_DEMOASSET" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/assets/demo/DemoAsset.groovy"/>
     <Content contentId="CMSASSCR_DEMOASSET" dataResourceId="CMSASSCR_DEMOASSET" contentTypeId="DOCUMENT" />
-    <CmsScriptTemplate scriptTemplateId="DEMOASSET" contentId="CMSASSCR_DEMOASSET" templateName="DemoAssetActions" standalone="N"
+    <CmsScriptTemplate scriptTemplateId="DEMOASSET" webSiteId="cmsSite" contentId="CMSASSCR_DEMOASSET" templateName="DemoAssetActions" standalone="N"
         description="Main actions script for DemoAsset"/>
 
     <!-- Demo Asset Template for global reuse (NOTE: no attributes, no explicit includes needed) -->
@@ -217,7 +216,7 @@
     <!-- Demo Asset Template 2 Actions - Dedicated self-titled script -->
     <DataResource dataResourceId="CMSASSCR_DEMOASSET2" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/assets/demo/DemoAsset2.groovy"/>
     <Content contentId="CMSASSCR_DEMOASSET2" dataResourceId="CMSASSCR_DEMOASSET2" contentTypeId="DOCUMENT" />
-    <CmsScriptTemplate scriptTemplateId="DEMOASSET2" contentId="CMSASSCR_DEMOASSET2" templateName="DemoAsset2Actions" standalone="N"
+    <CmsScriptTemplate scriptTemplateId="DEMOASSET2" webSiteId="cmsSite" contentId="CMSASSCR_DEMOASSET2" templateName="DemoAsset2Actions" standalone="N"
         description="Main actions script for DemoAsset2"/>
     
     <!-- Demo Asset Template 2, for import -->
@@ -253,12 +252,12 @@
     <!-- Demo Template Actions - Part of screen actions script inclusion test -->
     <DataResource dataResourceId="CMSPGSCR_DEMOMISC" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://webtools/widget/MiscScreens.xml"/>
     <Content contentId="CMSPGSCR_DEMOMISC" dataResourceId="CMSPGSCR_DEMOMISC" contentTypeId="DOCUMENT" />
-    <CmsScriptTemplate scriptTemplateId="DEMOMISC" contentId="CMSPGSCR_DEMOMISC" templateName="DemoTemplateActions" standalone="N"/>
+    <CmsScriptTemplate scriptTemplateId="DEMOMISC" webSiteId="cmsSite" contentId="CMSPGSCR_DEMOMISC" templateName="DemoTemplateActions" standalone="N"/>
     
     <!-- Demo Template Actions - Dedicated self-titled script -->
     <DataResource dataResourceId="CMSPGSCR_DEMOTMPL" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/DemoTemplate.groovy"/>
     <Content contentId="CMSPGSCR_DEMOTMPL" dataResourceId="CMSPGSCR_DEMOTMPL" contentTypeId="DOCUMENT" />
-    <CmsScriptTemplate scriptTemplateId="DEMOTMPL" contentId="CMSPGSCR_DEMOTMPL" templateName="DemoTemplateActions" standalone="N"/>
+    <CmsScriptTemplate scriptTemplateId="DEMOTMPL" webSiteId="cmsSite" contentId="CMSPGSCR_DEMOTMPL" templateName="DemoTemplateActions" standalone="N"/>
     
     <!-- Demo Template (Analogous to LayoutDemo, based on Basic Template) -->
     <DataResource dataResourceId="CMSPG_DEMOTMPL" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/demoTemplate.ftl"/>
@@ -346,7 +345,7 @@
     <CmsPageVersionState pageId="ADVSHOPINDEX" versionId="ADVSHOPINDEX" versionStateId="CMS_VER_ACTIVE"/>
     <DataResource dataResourceId="CMSSCR_SHOPMAIN" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://shop/webapp/shop/WEB-INF/actions/Main.groovy"/>
     <Content contentId="CMSSCR_SHOPMAIN" dataResourceId="CMSSCR_SHOPMAIN" contentTypeId="DOCUMENT"/>
-    <CmsScriptTemplate scriptTemplateId="SHOPMAIN" contentId="CMSSCR_SHOPMAIN" templateName="ShopMain" standalone="N" 
+    <CmsScriptTemplate scriptTemplateId="SHOPMAIN" webSiteId="ScipioWebStore" contentId="CMSSCR_SHOPMAIN" templateName="ShopMain" standalone="N" 
         description="Shop Main Script"/>
     <CmsPageScriptAssoc scriptAssocId="ADVSHOPINDEX_MAIN" pageId="ADVSHOPINDEX" scriptTemplateId="SHOPMAIN" invokeName="" inputPosition="10" />
     <CmsPageScriptAssoc scriptAssocId="ADVSHOPINDEX_CATEG" pageId="ADVSHOPINDEX" scriptTemplateId="SHOPCATEG" invokeName="" inputPosition="20" />
@@ -364,7 +363,7 @@
     <CmsPageVersionState pageId="DEMOPAGE" versionId="DEMOPAGE" versionStateId="CMS_VER_ACTIVE"/>
     <DataResource dataResourceId="CMSASSCR_DEMOSCRIPT3" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/assets/demo/DemoScript3.groovy"/>
     <Content contentId="CMSASSCR_DEMOSCRIPT3" dataResourceId="CMSASSCR_DEMOSCRIPT3" contentTypeId="DOCUMENT" />
-    <CmsScriptTemplate scriptTemplateId="DEMOSCRIPT3" contentId="CMSASSCR_DEMOSCRIPT3" templateName="DemoScript3" standalone="N"
+    <CmsScriptTemplate scriptTemplateId="DEMOSCRIPT3" webSiteId="cmsSite" contentId="CMSASSCR_DEMOSCRIPT3" templateName="DemoScript3" standalone="N"
         description="Demo Script 3 (helps test Page Scripts)"/>
     <CmsPageScriptAssoc scriptAssocId="DEMOPAGE_SCRPT3" pageId="DEMOPAGE" scriptTemplateId="DEMOSCRIPT3" invokeName="" inputPosition="10" />
     

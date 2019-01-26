@@ -435,7 +435,8 @@
     <entity entity-name="CmsScriptTemplate" package-name="com.ilscipio.scipio.cms.template"
         title="Script Template" author="Ilscipio GmbH" version="1.0">
       <field name="scriptTemplateId" type="id-ne"></field>
-      
+      <!-- 2019: NOTE: Unlike CmsPage.webSiteId, this field is not mandatory and basically not used. -->
+      <field name="webSiteId" type="id"><description>Organizational and editing page webSiteId (not used in rendering)</description></field>
       <field name="templateName" type="name"></field>
       <field name="description" type="very-long"></field>
       <field name="scriptLang" type="id">

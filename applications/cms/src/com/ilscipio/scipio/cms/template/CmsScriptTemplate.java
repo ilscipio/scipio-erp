@@ -175,6 +175,20 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    protected void verifyNewFields(Delegator delegator, Map<String, Object> fields, boolean isNew) throws CmsException {
+        // NOTE: in theory, could want groupingNullSignificant=false here because it makes the duplicate name check more aggressive...
+        verifyUniqueName(delegator, fields, isNew, "templateName", false, "webSiteId", true, true);
+    }
+
+    public void setWebSiteId(String webSiteId) { // legacy webSiteId field
+        entity.setString("webSiteId", webSiteId);
+    }
+
+    public String getWebSiteId() { // legacy webSiteId field
+        return entity.getString("webSiteId");
+    }
+
     public String getScriptLang() { // 2016: new
         return entity.getString("scriptLang");
     }
@@ -910,7 +924,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         /**
          * Finds by name and optional webSiteId.
          * NOTE: if no webSiteId passed, it preferentially returns the records having no webSiteId.
-         * NOTE: 2017-03-24: webSiteId IS CURRENTLY IGNORED.
+         * NOTE: 2019-01-25: webSiteId matching is now honored (was previously ignored).
          */
         public CmsScriptTemplate findByName(Delegator delegator, String name, String webSiteId, boolean webSiteIdOptional, boolean useCache, HttpServletRequest request) throws CmsException {
             boolean useGlobalCache = isUseGlobalObjCacheStatic(useCache);
@@ -934,24 +948,22 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                     Debug.logInfo("Cms: Retrieving script template from database: name: " + name + CmsControlUtil.getReqLogIdDelimStr(request), module);
                 }
                 Map<String, Object> fields = UtilMisc.toMap("templateName", name);
-//                if (!webSiteIdOptional || webSiteId != null) {
-//                    fields.put("webSiteId", webSiteId);
-//                }
+                if (!webSiteIdOptional || webSiteId != null) {
+                    fields.put("webSiteId", webSiteId);
+                }
                 // NOTE: always null webSiteIds first - this matters
-//                List<CmsScriptTemplate> scripts = findAll(delegator, fields, UtilMisc.toList("webSiteId"), isUseDbCacheStatic(useCache));
-                List<CmsScriptTemplate> scripts = findAll(delegator, fields, null, 
-                        isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache));
+                List<CmsScriptTemplate> scripts = findAll(delegator, fields, UtilMisc.toList("webSiteId"), isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache));
                 if (scripts.size() > 0) {
                     script = scripts.get(0);
                 }
                 if (scripts.size() > 1) {
-//                    if (!webSiteIdOptional || webSiteId != null) {
-                    Debug.logError("Cms: Multiple script templates with name '" + name + "' and webSiteId '" + webSiteId + "' found; using first found (id: " + script.getId() + ")", module);
-//                    } else if (asset.getWebSiteId() != null) {
-//                        // if lookup by name only, it's usually because we expected only one result,
-//                        // either one with webSiteId null (no log warning) or only one webSiteId
-//                        Debug.logWarning("Cms: Multiple asset templates with name '" + name + "' and having a webSiteId found; using first found (id: " + asset.getId() + ", webSiteId: " + asset.getWebSiteId() + ")", module);
-//                    }
+                    if (!webSiteIdOptional || webSiteId != null) {
+                        Debug.logError("Cms: Multiple script templates with name '" + name + "' and webSiteId '" + webSiteId + "' found; using first found (id: " + script.getId() + ")", module);
+                    } else if (script.getWebSiteId() != null) {
+                        // if lookup by name only, it's usually because we expected only one result,
+                        // either one with webSiteId null (no log warning) or only one webSiteId
+                        Debug.logWarning("Cms: Multiple script templates with name '" + name + "' and having a webSiteId found; using first found (id: " + script.getId() + ", webSiteId: " + script.getWebSiteId() + ")", module);
+                   }
                 }
 
                 if (useGlobalCache) {

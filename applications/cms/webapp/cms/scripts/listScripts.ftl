@@ -14,6 +14,7 @@
                 <@thead>
                     <@tr class="header-row">
                         <@th width="100px">${uiLabelMap.CmsScript}</@th>
+                        <@th width="100px">${uiLabelMap.CmsWebSite}</@th>
                         <@th width="100px">${uiLabelMap.CommonLanguageTitle}</@th>
                         <@th width="50px">${uiLabelMap.CmsStandalone}</@th>
                         <@th>${uiLabelMap.CommonName}</@th>
@@ -24,6 +25,7 @@
                     <#assign scriptTmpl = cmsScriptUtil.getScriptTemplateFromEntity(scriptEntity)>
                     <@tr>
                         <@td>${scriptTmpl.id!}</@td>
+                        <@td>${scriptTmpl.webSiteId!}</@td>
                         <@td>${scriptTmpl.resolvedScriptLang!"invalid"}</@td>
                         <@td>${scriptTmpl.standalone?string("Y", "N")}</@td>
                         <@td><a href="<@ofbizUrl>editScript?scriptTemplateId=${scriptTmpl.id!}</@ofbizUrl>">${scriptTmpl.templateName!}</a></@td>

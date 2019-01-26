@@ -43,12 +43,13 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     }
     
     function makeCmsEditPageUrl($node) {
+        <#-- 2019-01-23: The ?webSiteId= causes conflicts and nothing but problems
         var path = $node.data["path"]; //$node.a_attr.href
         var editorUrl = editorBaseUrl + '?' + $.param({
             webSiteId: $node.data["websiteid"],
             path: path
-        });
-        return editorUrl;
+        });-->
+        return editorBaseUrl + '?' + $.param({pageId: $node.data["pageId"] || ""});
     }
     
     <#-- Function to update the action menu. Will generate new menu items based on selected option -->

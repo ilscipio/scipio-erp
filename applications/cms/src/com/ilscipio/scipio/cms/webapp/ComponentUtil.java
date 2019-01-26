@@ -134,17 +134,17 @@ public class ComponentUtil {
                         Map<String, List<Map<String, Object>>> currMap = UtilGenerics.checkMap(requestMaps.get(webSiteId));
                         if (currMap.containsKey("pages")) {
                             List<Map<String, Object>> pages = currMap.get("pages");
-                            generateMapFromRequestUri(requestUri, "request", pages, webSiteId, webSiteId);
+                            generateMapFromRequestUri(null, requestUri, "request", pages, webSiteId, webSiteId);
                         } else {
                             List<Map<String, Object>> pages = new ArrayList<>();
-                            generateMapFromRequestUri(requestUri, "request", pages, webSiteId, webSiteId);
+                            generateMapFromRequestUri(null, requestUri, "request", pages, webSiteId, webSiteId);
                             currMap.put("pages", pages);
                         }
 
                     } else {
                         Map<String, Object> currMap = component;
                         List<Map<String, Object>> pages = new ArrayList<>();
-                        generateMapFromRequestUri(requestUri, "request", pages, webSiteId, webSiteId);
+                        generateMapFromRequestUri(null, requestUri, "request", pages, webSiteId, webSiteId);
                         currMap.put("pages", pages);
                         requestMaps.put(webSiteId, currMap);
                     }
@@ -204,9 +204,9 @@ public class ComponentUtil {
     }
 
     // NOTE: generateMapFromRequestUri changed to public because invoked from CmsContentTree.groovy directly
-    public static void generateMapFromRequestUri(String path, String type, List<Map<String, Object>> pages, String parent,
+    public static void generateMapFromRequestUri(String pageId, String path, String type, List<Map<String, Object>> pages, String parent,
             String webSiteId) {
-        generateMapFromRequestUri(path, type, pages, null, null, parent, webSiteId);
+        generateMapFromRequestUri(pageId, path, type, pages, null, null, parent, webSiteId);
     }
 
     /**
@@ -217,7 +217,7 @@ public class ComponentUtil {
      * <p>
      * path should start with slash (/).
      */
-    public static void generateMapFromRequestUri(String path, String type, List<Map<String, Object>> pages, Map<String, Object> state, String icon,
+    public static void generateMapFromRequestUri(String pageId, String path, String type, List<Map<String, Object>> pages, Map<String, Object> state, String icon,
             String parent, String webSiteId) {
         if (path == null) { // sanity checks
             throw new IllegalArgumentException("generateMapFromRequestUri: received null path");
@@ -237,6 +237,7 @@ public class ComponentUtil {
         if (parent == null)
             parent = "#";
         Map<String, Object> itemMap = null;
+        Map<String, Object> dataMap = null;
         for (String item : items) {
             if (item.length() > 0 && items.length > 1) {
                 /*
@@ -253,9 +254,10 @@ public class ComponentUtil {
                 boolean isTargetPath = subPathStr.equals(path);
 
                 // determine if node is parent and add appropriate folder
-                itemMap = new HashMap<>(UtilMisc.toMap("text", item, "a_attr", subPathStr, "id", id, "state", state,
-                        "parent", parent, "data", UtilMisc.toMap("type", type, "parentPath", parentPath, "path",
-                                subPathStr, "websiteid", webSiteId, "isTargetPath", isTargetPath)));
+                dataMap = UtilMisc.toMap("type", type, "parentPath", parentPath,
+                        "path", subPathStr, "websiteid", webSiteId, "isTargetPath", isTargetPath);
+                itemMap = UtilMisc.toMap("text", item, "a_attr", subPathStr, 
+                        "id", id, "state", state, "parent", parent, "data", dataMap);
                 parent = id;
 
                 // check for map in array and add if none has been added before
@@ -263,6 +265,9 @@ public class ComponentUtil {
                     pages.add(itemMap);
                 }
             }
+        }
+        if (dataMap != null && pageId != null) {
+            dataMap.put("pageId", pageId);
         }
     }
 

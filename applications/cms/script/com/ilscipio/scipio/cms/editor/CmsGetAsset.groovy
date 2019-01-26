@@ -24,7 +24,6 @@ final String module = "CmsGetAsset.groovy";
  
 /* Parameters */
 assetTemplateId = parameters.assetTemplateId;
-webSiteId = parameters.webSiteId;
 templateName = parameters.templateName;
 versionId = parameters.versionId;
 

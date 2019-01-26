@@ -6,7 +6,6 @@
   <#assign content = {}>
 </#if>
 <#assign pathPlaceholder = "/myUrl">
-
 <#-- NOTE: don't use container=false anymore, use @fields type="default-compact" -->
 <#macro pageAttrField fieldObj value="" id="" namePrefix="" expandLangVisible=true>
     <#if fieldObj.type?has_content>
@@ -398,7 +397,7 @@
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
                     <@fields type="default-compact">
-                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToPage")>
+                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToPage") webSiteId=(parameters.webSiteId!(meta.webSiteId)!)>
                             <input type="hidden" name="pageId" value="${pageId!}" />
                         </@cmsScriptTemplateSelectForm>
                     </@fields>

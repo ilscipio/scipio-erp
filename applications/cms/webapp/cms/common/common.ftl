@@ -358,7 +358,7 @@
 </#macro>
 
 <#-- Creates a new association between a CmsScriptTemplate and a template record (type implied by form action and passed nested hidden inputs) -->
-<#macro cmsScriptTemplateSelectForm formAction baseId="script-assoc-create">
+<#macro cmsScriptTemplateSelectForm formAction baseId="script-assoc-create" webSiteId="">
 
     <#-- should always show the existing scripts form, unless there are no existing standalone scripts in the system. -->
     <#local existingSelected = standaloneScriptTemplates?has_content>
@@ -413,7 +413,10 @@
         <@field type="text" label=uiLabelMap.CmsScriptName size="30" name="templateName" required=true tooltip=uiLabelMap.CmsScriptNameDescription />
         <@field type="text" label=uiLabelMap.CmsScriptLocation size="30" name="templateLocation" required=true 
             placeholder="component://cms/cms-templates/actions/xxx.groovy"/>
- 
+        <#-- NOTE: 2019: this WebSite field has NO rendering impact; for organization purposes only -->
+        <@webSiteSelectField name="webSiteId" value=webSiteId required=false
+            tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
+
         <@cmsScriptTemplateSelectFormCommonFields><#nested></@cmsScriptTemplateSelectFormCommonFields>
       </@form>
     </div>
@@ -428,7 +431,10 @@
 
 <#-- TODO?: we could support more editable fields, but to avoid issues and simplify, we are setting the script reference read-only here  -->
 <#macro cmsScriptTemplateSelectFormEditFields scriptTmpl>
-        <@field type="display" label=uiLabelMap.CmsScriptName name="scriptName" value="${rawString(scriptTmpl.templateName!scriptTmpl.id)} (${rawString(scriptTmpl.id)})"/>
+        <#local nameMarkup>${scriptTmpl.templateName!scriptTmpl.id} <#t/>
+            (<a href="<@ofbizUrl>editScript?scriptTemplateId=${scriptTmpl.id}</@ofbizUrl>">${scriptTmpl.id}</a>)</#local>
+        <@field type="display" label=uiLabelMap.CmsScriptName name="scriptName" value=wrapAsRaw({'raw':rawString(scriptTmpl.templateName!scriptTmpl.id), 'htmlmarkup':nameMarkup})/>
+        <@field type="display" label=uiLabelMap.CommonWebsite name="webSiteId" value=(scriptTmpl.webSiteId!"-")/>
         <@field type="display" label=uiLabelMap.CmsQualifiedName name="qualifiedName" value=(scriptTmpl.qualifiedName!"")/>
         <@field type="text" label=uiLabelMap.CmsInvokeName size="30" name="invokeName" required=false tooltip=uiLabelMap.CmsScriptInvokeNameDescription value=scriptTmpl.invokeName!/>
         <@field type="text" label=uiLabelMap.CommonPosition size="30" name="inputPosition" required=false value=scriptTmpl.inputPosition!/>
@@ -449,10 +455,11 @@
                 </@tr>
             </@thead>
             <#list scriptTemplates as scriptTmpl><#-- NOTE: should be already sorted by LinkedHashMap -->
+                <#local editUrlHtml = escapeVal(makeOfbizUrl("editScript?scriptTemplateId="+rawString(scriptTmpl.id)), "html")>
                 <@tr>
                    <@td>${scriptTmpl.inputPosition!}</@td>
-                   <@td><a href="<@ofbizUrl>editScript?scriptTemplateId=${scriptTmpl.id}</@ofbizUrl>">${scriptTmpl.id!}</a></@td>
-                   <@td><a href="<@ofbizUrl>editScript?scriptTemplateId=${scriptTmpl.id}</@ofbizUrl>">${scriptTmpl.templateName!}</a></@td>
+                   <@td><a href="${editUrlHtml}">${scriptTmpl.id!}</a></@td>
+                   <@td><a href="${editUrlHtml}">${scriptTmpl.templateName!}</a></@td>
                    <#-- TODO: ONLY SUPPORT location for now, because body storage requires more advanced screens for reuse -->
                    <@td>${scriptTmpl.qualifiedName!""}</@td>
                    <#--<@td>${scriptTmpl.invokeName!""}</@td> -->

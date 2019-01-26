@@ -183,7 +183,7 @@
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
                     <@fields type="default-compact">
-                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToTemplate")>
+                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToTemplate") webSiteId=(parameters.webSiteId!(pageTemplate.webSiteId)!)>
                             <input type="hidden" name="pageTemplateId" value="${pageTemplate.pageTemplateId!""}" />
                         </@cmsScriptTemplateSelectForm>
                     </@fields>
@@ -414,8 +414,7 @@
 
                         <@field type="textarea" name="description_visible" value=(pageTemplate.description!) required=false label=uiLabelMap.CommonDescription />
 
-                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only
-                            DEV NOTE: Questionable whether this switch should really be here anymore -->
+                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only -->
                         <@webSiteSelectField name="webSiteId" value=(pageTemplate.webSiteId!) required=false
                             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
 
@@ -469,8 +468,7 @@
                       <@fields type="default-compact">
                         <input type="hidden" name="isCreate" value="Y"/>
                         <@field type="input" name="templateName" value=(parameters.templateName!) id="templateName" label=uiLabelMap.CmsTemplateName placeholder="My Template Name" required=true/>
-                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only
-                            DEV NOTE: Questionable whether this switch should really be here anymore -->
+                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only -->
                         <@webSiteSelectField name="webSiteId" value=(parameters.webSiteId!) required=false
                             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
                         <@field type="textarea" name="description" value=(parameters.description!) label=uiLabelMap.CommonDescription required=false/>

@@ -312,6 +312,7 @@
     <service name="cmsUpdateScriptAssocInterface" engine="interface">
         <attribute name="scriptAssocId" type="String" mode="IN" optional="true"/>
         <attribute name="scriptTemplateId" type="String" mode="IN" optional="true"/><!-- always optional and should not be passed if scriptAssocId is passed -->
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="inputPosition" type="Long" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="scriptLang" type="String" mode="IN" optional="true"/>

@@ -21,6 +21,8 @@ code package.
 
     <simple-method method-name="createCommunicationEvent" short-description="Create a CommunicationEvent with or w/o permission check">
         <!-- check for forward only if created by a user and not incoming email by system-->
+<!--         <log message="website 1 ======> ${parameters.webSiteId}" level="always"/>
+        <log message="website 2 ======> ${parameters.websiteId}" level="always"/> -->
         <if-compare field="parameters.action" value="FORWARD" operator="equals">
             <if-not-empty field="parameters.origCommEventId">
                 <entity-one entity-name="CommunicationEvent" value-field="newEntity">
@@ -665,6 +667,8 @@ code package.
             <set field="emailParams.sendFrom" from-field="parameters.emailAddress"/>
             <set field="emailParams.contentType" from-field="productStoreEmailSetting.contentType"/>
             <set field="emailParams.bodyScreenUri" from-field="productStoreEmailSetting.bodyScreenLocation"/>
+            <!-- SCIPIO (01/26/2019): Fixes the missing webSiteId which needed to build links -->
+            <set field="emailParams.webSiteId" from-field="parameters.webSiteId"/>
             <call-service service-name="sendMailFromScreen" in-map-name="emailParams"/>
         </if-not-empty>
     </simple-method>

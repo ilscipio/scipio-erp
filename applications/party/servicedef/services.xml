@@ -863,6 +863,8 @@ code package.
         <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
         <attribute name="custRequestId" type="String" mode="IN" optional="true"/>
+        <!-- SCIPIO (01/26/2019): This should fix the missing webSiteId for all the communication services -->
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="action" type="String" mode="IN" optional="true"/><!-- to indicate any special action like: REPLY, REPLYALL, FORWARD or empty for no special action-->
         <override name="headerString" allow-html="any"/>
         <override name="content" allow-html="any"/>

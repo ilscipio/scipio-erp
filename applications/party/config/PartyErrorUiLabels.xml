@@ -1336,6 +1336,9 @@
         <value xml:lang="zh">无法更新人员信息 (写失败)：${0}</value>
         <value xml:lang="zh-TW">無法更新人員資訊 (寫失敗):${0}</value>
     </property>
+    <property key="PartyCaptchaMissingError">
+        <value xml:lang="en">Wrong captcha. Please try again.</value>
+    </property>
     <property key="PartyRequiredFieldMissingContactMechTypeId">
         <value xml:lang="de">Pflichtfeld fehlt: ContactMech Type Id.</value>
         <value xml:lang="en">Required Field Missing : ContactMech Type Id.</value>

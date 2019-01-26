@@ -1428,7 +1428,7 @@ code package.
         <call-object-method obj-field="parameters.captcha" method-name="toLowerCase" ret-field="submittedCaptcha"/>
         <script lang="groovy"><![CDATA[ context.actualCaptcha = request.getSession().getAttribute("_CAPTCHA_CODE_")?.get("captchaImage")?.toLowerCase()]]></script>
         <if-compare-field field="submittedCaptcha" operator="not-equals" to-field="actualCaptcha">
-            <add-error><fail-property resource="MyPortalUiLabels" property="MyPortalCaptchaMissingError"/></add-error>
+            <add-error><fail-property resource="PartyUiLabels" property="PartyCaptchaMissingError"/></add-error>
         </if-compare-field>
         <check-errors/>
         <if-empty field="parameters.partyId">

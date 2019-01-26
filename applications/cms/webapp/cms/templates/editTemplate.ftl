@@ -183,7 +183,7 @@
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
                     <@fields type="default-compact">
-                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToTemplate") webSiteId=(parameters.webSiteId!(pageTemplate.webSiteId)!)>
+                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToTemplate") webSiteId=((pageTemplate.webSiteId)!)>
                             <input type="hidden" name="pageTemplateId" value="${pageTemplate.pageTemplateId!""}" />
                         </@cmsScriptTemplateSelectForm>
                     </@fields>

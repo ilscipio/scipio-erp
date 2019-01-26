@@ -403,12 +403,12 @@
     <div id="${(baseId+"-newloc")}"<#if existingSelected> style="display: none;"</#if>>
       <@form method="post" action=formAction id=(baseId+"-newloc-form")>
 
-        <input type="hidden" name="templateSource" value="Location" />
+        <input type="hidden" name="templateSource" value="Location"/>
         
         <#-- NON-STANDALONE means the CmsScriptTemplate will be automatically deleted once orphaned, 
             as long as the user has never edited it further (editing it switches it to "Y").
             without this auto-delete, we would probably just annoy users who make heavy use of script locations. -->
-        <input type="hidden" name="standalone" value="N" />
+        <input type="hidden" name="standalone" value="N"/>
 
         <@field type="text" label=uiLabelMap.CmsScriptName size="30" name="templateName" required=true tooltip=uiLabelMap.CmsScriptNameDescription />
         <@field type="text" label=uiLabelMap.CmsScriptLocation size="30" name="templateLocation" required=true 
@@ -416,6 +416,7 @@
         <#-- NOTE: 2019: this WebSite field has NO rendering impact; for organization purposes only -->
         <@webSiteSelectField name="webSiteId" value=webSiteId required=false
             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
+        <input type="hidden" name="currentWebSiteId" value="${webSiteId}"/><#-- see CmsGetPage.groovy -->
 
         <@cmsScriptTemplateSelectFormCommonFields><#nested></@cmsScriptTemplateSelectFormCommonFields>
       </@form>

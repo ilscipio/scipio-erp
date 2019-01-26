@@ -47,17 +47,20 @@
                         </#if>
                     </@td>
                     <@td>
-                      <#-- TODO?: REVIEW: in future, consider scrapping the path-based link and using only the pageId one instead...
-                          it would simplify the UI code... -->
+                      <#-- 2019-01-23: The ?webSiteId= causes conflicts and nothing but problems
                       <#if item.path?has_content>
                         <#assign editPageLink = "editPage?path=${escapeVal(item.path, 'url')}&webSiteId=${item.webSiteId!item.defaultWebSiteId!}">
                         <a href="<@ofbizUrl uri=editPageLink escapeAs='html'/>">${escapeFullUrl(item.path, 'html')}</a>
                       <#else>
                         <#assign editPageLink = "editPage?pageId=${item.id}&webSiteId=${item.webSiteId!item.defaultWebSiteId!}">
+                      </#if>-->
+                      <#assign editPageUri = "editPage?pageId=${escapeVal(item.id, 'url')}"><#-- &webSiteId=${escapeVal(item.webSiteId!item.defaultWebSiteId!, 'url')} -->
+                      <#if item.path?has_content>
+                        <a href="<@ofbizUrl uri=editPageUri escapeAs='html'/>">${escapeFullUrl(item.path, 'html')}</a>
                       </#if>
                     </@td>
                     <#-- FIXME: the name should always get the pageId link, but right now the javascript has issues -->
-                    <@td><a href="<@ofbizUrl uri=editPageLink escapeAs='html'/>">${item.name!""}</a></@td>
+                    <@td><a href="<@ofbizUrl uri=editPageUri escapeAs='html'/>">${item.name!}</a></@td>
                     <@td>${makeShortCmsDesc(item.description!)}</@td>
                 </@tr>
             </#list>

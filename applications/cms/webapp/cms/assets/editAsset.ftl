@@ -97,7 +97,7 @@
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
                     <@fields type="default-compact">
-                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToAsset") webSiteId=(parameters.webSiteId!(assetTemplateModel.webSiteId)!)>
+                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToAsset") webSiteId=((assetTemplateModel.webSiteId)!)>
                             <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}"/>
                         </@cmsScriptTemplateSelectForm>
                     </@fields>

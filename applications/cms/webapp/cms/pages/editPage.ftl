@@ -109,12 +109,14 @@
 <#-- The Content -->
 <#-- EDIT PAGE -->
 <#if template?has_content || meta?has_content>
-  <#if webSiteId?has_content><#-- 2016-11-30: currently this depends highly on website, can't omit -->
+  <#if webSiteId?has_content><#-- NOTE: webSiteId must be both -->
   
     <#-- DEV NOTE: The path must be escaped using escapeVal(path, 'url') when passed as parameter -->
   
-    <#assign editPageUrl = makeOfbizUrl("editPage?webSiteId=${webSiteId!}&path=${escapeVal(pagePrimaryPath, 'url')}")>
-    <#assign editPageByIdUrl = makeOfbizUrl("editPage?pageId=${pageId!}")>
+    <#assign editPageByIdUrl = makeOfbizUrl("editPage?pageId="+escapeVal(pageId!, 'url'))>
+    <#-- 2019-01-23: The ?webSiteId= causes conflicts and nothing but problems
+    <#assign editPageUrl = makeOfbizUrl("editPage?webSiteId=${webSiteId!}&path=${escapeVal(pagePrimaryPath, 'url')}")>-->
+    <#assign editPageUrl = editPageByIdUrl>
 
     <#-- NOTES: Preview & Live links:
         * the preview links must use the *Expanded variable, otherwise will break in future
@@ -397,7 +399,7 @@
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
                     <@fields type="default-compact">
-                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToPage") webSiteId=(parameters.webSiteId!(meta.webSiteId)!)>
+                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToPage") webSiteId=((meta.webSiteId)!)>
                             <input type="hidden" name="pageId" value="${pageId!}" />
                         </@cmsScriptTemplateSelectForm>
                     </@fields>
@@ -510,9 +512,10 @@
                                         <@tr alt=rowSelected selected=rowSelected>
                                            <@td><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_user!}" style="font-size:16px;margin:4px;"/></@td>
                                            <@td> ${version.createdBy!"Anonymous"}</@td>
-                                           <@td><#if version.date?has_content><a href="<@ofbizUrl escapeAs="html">editPage?versionId=${version.id!}&webSiteId=${webSiteId!}&path=${escapeVal(pagePrimaryPath!, 'url')}</@ofbizUrl>">${rawString(version.date)?datetime}</a></#if></@td>
+                                           <#assign verLinkMkrp><@ofbizUrl escapeAs="html">editPage?pageId=${escapeVal(pageId!, 'url')}&versionId=${escapeVal(version.id!, 'url')}</@ofbizUrl></#assign>
+                                           <@td><#if version.date?has_content><a href="${verLinkMkrp}">${rawString(version.date)?datetime}</a></#if></@td>
                                            <@td><#if version.comment?has_content>${version.comment!""}</#if></@td>
-                                           <@td><a href="<@ofbizUrl escapeAs="html">editPage?versionId=${version.id!}&webSiteId=${webSiteId!}&path=${escapeVal(pagePrimaryPath!, 'url')}</@ofbizUrl>"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"/></a></@td>
+                                           <@td><a href="${verLinkMkrp}"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"/></a></@td>
                                            <@td><#if version.active==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"/></#if></@td>      
                                         </@tr>
                                     </#list>

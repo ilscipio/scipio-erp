@@ -408,6 +408,7 @@
             <#-- NOTE: void(0) MUST be at the end to prevent browser failure -->
             <@menuitem type="link" href="javascript:addPageVersion($('form#editorForm'),false); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave/>
             <@menuitem type="link" href="javascript:activateVersion($('#versionId').val()); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CmsPublish/>
+            <@menuitem type="link" href="javascript:addAndActivateVersion(); void(0);" class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsSaveAndPublish/>
             <#if previewUrl?has_content && webSiteAllowPreview>
               <@menuitem type="link" href=previewUrl class="+${styles.action_run_sys!} ${styles.action_show!}" target="_blank" text=uiLabelMap.CmsPreview/>
             <#else>
@@ -425,7 +426,6 @@
                 <@menuitem type="link" disabled=true class="+${styles.action_run_sys!} ${styles.action_show!}" text=previewLabel/>
               </#if>
             </#if>
-            <@menuitem type="link" href="javascript:addAndActivateVersion(); void(0);" class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsSaveAndPublish/>
             <#if liveUrl?has_content>
               <@menuitem type="link" href=liveUrl class="+${styles.action_run_sys!} ${styles.action_show!}" target="_blank" text=uiLabelMap.CmsViewLive/>
             <#else>

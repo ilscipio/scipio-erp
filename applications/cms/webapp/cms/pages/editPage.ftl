@@ -668,7 +668,7 @@
                          
                          <@field type="input" name="path" value=(parameters.path!) id="path" label=uiLabelMap.CommonPath placeholder=pathPlaceholder required=true/><#-- TODO: rename to primaryPath -->
 
-                         <@field type="select" name="primaryTargetPath" id="primaryTargetPath" items=primaryTargetPathOptions defaultValue="/cmsPagePlainNoAuth" label="${rawLabel('CommonPath')} ${rawLabel('CommonSettings')}" required=false />
+                         <@field type="select" name="primaryTargetPath" id="primaryTargetPath" items=primaryTargetPathOptions defaultValue="/cmsPageSecureNoAuth" label="${rawLabel('CommonPath')} ${rawLabel('CommonSettings')}" required=false />
 
                          <@field type="select" name="pageTemplateId" id="pageTemplateId" label=uiLabelMap.CmsTemplate required=true>
                             <option value="">${uiLabelMap.CmsSelectTemplate}</option>

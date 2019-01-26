@@ -203,7 +203,8 @@ public class ComponentUtil {
         return viewMaps;
     }
 
-    private static void generateMapFromRequestUri(String path, String type, List<Map<String, Object>> pages, String parent,
+    // NOTE: generateMapFromRequestUri changed to public because invoked from CmsContentTree.groovy directly
+    public static void generateMapFromRequestUri(String path, String type, List<Map<String, Object>> pages, String parent,
             String webSiteId) {
         generateMapFromRequestUri(path, type, pages, null, null, parent, webSiteId);
     }
@@ -216,7 +217,7 @@ public class ComponentUtil {
      * <p>
      * path should start with slash (/).
      */
-    private static void generateMapFromRequestUri(String path, String type, List<Map<String, Object>> pages, Map<String, Object> state, String icon,
+    public static void generateMapFromRequestUri(String path, String type, List<Map<String, Object>> pages, Map<String, Object> state, String icon,
             String parent, String webSiteId) {
         if (path == null) { // sanity checks
             throw new IllegalArgumentException("generateMapFromRequestUri: received null path");

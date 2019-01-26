@@ -412,7 +412,9 @@ public abstract class AttributeExpander {
             // parse as string, and then coerce result to Boolean
             Object str = getParser(Type.SHORT_TEXT).parse(strValue, attrTmpl, sourceContext, pageContext);
 
-            if ("true".equals(str)) {
+            if (str == null) {
+                return null;
+            } else if ("true".equals(str)) {
                 return Boolean.TRUE;
             } else if ("false".equals(str)) {
                 return Boolean.FALSE;

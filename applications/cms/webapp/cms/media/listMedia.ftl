@@ -48,10 +48,10 @@
                     <input type="hidden" name="VIEW_INDEX" value="${viewIndex!}"/>    
                     <@grid type="tiles">                                
                         <#list mediaFiles as mediaFile>
-                            <#assign editMediaUrl=makeOfbizWebappUrl("/control/editMedia?contentId=" + rawString(mediaFile.contentId)) /><#--  + "&dataResourceTypeId=" + mediaFile.dataResourceTypeId -->
+                            <#assign editMediaUrl = makeOfbizWebappUrl("/control/editMedia?contentId=" + rawString(mediaFile.contentId)) /><#--  + "&dataResourceTypeId=" + mediaFile.dataResourceTypeId -->
                             <#if mediaFile.dataResourceTypeId == "IMAGE_OBJECT">
-                                <#assign contentUrl=makeOfbizWebappUrl("/media?contentId=" + mediaFile.contentId + "&dataResourceTypeId=" + mediaFile.dataResourceTypeId) />
-                                <@tile image=contentUrl icon="${styles.icon} ${styles.icon_prefix}camera ${styles.icon_prefix}picture-o" link=editMediaUrl title=mediaFile.contentName!mediaFile.contentId!"" />
+                                <#assign mediaUrl = makeOfbizWebappUrl("/media?contentId=" + mediaFile.contentId + "&dataResourceTypeId=" + mediaFile.dataResourceTypeId) />
+                                <@tile image=mediaUrl icon="${styles.icon} ${styles.icon_prefix}camera ${styles.icon_prefix}picture-o" link=editMediaUrl title=mediaFile.contentName!mediaFile.contentId!"" />
                             <#elseif mediaFile.dataResourceTypeId == "VIDEO_OBJECT">
                                 <@tile color="3" icon="${styles.icon} ${styles.icon_prefix}play-video ${styles.icon_prefix}video-camera" link=editMediaUrl title=mediaFile.contentName!mediaFile.contentId!"" />
                             <#elseif mediaFile.dataResourceTypeId == "AUDIO_OBJECT">

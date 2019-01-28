@@ -115,10 +115,11 @@ code package.
             <#if productionRunRoutingTasks?has_content>
             <fo:table width="100%">
               <fo:table-column column-width="20%"/>
-              <fo:table-column column-width="30%"/>
-              <fo:table-column column-width="30%"/>
+              <fo:table-column column-width="20%"/>
+              <fo:table-column column-width="20%"/>
               <fo:table-column column-width="10%"/>
               <fo:table-column column-width="10%"/>
+              <fo:table-column column-width="20%"/>
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
                         <fo:table-cell><fo:block>${uiLabelMap.ManufacturingProductionRunFixedAssets}</fo:block></fo:table-cell>
@@ -126,6 +127,7 @@ code package.
                         <fo:table-cell><fo:block>${uiLabelMap.CommonDescription}</fo:block></fo:table-cell>
                         <fo:table-cell><fo:block>${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}</fo:block></fo:table-cell>
                         <fo:table-cell><fo:block>${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}</fo:block></fo:table-cell>
+                        <fo:table-cell><fo:block>Comments</fo:block></fo:table-cell>
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
@@ -145,6 +147,9 @@ code package.
                             </fo:table-cell>
                             <fo:table-cell>
                                 <fo:block>${productionRunRoutingTask.estimatedMilliSeconds!}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell>
+                                <fo:block>${productionRunRoutingTask.noteId!}</fo:block>
                             </fo:table-cell>
                         </fo:table-row>
                     </#list>

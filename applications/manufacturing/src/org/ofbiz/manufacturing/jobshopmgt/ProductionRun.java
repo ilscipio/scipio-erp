@@ -445,4 +445,10 @@ public class ProductionRun {
     public boolean isUpdateCompletionDate() {
         return updateCompletionDate;
     }
+    
+    public static String getCommentsFromProductionRunTask(String productionRunId) {
+        // TODO: get the comment string easily from there
+        return null;
+    }
+
 }

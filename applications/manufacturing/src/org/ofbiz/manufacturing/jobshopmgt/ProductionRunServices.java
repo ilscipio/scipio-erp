@@ -2381,6 +2381,15 @@ public class ProductionRunServices {
         try {
             Map<String, Object> serviceContext = new HashMap<String, Object>();
             serviceContext.clear();
+
+            String noteId = null;
+            if (UtilValidate.isNotEmpty(comments)) {
+                Map<String, Object> productionRunCommentsResult = createProductionRunComments(dispatcher, theTask.getString("workEffortId"), comments, null, userLogin);
+                if (ServiceUtil.isSuccess(productionRunCommentsResult)) {
+                    noteId = (String) productionRunCommentsResult.get("noteId");
+                }
+            }
+
             serviceContext.put("workEffortId", workEffortId);
             if (addTaskTime != null) {
                 Double actualMilliSeconds = theTask.getDouble("actualMilliSeconds");
@@ -2399,6 +2408,9 @@ public class ProductionRunServices {
             serviceContext.put("quantityProduced", totalQuantityProduced);
             serviceContext.put("quantityRejected", totalQuantityRejected);
             serviceContext.put("userLogin", userLogin);
+            if (UtilValidate.isNotEmpty(noteId)) {
+                serviceContext.put("noteId", noteId);
+            }
             Map<String, Object> serviceResult = dispatcher.runSync("updateWorkEffort", serviceContext);
             if (ServiceUtil.isError(serviceResult)) {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
@@ -2625,28 +2637,7 @@ public class ProductionRunServices {
                 } else {
                     components.put(componentProductId, componentQuantity);
                 }
-
-                //  create production run notes from comments
-                String comments = co.getComments();
-                if (UtilValidate.isNotEmpty(comments)) {
-                    serviceResult.clear();
-                    serviceContext.clear();
-                    serviceContext.put("workEffortId", productionRunId);
-                    serviceContext.put("internalNote", "Y");
-                    serviceContext.put("noteInfo", comments);
-                    serviceContext.put("noteName", co.getDescription());
-                    serviceContext.put("userLogin", userLogin);
-                    serviceContext.put("noteParty", userLogin.getString("partyId"));
-                    try {
-                        serviceResult = dispatcher.runSync("createWorkEffortNote", serviceContext);
-                        if (ServiceUtil.isError(serviceResult)) {
-                            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
-                        }
-                    } catch (GenericServiceException e) {
-                        Debug.logWarning(e.getMessage(), module);
-                        return ServiceUtil.returnError(e.getMessage());
-                    }
-                }
+                createProductionRunComments(dispatcher, productionRunId, co.getComments(), co.getDescription(), userLogin);
             }
         }
 
@@ -3553,5 +3544,40 @@ public class ProductionRunServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunErrorRunningSetEstimatedDeliveryDates", locale));
         }
         return ServiceUtil.returnSuccess();
+    }
+    
+    private static Map<String, Object> createProductionRunComments(LocalDispatcher dispatcher, String productionRunId, String comments, String description, GenericValue userLogin) {
+        return createProductionRunComments(dispatcher, productionRunId, comments, description, userLogin, "Y");
+    }
+    
+    /**
+     * SCIPIO (01/28/2019): Create production run notes from comments
+     * Moved to its own method for reuse.
+     * @param comments
+     */
+    private static Map<String, Object> createProductionRunComments(LocalDispatcher dispatcher, String productionRunId, String comments, String description, GenericValue userLogin,
+            String internalNote) {
+        Map<String, Object> serviceContext = UtilMisc.newMap();
+        Map<String, Object> serviceResult = UtilMisc.newMap();
+        if (UtilValidate.isNotEmpty(comments)) {
+            serviceContext.clear();
+            serviceContext.put("workEffortId", productionRunId);
+            serviceContext.put("internalNote", "Y");
+            serviceContext.put("noteInfo", comments);
+            serviceContext.put("noteName", description);
+            serviceContext.put("userLogin", userLogin);
+            serviceContext.put("noteParty", userLogin.getString("partyId"));
+            try {
+                serviceResult = dispatcher.runSync("createWorkEffortNote", serviceContext);
+                if (ServiceUtil.isError(serviceResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                }
+                return serviceResult;
+            } catch (GenericServiceException e) {
+                Debug.logWarning(e.getMessage(), module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+        return serviceResult;
     }
 }

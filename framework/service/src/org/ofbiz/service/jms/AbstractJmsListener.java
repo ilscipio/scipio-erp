@@ -26,7 +26,6 @@ import javax.jms.MapMessage;
 import javax.jms.Message;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.serialize.XmlSerializer;
@@ -74,8 +73,11 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
             Object o = XmlSerializer.deserialize(xmlContext, dispatcher.getDelegator());
 
             if (Debug.verboseOn()) Debug.logVerbose("De-Serialized Context --> " + o, module);
-            if (ObjectType.instanceOf(o, "java.util.Map"))
+            // SCIPIO: Improved
+            //if (ObjectType.instanceOf(o, "java.util.Map"))
+            if (o instanceof java.util.Map) {
                 context = UtilGenerics.checkMap(o);
+            }
         } catch (JMSException je) {
             Debug.logError(je, "Problems reading message.", module);
         } catch (Exception e) {

@@ -29,7 +29,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.apache.commons.lang3.ClassUtils;
 import org.ofbiz.base.conversion.ConversionException;
 import org.ofbiz.base.conversion.Converter;
 import org.ofbiz.base.conversion.Converters;
@@ -41,6 +40,11 @@ import org.w3c.dom.Node;
 /**
  * Utilities for analyzing and converting Object types in Java
  * Takes advantage of reflection
+ * <p>
+ * SCIPIO: <strong>WARNING:</code> 2018-03-26: The behavior of the
+ * methods {@link #interfaceOf(Class, Class)} and {@link #instanceOf(Class, Class)}
+ * have been modified; they now both behavior closer to the equivalent of a
+ * {@code instanceof} operation.
  */
 public class ObjectType {
 
@@ -259,15 +263,37 @@ public class ObjectType {
 
     /**
      * Tests if a class properly implements the specified interface.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> 2018-03-26: This method's behavior has changed:
+     * it now recursively checks all of <code>objectClass</code>'s implemented interfaces
+     * to see if <code>interfaceClass</code> is one of them. Previously, it only checked
+     * the immediately/explicitly declared super interfaces of <code>objectClass</code>
+     * and its parent classes (this is presumably what was meant by "properly implements";
+     * however, that behavior caused noticeable limitations in the
+     * {@link org.ofbiz.base.conversion.AbstractConverter}s and elsewhere;
+     * meanwhile, this method was poorly named and therefore prone to being misused.
+     * Due to this change, this method is now effectively performing nothing more than
+     * a single simple {@code instanceof} operation. In addition, it also now returns
+     * true if objectClass and interfaceClass are the same, an interface.
+     * <p>
+     * 2018-03-26: As such, this method has now been reduced, for performance reasons, to:
+     * {@code typeClass.isAssignableFrom(objectClass)} plus some null checks.
+     * Another change 
+     * <p>
+     * <strong>It is recommended to avoid using this method in client code, and instead
+     * use a better library such as {@link org.apache.commons.lang3.ClassUtils}.
+     *
      * @param objectClass Class to test
      * @param interfaceClass Class to test against
      * @return true if interfaceClass is an interface of objectClass
      */
     public static boolean interfaceOf(Class<?> objectClass, Class<?> interfaceClass) {
+        /* SCIPIO: 2019-01-23: Replaced with a saner check
         while (objectClass != null) {
-            // SCIPIO (03/26/2018): objectClass.getInterfaces() only returned the interfaces directly implemented by the given objectClass.
+            // SCIPIO: 2018-03-26: objectClass.getInterfaces() only returned the interfaces directly implemented by the given objectClass.
             // That was wrong because it didn't look for interfaces implemented in parent classes or implemented within those explicit
             // implemented interfaces.
+            //Class<?>[] ifaces = objectClass.getInterfaces();
             List<Class<?>> ifaces = ClassUtils.getAllInterfaces(objectClass);
 
             for (Class<?> iface: ifaces) {
@@ -277,7 +303,9 @@ public class ObjectType {
             }
             objectClass = objectClass.getSuperclass();
         }
-        return false;
+        return false; */
+        return (objectClass != null && interfaceClass != null &&
+                interfaceClass.isInterface() && interfaceClass.isAssignableFrom(objectClass));
     }
 
     /**
@@ -479,15 +507,36 @@ public class ObjectType {
 
     /**
      * Tests if a class is a class of a sub-class of or properly implements an interface.
+     * <p>
+     * SCIPIO: <strong>WARNING:</strong> 2018-03-26: The behavior of this method has changed, due to the
+     * modification of the {@link #interfaceOf(Class, Class)} method (above) on which it depended,
+     * which previously only returned true on matching <code>typeClass</code> to the immediate/explicit
+     * super interfaces of the <code>objectClass</code> or its parent classes, rather than recursively
+     * checking all interfaces of those interfaces...
+     * Due to this change, this method is now effectively performing nothing more than
+     * a single simple {@code instanceof} operation.
+     * <p>
+     * 2018-03-26: As such, this method has now been reduced, for performance reasons, to:
+     * {@code typeClass.isAssignableFrom(objectClass)}.
+     * <p>
+     * <strong>It is recommended to avoid using this method in client code, and instead
+     * use a better library such as {@link org.apache.commons.lang3.ClassUtils}.
+     *
      * @param objectClass Class to test
      * @param typeClass Class to test against
      * @return true if objectClass is a class or sub-class of, or implements typeClass
      */
     public static boolean instanceOf(Class<?> objectClass, Class<?> typeClass) {
+        /* SCIPIO: 2019-01-28: Since we changed the implementation of
+         *     boolean interfaceOf(Class<?> objectClass, Class<?> interfaceClass)
+         * to fully recurse the interfaces, this method - which was always extremely
+         * slow - can now be reduced to a single simple "instanceof" test.
+         * This should help improve performance in service interface validation and numerous others.
         if (typeClass.isInterface() && !objectClass.isInterface()) {
             return interfaceOf(objectClass, typeClass);
         }
-        return isOrSubOf(objectClass, typeClass);
+        return isOrSubOf(objectClass, typeClass); */
+        return typeClass.isAssignableFrom(objectClass);
     }
 
     public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale, boolean noTypeFail) throws GeneralException {
@@ -495,9 +544,16 @@ public class ObjectType {
     }
 
     /**
-     * Converts the passed object to the named simple type.  Supported types
-     * include: String, Boolean, Double, Float, Long, Integer, Date (java.sql.Date),
-     * Time, Timestamp, TimeZone;
+     * Converts the passed object to the named type.
+     * Initially created for only simple types but actually handle more types and not all simple types.
+     * See ObjectTypeTests class for more, and (normally) up to date information
+     *
+     * Supported types:
+     * - All primitives
+     * - Simple types: String, Boolean, Double, Float, Long, Integer, BigDecimal.
+     * - Other Objects: List, Map, Set, Calendar, Date (java.sql.Date), Time, Timestamp, TimeZone, Date (util.Date and sql.Date)
+     * - Simple types (maybe) not handled: Short, BigInteger, Byte, Character, ObjectName and Void...
+     *
      * @param obj Object to convert
      * @param type Optional Java class name of type to convert to. A <code>null</code> or empty <code>String</code> will return the original object.
      * @param format Optional (can be null) format string for Date, Time, Timestamp
@@ -590,6 +646,20 @@ public class ObjectType {
     }
 
     public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale) throws GeneralException {
+        return simpleTypeConvert(obj, type, format, locale, true);
+    }
+
+    // SCIPIO: Compatibility wrappers
+
+    public static Object simpleTypeOrObjectConvert(Object obj, String type, String format, TimeZone timeZone, Locale locale, boolean noTypeFail) throws GeneralException {
+        return simpleTypeConvert(obj, type, format, timeZone, locale, noTypeFail);
+    }
+
+    public static Object simpleTypeOrObjectConvert(Object obj, String type, String format, Locale locale, boolean noTypeFail) throws GeneralException {
+        return simpleTypeOrObjectConvert(obj, type, format, null, locale, noTypeFail);
+    }
+
+    public static Object simpleTypeOrObjectConvert(Object obj, String type, String format, Locale locale) throws GeneralException {
         return simpleTypeConvert(obj, type, format, locale, true);
     }
 
@@ -895,11 +965,8 @@ public class ObjectType {
 
         @Override
         public boolean equals(Object other) {
-            if (other instanceof NullObject) {
-                // should do equality of object? don't think so, just same type
-                return true;
-            }
-            return false;
+            // should do equality of object? don't think so, just same type
+            return other instanceof NullObject;
         }
     }
 }

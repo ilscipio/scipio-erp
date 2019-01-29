@@ -576,13 +576,13 @@ context.styles = [
                   submit button on a find form
                   export PDF button
                   <input type="submit" value="Create/Submit" class="${styles.link_run_sys!} ${styles.action_add!}" />
-                  <a href="${makeOfbizUrl("order.pdf")}" class="${styles.link_run_sys!} ${styles.action_export!}">PDF</a>
+                  <a href="${makePageUrl("order.pdf")}" class="${styles.link_run_sys!} ${styles.action_export!}">PDF</a>
         * link_nav (implies action_nav): Any text link whose primary purpose (action_primary) is basic navigation or navigation toward or encouraging an action.
           * If no specific action type is given, more or less implies action_view (in a general sense)
           * e.g.: a "New" link that leads to another page with a form for entity creation
                   a "View" button for an entity value
-                  <a href="${makeOfbizUrl("EditEntity?mode=new")}" class="${styles.link_nav!} ${styles.action_add!}">New</a>
-                  <a href="${makeOfbizUrl("ViewEntity?id=abc")}" class="${styles.link_nav!}">View Entity</a>
+                  <a href="${makePageUrl("EditEntity?mode=new")}" class="${styles.link_nav!} ${styles.action_add!}">New</a>
+                  <a href="${makePageUrl("ViewEntity?id=abc")}" class="${styles.link_nav!}">View Entity</a>
       * INLINE TEXT LINKS (link_nav_inline, link_run_sys_inline): These are primary link actions like main text links, but with an explicit request by the template
         to mark the link as inline and blending in, or in practical terms, a link without a button.
         NOTE: If the link text is information first, please use info links instead (secondary action).
@@ -604,7 +604,7 @@ context.styles = [
           * If using link_nav_info_xxx, the xxx describes the text content of the link.
           * e.g.: a "WS10000" order ID in an order listing table
                   a party name that links to a profile
-                  <a href="${makeOfbizUrl("ViewOrder?orderId=WS10000")}" class="${styles.link_nav_info_id!}">WS10000</a>
+                  <a href="${makePageUrl("ViewOrder?orderId=WS10000")}" class="${styles.link_nav_info_id!}">WS10000</a>
 
 
     TYPE MODIFIERS:
@@ -624,10 +624,10 @@ context.styles = [
         For image links, it's a good idea to add link_type_image as well, to help with limitations of CSS selectors, even if it makes it more verbose.
         * Main Types:
           * action_run_xxx: Run-action (with scope).
-            * e.g.: <a href="${makeOfbizUrl("removeProduct?productId=10000")}" class="x-icon ${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_remove!}"><img src="x-icon.jpg"/></a>
+            * e.g.: <a href="${makePageUrl("removeProduct?productId=10000")}" class="x-icon ${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_remove!}"><img src="x-icon.jpg"/></a>
                     <@menuitem type="link" href="report.pdf" class="+${styles.action_run_sys!} ${styles.action_export!}" text="PDF" />
           * action_nav: Navigation action.
-            * e.g.: <a href="${makeOfbizUrl("ViewProduct?productId=10000")}" class="product-img-link ${styles.link_type_image!} ${styles.action_nav!}"><img src="product-image.jpg"/></a>
+            * e.g.: <a href="${makePageUrl("ViewProduct?productId=10000")}" class="product-img-link ${styles.link_type_image!} ${styles.action_nav!}"><img src="product-image.jpg"/></a>
                     <@menuitem type="link" href="EditProduct" class="+${styles.action_nav!} ${styles.action_add!}" text="New Product" />
         * Special cases:
           * action_cancel: Anti-action cancel links. NOTE: Here these do not have a dedicated convenience/factoring style (not needed).

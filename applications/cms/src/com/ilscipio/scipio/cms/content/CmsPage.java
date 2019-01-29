@@ -75,6 +75,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
      * Leaving this one in place because of potential uses.
      */
     private static final CmsObjectCache<CmsPage> idCache = CmsObjectCache.getGlobalCache("cms.content.page.id");
+    private static final CmsObjectCache<CmsPage> nameCache = CmsObjectCache.getGlobalCache("cms.content.page.name");
 
     public static final UserRole DEFAULT_USER_ROLE = UserRole.CMS_VISITOR;
 
@@ -2081,6 +2082,216 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
          */
         public List<CmsPage> findByWebSiteId(Delegator delegator, String webSiteId, boolean useCache) {
             return findAll(delegator, UtilMisc.toMap("webSiteId", webSiteId), getPagesOrderBy(), useCache);
+        }
+ 
+        /**
+         * Gets best-matching page by name and webSiteId, using special webSiteId handling.
+         * <p>
+         * NOTE: The webSiteId arguments should already be normalized using {@link #normalizeWebSiteId}.
+         * <p>
+         * NOTE: preferredWebSiteId is only used when hasWebSiteLookup false.
+         * hasWebSiteLookup true INTENTIONALLY still allows search by null webSiteId, so lookupFields must not contain the key.
+         * <p>
+         * Typically this should be passed hasWebSiteLookup false when the webSiteId is implied by the "current" webapp
+         * or when the current webapp has no webSiteId, and hasWebSiteLookup true only if lookupFields.webSiteId is set.
+         */
+        public CmsPage findByNameBest(Delegator delegator, String pageName, String exactWebSiteId, String webSiteLookupMode,
+                String preferredWebSiteId, boolean useCache) throws GenericEntityException {
+            boolean useGlobalCache = isUseGlobalObjCacheStatic(useCache);
+            CmsObjectCache<CmsPage> cache = null;
+            if (useGlobalCache) {
+                cache = nameCache;
+            }
+
+            String key = delegator.getDelegatorName() + "::" + pageName + "::" + exactWebSiteId + "::" + webSiteLookupMode + "::" + preferredWebSiteId;
+            CmsPage page = null;
+            CacheEntry<CmsPage> pageEntry = null;
+
+            if (useGlobalCache) {
+                pageEntry = cache.getEntry(key);
+            }
+
+            if (pageEntry == null) {
+                if (CmsUtil.verboseOn()) {
+                    Debug.logInfo("Cms: Retrieving page from database: name: " + pageName, module);
+                }
+                page = findByNameBestCore(delegator, pageName, exactWebSiteId, webSiteLookupMode, preferredWebSiteId, 
+                    isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache), useGlobalCache);
+                if (useGlobalCache) {
+                    cache.put(key, page);
+                }
+            } else {
+                if (pageEntry.hasValue()) {
+                    if (CmsUtil.verboseOn()) {
+                        Debug.logVerbose("Cms: Retrieving page from cache: name: " + pageName, module);
+                    }
+                    page = pageEntry.getValue();
+                }
+            }
+            return page;
+        }
+        
+        private CmsPage findByNameBestCore(Delegator delegator, String pageName, String exactWebSiteId, String webSiteLookupMode,
+                String preferredWebSiteId, boolean useCache, boolean reuseIdCache) throws GenericEntityException {
+            boolean webSiteIdLegacyLookup = true;
+            boolean webSiteIdMappingsLookup = true;
+            if (UtilValidate.isNotEmpty(webSiteLookupMode)) {
+                if ("default-only".equals(webSiteLookupMode)) {
+                    webSiteIdMappingsLookup = false;
+                } else if ("mappings-only".equals(webSiteLookupMode)) {
+                    webSiteIdLegacyLookup = false;
+                }
+            }
+            
+            FindPageByNameResults findResults = new FindPageByNameResults();
+            
+            // 2016: double-lookup:
+            // do a manual fast cached DB lookup to find the pageId, and afterward re-query
+            // the CmsPage using using the findById call -
+            // this is probably the best way to reuse the memory instances (fewer duplicates)
+            if (webSiteIdLegacyLookup) {
+                Map<String, Object> lookupFields = new HashMap<>();
+                lookupFields.put("pageName", pageName);
+                if (exactWebSiteId != null) {
+                    lookupFields.put("webSiteId", getEffectiveWebSiteId(exactWebSiteId));
+                }
+                List<GenericValue> pageValues = delegator.findByAnd("CmsPage", lookupFields, null, isUseDbCacheStatic(useCache));
+                filterNamedPageResults(pageValues, exactWebSiteId, preferredWebSiteId, "webSiteId", lookupFields, findResults);
+            }
+            if (findResults.exactPageValue == null && webSiteIdMappingsLookup) { // && hasWebSiteLookup
+                Map<String, Object> lookupFields = new HashMap<>();
+                lookupFields.put("pageName", pageName);
+                if (exactWebSiteId != null) {
+                    lookupFields.put("sourceWebSiteId", getEffectiveWebSiteId(exactWebSiteId));
+                }
+                List<GenericValue> pageValues = delegator.findByAnd("CmsPageAndPrimaryProcessMapping", lookupFields, null, isUseDbCacheStatic(useCache));
+                filterNamedPageResults(pageValues, exactWebSiteId, preferredWebSiteId, "sourceWebSiteId", lookupFields, findResults);
+            }
+            CmsPage page = null;
+            GenericValue resultPageValue = findResults.getResultPageValue();
+            if (resultPageValue != null) {
+                // SPECIAL: For name lookups, we will reuse the ID cache to try to ensure
+                // we don't duplicate CmsPage instances in memory... live, this goes straight back into name cache
+                page = CmsPage.getWorker().findById(delegator, resultPageValue.getString("pageId"), reuseIdCache);
+            }
+            return page;
+        }
+        
+        /**
+         * Gets best-matching page by name and webSiteId, using special webSiteId handling.
+         * <p>
+         * NOTE: The webSiteId arguments should already be normalized using {@link #normalizeWebSiteId}.
+         */
+        public CmsPage findByNameBestAlways(Delegator delegator, String pageName, String exactWebSiteId, String webSiteLookupMode,
+                String preferredWebSiteId, boolean useCache) throws GenericEntityException {
+            CmsPage page = findByNameBest(delegator, pageName, exactWebSiteId, webSiteLookupMode, preferredWebSiteId, useCache);
+            if (page == null) {
+                throw new IllegalArgumentException("Could not locate page by name using page name: " + pageName);
+            }
+            return page;
+        }
+
+        /**
+         * Tries to find the "best" record for the given lookup. If lookupFields.webSiteId is set (hasWebSiteLookup true),
+         * this does nothing special. It's needed for whenever explicit webSiteId is not specified by user: in that case
+         * we need to give priority lookup to the "current" webSiteId (preferredWebSiteId), and only allow others if that one not found.
+         */
+        private static void filterNamedPageResults(List<GenericValue> pageValues, String exactWebSiteId, String preferredWebSiteId,
+                String resultWebSiteIdKey, Map<String, ?> lookupFields, FindPageByNameResults findResults) {
+            if (exactWebSiteId != null) {
+                if (!pageValues.isEmpty()) {
+                    findResults.exactPageValue = pageValues.get(0);
+                    if (pageValues.size() > 1) {
+                        Debug.logWarning("Cms: Page link: more than one CmsPage found for lookup fields " + lookupFields.toString()
+                            + "; using first only (id: " + findResults.exactPageValue.getPkShortValueString() + ")", module);
+                    }
+                }
+            } else {
+                if (preferredWebSiteId != null) {
+                    String effPrefWebSiteId = getEffectiveWebSiteId(preferredWebSiteId);
+                    if (effPrefWebSiteId != null) {
+                        for(GenericValue foundValue : pageValues) {
+                            if (effPrefWebSiteId.equals(foundValue.get(resultWebSiteIdKey))) {
+                                findResults.exactPageValue = foundValue;
+                                break;
+                            }
+                        }
+                    } else {
+                        for(GenericValue foundValue : pageValues) {
+                            if (foundValue.get(resultWebSiteIdKey) == null) { // explicit null preference
+                                findResults.exactPageValue = foundValue;
+                                break;
+                            }
+                        }
+                    }
+                    if (findResults.exactPageValue == null && !pageValues.isEmpty()) {
+                        findResults.candidatePageValue = pageValues.get(0);
+                        if (pageValues.size() > 1) {
+                            Debug.logWarning("Cms: Page link: more than one CmsPage found for lookup fields " + lookupFields.toString()
+                                + "; using first only (id: " + findResults.candidatePageValue.getPkShortValueString() + ")", module);
+                        }
+                    }
+                } else {
+                    if (!pageValues.isEmpty()) {
+                        findResults.candidatePageValue = pageValues.get(0);
+                        if (pageValues.size() > 1) {
+                            Debug.logWarning("Cms: Page link: more than one CmsPage found for lookup fields " + lookupFields.toString()
+                                + "; using first only (id: " + findResults.candidatePageValue.getPkShortValueString() + ")", module);
+                        }
+                    }
+                }
+            }
+        }
+        
+        private static class FindPageByNameResults {
+            GenericValue exactPageValue; // if non-null, exact result found
+            GenericValue candidatePageValue; // used as last resort
+            
+            GenericValue getResultPageValue() { return exactPageValue != null ? exactPageValue : candidatePageValue; }
+        }
+        
+        /**
+         * Returns one of 3 possible values: null, the string "null" (meaning "search for null"),
+         * or a webSiteId. (Only) The result may be used with isWebSiteIdNullLookup and getEffectiveWebSiteId.
+         * <p>
+         * For use with {@link #findByNameBest}.
+         */
+        public static String normalizeWebSiteId(Object webSiteIdObj) {
+            if (webSiteIdObj instanceof String) {
+                return normalizeWebSiteId((String) webSiteIdObj);
+            } else if (webSiteIdObj instanceof Boolean) {
+                return ((Boolean) webSiteIdObj) ? null : "null";
+            }
+            return null;
+        }
+        
+        /**
+         * Returns one of 3 possible values: null, the string "null" (meaning "search for null"),
+         * or a non-empty webSiteId. (Only) The result may be used with isWebSiteIdNullLookup and getEffectiveWebSiteId.
+         * <p>
+         * For use with {@link #findByNameBest}.
+         */
+        public static String normalizeWebSiteId(String webSiteId) {
+            if (webSiteId == null || webSiteId.isEmpty()) {
+                return null;
+            } else if ("NULL".equals(webSiteId) || "false".equals(webSiteId)) {
+                return "null";
+            }
+            return webSiteId;
+        }
+        
+        /**
+         * For use with {@link #findByNameBest}. Assumes normalized already using {@link #normalizeWebSiteId}.
+         */
+        public static boolean isWebSiteIdNullLookup(String webSiteId) {
+            return "null".equals(webSiteId);
+        }
+        
+        /**
+         * For use with {@link #findByNameBest}. Assumes normalized already using {@link #normalizeWebSiteId}.
+         */
+        public static String getEffectiveWebSiteId(String webSiteId) {
+            return isWebSiteIdNullLookup(webSiteId) ? null : webSiteId;
         }
 
         public List<String> getPagesOrderBy() {

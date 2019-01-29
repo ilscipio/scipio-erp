@@ -29,6 +29,7 @@ import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.SimpleMapModel;
 import freemarker.ext.util.WrapperTemplateModel;
+import freemarker.template.AdapterTemplateModel;
 import freemarker.template.DefaultArrayAdapter;
 import freemarker.template.DefaultListAdapter;
 import freemarker.template.DefaultMapAdapter;
@@ -74,6 +75,9 @@ public abstract class LangFtlUtil {
     private static Template stringBuiltInCall = null;
     private static final Map<String, Template> functionCalls = new ConcurrentHashMap<>();
     private static final Map<String, Template> macroCalls = new ConcurrentHashMap<>();
+
+    protected LangFtlUtil() {
+    }
 
     /**
      * Used for TemplateModel <-> unwrapped/raw value conversions.
@@ -149,9 +153,6 @@ public abstract class LangFtlUtil {
         public TemplateModel getVariable(String name) throws TemplateModelException {
             return env.getLocalVariable(name);
         }
-    }
-
-    protected LangFtlUtil() {
     }
 
     /**
@@ -323,12 +324,10 @@ public abstract class LangFtlUtil {
             Object res = DeepUnwrap.permissiveUnwrap(templateModel);
             if (res != templateModel) {
                 return res;
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -347,12 +346,10 @@ public abstract class LangFtlUtil {
             Object res = DeepUnwrap.permissiveUnwrap((TemplateModel) value);
             if (res != value) {
                 return res;
-            }
-            else {
+            } else {
                 return null;
             }
-        }
-        else {
+        } else {
             return value;
         }
     }
@@ -366,8 +363,7 @@ public abstract class LangFtlUtil {
     public static Object unwrapPermissive(TemplateModel templateModel) throws TemplateModelException {
         if (templateModel != null) {
             return DeepUnwrap.permissiveUnwrap(templateModel);
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -381,8 +377,7 @@ public abstract class LangFtlUtil {
     public static Object unwrapPermissive(Object value) throws TemplateModelException {
         if (value instanceof TemplateModel) {
             return DeepUnwrap.permissiveUnwrap((TemplateModel) value);
-        }
-        else {
+        } else {
             return value;
         }
     }
@@ -396,8 +391,7 @@ public abstract class LangFtlUtil {
     public static Object unwrap(TemplateModel templateModel) throws TemplateModelException {
         if (templateModel != null) {
             return DeepUnwrap.unwrap(templateModel); // will throw exception if improper type
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -412,8 +406,7 @@ public abstract class LangFtlUtil {
     public static Object unwrap(Object value) throws TemplateModelException {
         if (value instanceof TemplateModel) {
             return DeepUnwrap.unwrap((TemplateModel) value);
-        }
-        else {
+        } else {
             return value;
         }
     }
@@ -441,8 +434,7 @@ public abstract class LangFtlUtil {
     public static Object unwrapAlways(Object value) throws TemplateModelException {
         if (value instanceof TemplateModel || value == null) {
             return DeepUnwrap.unwrap((TemplateModel) value);
-        }
-        else {
+        } else {
             throw new TemplateModelException("Cannot unwrap non-TemplateModel value (type " + value.getClass().getName() + ")");
         }
     }
@@ -458,8 +450,7 @@ public abstract class LangFtlUtil {
     public static Object unwrapAlwaysUnlessNull(TemplateModel templateModel) throws TemplateModelException {
         if (templateModel == null) {
             return null;
-        }
-        else {
+        } else {
             return DeepUnwrap.unwrap(templateModel); // will throw exception if improper type
         }
     }
@@ -475,11 +466,9 @@ public abstract class LangFtlUtil {
     public static Object unwrapAlwaysUnlessNull(Object value) throws TemplateModelException {
         if (value instanceof TemplateModel) {
             return DeepUnwrap.unwrap((TemplateModel) value);
-        }
-        else if (value == null) {
+        } else if (value == null) {
             return null;
-        }
-        else {
+        } else {
             throw new TemplateModelException("Cannot unwrap non-TemplateModel value (type " + value.getClass().getName() + ")");
         }
     }
@@ -573,15 +562,13 @@ public abstract class LangFtlUtil {
             // WARN: bypasses auto-escaping
             Map<Object, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
             return wrappedObject.keySet();
-        }
-        else if (object instanceof TemplateHashModelEx) {
+        } else if (object instanceof TemplateHashModelEx) {
             // 2016-04-20: cannot do this because we MUST trigger bypass of auto-escaping,
             // so just do a deep unwrap, which automatically bypasses the escaping,
             // and then caller handles the result, which is probably an arraylist
             //return ((TemplateHashModelEx) object).keys();
             return unwrapAlways(((TemplateHashModelEx) object).keys());
-        }
-        else {
+        } else {
             throw new TemplateModelException("object is not a map or does not support key iteration");
         }
     }
@@ -600,11 +587,9 @@ public abstract class LangFtlUtil {
         }
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object) || (object instanceof TemplateHashModelEx && OfbizFtlObjectType.MAP.isObjectType(object))) {
             return LangFtlUtil.copyMap(object, null, null, targetType, objectWrapper);
-        }
-        else if (object instanceof TemplateCollectionModel || object instanceof TemplateSequenceModel) {
+        } else if (object instanceof TemplateCollectionModel || object instanceof TemplateSequenceModel) {
             return LangFtlUtil.copyList(object, targetType, objectWrapper);
-        }
-        else {
+        } else {
             throw new TemplateModelException("object is not cloneable");
         }
     }
@@ -628,12 +613,10 @@ public abstract class LangFtlUtil {
             // TODO: this only handles most urgent targetType case
             if (targetType == TemplateValueTargetType.SIMPLEMODEL) {
                 return LangFtlUtil.copyMapToSimple(wrappedObject, inExKeys, include, objectWrapper);
-            }
-            else {
+            } else {
                 return LangFtlUtil.copyMapToRawMap(wrappedObject, inExKeys, include);
             }
-        }
-        else if (object instanceof TemplateHashModel && OfbizFtlObjectType.MAP.isObjectType(object)) {
+        } else if (object instanceof TemplateHashModel && OfbizFtlObjectType.MAP.isObjectType(object)) {
             // TODO: this ignores targetType
             return LangFtlUtil.copyMapToSimple((TemplateHashModel) object, inExKeys, include, objectWrapper);
         }
@@ -658,8 +641,7 @@ public abstract class LangFtlUtil {
                     res.put(key, valueModel);
                 }
             }
-        }
-        else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
+        } else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
             if (!(hashModel instanceof TemplateHashModelEx)) {
                 throw new TemplateModelException("Hash to copy does not support ?keys");
             }
@@ -671,8 +653,7 @@ public abstract class LangFtlUtil {
                 String key = getAsStringNonEscaping((TemplateScalarModel) keysIt.next());
                 res.put(key, hashModel.get(key));
             }
-        }
-        else {
+        } else {
             if (!(hashModel instanceof TemplateHashModelEx)) {
                 throw new TemplateModelException("Hash to copy does not support ?keys");
             }
@@ -1095,8 +1076,7 @@ public abstract class LangFtlUtil {
             else {
                 throw new TemplateModelException("Cannot convert bean-wrapped object of type " + (object != null ? object.getClass() : "null") + " to simple sequence");
             }
-        }
-        else if (object instanceof TemplateCollectionModel) {
+        } else if (object instanceof TemplateCollectionModel) {
             TemplateCollectionModel collModel = (TemplateCollectionModel) object;
             SimpleSequence res = new SimpleSequence(objectWrapper);
             TemplateModelIterator it = collModel.iterator();
@@ -1104,37 +1084,155 @@ public abstract class LangFtlUtil {
                 res.add(it.next());
             }
             return res;
-        }
-        else {
+        } else {
             throw new TemplateModelException("Cannot convert object of type " + (object != null ? object.getClass() : "null") + " to simple sequence");
         }
     }
 
-    public static Object toSet(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
+    /**
+     * Adds all the elements in the given collection to a new set.
+     * @deprecated 2019-01-28: objectWrapper is not necessary.
+     * <p>
+     * NOTE: This method does NOT handle string escaping explicitly; you may want {@link #toStringSet} instead.
+     */
+    @Deprecated
+    public static <T> Set<T> toSet(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
+        return toSet(object);
+    }
+
+    /**
+     * Adds all the elements in the given collection to a new set.
+     * <p>
+     * NOTE: This method does NOT handle string escaping explicitly; you may want {@link #toStringSet} instead.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Set<T> toSet(TemplateModel object) throws TemplateModelException {
         if (object instanceof WrapperTemplateModel && ((WrapperTemplateModel) object).getWrappedObject() instanceof Set) {
-            return object;
-        }
-        else if (object instanceof TemplateCollectionModel) {
-            // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
-            TemplateCollectionModel collModel = (TemplateCollectionModel) object;
-            Set<Object> res = new HashSet<Object>();
-            TemplateModelIterator it = collModel.iterator();
-            while(it.hasNext()) {
-                res.add(LangFtlUtil.unwrapAlways(it.next()));
-            }
-            return res;
-        }
-        else if (object instanceof TemplateSequenceModel) {
-            TemplateSequenceModel seqModel = (TemplateSequenceModel) object;
-            Set<Object> res = new HashSet<Object>();
-            for(int i=0; i < seqModel.size(); i++) {
-                res.add(LangFtlUtil.unwrapAlways(seqModel.get(i)));
-            }
-            return res;
-        }
-        else {
+            return (Set<T>) ((WrapperTemplateModel) object).getWrappedObject();
+        } else if (object instanceof TemplateCollectionModel) {
+            return toSet((TemplateCollectionModel) object);
+        } else if (object instanceof TemplateSequenceModel) {
+            return toSet((TemplateSequenceModel) object);
+        } else {
             throw new TemplateModelException("Cannot convert object of type " + (object != null ? object.getClass() : "null") + " to set");
         }
+    }
+
+    /**
+     * Adds all the elements in the given collection to a new set.
+     * <p>
+     * NOTE: This method does NOT handle string escaping explicitly; you may want {@link #toStringSet} instead.
+     */
+    public static <T> Set<T> toSet(TemplateCollectionModel object) throws TemplateModelException {
+        // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
+        TemplateCollectionModel collModel = (TemplateCollectionModel) object;
+        Set<Object> res = new HashSet<>();
+        TemplateModelIterator it = collModel.iterator();
+        while(it.hasNext()) {
+            res.add(LangFtlUtil.unwrapAlways(it.next()));
+        }
+        return UtilGenerics.cast(res);
+    }
+
+    /**
+     * Adds all the elements in the given collection to a new set.
+     * <p>
+     * NOTE: This method does NOT handle string escaping explicitly; you may want {@link #toStringSet} instead.
+     */
+    public static <T> Set<T> toSet(TemplateSequenceModel object) throws TemplateModelException {
+        TemplateSequenceModel seqModel = (TemplateSequenceModel) object;
+        Set<Object> res = new HashSet<>();
+        for(int i=0; i < seqModel.size(); i++) {
+            res.add(LangFtlUtil.unwrapAlways(seqModel.get(i)));
+        }
+        return UtilGenerics.cast(res);
+    }
+
+    /**
+     * Adds all the elements in the given collection to a new set, as TemplateModels.
+     * <p>
+     * NOTE: This method does NOT handle string escaping explicitly; you may want {@link #toStringSet} instead.
+     */
+    public static <T extends TemplateModel> Set<T> toSetNoUnwrap(TemplateCollectionModel object) throws TemplateModelException {
+        // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
+        TemplateCollectionModel collModel = (TemplateCollectionModel) object;
+        Set<Object> res = new HashSet<>();
+        TemplateModelIterator it = collModel.iterator();
+        while(it.hasNext()) {
+            res.add(it.next());
+        }
+        return UtilGenerics.cast(res);
+    }
+
+    /**
+     * Adds all the elements in the given collection to a new set, as TemplateModels.
+     * <p>
+     * NOTE: This method does NOT handle string escaping explicitly; you may want {@link #toStringSet} instead.
+     */
+    public static <T extends TemplateModel> Set<T> toSetNoUnwrap(TemplateSequenceModel object) throws TemplateModelException {
+        TemplateSequenceModel seqModel = (TemplateSequenceModel) object;
+        Set<Object> res = new HashSet<>();
+        for(int i=0; i < seqModel.size(); i++) {
+            res.add(seqModel.get(i));
+        }
+        return UtilGenerics.cast(res);
+    }
+
+
+    /**
+     * Adds all the elements in the given collection to a new list.
+     * <p>
+     * NOTE: This method does NOT handle string escaping explicitly; you may want {@link #toStringSet} instead.
+     */
+    public static <T> List<T> toList(TemplateCollectionModel collModel) throws TemplateModelException {
+        // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
+        List<Object> res = new ArrayList<>();
+        TemplateModelIterator it = collModel.iterator();
+        while(it.hasNext()) {
+            res.add(LangFtlUtil.unwrapAlways(it.next()));
+        }
+        return UtilGenerics.cast(res);
+    }
+
+    /**
+     * Adds all the elements in the given collection to a new list.
+     * <p>
+     * NOTE: This method does NOT handle string escaping explicitly; you may want {@link #toStringSet} instead.
+     */
+    public static <T> List<T> toList(TemplateSequenceModel seqModel) throws TemplateModelException {
+        List<Object> res = new ArrayList<>();
+        for(int i=0; i < seqModel.size(); i++) {
+            res.add(LangFtlUtil.unwrapAlways(seqModel.get(i)));
+        }
+        return UtilGenerics.cast(res);
+    }
+
+    /**
+     * Adds all the elements in the given collection to a new list, as TemplateModels.
+     * <p>
+     * NOTE: This method does NOT handle string escaping explicitly; you may want {@link #toStringSet} instead.
+     */
+    public static <T extends TemplateModel> List<T> toListNoUnwrap(TemplateCollectionModel collModel) throws TemplateModelException {
+        // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
+        List<Object> res = new ArrayList<>();
+        TemplateModelIterator it = collModel.iterator();
+        while(it.hasNext()) {
+            res.add(it.next());
+        }
+        return UtilGenerics.cast(res);
+    }
+
+    /**
+     * Adds all the elements in the given collection to a new list, as TemplateModels.
+     * <p>
+     * NOTE: This method does NOT handle string escaping explicitly; you may want {@link #toStringSet} instead.
+     */
+    public static <T extends TemplateModel> List<T> toListNoUnwrap(TemplateSequenceModel seqModel) throws TemplateModelException {
+        List<Object> res = new ArrayList<>();
+        for(int i=0; i < seqModel.size(); i++) {
+            res.add(seqModel.get(i));
+        }
+        return UtilGenerics.cast(res);
     }
 
     /*
@@ -1913,4 +2011,32 @@ public abstract class LangFtlUtil {
         return new SimpleScalar(sb.toString());
     }
 
+    /**
+     * Adapts a hash model to a Map adapter.
+     * <p>
+     * NOTE: At current time (2019-01-28), this is best-effort and does not guarantee
+     * copies won't be made - see implementation (incomplete). In other words,
+     * avoid using anything but the Map.get method.
+     */
+    public static <V extends TemplateModel> Map<String, V> adaptAsMap(TemplateHashModelEx hash) {
+        return new TemplateModelContainer.TemplateModelMap<>(hash);
+    }
+
+    /**
+     * Gets the wrapped hash's map OR adapts a hash model to a Map adapter if not a wrapper (SimpleHash).
+     * <p>
+     * NOTE: At current time (2019-01-28), this is best-effort and does not guarantee
+     * copies won't be made - see implementation (incomplete). In other words,
+     * avoid using anything but the Map.get method.
+     */
+    @SuppressWarnings("unchecked")
+    public static <V extends TemplateModel> Map<String, V> getWrappedOrAdaptAsMap(TemplateHashModelEx hash) {
+        if (hash instanceof AdapterTemplateModel) {
+            return (Map<String, V>) ((AdapterTemplateModel) hash).getAdaptedObject(Map.class);
+        }
+        if (hash instanceof WrapperTemplateModel) {
+            return (Map<String, V>) ((WrapperTemplateModel) hash).getWrappedObject();
+        }
+        return adaptAsMap(hash);
+    }
 }

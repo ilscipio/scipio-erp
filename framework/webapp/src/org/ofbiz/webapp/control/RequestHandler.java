@@ -1854,7 +1854,7 @@ public class RequestHandler {
      * @param response the response (required)
      * @param url the path or URI (required), relative (relative to controller servlet if controller true, or relative to webapp context root if controller false)
      * @param interWebapp if true, treat the link as inter-webapp (default: null/false) (Scipio: new parameter)
-     * @param webappInfo the webapp info of the link's target webapp (optional, conditionally required) (Scipio: new parameter)
+     * @param targetWebappInfo the webapp info of the link's target webapp (optional, conditionally required) (Scipio: new parameter)
      * @param controller if true, assume is a controller link and refer to controller for building link (default: null/true) (Scipio: new parameter)
      * @param fullPath if true, always produce full URL (HTTP or HTTPS) (default: null/false) (Scipio: changed to Boolean instead of boolean, and changed behavior)
      * @param secure if true, resulting links is guaranteed to be secure (default: null/false) (Scipio: changed to Boolean instead of boolean, and changed behavior)
@@ -2468,19 +2468,14 @@ public class RequestHandler {
 
         // Check inter-webapp
         if (interWebapp == null) {
-            // FIXME? For now, can assume false unless requested otherwise.
-            interWebapp = Boolean.FALSE;
-
-            /* This is incomplete or invalid... don't always have webSiteId...
-             * would have to compare WebappInfo from request to ours.. but the tests become circular...
-            boolean sameWebSite = true;
-            if (webSiteId != null && !webSiteId.isEmpty()) {
-                String currWebSiteId = WebSiteWorker.getWebSiteId(request);
-                if (currWebSiteId != null && !currWebSiteId.isEmpty()) {
-                    sameWebSite = webSiteId.equals(currWebSiteId);
-                }
+            // For now, can assume false unless requested otherwise.
+            // SPECIAL CASE: for intra-webapp non-control links, we must determine this...
+            // FIXME?: This case could try to detect if webSiteId is different from current, but not necessary (yet)...
+            if (Boolean.FALSE.equals(absPath) && Boolean.FALSE.equals(controller) && webSiteId != null && !webSiteId.isEmpty()) {
+                interWebapp = true;
+            } else {
+                interWebapp = false;
             }
-            */
         }
 
         // Check if absolute path

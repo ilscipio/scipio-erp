@@ -713,7 +713,7 @@ WARN: Currently the enclosing @menu and sub-menus should never cross widget boun
                               By default, you '''must''' use this to specific link text, not nested content;
                               nested content will by default be put outside the link.
     href                    = Content link, for {{{link}}} type
-                              Also supports ofbiz request URLs using the notation: {{{ofbizUrl://}}} (see interpretRequestUri function)
+                              Also supports ofbiz request URLs using the notation: {{{pageUrl://}}} (see interpretRequestUri function)
                               NOTE: This parameter is automatically (re-)escaped for HTML and javascript (using #escapeFullUrl or equivalent) 
                                   to help prevent injection, as it is high-risk. It accepts pre-escaped query string delimiters for compatibility,
                                   but other characters should not be manually escaped (apart from URL parameter encoding).
@@ -2235,11 +2235,11 @@ It may be used in combination with cms menus:
                                     </@menuitem>
                                 <#else>
                                     <#if item.data.websiteid?has_content>
-                                        <@menuitem type="link" text=item.text!"" href=makeOfbizInterWebappUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})>
+                                        <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})>
                                             <@cmsmenu items=item["children"] type=type/>
                                         </@menuitem>
                                     <#else>
-                                        <@menuitem type="link" text=item.text!"" href=makeOfbizUrl(rawString(item.data.path!""))>
+                                        <@menuitem type="link" text=item.text!"" href=makePageUrl(rawString(item.data.path!""))>
                                             <@cmsmenu items=item["children"] type=type/>
                                         </@menuitem>
                                     </#if>
@@ -2262,11 +2262,11 @@ It may be used in combination with cms menus:
                             </@menuitem>
                         <#else>
                             <#if item.data.websiteid?has_content>
-                                <@menuitem type="link" text=item.text!"" href=makeOfbizInterWebappUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})>
+                                <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})>
                                     <@cmsmenu items=item["children"] type=type/>
                                 </@menuitem>
                             <#else>
-                                <@menuitem type="link" text=item.text!"" href=makeOfbizUrl(rawString(item.data.path!""))>
+                                <@menuitem type="link" text=item.text!"" href=makePageUrl(rawString(item.data.path!""))>
                                     <@cmsmenu items=item["children"] type=type/>
                                 </@menuitem>
                             </#if>

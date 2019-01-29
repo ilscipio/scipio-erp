@@ -59,7 +59,7 @@
 <#include "ftlDocCommon.ftl">
 
 <#function makeOwaAbsInterLibUrl targetLibDocPath targetName="">
-  <#return makeOfbizWebappUrl(makeAbsInterLibUrl(targetLibDocPath, targetName))><#-- NOTE: intentionally skip html escaping, never needed here. -->
+  <#return makeAppUrl(makeAbsInterLibUrl(targetLibDocPath, targetName))><#-- NOTE: intentionally skip html escaping, never needed here. -->
 </#function>
 
 <#-- REDEFINE this to make absolute links -->
@@ -132,7 +132,7 @@
         </style>
         <div style="float:left;"><#-- FIXME? floats? -->
           <#-- WARN: use escapeVal on docPurpose if ever printed  -->
-        <form method="get" action="<@ofbizWebappUrl uri=currPageIntraWebappUri escapeAs="html"/>">
+        <form method="get" action="<@appUrl uri=currPageIntraWebappUri escapeAs="html"/>">
           <@field type="select" inline=true name="docPurpose" events={"change": "jQuery(this).closest('form').submit();"}
               tooltip="Documentation Filter: Select Developer to see more implementation notes and TODOs" title="Documentation Filter">
             <@field type="option" value="templating" selected=(docPurpose == "templating")>Templating</@field>

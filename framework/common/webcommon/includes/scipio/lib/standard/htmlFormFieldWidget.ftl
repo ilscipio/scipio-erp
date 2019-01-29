@@ -175,7 +175,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#if language?has_content && language != "en">
       <@script src="/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${escapeVal(language, 'html')}.js" /><#rt/>
     </#if>
-    <link href="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>" rel="stylesheet" type="text/css">
+    <link href="<@contentUrl>/images/jquery/plugins/elrte-1.3/css/elrte.min.css</@contentUrl>" rel="stylesheet" type="text/css">
     <@script>
       var opts = {
          cssClass : 'el-rte',

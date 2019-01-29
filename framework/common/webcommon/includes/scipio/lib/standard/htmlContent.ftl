@@ -1969,15 +1969,15 @@ Creates a QR Code image link.
   <#switch export>
     <#case "link">
       <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
-        <a href="<@ofbizUrl uri=qrURL escapeAs='html'/>" alt="${escapeVal(alt, 'html')}" target="_external"><#if linktext?has_content>${linktext}<#else><#nested></#if></a>
+        <a href="<@pageUrl uri=qrURL escapeAs='html'/>" alt="${escapeVal(alt, 'html')}" target="_external"><#if linktext?has_content>${linktext}<#else><#nested></#if></a>
       </div>
     <#break>
     <#case "url">
-      <@ofbizUrl uri=qrURL escapeAs='html'/><#t/>
+      <@pageUrl uri=qrURL escapeAs='html'/><#t/>
     <#break>
     <#default>
       <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
-        <img src="<@ofbizUrl uri=qrURL escapeAs='html'/>" width="${width}" height="${height}" alt="${escapeVal(alt, 'html')}"/>
+        <img src="<@pageUrl uri=qrURL escapeAs='html'/>" width="${width}" height="${height}" alt="${escapeVal(alt, 'html')}"/>
       </div>
   </#switch>
 </#macro>

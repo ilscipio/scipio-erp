@@ -107,7 +107,7 @@
   </@section>
 
 <#if cmsPageId?has_content><#-- cmsPageId is set to the current page rendering -->
-  <@section title="Page links">
+  <@section title="Page URLs">
       <p><em>NOTE: both @pageUrl and @cmsPageUrl are valid names, but only @cmsPageUrl will
         work to link cms pages from outside of CMS rendering.</em></p>
       <@section title="Current page (by ID)">
@@ -130,8 +130,11 @@
             <li>${makePageUrl({"id":cmsPageId, "escapeAs":'html'})}</li>
             <li>${makeCmsPageUrl({"id":cmsPageId, "escapeAs":'html', "extLoginKey":true})}</li>
             <li>${makePageUrl({"id":cmsPageId, "escapeAs":'js-html'})}</li>
-            <#-- shorthand mode (page name only, very limited usage) -->
-            <li>${escapeFullUrl(makePageUrl(pageName), 'html')}</li>
+            <#-- shorthand mode (page name only, very limited usage) 
+                NOTE: 2019-01-28: If you want to use this mode, you must use
+                makeCmsPageUrl instead of makePageUrl, otherwise it will try
+                to link to a controller request. -->
+            <li>${escapeFullUrl(makeCmsPageUrl(pageName), 'html')}</li>
           </ul>
       </@section>
       
@@ -143,11 +146,21 @@
             <li><@pageUrl name="DemoPage" webSiteId="cmsSite" escapeAs='html'/></li>
             <li><@pageUrl name="DemoPage" webSiteId="cmsSite" extLoginKey=true/></li>
             <li><@pageUrl name="DemoPage" webSiteId="cmsSite" escapeAs='html' extLoginKey=true/></li>
-            <li><@pageUrl name="DemoPage" escapeAs='js'/></li>
-            <li><@pageUrl name="DemoPage" escapeAs='html' extLoginKey=true params="param1=value1&param2=value2"/></li>
-            <li><@pageUrl name="DemoPage" extLoginKey=true params="param1=value1&amp;param2=value2"/></li>
-            <li><@pageUrl name="DemoPage" escapeAs='html' extLoginKey=true params={"param1":"value1", "param2":"value2"}/></li>
-            <li><@pageUrl name="DemoPage" extLoginKey=true params={"param1":"value1", "param2":"value2"}/></li>
+            <li><@pageUrl name="DemoPage" webSiteId="cmsSite" escapeAs='js'/></li>
+            <li><@pageUrl name="DemoPage" webSiteId="cmsSite" escapeAs='html' extLoginKey=true params="param1=value1&param2=value2"/></li>
+            <li><@pageUrl name="DemoPage" webSiteId="cmsSite" extLoginKey=true params="param1=value1&amp;param2=value2"/></li>
+            <li><@pageUrl name="DemoPage" webSiteId="cmsSite" escapeAs='html' extLoginKey=true params={"param1":"value1", "param2":"value2"}/></li>
+            <li><@pageUrl name="DemoPage" webSiteId="cmsSite" extLoginKey=true params={"param1":"value1", "param2":"value2"}/></li>
+          </ul>
+      </@section>
+      
+      <@section title="Request/Control URLs (test)">
+          <ul>
+            <li><@pageUrl uri="main" /></li>
+            <li><@pageUrl uri="main" fullPath=true/></li>
+            <li><@pageUrl>main</@pageUrl></li>
+            <li>${escapeFullUrl(makePageUrl("main"), 'html')}</li>
+            <li>${makePageUrl({"uri":"main", "escapeAs":"html"})}</li>
           </ul>
       </@section>
   </@section>

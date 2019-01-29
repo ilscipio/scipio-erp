@@ -350,7 +350,7 @@ NOTE: It is also possible to pass the map as the second parameter instead of the
     (other)                 = See #interpretStd
 
   * Related *                           
-    @ofbizUrl
+    @pageUrl
     
   * History *
     Added for 1.14.3.
@@ -394,35 +394,38 @@ TODO: widget renderer-compatible sections renderer ("screen" type).
 
 <#-- 
 *************
-* ofbizUrl
+* pageUrl
 ************
-Builds an Ofbiz navigation URL - for direct output into template document (primarily).
+Builds a page (controller request-map) navigation URL - for direct output into template document (primarily).
 
-STOCK OFBIZ UTILITY. It is highly modified with enhanced capabilities for Scipio.
+'''UPDATE: 2019-01-28:''' This macro has been renamed from @ofbizUrl, as well as several other macros
+accordingly. The old names will continue to function for backward-compatibility, but
+using the new names is encouraged. In addition, this macro can now render CMS pages,
+which is simply done by passing {{{id="..."}}} or {{{name="..."}}} instead of {{{uri}}} or a macro body.
 
-See also the function version, #makeOfbizUrl; #makeOfbizUrl should be used instead of @ofbizUrl 
-when passing fully-built URLs to other macros (rather than trying to capture the output of @ofbizUrl) 
-and in some other cases; meanwhile @ofbizUrl is more appropriate for writing generate URLs directly
+See also the function version, #makePageUrl; #makePageUrl should be used instead of @pageUrl 
+when passing fully-built URLs to other macros (rather than trying to capture the output of @pageUrl) 
+and in some other cases; meanwhile @pageUrl is more appropriate for writing generate URLs directly
 to document output in templates (no intermediate captures). To this end, their default behaviors differ.
 
-'''(Non-)HTML/JS escaping behavior:''' By default, neither @ofbizUrl, #makeOfbizUrl nor any of their variants
+'''(Non-)HTML/JS escaping behavior:''' By default, neither @pageUrl, #makePageUrl nor any of their variants
 perform any HTML or Javascript escaping on their input URIs or parameters - it is not their responsibility.
 HTML/JS escaping must be done either (preferably) using #escapeFullUrl, #escapeVal, or (simplest) the ''optional'' {{{escapeAs}}} parameter added 
 to the URL utilities for Scipio 1.14.2, OR (often problematic) by letting screen html auto-escaping handle it.
 
 '''Auto-escaping bypass behavior''': '''The macro URL builders behave differently than their function counterparts.'''
-For legacy-compatibility reasons, as an exception to Scipio macros (see >>>standard/htmlTemplate<<<), @ofbizUrl 
+For legacy-compatibility reasons, as an exception to Scipio macros (see >>>standard/htmlTemplate<<<), @pageUrl 
 does '''not''' perform an implied #rawString call on its parameters, and is thus subject to receiving context/data-model
-values html-escaped to its inputs due to the renderer's automatic html escaping. By ofbiz's design, @ofbizUrl
+values html-escaped to its inputs due to the renderer's automatic html escaping. By upstream design, @pageUrl
 historically received almost exclusively pre-html-escaped values as inputs in ofbiz templates and code.
 
-In contrast, #makeOfbizUrl automatically calls #rawString on its parameters like standard Scipio html macros, such
+In contrast, #makePageUrl automatically calls #rawString on its parameters like standard Scipio html macros, such
 that the caller only needs to call #rawString if he is composing strings before passing them to the function.
-Furthermore, as noted, #makeOfbizUrl performs no extra language escaping by default, so its result remains unescaped
+Furthermore, as noted, #makePageUrl performs no extra language escaping by default, so its result remains unescaped
 This means the result must be passed to another macro which performs escaping or to #escapeFullUrl - otherwise
 it would be unsafe to output. Ultimately the goal is point-of-use escaping.
 
-NOTE: 2016-11-04: The return value behavior for #makeOfbizUrl ''may'' be changed in the near future; for the current time, 
+NOTE: 2016-11-04: The return value behavior for #makePageUrl ''may'' be changed in the near future; for the current time, 
     it better to use #rawString explicitly on the result ''if'' you explicitly need a raw unescapted value;
     this may be set to return an auto-html-wrapped string instead. If you need to encure escaping, #escapeVal automatically
     handles such auto-escaped values in prevision of the future. In most cases such as passing the URL to other
@@ -431,24 +434,24 @@ NOTE: 2016-11-04: The return value behavior for #makeOfbizUrl ''may'' be changed
 ''Note that the previous paragraphs describe default behaviors only''; the Scipio-modified utilities (all of them) support
 extra parameters to handle escaping and switch the uri parameter handling: 
   escapeAs, rawParams, strict.
-Specifically, {{{rawParams}}} if set to true will make @ofbizUrl behave like #makeOfbizUrl does by default
+Specifically, {{{rawParams}}} if set to true will make @pageUrl behave like #makePageUrl does by default
 - and it is made safe by using {{{escapeAs}}} to apply html escaping on the final result. Conveniently,
 specifying {{{escapeAs}}} automatically turns on {{{rawParams}}}, so it's the only one to remember.
 
-In most cases it comes down to using the right tool for the job. #makeOfbizUrl is perfect for passing URLs
+In most cases it comes down to using the right tool for the job. #makePageUrl is perfect for passing URLs
 to Scipio macros which generally now (since 1.14.2) perform html escaping automatically on their parameters. 
 So the following suffices for a simple hardcoded URL (for parameter values coming from screen context/data-model, you may
 need to use #rawString):
 
-  <@menuitem type="link" href=makeOfbizUrl('myRequest?param1=val1&param2=val2') ... />
+  <@menuitem type="link" href=makePageUrl('myRequest?param1=val1&param2=val2') .../>
 
 Meanwhile, URLs outputted directly into templates or text are usually most quickly done using 
-@ofbizUrl, but in newer code it is better done by specifying the {{{escapeAs}}} parameter, 
+@pageUrl, but in newer code it is better done by specifying the {{{escapeAs}}} parameter, 
 which will then escape the resulting URL in the given language ''and'' turn on the 
 {{{rawParams}}} option. Such that, to illustrate, unlike stock ofbiz
 there is no need to pre-escape special characters like the parameter delimiter ("&" vs "&amp;"):
 
-  <a href="<@ofbizUrl uri='myRequest?param1=val1&param2=val2' escapeAs='html' />">some text</a>
+  <a href="<@pageUrl uri='myRequest?param1=val1&param2=val2' escapeAs='html'/>">some text</a>
 
 '''Boolean parameters:''' In Scipio, boolean arguments can be given as booleans, string representation of booleans
 or empty string (ternary, signifying defaults or emulating null).
@@ -473,11 +476,13 @@ secure to force a fullPath link. Links may still generate full-path secure links
 if not requested, however.
 
   * Parameters *
-    type                    = (intra-webapp|inter-webapp|, default: intra-webapp)
+    type                    = (intra-webapp|inter-webapp|cmspage|, default: intra-webapp)
                               * intra-webapp: a relative intra-webapp link (either a controller URI or arbitrary servlet path)
                               * inter-webapp: an inter-webapp link (either a controller URI or an absolute path to any webapp navigation resource)
                                 The target webapp MUST exist on the current server as a recognized webapp (with web.xml).
                                 It can be identified using either webSiteId or using an absolute full path to the webapp and as the uri.
+                              * cmspage: CMS Page URL - '''automatically''' selected mode when {{{id}}} or {{{name}}} parameters are passed.
+                                When {{{id}}} or {{{name}}} is passed, this macro behaves exactly like @cmsPageUrl (see CMS demo templates for example).
                               (New in Scipio)
     interWebapp             = ((boolean), default: false) Alias for type="inter-webapp"
                               If true, same as type="inter-webapp"; if false, same as type="" (intra-webapp implied).
@@ -488,10 +493,10 @@ if not requested, however.
                               For inter-webapp links, if no webSiteId is specified, this must be an absolute path from
                               server root, containing webapp context root and servlet path; if webSiteId specified, 
                               this should specified relative like intra-webapp (unless absPath forced to true).
-                              WARN: At current time (2016-10-14), this macro version of @ofbizUrl does NOT prevent automatic
-                                  screen html escaping on the URI parameter, because too many templates use @ofbizUrl
+                              WARN: At current time (2016-10-14), this macro version of @pageUrl does NOT prevent automatic
+                                  screen html escaping on the URI parameter, because too many templates use @pageUrl
                                   directly without consideration to escaping.
-                                  However, the function versions of this macro such as #makeOfbizUrl DO bypass the
+                                  However, the function versions of this macro such as #makePageUrl DO bypass the
                                   auto screen escaping on this parameter.
                               (New in Scipio)
     absPath                 = ((boolean), default: -depends on type-, fallback default: false)       
@@ -555,9 +560,9 @@ if not requested, however.
                               See #escapeFullUrl for possible values.
                               When this is empty (default), the macro performs no escaping whatsoever.
                               If this is set to a language, it toggles {{{rawParams}}} and {{{strict}}} to {{{true}}}, and doing
-                                <@ofbizUrl uri=someUri escapeAs='html'... />
+                                <@pageUrl uri=someUri escapeAs='html'... />
                               is basically equivalent to doing:
-                                <#assign urlContent><@ofbizUrl uri=someUri rawParams=true strict=true ... /></#assign>
+                                <#assign urlContent><@pageUrl uri=someUri rawParams=true strict=true ... /></#assign>
                                 ${escapeFullUrl(urlContext, 'html')}
                               Usually, if you use this shortcut, you should use the {{{uri}}} parameter instead of nested, to bypass screen html auto-escaping;
                               but note you may need to use #rawString manually if you are adding parameters to the uri.
@@ -566,41 +571,47 @@ if not requested, however.
                               NOTE: 2016-10-19: Currently this parameter has no effect on this macro (subject to change in a revision). 
                               NOTE: 2016-10-19: Currently this parameter is ''not'' passed to #escapeFullUrl (when {{{escapeAs}}} is set), because the
                                   pre-escaped ampersand {{{&amp;}}} is too ubiquitous in existing code.
+    id                      = ((string)) The ID of a CMS page to render, instead of a non-CMS controller request-map.
+                              NOTE: Not all parameters above apply to CMS page link generation.
+    name                    = ((string)) The exact name of a CMS page to render, instead of a non-CMS controller request-map.
+                              NOTE: Not all parameters above apply to CMS page link generation.
 
   * History *
+    Integrated @cmsPageUrl function (id/name) for 1.14.5.
+    Renamed from @ofbizUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#macro ofbizUrl uri="" absPath="" interWebapp="" webSiteId="" controller="" fullPath="" secure="" encode="" rawParams="" escapeAs="" strict="">
+<#macro pageUrl uri="" absPath="" interWebapp="" webSiteId="" controller="" fullPath="" secure="" encode="" rawParams="" escapeAs="" strict="">
 </#macro>
 -->
 
 <#-- 
 *************
-* makeOfbizUrl
+* makePageUrl
 ************
-Builds an Ofbiz navigation URL - for passing to other utilities (primarily).
+Builds a control/navigation URL - for passing to other utilities (primarily).
 
-Function version of the @ofbizUrl macro, supporting all the same parameters,
+Function version of the @pageUrl macro, supporting all the same parameters,
 but with slight differences in defaults and default behavior.
 
-This is useful to avoid bloating templates with heavy {{{<#assign...><@ofbizUrl.../></#assign>}}} captures
+This is useful to avoid bloating templates with heavy {{{<#assign...><@pageUrl.../></#assign>}}} captures
 and instead passing results directly to other macros and functions.
 
-'''This function's default escaping behavior is different from the default behavior of its macro counterpart''', @ofbizUrl; 
-unlike @ofbizUrl this function was primarily intended to manipulate unescaped strings at input. See @ofbizUrl for details.
+'''This function's default escaping behavior is different from the default behavior of its macro counterpart''', @pageUrl; 
+unlike @pageUrl this function was primarily intended to manipulate unescaped strings at input. See @pageUrl for details.
 
-NOTE: 2016-11-04: The return value behavior for #makeOfbizUrl ''may'' be changed in the near future; for the current time, 
+NOTE: 2016-11-04: The return value behavior for #makePageUrl ''may'' be changed in the near future; for the current time, 
     it better to use #rawString explicitly on the result ''if'' you explicitly need a raw unescapted value;
     this may be set to return an auto-html-wrapped string instead. If you need to encure escaping, #escapeVal automatically
     handles such auto-escaped values in prevision of the future. In most cases such as passing the URL to other
     macros, there is no significant impact (and is only made possible) because of other improvements in 1.14.2.
 
   * Parameters *
-    args                    = Map of @ofbizUrl arguments OR a string containing a uri (single parameter)
+    args                    = Map of @pageUrl arguments OR a string containing a uri (single parameter)
                               NOTE: The {{{rawParams}}} default is {{{true}}}, unlike the macro version.
                               DEV NOTE: This is the only sane way to implement this because FTL supports only positional args
-                                  for functions, which would be unreadable here ({{{makeOfbizUrl("main", false, false, true, true...)}}})
+                                  for functions, which would be unreadable here ({{{makePageUrl("main", false, false, true, true...)}}})
                                   However majority of cases use only a URI so we can shortcut in that case.
                                   Freemarker doesn't support overloading so we basically implement it ourselves.
                                   Note that if we needed extra positional parameters for common cases, should keep the args map check on
@@ -609,182 +620,201 @@ NOTE: 2016-11-04: The return value behavior for #makeOfbizUrl ''may'' be changed
                                   so you use only args map or only positionals).
    
   * Related *                           
-    @ofbizUrl
+    @pageUrl
     
   * History *
+    Renamed from #makePageUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
-<#function makeOfbizUrl args>
-  <#if isObjectType("map", args)><#-- ?is_hash doesn't work right with context var strings and hashes -->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function makePageUrl args>
+  <#if isObjectType("map", args)><#- - ?is_hash doesn't work right with context var strings and hashes - ->
     <#local rawParams = args.rawParams!true>
-    <#if !rawParams?has_content><#-- handles empty string case -->
+    <#if !rawParams?has_content><#- - handles empty string case - ->
       <#local rawParams = true>
     </#if>
     <#local strict = args.strict!true>
-    <#if !strict?has_content><#-- handles empty string case -->
+    <#if !strict?has_content><#- - handles empty string case - ->
       <#local strict = true>
     </#if>
-    <#local res><@ofbizUrl uri=(args.uri!"") webSiteId=(args.webSiteId!"") absPath=(args.absPath!"") interWebapp=(args.interWebapp!"") controller=(args.controller!"") 
+    <#local res><@pageUrl uri=(args.uri!"") webSiteId=(args.webSiteId!"") absPath=(args.absPath!"") interWebapp=(args.interWebapp!"") controller=(args.controller!"") 
         extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
         rawParams=rawParams strict=strict escapeAs=(args.escapeAs!"")/></#local>
   <#else>
-    <#local res><@ofbizUrl uri=args rawParams=true strict=true/></#local>
+    <#local res><@pageUrl uri=args rawParams=true strict=true/></#local>
   </#if>
   <#return res>
 </#function>
+-->
 
 <#-- 
 *************
-* ofbizWebappUrl
+* appUrl
 ************
-Builds an Ofbiz navigation intra-webapp, non-controller URL.
+Builds an intra-webapp, non-controller URL from a path (uri) that start from the webapp context root
+(thus can point to any servlet within it).
 
 The URI takes the basic form /control/requesturi, 
 but this is normally used to access another servlet, such as /products/PH-1000.
 
-This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.
+This calls @pageUrl with absPath=false, interWebapp=false, controller=false by default.
 
-NOTE: This macro is subject to escaping particularities - see its cousin @ofbizUrl for details.
+NOTE: This macro is subject to escaping particularities - see its cousin @pageUrl for details.
 
   * Parameters *
-    (other)                 = See @ofbizUrl
+    (other)                 = See @pageUrl
 
   * Related *                           
-    @ofbizUrl
+    @pageUrl
     
   * History *
+    Renamed from @ofbizWebappUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
-<#macro ofbizWebappUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false rawParams="" strict="" escapeAs="">
-  <@ofbizUrl uri=uri absPath=absPath interWebapp=false controller=controller 
-    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams strict=strict escapeAs=escapeAs><#nested></@ofbizUrl><#t>
+<#-- IMPLEMENTED AS TRANSFORM
+<#macro appUrl uri="" fullPath="" secure="" encode="" absPath=false controller=false extLoginKey=false rawParams="" strict="" escapeAs="">
+  <@pageUrl uri=uri absPath=absPath interWebapp=false controller=controller 
+    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams strict=strict escapeAs=escapeAs><#nested></@pageUrl><#t>
 </#macro>
+-->
 
 <#-- 
 *************
-* makeOfbizWebappUrl
+* makeAppUrl
 ************
-Builds an Ofbiz navigation intra-webapp, non-controller URL. Function version of @ofbizWebappUrl.
+Builds an intra-webapp, non-controller URL from a path (uri) that start from the webapp context root
+(thus can point to any servlet within it). Function version of @appUrl.
 
 The URI takes the basic form /control/requesturi, 
 but this is normally used to access another servlet, such as /products/PH-1000.
 
-This calls @ofbizUrl with absPath=false, interWebapp=false, controller=false by default.
+This calls @pageUrl with absPath=false, interWebapp=false, controller=false by default.
 
-NOTE: This function is subject to escaping particularities - see its cousin #makeOfbizUrl for details.
+NOTE: This function is subject to escaping particularities - see its cousin #makePageUrl for details.
 
   * Parameters *
-    (other)                 = See #makeOfbizUrl, @ofbizWebappUrl
+    (other)                 = See #makePageUrl, @appUrl
 
   * Related * 
-    @ofbizWebappUrl                          
-    @ofbizUrl
+    @appUrl                          
+    @pageUrl
     
   * History *
+    Renamed from #makeAppUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
-<#function makeOfbizWebappUrl args>
+<#-- IMPLEMENTED AS TRANSFORM
+<#function makeAppUrl args>
   <#if isObjectType("map", args)>
     <#local rawParams = args.rawParams!true>
-    <#if !rawParams?has_content><#-- handles empty string case -->
+    <#if !rawParams?has_content><#- - handles empty string case - ->
       <#local rawParams = true>
     </#if>
     <#local strict = args.strict!true>
-    <#if !strict?has_content><#-- handles empty string case -->
+    <#if !strict?has_content><#- - handles empty string case - ->
       <#local strict = true>
     </#if>
-    <#local res><@ofbizUrl uri=(args.uri!"") absPath=(args.absPath!false) interWebapp=false controller=(args.controller!false) 
+    <#local res><@pageUrl uri=(args.uri!"") absPath=(args.absPath!false) interWebapp=false controller=(args.controller!false) 
         extLoginKey=(args.extLoginKey!false) fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
         rawParams=rawParams strict=strict escapeAs=(args.escapeAs!"")/></#local>
   <#else>
-    <#local res><@ofbizUrl uri=args absPath=false interWebapp=false controller=false extLoginKey=false
+    <#local res><@pageUrl uri=args absPath=false interWebapp=false controller=false extLoginKey=false
         rawParams=true strict=true/></#local>
   </#if>
   <#return res>
 </#function>
+-->
 
 <#-- 
 *************
-* ofbizInterWebappUrl
+* serverUrl
 ************
-Builds an Ofbiz navigation inter-webapp URL.
+Builds a URL from a path (uri) that starts from server root and includes a webapp context.
+Generally, this is used for inter-webapp URLs.
 
 The URI takes the basic and usual form /webappmountpoint/control/requesturi 
 OR requesturi if webSiteId is specified and is a controller request.
 
-This calls @ofbizUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
+This calls @pageUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
 by the implementation or can be overridden; controller is left to interpretation or can be specified.
 
-NOTE: This macro is subject to escaping particularities - see its cousin @ofbizUrl for details.
+NOTE: This macro is subject to escaping particularities - see its cousin @pageUrl for details.
 
   * Parameters *
-    (other)                 = See @ofbizUrl
+    (other)                 = See @pageUrl
 
   * Related * 
-    @ofbizUrl
+    @pageUrl
     
   * History *
+    Renamed from @ofbizInterWebappUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
-<#macro ofbizInterWebappUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="" rawParams="" strict="" escapeAs="">
-  <@ofbizUrl uri=uri interWebapp=true absPath=absPath webSiteId=webSiteId controller=controller
-    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams strict=strict escapeAs=escapeAs><#nested></@ofbizUrl><#t>
+<#-- IMPLEMENTED AS TRANSFORM
+<#macro serverUrl uri="" webSiteId="" absPath="" controller="" extLoginKey="" fullPath="" secure="" encode="" rawParams="" strict="" escapeAs="">
+  <@pageUrl uri=uri interWebapp=true absPath=absPath webSiteId=webSiteId controller=controller
+    extLoginKey=extLoginKey fullPath=fullPath secure=secure encode=encode rawParams=rawParams strict=strict escapeAs=escapeAs><#nested></@pageUrl><#t>
 </#macro>
+-->
 
 <#-- 
 *************
-* makeOfbizInterWebappUrl
+* makeServerUrl
 ************
-Builds an Ofbiz navigation inter-webapp URL. Function version of @ofbizInterWebappUrl.
+Builds a URL from a path (uri) that starts from server root and includes a webapp context. Function version of @serverUrl.
+Generally, this is used for inter-webapp URLs.
 
 The URI takes the basic and usual form /webappmountpoint/control/requesturi 
 OR requesturi if webSiteId is specified and is a controller request.
 
-This calls @ofbizUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
+This calls @pageUrl with interWebapp=true and optional webSiteId; absPath is left to interpretation
 by the implementation or can be overridden; controller is left to interpretation or can be specified.
 
 NOTE: If args is specified as map, "webSiteId" must be passed in args, not as argument.
     (This is intentional, to be consistent with macro invocations, emulated for functions)
 
-NOTE: This function is subject to escaping particularities - see its cousin #makeOfbizUrl for details.
+NOTE: This function is subject to escaping particularities - see its cousin #makePageUrl for details.
+
+NOTE: 
 
   * Parameters *
-    (other)                 = See #makeOfbizUrl, @ofbizInterWebappUrl
+    (other)                 = See #makePageUrl, @serverUrl
 
   * Related * 
-    @ofbizInterWebappUrl
-    @ofbizUrl
+    @serverUrl
+    @pageUrl
     
   * History *
+    Renamed from #makeOfbizInterWebappUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
-<#function makeOfbizInterWebappUrl args webSiteId="">
+<#-- IMPLEMENTED AS TRANSFORM
+<#function makeServerUrl args webSiteId="">
   <#if isObjectType("map", args)>
     <#local rawParams = args.rawParams!true>
-    <#if !rawParams?has_content><#-- handles empty string case -->
+    <#if !rawParams?has_content><#- - handles empty string case - ->
       <#local rawParams = true>
     </#if>
     <#local strict = args.strict!true>
-    <#if !strict?has_content><#-- handles empty string case -->
+    <#if !strict?has_content><#- - handles empty string case - ->
       <#local strict = true>
     </#if>
-    <#local res><@ofbizUrl uri=(args.uri!"") absPath=(args.absPath!"") interWebapp=true webSiteId=(args.webSiteId!"")  
+    <#local res><@pageUrl uri=(args.uri!"") absPath=(args.absPath!"") interWebapp=true webSiteId=(args.webSiteId!"")  
         controller=(args.controller!"") extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
         rawParams=rawParams strict=strict escapeAs=(args.escapeAs!"")/></#local>
   <#else>
-    <#local res><@ofbizUrl uri=args absPath="" interWebapp=true webSiteId=webSiteId
+    <#local res><@pageUrl uri=args absPath="" interWebapp=true webSiteId=webSiteId
         controller="" extLoginKey="" rawParams=true strict=true/></#local>
   </#if>
   <#return res>
 </#function>
+-->
 
 <#-- 
 *************
-* ofbizContentUrl
+* contentUrl
 ************
-Builds an Ofbiz content/resource URL.
-
-STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
+Builds a content/resource URL.
 
 NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''changed''' from 
     stock Ofbiz. By default this macro NO LONGER url-decodes the uri/nested. The stock
@@ -796,17 +826,17 @@ NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''c
     they are stored with the rest of the URL as-is - only full URLs should be decoded, if received encoded
     (in such cases, parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).
 
-NOTE: This macro is subject to escaping particularities - see its cousin @ofbizUrl for details.
+NOTE: This macro is subject to escaping particularities - see its cousin @pageUrl for details.
 
 NOTE: 2017-07-04: The {{{variant}}} parameter's usage in filenames has been fixed in Scipio and will be modified again soon;
     see the parameter's documentation below. 
 
   * Parameters *
     uri                     = (string) URI or path as parameter; alternative to nested
-                              WARN: At current time (2016-10-14), this macro version of @ofbizContentUrl does NOT prevent automatic
-                                  screen html escaping on the URI parameter, because too many templates use @ofbizUrl
+                              WARN: At current time (2016-10-14), this macro version of @contentUrl does NOT prevent automatic
+                                  screen html escaping on the URI parameter, because too many templates use @pageUrl
                                   directly without consideration to escaping.
-                                  However, the function versions of this macro such as #makeOfbizContentUrl DO bypass the
+                                  However, the function versions of this macro such as #makeContentUrl DO bypass the
                                   auto screen escaping on this parameter.
                               NOTE: SPECIAL VALUES: Stock ofbiz originally recognized the string "/images/defaultImage.jpg" as
                                   a special value; when this value was specified, the {{{variant}}} parameter was ignored.
@@ -847,10 +877,10 @@ NOTE: 2017-07-04: The {{{variant}}} parameter's usage in filenames has been fixe
                               NOTE: 2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).
                               (New in Scipio)
     rawParams               = ((boolean), default: -false, unless escapeAs is set-) Whether macro should call #rawString on its string parameters
-                              See @ofbizUrl for description.
+                              See @pageUrl for description.
     escapeAs                = (html|js|js-html|...|, default: -empty-) Language in which to escape the whole resulting URL
                               See #escapeFullUrl for possible values.
-                              See @ofbizUrl for description.
+                              See @pageUrl for description.
     strict                  = ((boolean), default: -false, unless escapeAs is set-) Whether to handle only raw strings or recognize pre-escaped strings
                               This macro must perform checks and concatenations on the passed uri; if pre-escaped
                               values are passed (such as HTML), this parameter must be false.
@@ -867,7 +897,7 @@ NOTE: 2017-07-04: The {{{variant}}} parameter's usage in filenames has been fixe
                                     with a forward slash or escaped equivalent ("/"), the method could produce
                                     a dangerous result! This is prevented by not passing unsafe values as the
                                     {{{ctxPrefix}}}, or simply not pre-escaping for javascript.
-                              NOTE: The function version of this macro, #makeOfbizContentUrl, uses
+                              NOTE: The function version of this macro, #makeContentUrl, uses
                                   true as default for this parameter, unlike this macro.
                               (New in Scipio)
     secure                  = ((boolean), default: -true, except for xsl-fo-) Force secure or insecure link flag.
@@ -884,88 +914,99 @@ NOTE: 2017-07-04: The {{{variant}}} parameter's usage in filenames has been fixe
                               Added 2018-08-17.
 
   * History *
+    Renamed from @ofbizContentUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
     Enhanced for 1.14.5 (secure and type flags)
     Enhanced for 1.14.4 (variant parameter enhancement; autoVariant parameters added).
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#macro ofbizContentUrl ...>
+<#macro contentUrl ...>
 </#macro>
 -->
 
 <#-- 
 *************
-* makeOfbizContentUrl
+* makeContentUrl
 ************
-Builds an Ofbiz content/resource URL. Function version of the @ofbizContentUrl macro.
+Builds a content/resource URL. Function version of the @contentUrl macro.
 
-NOTE: This function is subject to escaping particularities - see its cousin #makeOfbizUrl for details.
+NOTE: This function is subject to escaping particularities - see its cousin #makePageUrl for details.
 
   * Parameters *
     rawParams               = ((boolean), default: true) Whether macro should call #rawString on string parameters (mainly {{{uri}}})
-                              NOTE: Unlike @ofbizContentUrl, the default here is true.
+                              NOTE: Unlike @contentUrl, the default here is true.
     strict                  = ((boolean), default: true) Whether to handle only raw strings or recognize pre-escaped strings
-                              NOTE: Unlike @ofbizContentUrl, the default here is true, such that, by default, this
+                              NOTE: Unlike @contentUrl, the default here is true, such that, by default, this
                                   function is meant to operate on raw unescaped strings only.
-    (other)                 = See @ofbizContentUrl
+    (other)                 = See @contentUrl
 
   * Related * 
-    @ofbizContentUrl
+    @contentUrl
     
   * History *
+    Renamed from #makeOfbizContentUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
-<#function makeOfbizContentUrl args variant="">
+<#-- IMPLEMENTED AS TRANSFORM
+<#function makeContentUrl args variant="">
+  <#- - TODO: Implement as transform - ->
   <#if isObjectType("map", args)>
     <#local rawParams = args.rawParams!true>
-    <#if !rawParams?has_content><#-- handles empty string case -->
+    <#if !rawParams?has_content><#- - handles empty string case - ->
       <#local rawParams = true>
     </#if>
     <#local strict = args.strict!true>
-    <#if !strict?has_content><#-- handles empty string case -->
+    <#if !strict?has_content><#- - handles empty string case - ->
       <#local strict = true>
     </#if>
-    <#-- DEV NOTE: no rawString around ctxPrefix because already done by the macro (exceptionally) -->
-    <#local res><@ofbizContentUrl uri=(args.uri!"") variant=(args.variant!"") 
+    <#- - DEV NOTE: no rawString around ctxPrefix because already done by the macro (exceptionally) - ->
+    <#local res><@contentUrl uri=(args.uri!"") variant=(args.variant!"") 
         ctxPrefix=(args.ctxPrefix!false) urlDecode=(args.urlDecode!"") 
         autoVariant=(args.autoVariant!"") width=(args.width!"") height=(args.height!"") variantCfg=(args.variantCfg!"") 
         strict=strict rawParams=rawParams/></#local>
   <#else>
-    <#local res><@ofbizContentUrl uri=args variant=variant rawParams=true strict=true/></#local>
+    <#local res><@contentUrl uri=args variant=variant rawParams=true strict=true/></#local>
   </#if>
   <#return res>
 </#function>
+-->
 
 <#-- 
 *************
-* makeOfbizContentCtxPrefixUrl
+* makeContentCtxPrefixUrl
 ************
-Version of #makeOfbizContentUrl that is preset to recognize the {{{contentPathPrefix}}} context prefix.
+Version of #makeContentUrl that is preset to recognize the {{{contentPathPrefix}}} context prefix.
 Same as (shorthand for):
-  makeOfbizContentUrl({"uri":someUri, "ctxPrefix":true, ...})
+  makeContentUrl({"uri":someUri, "ctxPrefix":true, ...})
 
-NOTE: This function is subject to escaping particularities - see its cousin #makeOfbizUrl for details.
+NOTE: This function is subject to escaping particularities - see its cousin #makePageUrl for details.
 
   * Related * 
-    #makeOfbizContentUrl
-    @ofbizContentUrl
+    #makeContentUrl
+    @contentUrl
     
   * History *
+    Renamed from #makeOfbizContentCtxPrefixUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
-<#function makeOfbizContentCtxPrefixUrl args variant="">
+<#function makeContentCtxPrefixUrl args variant="">
   <#if isObjectType("map", args)>
-    <#return makeOfbizContentUrl({"ctxPrefix":true} + args) />
+    <#return makeContentUrl({"ctxPrefix":true} + args) />
   <#else>
-    <#return makeOfbizContentUrl({"uri":args, "variant":variant, "ctxPrefix":true}) />
+    <#return makeContentUrl({"uri":args, "variant":variant, "ctxPrefix":true}) />
   </#if>
+</#function>
+
+<#-- SCIPIO: 2019-01-28: Legacy directive (backward-compatibility) -->
+<#function makeOfbizContentCtxPrefixUrl args variant="">
+  <#return makeContentCtxPrefixUrl(args, variant)>
 </#function>
 
 <#-- 
 *************
-* ofbizContentAltUrl
+* contentAltUrl
 ************
-Builds an Ofbiz content/resource Alt URL, from a URL stored in the database by contentId.
+Builds a content/resource Alt URL, from a URL stored in the database by contentId.
 
 STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
 
@@ -977,14 +1018,14 @@ NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''c
     stock Ofbiz. By default this macro NO LONGER url-decodes the URL retrieved by contentId. The stock
     Ofbiz behavior was presumably originally written to URL-decode whole URLs that had been stored
     URL-encoded in the database.
-    For consistency and prevention of some less obvious security issues (not as dramatic as @ofbizContentUrl),
+    For consistency and prevention of some less obvious security issues (not as dramatic as @contentUrl),
     the default has been changed to ''not'' decode by default.
     In general, if ever applicable, events and services that may receive fully-URL-encoded URLs should URL-decode them
     ''before'' storing in database - but note that URL-encoded parameters should probably not be decoded if
     they are stored with the rest of the URL as-is - only full URLs should be decoded, if received encoded
     (parameters could effectively be double-encoded, and in that case only the first encoding layer should be removed).
 
-NOTE: This macro is subject to escaping particularities - see its cousin @ofbizUrl for details.
+NOTE: This macro is subject to escaping particularities - see its cousin @pageUrl for details.
 
   * Parameters *
     contentId               = (string) Content ID
@@ -995,26 +1036,27 @@ NOTE: This macro is subject to escaping particularities - see its cousin @ofbizU
                               NOTE: 2016-10-18: The new default is FALSE (changed from stock Ofbiz - or what it would have been).
                               (New in Scipio)
     rawParams               = ((boolean), default: -false, unless escapeAs is set-) Whether macro should call #rawString on its string parameters
-                              See @ofbizUrl for description.
+                              See @pageUrl for description.
     escapeAs                = (html|js|js-html|...|, default: -empty-) Language in which to escape the whole resulting URL
                               See #escapeFullUrl for possible values.
-                              See @ofbizUrl for description.
+                              See @pageUrl for description.
     strict                  = ((boolean), default: -false, unless escapeAs is set-) Whether to handle only raw strings or recognize pre-escaped strings
                               NOTE: 2016-10-19: Currently this parameter has no effect on this macro (subject to change in a revision). 
                               NOTE: 2016-10-19: Currently this parameter is ''not'' passed to #escapeFullUrl (when {{{escapeAs}}} is set), because the
                                   pre-escaped ampersand {{{&amp;}}} is too ubiquitous in existing code.
-                              See @ofbizUrl for description.
-    fullPath                = See @ofbizUrl
-    secure                  = See @ofbizUrl
-    encode                  = See @ofbizUrl
+                              See @pageUrl for description.
+    fullPath                = See @pageUrl
+    secure                  = See @pageUrl
+    encode                  = See @pageUrl
     params                  = Extra query parameters, as a string.
                               
   * History *
+    Renamed from @ofbizContentAltUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
     Fixed and new params for 1.14.5.
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#macro ofbizContentAltUrl ...>
+<#macro contentAltUrl ...>
 </#macro>
 -->
 
@@ -1025,13 +1067,13 @@ NOTE: This macro is subject to escaping particularities - see its cousin @ofbizU
 Interprets the given request URI/URL resource and transforms into a valid URL if and as needed.
 Can help to cut down on macro URL arguments, but may be used anywhere.
 
-FIXME: This is out of date with @ofbizUrl enhancements
+FIXME: This is out of date with @pageUrl enhancements
 
 If the uri is already a web URL, it is returned as-is.
 The following URI forms are currently interpreted and transformed:
-* ofbizUrl:// - Any URI that begins with this will be interpreted as an ofbiz controller URL and ran through @ofbizUrl/makeOfbizUrl.
+* pageUrl:// - Any URI that begins with this will be interpreted as a controller URL and ran through @pageUrl/makePageUrl.
   Form: 
-    ofbizUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1
+    pageUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1
   NOTE: Order of arguments is strict; args will be stripped.
                  
   * Parameters *
@@ -1039,18 +1081,15 @@ The following URI forms are currently interpreted and transformed:
 -->
 <#function interpretRequestUri uri>
   <#local uri = rawString(uri)>
-  <#if uri?starts_with("ofbizUrl://")>
-    <#local uriDesc = Static["org.ofbiz.webapp.control.RequestDescriptor"].fromUriStringRepr(request!, response!, uri)>
-    <#if uriDesc.getType() == "ofbizUrl">
+  <#if uri?starts_with("pageUrl://") || uri?starts_with("ofbizUrl://")><#-- 2018-01-28: backward-compat for old name -->
+    <#local uriDesc = Static["org.ofbiz.webapp.control.RequestDescriptor"].fromPageUrlUriStringRepr(request!, response!, uri)>
+    <#if uriDesc.getType() == "pageUrl">
       <#-- NOTE: although there is uriDesc.getWebUrlString(), should pass through FTL macro version instead, hence all this manual work... -->
-      <#local res><@ofbizUrl fullPath=(uriDesc.getFullPath()!"") secure=(uriDesc.getSecure()!"") encode=(uriDesc.getEncode()!"")>${rawString(uriDesc.getBaseUriString())}</@ofbizUrl></#local>
+      <#local res><@pageUrl fullPath=(uriDesc.getFullPath()!"") secure=(uriDesc.getSecure()!"") encode=(uriDesc.getEncode()!"")>${rawString(uriDesc.getBaseUriString())}</@pageUrl></#local>
       <#return res>
-    <#else>
-      <#return uri>
     </#if>
-  <#else>
-    <#return uri>
   </#if>
+  <#return uri>
 </#function>
 
 <#-- 

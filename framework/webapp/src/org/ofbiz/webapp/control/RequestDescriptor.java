@@ -22,12 +22,18 @@ public abstract class RequestDescriptor {
     private static final Pattern pathParamPat = Pattern.compile(";(\\w+)=([^?#;/]*)");
 
     public static RequestDescriptor fromUriStringRepr(HttpServletRequest request, HttpServletResponse response, String uriRepr) {
-        if (uriRepr.startsWith("ofbizUrl://")) {
-            return OfbizRequestDescriptor.fromUriStringRepr(request, response, uriRepr);
-        }
-        else {
+        int protoDelim = uriRepr.indexOf("://");
+        if (protoDelim > 0 && (uriRepr.equals("pageUrl") || uriRepr.equals("ofbizUrl"))) {
+            return PageRequestDescriptor.fromUriStringRepr(request, response, uriRepr, uriRepr.substring(0, protoDelim),
+                    uriRepr.substring(protoDelim + "://".length()));
+        } else {
             return WebRequestDescriptor.fromUriStringRepr(request, response, uriRepr);
         }
+    }
+
+    // SCIPIO: NOTE: this is required for invocation from freemarker due to a freemarker bug...
+    public static RequestDescriptor fromPageUrlUriStringRepr(HttpServletRequest request, HttpServletResponse response, String uriRepr) {
+        return PageRequestDescriptor.fromUriStringRepr(request, response, uriRepr);
     }
 
     /**
@@ -55,7 +61,6 @@ public abstract class RequestDescriptor {
         protected final String uri;
 
         public WebRequestDescriptor(HttpServletRequest request, HttpServletResponse response, String uri) {
-            super();
             this.uri = uri;
         }
 
@@ -88,8 +93,7 @@ public abstract class RequestDescriptor {
      * Parses a string URI in the form:
      * ofbizUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1
      */
-    public static class OfbizRequestDescriptor extends RequestDescriptor {
-
+    public static class PageRequestDescriptor extends RequestDescriptor {
         private static final Set<String> optionNames = new HashSet<String>(Arrays.asList("fullPath", "secure", "encode"));
 
         protected final HttpServletRequest request;
@@ -98,20 +102,27 @@ public abstract class RequestDescriptor {
         protected final Boolean fullPath;
         protected final Boolean secure;
         protected final Boolean encode;
+        //protected final String type;
 
-        public OfbizRequestDescriptor(HttpServletRequest request, HttpServletResponse response, String requestUri, Boolean fullPath, Boolean secure, Boolean encode) {
-            super();
+        public PageRequestDescriptor(HttpServletRequest request, HttpServletResponse response, String requestUri,
+                Boolean fullPath, Boolean secure, Boolean encode, String type) {
             this.request = request;
             this.response = response;
             this.requestUri = requestUri;
             this.fullPath = fullPath;
             this.secure = secure;
             this.encode = encode;
+            //this.type = type;
         }
 
-        public static OfbizRequestDescriptor fromUriStringRepr(HttpServletRequest request, HttpServletResponse response, String uriRepr) {
-            // assumes begins with "ofbizUrl://" or "ofbizUri://" for now
-            String path = uriRepr.substring("ofbizXxx://".length());
+        public static PageRequestDescriptor fromUriStringRepr(HttpServletRequest request, HttpServletResponse response, String uriRepr) {
+            int protoDelim = uriRepr.indexOf("://");
+            return fromUriStringRepr(request, response, uriRepr, uriRepr.substring(0, protoDelim),
+                    uriRepr.substring(protoDelim + "://".length()));
+        }
+
+        private static PageRequestDescriptor fromUriStringRepr(HttpServletRequest request, HttpServletResponse response, String uriRepr,
+                String protocol, String path) {
             Boolean fullPath = null;
             Boolean secure = null;
             Boolean encode = null;
@@ -122,12 +133,12 @@ public abstract class RequestDescriptor {
                 secure = stringToBool(optionVals.get("secure"), null);
                 encode = stringToBool(optionVals.get("encode"), null);
             }
-            return new OfbizRequestDescriptor(request, response, path, fullPath, secure, encode);
+            return new PageRequestDescriptor(request, response, path, fullPath, secure, encode, protocol);
         }
 
         @Override
         public String getType() {
-            return "ofbizUrl";
+            return "pageUrl";
         }
 
         @Override
@@ -169,7 +180,6 @@ public abstract class RequestDescriptor {
                 return defaultVal;
             }
         }
-
     }
 
     /**
@@ -194,5 +204,4 @@ public abstract class RequestDescriptor {
         sb.append(uri.substring(i));
         return sb.toString();
     }
-
 }

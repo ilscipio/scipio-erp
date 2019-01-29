@@ -95,14 +95,14 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   <@section title="Simple thumbnail image gallery with fixed-size tiles" relHeadingLevel=+1>
     <#-- Simple image gallery using tiles -->
     <@grid type="tiles" tilesType="gallery1">
-        <@tile image=makeOfbizContentUrl("/images/products/GZ-1000/small.png") link=makeOfbizContentUrl("/images/products/GZ-1000/large.png")>Image 1 - click to view full image</@tile>
-        <@tile image=makeOfbizContentUrl("/images/products/GZ-1001/small.png") link=makeOfbizContentUrl("/images/products/GZ-1001/large.png") title="Image 2 title">Image 2 - click to view full image</@tile>
-        <@tile image=makeOfbizContentUrl("/images/products/GZ-1004/small.png") link=makeOfbizContentUrl("/images/products/GZ-1004/large.png")>Image 3 - click to view full image</@tile>
-        <@tile image=makeOfbizContentUrl("/images/products/GZ-1005/small.png") link=makeOfbizContentUrl("/images/products/GZ-1005/large.png")>Image 4 - click to view full image</@tile>
-        <@tile image=makeOfbizContentUrl("/images/products/GZ-1006/small.png") link=makeOfbizContentUrl("/images/products/GZ-1006/large.png") title="Image 5 title">Image 5 - click to view full image</@tile>
-        <@tile image=makeOfbizContentUrl("/images/products/GZ-2002/small.png") link=makeOfbizContentUrl("/images/products/GZ-2002/large.png")>Image 6 - click to view full image</@tile>
-        <@tile image=makeOfbizContentUrl("/images/products/GZ-2644/small.png") link=makeOfbizContentUrl("/images/products/GZ-2644/large.png")>Image 7 - click to view full image</@tile>
-        <@tile image=makeOfbizContentUrl("/images/products/GZ-5005/small.png") link=makeOfbizContentUrl("/images/products/GZ-5005/large.png")>Image 8 - click to view full image</@tile>
+        <@tile image=makeContentUrl("/images/products/GZ-1000/small.png") link=makeContentUrl("/images/products/GZ-1000/large.png")>Image 1 - click to view full image</@tile>
+        <@tile image=makeContentUrl("/images/products/GZ-1001/small.png") link=makeContentUrl("/images/products/GZ-1001/large.png") title="Image 2 title">Image 2 - click to view full image</@tile>
+        <@tile image=makeContentUrl("/images/products/GZ-1004/small.png") link=makeContentUrl("/images/products/GZ-1004/large.png")>Image 3 - click to view full image</@tile>
+        <@tile image=makeContentUrl("/images/products/GZ-1005/small.png") link=makeContentUrl("/images/products/GZ-1005/large.png")>Image 4 - click to view full image</@tile>
+        <@tile image=makeContentUrl("/images/products/GZ-1006/small.png") link=makeContentUrl("/images/products/GZ-1006/large.png") title="Image 5 title">Image 5 - click to view full image</@tile>
+        <@tile image=makeContentUrl("/images/products/GZ-2002/small.png") link=makeContentUrl("/images/products/GZ-2002/large.png")>Image 6 - click to view full image</@tile>
+        <@tile image=makeContentUrl("/images/products/GZ-2644/small.png") link=makeContentUrl("/images/products/GZ-2644/large.png")>Image 7 - click to view full image</@tile>
+        <@tile image=makeContentUrl("/images/products/GZ-5005/small.png") link=makeContentUrl("/images/products/GZ-5005/large.png")>Image 8 - click to view full image</@tile>
     </@grid>
   </@section>  
 </@section>
@@ -1271,7 +1271,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
         function submitWebSocketsExampleForm() {
             var form = $('#websockets-example-form');
             $.ajax({
-                url: "<@ofbizUrl uri='sendExamplePushNotifications' escapeAs='js'/>",
+                url: "<@pageUrl uri='sendExamplePushNotifications' escapeAs='js'/>",
                 data: {exampleId: $('input[name=exampleId]', form).val(), message: $('input[name=message]', form).val()},
                 async: true,
                 type: "POST",
@@ -1295,7 +1295,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 <#if debugMode>
 <a name="AutoValueFormFields"></a>
 <@section title="Auto-Value Form Fields">
-  <#assign autoformAction><@ofbizUrl>LayoutDemo<#if debugMode>?debugMode=true</#if></@ofbizUrl></#assign>
+  <#assign autoformAction><@pageUrl>LayoutDemo<#if debugMode>?debugMode=true</#if></@pageUrl></#assign>
   <#macro simulateErrorField>
     <#-- NOTE: this field is for demo usage only, bypasses auto-value -->
     <@field type="checkbox" autoValue=false name="simulateError" label="Simulate Error" value="Y" checked=((parameters.simulateError!"") == "Y") />
@@ -1347,122 +1347,122 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     },
     "FULL1": { 
         "title": "Full page",
-        "requestUri": makeOfbizUrl("ajaxRender"), 
+        "requestUri": makePageUrl("ajaxRender"), 
         "view": "runService" 
     },
     "PARTSECT1": {
         "title": "Partial page, widget section",
-        "requestUri": makeOfbizUrl("ajaxRender"), 
+        "requestUri": makePageUrl("ajaxRender"), 
         "view": "runService", 
         "scpRenderTargetExpr": "$Global-Column-Main"
     },  
     "PARTCONTAINERNONOPT1": {
         "title": "Partial page, widget container, NON-optimized",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "runService",
         "scpRenderTargetExpr": "#main-content"
     },  
     "PARTCONTAINERCOMPLEX1": {
         "title": "Partial page, widget container, with section execution optimization",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "runService",
         "scpRenderTargetExpr": "$Global-Column-Main #main-content" 
     },  
     "PARTCONTAINERCOMPLEXJS1": {
         "title": "Partial page, widget container, plus jQuery sub-element extraction",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "runService",
         "scpRenderTargetExpr": "$Global-Column-Main #main-content",
         "jQueryElemExpr": "#screenlet_1"
     },
     "PARTFTLBOUNDARY1": {
         "title": "Partial page, non-optimized, deep section across FTL boundary test",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$TR-Widget-Deep-Section-2" 
     },
     "PARTFTLBOUNDARY2": {
         "title": "Partial page, part-optimized, deep section across FTL boundary test",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-SubDec-Section-2 #tr-widget-container-3" 
     },
     "PARTFTLSEL1": {
         "title": "Partial page, LIMITED FTL macro selection test (@container)",
         "description": "NOTE: %screenlet[id=tr-ftl-section-2] also matches Freemarker @section invocations (platform-agnostic)",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 %screenlet[id=tr-ftl-section-2] #tr-ftl-container-1" 
     },
     "PARTFTLSEL2": {
         "title": "Partial page, LIMITED FTL macro selection test (@virtualSection)",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 $TR-FTL-VirtualSection-1" 
     },
     "PARTFTLSEL2b": {
         "title": "Partial page, LIMITED FTL macro selection test 2 (@virtualSection)",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main $TR-Widget-Section-1 %section[name='TR-FTL-VirtualSection-1']" 
     },
     "PARTFTLSEL3": {
         "title": "Partial page, LIMITED FTL macro selection test (@form)",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-form-1" 
     },
     "PARTFTLSEL4": {
         "title": "Partial page, LIMITED FTL macro selection test (widget form within FTL)",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main #TargetedRenderingTestForm1" 
     },
     "PARTFTLSEL5": {
         "title": "Partial page, LIMITED FTL macro selection test (@table)",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-table-1" 
     },
     "PARTFTLSEL6": {
         "title": "Partial page, LIMITED FTL macro selection test (@menu)",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main #tr-ftl-menu-1" 
     },
     "PARTFTLSEL7": {
         "title": "Partial page, LIMITED FTL macro selection test (widget menu within FTL)",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "$Global-Column-Main #TargetedRenderingTestMenu1" 
     },
     "PARTDECSEL1": {
         "title": "Partial page, special decorator selection test 1",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "^decorator-screen $Global-Column-Main ^/body" 
     },
     "PARTDECSEL2": {
         "title": "Partial page, special decorator selection test 2 (complex)",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "^decorator-screen[name=CommonWebtoolsAppDecorator] ^decorator-screen[name=main-decorator] $Global-Column-Main ^/body ^/body ^decorator-screen[name=TargetedRenderingTestSubDecorator] ^/body #tr-widget-container-3" 
     },
     "PARTREQURI1": {
         "title": "Request URI test, partial page",
-        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+        "requestUri": makePageUrl("TargetedRenderingTest"),
         "scpRenderTargetExpr": "$Global-Column-Main" 
     },
     "PARTREQURI2": {
         "title": "Request URI test, partial page, but FULL page for login and error pages",
-        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+        "requestUri": makePageUrl("TargetedRenderingTest"),
         "scpRenderTargetExpr": "$Global-Column-Main",
         "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
         "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
     },
     "PARTREQURI3": {
         "title": "Request URI test, partial page, but FULL page for login or error pages, and test event throws exception (NOTE: does NOT give error page)",
-        "requestUri": makeOfbizUrl("TargetedRenderingTest"),
+        "requestUri": makePageUrl("TargetedRenderingTest"),
         "scpRenderTargetExpr": "$Global-Column-Main",
         "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
         "scpErrorRenderTargetExpr": "%screen",  <#-- get the full error page -->
@@ -1470,14 +1470,14 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     },
     "PARTREQURI4": {
         "title": "Request URI test, partial page, but FULL page for login or error pages, and we call invalid request which gives error page",
-        "requestUri": makeOfbizUrl("TargetedRenderingTest")?replace("TargetedRenderingTest", "TargetedRenderingInvalidRequestTest"),
+        "requestUri": makePageUrl("TargetedRenderingTest")?replace("TargetedRenderingTest", "TargetedRenderingInvalidRequestTest"),
         "scpRenderTargetExpr": "$Global-Column-Main",
         "scpLoginRenderTargetExpr": "%screen", <#-- get the full login page -->
         "scpErrorRenderTargetExpr": "%screen"  <#-- get the full error page -->
     },
     "PARTMULTI1": {
         "title": "Partial page, multi-select test: left & main columns",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left" 
     },
@@ -1485,26 +1485,26 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
         "title": "Partial page, multi-select test: left & main columns, with menu extract by CommonSideBarMenu section name",
         "description": "NOTE: WE CANNOT SET ID on the main <menu> def to reference here ($Global-Column-Left #some-menu-id)
             because metro theme includes it TWICE causing duplicate ID!!!",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,common-sidebar-menu:$Global-Column-Left $Global-CommonSideBarMenu"
     },
     "PARTMULTI2b": {
         "title": "Partial page, multi-select test: left & main columns, with menu extract by element name",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,common-sidebar-menu:$Global-Column-Left $Global-CommonSideBarMenu %menu"
     },
     "PARTMULTI3": {
         "title": "Partial page, multi-select test: left & main columns, with jQuery extract of main menu",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "+multi:main-column:$Global-Column-Main,left-column:$Global-Column-Left",
         "jQueryElemExpr": "+multi:left-column:ul.menu-level-1"
     },
     "PARTMULTI4": {
         "title": "Partial page, multi-select test: nesting support",
-        "requestUri": makeOfbizUrl("ajaxRender"),
+        "requestUri": makePageUrl("ajaxRender"),
         "view": "TargetedRenderingTest",
         "scpRenderTargetExpr": "+multi: parent-container: $TR-SubDec-Section-Top, sub-container-1 : $TR-SubDec-Section-Top $tr-subdec-ftl-virtual-1, sub-container-2 : $TR-SubDec-Section-Top $tr-subdec-ftl-virtual-2" 
     }
@@ -1713,9 +1713,9 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     <@field type="select" name="requestUri" label="Request URI" value="" onChange="ajaxRenderRequestUriOnChange(this);">
       <@field type="option" selected=(!defaultRequestUri?has_content) value=""></@field>
       <#list requestMapMap?keys as requestName>
-        <@field type="option" value=makeOfbizUrl(requestName) selected=(requestName?contains(defaultRequestUri))>${requestName}</@field>
+        <@field type="option" value=makePageUrl(requestName) selected=(requestName?contains(defaultRequestUri))>${requestName}</@field>
       </#list>
-        <@field type="option" value=makeOfbizUrl("TargetedRenderingTest")?replace("TargetedRenderingTest", "TargetedRenderingInvalidRequestTest") selected=(defaultRequestUri?contains("TargetedRenderingInvalidRequestTest"))>TargetedRenderingInvalidRequestTest</@field>
+        <@field type="option" value=makePageUrl("TargetedRenderingTest")?replace("TargetedRenderingTest", "TargetedRenderingInvalidRequestTest") selected=(defaultRequestUri?contains("TargetedRenderingInvalidRequestTest"))>TargetedRenderingInvalidRequestTest</@field>
     </@field>
     <@field type="select" name="view" label="View Name" value="">
       <@field type="option" selected=true value=""></@field>
@@ -1954,168 +1954,188 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 <#if shopWebSiteId?has_content>
   <@section title="Standard navigation URLs">
     <ul>
-      <li><@ofbizUrl uri="LayoutDemo?param1=val1&param2=val2" escapeAs='html'/> <em>(html post-escaping - <strong>strongly preferred</strong> to pre-escaping)</em></li>
-      <li><@ofbizUrl uri="LayoutDemo?param1=val1&amp;param2=val2" /> <em>(html pre-escaping - legacy ofbiz mode - escaping done by caller before passing to macro)</em></li>
-      <li><@ofbizUrl>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li>${makeOfbizUrl("LayoutDemo?param1=val1&amp;param2=val2")}</li>
-      <li><@ofbizUrl fullPath=true>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath="true">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl secure=true>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl secure="true">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl secure=false>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl secure="false">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true secure=true>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true secure="true">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true secure=false>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true secure="false">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true encode=false>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl uri="main" webSiteId=shopWebSiteId/></li>
-      <li><@ofbizWebappUrl uri="/control/LayoutDemo?param1=val1&amp;param2=val2" /></li>
-      
-      <li><@ofbizInterWebappUrl uri=shopMainUri /></li>
-      <li><@ofbizInterWebappUrl uri=shopMainUri fullPath=true/></li>
+      <li><@pageUrl uri="LayoutDemo?param1=val1&param2=val2" escapeAs='html'/> <em>(html post-escaping - <strong>strongly preferred</strong> to pre-escaping)</em></li>
+      <li><@pageUrl uri="LayoutDemo?param1=val1&amp;param2=val2" /> <em>(html pre-escaping - legacy ofbiz mode - escaping done by caller before passing to macro)</em></li>
+      <li><@pageUrl>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li>${escapeFullUrl(makePageUrl("LayoutDemo?param1=val1&amp;param2=val2"), 'html')}</li>
+      <li><@pageUrl fullPath=true>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl fullPath="true">LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl secure=true>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl secure="true">LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl secure=false>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl secure="false">LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl fullPath=true secure=true>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl fullPath=true secure="true">LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl fullPath=true secure=false>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl fullPath=true secure="false">LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl fullPath=true encode=false>LayoutDemo?param1=val1&amp;param2=val2</@pageUrl></li>
+      <li><@pageUrl uri="main" webSiteId=shopWebSiteId/></li>
+
+      <li><@appUrl uri="/control/LayoutDemo?param1=val1&amp;param2=val2" /></li>
+      <li><@appUrl uri="/control/checkLogin?param1=val1&amp;param2=val2" webSiteId=shopWebSiteId/></li>
+      <li><@appUrl uri="/control/checkLogin?param1=val1&amp;param2=val2"/></li>
+
+      <li>${escapeFullUrl(makeAppUrl("control/LayoutDemo?param1=val1&amp;param2=val2"), 'html')}</li>
+      <li>${escapeFullUrl(makeAppUrl({"uri":"control/LayoutDemo?param1=val1&amp;param2=val2"}), 'html')}</li>
+
+      <li><@serverUrl uri=shopMainUri /></li>
+      <li><@serverUrl uri=shopMainUri fullPath=true/></li>
       <#-- Explicitly allow downgrading to HTTP -->
-      <li><@ofbizInterWebappUrl uri=shopMainUri secure=false/></li>
+      <li><@serverUrl uri=shopMainUri secure=false/></li>
       <#-- Explicitly allow downgrading to HTTP -->
-      <li><@ofbizInterWebappUrl uri=shopMainUri fullPath=true secure=false/></li>
-      <li><@ofbizInterWebappUrl uri="main" webSiteId=shopWebSiteId /></li>
-      <li>${makeOfbizInterWebappUrl(shopMainUri)}</li>
-    
-      <li>${makeOfbizInterWebappUrl("main", shopWebSiteId)}</li>
-      <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":shopWebSiteId, "extLoginKey": true})}</li>
-      <li>${makeOfbizInterWebappUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":shopWebSiteId, "extLoginKey": true})}</li>
-      
+      <li><@serverUrl uri=shopMainUri fullPath=true secure=false/></li>
+      <li><@serverUrl uri="main" webSiteId=shopWebSiteId /></li>
+
+      <li>${escapeFullUrl(makeServerUrl(shopMainUri), 'html')}</li>
+      <li>${escapeFullUrl(makeServerUrl("main", shopWebSiteId), 'html')}</li>
+      <li>${escapeFullUrl(makeServerUrl({"uri":"main", "webSiteId":shopWebSiteId, "extLoginKey": true}), 'html')}</li>
+      <li>${escapeFullUrl(makeServerUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":shopWebSiteId, "extLoginKey": true}), 'html')}</li>
+     
+
       <#-- Some edge cases -->
-      <li><@ofbizInterWebappUrl uri="/catalog"/></li>
-      <li><@ofbizInterWebappUrl uri="/catalog/"/></li>
-      <li><@ofbizInterWebappUrl uri="/catalog?awefawf=323"/></li>
-      <li><@ofbizInterWebappUrl uri="/catalog/?awefawef=2343"/></li>
+      <li><@serverUrl uri="/catalog"/></li>
+      <li><@serverUrl uri="/catalog/"/></li>
+      <li><@serverUrl uri="/catalog?awefawf=323"/></li>
+      <li><@serverUrl uri="/catalog/?awefawef=2343"/></li>
       
-      <li><@ofbizInterWebappUrl uri="/admin"/></li>
-      <li><@ofbizInterWebappUrl uri="/admin/"/></li>
-      <li><@ofbizInterWebappUrl uri="/admin?awefawf=323"/></li>
-      <li><@ofbizInterWebappUrl uri="/admin/?awefawef=2343"/></li>
+      <li><@serverUrl uri="/admin"/></li>
+      <li><@serverUrl uri="/admin/"/></li>
+      <li><@serverUrl uri="/admin?awefawf=323"/></li>
+      <li><@serverUrl uri="/admin/?awefawef=2343"/></li>
     </ul>
   </@section>
   
   <@section title="Non-standard navigation URLs">
     <p><em>NOTE: These are not invalid, but needlessly obscure; for testing.</em></p>
     <ul>
-      <li><@ofbizInterWebappUrl uri=shopMainUri webSiteId=shopWebSiteId absPath=true /></li>
-      <li><@ofbizInterWebappUrl uri=shopMainUri controller=true /></li>
-      <li><@ofbizInterWebappUrl uri=shopMainUri controller=false /></li>
+      <li><@serverUrl uri=shopMainUri webSiteId=shopWebSiteId absPath=true /></li>
+      <li><@serverUrl uri=shopMainUri controller=true /></li>
+      <li><@serverUrl uri=shopMainUri controller=false /></li>
       <#-- NOTE: if controller false, can't detect some cases of fullPath requirements -->
-      <li><@ofbizInterWebappUrl uri=shopMainUri controller=false fullPath=true/></li>
+      <li><@serverUrl uri=shopMainUri controller=false fullPath=true/></li>
       <#-- Allow downgrade -->
-      <li><@ofbizInterWebappUrl uri=shopMainUri controller=false fullPath=true secure=false/></li>
-      <li><@ofbizInterWebappUrl uri=shopMainUri controller=false secure=true/></li>
+      <li><@serverUrl uri=shopMainUri controller=false fullPath=true secure=false/></li>
+      <li><@serverUrl uri=shopMainUri controller=false secure=true/></li>
       
-      <li><@ofbizInterWebappUrl uri="/control/main" webSiteId=shopWebSiteId controller=false /></li>
-      <li><@ofbizInterWebappUrl uri="main" webSiteId=shopWebSiteId controller=true /></li>
-      <li><@ofbizUrl absPath=true interWebapp=false controller=true uri="/admin/control/main" /></li>
-      <li><@ofbizUrl absPath=true interWebapp=true controller=true uri="/admin/control/main" /></li>
-      <li><@ofbizUrl absPath=true interWebapp=false controller=false uri="/admin/control/main" /></li>
-      <li><@ofbizUrl absPath=true interWebapp=true controller=false uri="/admin/control/main" /></li>
+      <li><@serverUrl uri="/control/main" webSiteId=shopWebSiteId controller=false /></li>
+      <li><@serverUrl uri="main" webSiteId=shopWebSiteId controller=true /></li>
+      <li><@pageUrl absPath=true interWebapp=false controller=true uri="/admin/control/main" /></li>
+      <li><@pageUrl absPath=true interWebapp=true controller=true uri="/admin/control/main" /></li>
+      <li><@pageUrl absPath=true interWebapp=false controller=false uri="/admin/control/main" /></li>
+      <li><@pageUrl absPath=true interWebapp=true controller=false uri="/admin/control/main" /></li>
       
       <#-- Some edge cases -->
-      <li><@ofbizInterWebappUrl uri="/shop" webSiteId=shopWebSiteId absPath=true/></li>
-      <li><@ofbizInterWebappUrl uri="/shop/" webSiteId=shopWebSiteId absPath=true/></li>
-      <li><@ofbizInterWebappUrl uri="/shop?23afe" webSiteId=shopWebSiteId absPath=true/></li>
-      <li><@ofbizInterWebappUrl uri="/shop/?wefwef" webSiteId=shopWebSiteId absPath=true/></li>
+      <li><@serverUrl uri="/shop" webSiteId=shopWebSiteId absPath=true/></li>
+      <li><@serverUrl uri="/shop/" webSiteId=shopWebSiteId absPath=true/></li>
+      <li><@serverUrl uri="/shop?23afe" webSiteId=shopWebSiteId absPath=true/></li>
+      <li><@serverUrl uri="/shop/?wefwef" webSiteId=shopWebSiteId absPath=true/></li>
         
-      <li><@ofbizInterWebappUrl uri="" webSiteId=shopWebSiteId controller=false/></li>
-      <li><@ofbizInterWebappUrl uri="/" webSiteId=shopWebSiteId controller=false/></li>
-      <li><@ofbizInterWebappUrl uri="?awefaewf=23awef" webSiteId=shopWebSiteId controller=false/></li>
-      <li><@ofbizInterWebappUrl uri="/?awefafe=234" webSiteId=shopWebSiteId controller=false/></li>
+      <li><@serverUrl uri="" webSiteId=shopWebSiteId controller=false/></li>
+      <li><@serverUrl uri="/" webSiteId=shopWebSiteId controller=false/></li>
+      <li><@serverUrl uri="?awefaewf=23awef" webSiteId=shopWebSiteId controller=false/></li>
+      <li><@serverUrl uri="/?awefafe=234" webSiteId=shopWebSiteId controller=false/></li>
       
-      <li><@ofbizWebappUrl uri=""/></li>
-      <li><@ofbizWebappUrl uri="/"/></li>
-      <li><@ofbizWebappUrl uri="?awefaewf=23awef"/></li>
-      <li><@ofbizWebappUrl uri="/?awefafe=234"/></li>
+      <li><@appUrl uri=""/></li>
+      <li><@appUrl uri="/"/></li>
+      <li><@appUrl uri="?awefaewf=23awef"/></li>
+      <li><@appUrl uri="/?awefafe=234"/></li>
+      
+      <#-- Old names -->
+      <li><@ofbizUrl uri="main" webSiteId=shopWebSiteId/></li>
+      <li>${escapeFullUrl(makeOfbizUrl("LayoutDemo?param1=val1&amp;param2=val2"), 'html')}</li>
+      <li><@ofbizWebappUrl uri="/control/LayoutDemo?param1=val1&amp;param2=val2" /></li>
+      <li>${escapeFullUrl(makeOfbizWebappUrl({"uri":"control/LayoutDemo?param1=val1&amp;param2=val2"}), 'html')}</li>
+      <li>${escapeFullUrl(makeOfbizWebappUrl("control/LayoutDemo?param1=val1&amp;param2=val2"), 'html')}</li>
+      <li><@ofbizInterWebappUrl uri="main" webSiteId=shopWebSiteId /></li>
+      <li>${escapeFullUrl(makeOfbizInterWebappUrl(shopMainUri), 'html')}</li>
+      <li>${escapeFullUrl(makeOfbizInterWebappUrl("main", shopWebSiteId), 'html')}</li>
+      <li>${escapeFullUrl(makeOfbizInterWebappUrl({"uri":"main", "webSiteId":shopWebSiteId, "extLoginKey": true}), 'html')}</li>
+      <li>${escapeFullUrl(makeOfbizInterWebappUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":shopWebSiteId, "extLoginKey": true}), 'html')}</li>
+      <li><@ofbizWebappUrl uri="/control/LayoutDemo?param1=val1&amp;param2=val2" /></li>
     </ul>
   </@section>
   
   <@section title="Inter-webapp catalog URLs">
     <p><em>NOTE: These should only reference a webapp configured to handle these in its web.xml file.</em></p>
     <ul>
-      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId productId="PH-1000" /></li>
-      <li><@ofbizCatalogUrl prefix=shopMountPoint productId="PH-1000" /></li>
-      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" /></li>
-      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productId="PH-1000" /></li>
-      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true/></li>
-      <li><@ofbizCatalogUrl prefix=shopMountPoint productId="PH-1000" fullPath=true/></li>
-      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true /></li>
-      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productId="PH-1000" fullPath=true /></li>
-      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true secure=true/></li>
-      <li><@ofbizCatalogUrl prefix=shopMountPoint productId="PH-1000" fullPath=true secure=true/></li>
-      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true secure=true params="?test1=val1&test2=val2"?html/></li>
-      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productId="PH-1000" fullPath=true secure=true params="test1=val1&test2=val2"?html /></li>
-      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId productId="PH-1000" secure=false/></li>
-      <li><@ofbizCatalogUrl prefix=shopMountPoint productId="PH-1000" secure=false/></li>
-      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" secure=false /></li>
-      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productId="PH-1000" secure=false /></li>
+      <li><@catalogUrl webSiteId=shopWebSiteId productId="PH-1000" /></li>
+      <li><@catalogUrl prefix=shopMountPoint productId="PH-1000" /></li>
+      <li><@catalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" /></li>
+      <li><@catalogAltUrl prefix=shopMountPoint productId="PH-1000" /></li>
+      <li><@catalogUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true/></li>
+      <li><@catalogUrl prefix=shopMountPoint productId="PH-1000" fullPath=true/></li>
+      <li><@catalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true /></li>
+      <li><@catalogAltUrl prefix=shopMountPoint productId="PH-1000" fullPath=true /></li>
+      <li><@catalogUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true secure=true/></li>
+      <li><@catalogUrl prefix=shopMountPoint productId="PH-1000" fullPath=true secure=true/></li>
+      <li><@catalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true secure=true params="?test1=val1&test2=val2"?html/></li>
+      <li><@catalogAltUrl prefix=shopMountPoint productId="PH-1000" fullPath=true secure=true params="test1=val1&test2=val2"?html /></li>
+      <li><@catalogUrl webSiteId=shopWebSiteId productId="PH-1000" secure=false/></li>
+      <li><@catalogUrl prefix=shopMountPoint productId="PH-1000" secure=false/></li>
+      <li><@catalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" secure=false /></li>
+      <li><@catalogAltUrl prefix=shopMountPoint productId="PH-1000" secure=false /></li>
     
-      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" /></li>
-      <li><@ofbizCatalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" /></li>
-      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" /></li>
-      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" /></li>
-      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" fullPath=true/></li>
-      <li><@ofbizCatalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" fullPath=true/></li>
-      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" fullPath=true /></li>
-      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" fullPath=true /></li>
-      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
-      <li><@ofbizCatalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
-      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
-      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
-      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
-      <li><@ofbizCatalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
-      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" fullPath=true secure=false params="test1=val1&test2=val2"?html/></li>
-      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" fullPath=true secure=false /></li>
+      <li><@catalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" /></li>
+      <li><@catalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" /></li>
+      <li><@catalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" /></li>
+      <li><@catalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" /></li>
+      <li><@catalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" fullPath=true/></li>
+      <li><@catalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" fullPath=true/></li>
+      <li><@catalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" fullPath=true /></li>
+      <li><@catalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" fullPath=true /></li>
+      <li><@catalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
+      <li><@catalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
+      <li><@catalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
+      <li><@catalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
+      <li><@catalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
+      <li><@catalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
+      <li><@catalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" fullPath=true secure=false params="test1=val1&test2=val2"?html/></li>
+      <li><@catalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" fullPath=true secure=false /></li>
     </ul>
   </@section>
   
   <@section title="Content URLs">
-    <p><em><strong>NOTE:</strong> Some of these are poor-to-terrible use of ofbizContentUrl/makeOfbizContentUrl; post-escaping is always best where possible.
+    <p><em><strong>NOTE:</strong> Some of these are poor-to-terrible use of ofbizContentUrl/makeContentUrl; post-escaping is always best where possible.
        Other macro implementations new to Scipio (part of Scipio standard library) all do post-escaping.<br/>
-       These examples are complicated not only for testing purposes, but also because @ofbizContentUrl (legacy Ofbiz macro, modified in Scipio) is forced to support
+       These examples are complicated not only for testing purposes, but also because @contentUrl (legacy Ofbiz macro, modified in Scipio) is forced to support
        pre-escaping, which was frequently used in legacy Ofbiz templates (<em>even though</em> the macro suffered from implementation problems because of it),
        usually done by screen html auto-escaping.
     </em></p>
     <ul>
-      <li>${escapeVal(makeOfbizContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping - <strong>NOTE: this is the best way (post-escaping)</strong>, compared to others below that do pre-escaping)</em></li>
-      <li><@ofbizContentUrl uri=demoScreenContentUri escapeAs='html'/> <em>(no pre-escaping (rawString implicit), html post-escaping - this is equivalent to the previous, but slightly shorter.</em></li>
+      <li>${escapeVal(makeContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping - <strong>NOTE: this is the best way (post-escaping)</strong>, compared to others below that do pre-escaping)</em></li>
+      <li><@contentUrl uri=demoScreenContentUri escapeAs='html'/> <em>(no pre-escaping (rawString implicit), html post-escaping - this is equivalent to the previous, but slightly shorter.</em></li>
       <li>
-        <#assign urlContent><@ofbizContentUrl strict=true>${rawString(demoScreenContentUri)}</@ofbizContentUrl></#assign>
+        <#assign urlContent><@contentUrl strict=true>${rawString(demoScreenContentUri)}</@contentUrl></#assign>
         ${escapeVal(urlContent, 'html')} <em>(no pre-escaping (rawString explicit, strict true explicit), html post-escaping - NOTE: This is a more verbose and clumsy version (but still correct and strict) of the previous, but technically valid)</em>
       </li>
-      <li><@ofbizContentUrl>${demoScreenContentUri}</@ofbizContentUrl> <em>(has html pre-escaping)</em></li>
-      <li><@ofbizContentUrl uri=demoScreenContentUri /> <em>(has html pre-escaping)</em></li>
-      <li>${escapeVal(makeOfbizContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
-      <li>${escapeVal(makeOfbizContentUrl({"uri":demoScreenContentUri}), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
-      <li><@ofbizContentUrl ctxPrefix=true>${demoScreenContentUri}</@ofbizContentUrl> <em>(partial html pre-escaping)</em></li>
-      <li><@ofbizContentUrl uri=demoScreenContentUri ctxPrefix=true/> <em>(partial html pre-escaping)</em></li>
-      <li>${escapeVal(makeOfbizContentCtxPrefixUrl(demoScreenContentUri), 'html')} (no pre-escaping <em>(rawString implicit), html post-escaping)</em></li>
-      <li>${escapeVal(makeOfbizContentUrl({"uri":demoScreenContentUri, "ctxPrefix":true}), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
+      <li><@contentUrl>${demoScreenContentUri}</@contentUrl> <em>(has html pre-escaping)</em></li>
+      <li><@contentUrl uri=demoScreenContentUri /> <em>(has html pre-escaping)</em></li>
+      <li>${escapeVal(makeContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
+      <li>${escapeVal(makeContentUrl({"uri":demoScreenContentUri}), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
+      <li><@contentUrl ctxPrefix=true>${demoScreenContentUri}</@contentUrl> <em>(partial html pre-escaping)</em></li>
+      <li><@contentUrl uri=demoScreenContentUri ctxPrefix=true/> <em>(partial html pre-escaping)</em></li>
+      <li>${escapeVal(makeContentCtxPrefixUrl(demoScreenContentUri), 'html')} (no pre-escaping <em>(rawString implicit), html post-escaping)</em></li>
+      <li>${escapeVal(makeContentUrl({"uri":demoScreenContentUri, "ctxPrefix":true}), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
       <#assign manualPrefix = "https://ilscipio.com/images/"><#-- extra slash -->
-      <li><@ofbizContentUrl ctxPrefix=manualPrefix>${demoScreenContentUri}</@ofbizContentUrl> <em>(partial html pre-escaping)</em></li>
-      <li><@ofbizContentUrl uri=demoScreenContentUri ctxPrefix=manualPrefix/> <em>(partial html pre-escaping)</em></li>
-      <li>${escapeVal(makeOfbizContentUrl({"uri":demoScreenContentUri, "ctxPrefix":manualPrefix}), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
-      <li><@ofbizContentUrl uri=escapeVal(demoScreenContentUri,'js-html') ctxPrefix=escapeVal(contentPathPrefix, 'js-html')/> <em>(js-html pre-escaping)</em></li>
-      <li><@ofbizContentUrl uri=escapeVal(demoScreenContentUri,'js-html') ctxPrefix=escapeVal(manualPrefix, 'js-html')/> <em>(js-html pre-escaping)</em></li>
-      <li><@ofbizContentUrl uri=escapeVal(demoScreenContentUri,'js-html') ctxPrefix=escapeVal(manualPrefix, 'js-html') strict=true/> <em>(<strong>USAGE ERROR:</strong> js-html pre-escaping - should contain an error (doubled slash), because we passed strict true which means the js-html pre-escaping doesn't get handled properly)</em></li>
-      <li>${escapeVal(makeOfbizContentUrl({"uri":escapeVal(demoScreenContentUri,'js'), "ctxPrefix":manualPrefix}), 'html')} <em>(<strong>USAGE ERROR:</strong> js pre-escaping - should contain an error (doubled slash), because this doesn't handle pre-encodings because strict true by default on function)</em></li>
+      <li><@contentUrl ctxPrefix=manualPrefix>${demoScreenContentUri}</@contentUrl> <em>(partial html pre-escaping)</em></li>
+      <li><@contentUrl uri=demoScreenContentUri ctxPrefix=manualPrefix/> <em>(partial html pre-escaping)</em></li>
+      <li>${escapeVal(makeContentUrl({"uri":demoScreenContentUri, "ctxPrefix":manualPrefix}), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
+      <li><@contentUrl uri=escapeVal(demoScreenContentUri,'js-html') ctxPrefix=escapeVal(contentPathPrefix, 'js-html')/> <em>(js-html pre-escaping)</em></li>
+      <li><@contentUrl uri=escapeVal(demoScreenContentUri,'js-html') ctxPrefix=escapeVal(manualPrefix, 'js-html')/> <em>(js-html pre-escaping)</em></li>
+      <li><@contentUrl uri=escapeVal(demoScreenContentUri,'js-html') ctxPrefix=escapeVal(manualPrefix, 'js-html') strict=true/> <em>(<strong>USAGE ERROR:</strong> js-html pre-escaping - should contain an error (doubled slash), because we passed strict true which means the js-html pre-escaping doesn't get handled properly)</em></li>
+      <li>${escapeVal(makeContentUrl({"uri":escapeVal(demoScreenContentUri,'js'), "ctxPrefix":manualPrefix}), 'html')} <em>(<strong>USAGE ERROR:</strong> js pre-escaping - should contain an error (doubled slash), because this doesn't handle pre-encodings because strict true by default on function)</em></li>
       <li>
-        <#assign urlContent><@ofbizContentUrl uri="suffix_without_a_starting_slash/something/extra.jpg" ctxPrefix=(manualPrefix+"<") /></#assign>
+        <#assign urlContent><@contentUrl uri="suffix_without_a_starting_slash/something/extra.jpg" ctxPrefix=(manualPrefix+"<") /></#assign>
         ${escapeVal(urlContent, 'html')} <em>(<strong>USAGE ERROR - DANGEROUS:</strong> js pre-escaping - unsafe string passed to ctxPrefix - should produce log warning that JS string possibly unsafe)</em>
       </li>
     </ul>
     <p>Variant filename (only) tests:</p>
     <ul>
-      <li><@ofbizContentUrl uri="/image/some-thing/test.jpg" variant="detail"/> (append)</li>
-      <li><@ofbizContentUrl uri="/image/some-thing/test-original.jpg" variant="detail"/> (should replace original)</li>
-      <li><@ofbizContentUrl uri="/image/some-thing/original.jpg" variant="detail"/> (should replace original)</li>
-      <li><@ofbizContentUrl uri=rewrapString("/image/some-thing/original.jpg") variant="detail"/> (should replace original) (non-strict, tries to work even if html-escaped)</li>
-      <li><@ofbizContentUrl uri=rewrapString("/image/some-thing/original.jpg") variant="-detail"/> (force-append)</li>
+      <li><@contentUrl uri="/image/some-thing/test.jpg" variant="detail"/> (append)</li>
+      <li><@contentUrl uri="/image/some-thing/test-original.jpg" variant="detail"/> (should replace original)</li>
+      <li><@contentUrl uri="/image/some-thing/original.jpg" variant="detail"/> (should replace original)</li>
+      <li><@contentUrl uri=rewrapString("/image/some-thing/original.jpg") variant="detail"/> (should replace original) (non-strict, tries to work even if html-escaped)</li>
+      <li><@contentUrl uri=rewrapString("/image/some-thing/original.jpg") variant="-detail"/> (force-append)</li>
     </ul>
   </@section>
   
@@ -2148,6 +2168,55 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       <li>Explicit encoding: someUri?param1=${"start''#%'end"?url("UTF-8")}</li>
       <li>Implicit encoding (added 2017-01-27): someUri?param1=${"start''#%'end"?url}</li>
     </ul>
+  </@section>
+  
+  <@section title="CMS Page URLs">
+      <#assign cmsPageId = "DEMOPAGE">
+      <#assign pageName = "DemoPage">
+      <p><em>NOTE: both @pageUrl and @cmsPageUrl are valid names, but only @cmsPageUrl will
+        work to link cms pages from outside of CMS rendering.</em></p>
+      <@section title="Current page (by ID)">
+          <ul>
+            <li><@pageUrl id=cmsPageId /></li>
+            <li><@pageUrl id=cmsPageId fullPath=true /></li>
+            <li><@cmsPageUrl id=cmsPageId secure=true /></li>
+            <li><@pageUrl id=cmsPageId escapeAs='html'/></li>
+            <li><@pageUrl id=cmsPageId extLoginKey=true/></li>
+            <li><@pageUrl id=cmsPageId escapeAs='html' extLoginKey=true/></li>
+            <li><@pageUrl id=cmsPageId escapeAs='js'/></li>
+            <li><@pageUrl id=cmsPageId escapeAs='html' extLoginKey=true params="param1=value1&param2=value2"/></li>
+            <li><@pageUrl id=cmsPageId extLoginKey=true params="param1=value1&amp;param2=value2"/></li>
+            <li><@pageUrl id=cmsPageId escapeAs='html' extLoginKey=true params={"param1":"value1", "param2":"value2"}/></li>
+            <li><@pageUrl id=cmsPageId extLoginKey=true params={"param1":"value1", "param2":"value2"}/></li>
+          </ul>
+          <ul>
+            <li>${makePageUrl({"name":pageName, "escapeAs":'html'})}</li>
+            <li>${makePageUrl({"id":cmsPageId, "escapeAs":'html'})}</li>
+            <li>${makeCmsPageUrl({"id":cmsPageId, "escapeAs":'html', "extLoginKey":true})}</li>
+            <li>${makePageUrl({"id":cmsPageId, "escapeAs":'js-html'})}</li>
+            <#-- shorthand mode (page name only, very limited usage) 
+                NOTE: 2019-01-28: If you want to use this mode, you must use
+                makeCmsPageUrl instead of makePageUrl, otherwise it will try
+                to link to a controller request. -->
+            <li>${escapeFullUrl(makeCmsPageUrl(pageName), 'html')}</li>
+          </ul>
+      </@section>
+      
+      <@section title="Demo page (explicit)">
+          <ul>
+            <li><@pageUrl name="DemoPage" webSiteId="cmsSite" /></li>
+            <li><@pageUrl name="DemoPage" webSiteId="cmsSite" fullPath=true /></li>
+            <li><@cmsPageUrl name="DemoPage" webSiteId="cmsSite" secure=true /></li>
+            <li><@pageUrl name="DemoPage" webSiteId="cmsSite" escapeAs='html'/></li>
+            <li><@pageUrl name="DemoPage" webSiteId="cmsSite" extLoginKey=true/></li>
+            <li><@pageUrl name="DemoPage" webSiteId="cmsSite" escapeAs='html' extLoginKey=true/></li>
+            <li><@pageUrl name="DemoPage" escapeAs='js'/></li>
+            <li><@pageUrl name="DemoPage" escapeAs='html' extLoginKey=true params="param1=value1&param2=value2"/></li>
+            <li><@pageUrl name="DemoPage" extLoginKey=true params="param1=value1&amp;param2=value2"/></li>
+            <li><@pageUrl name="DemoPage" escapeAs='html' extLoginKey=true params={"param1":"value1", "param2":"value2"}/></li>
+            <li><@pageUrl name="DemoPage" extLoginKey=true params={"param1":"value1", "param2":"value2"}/></li>
+          </ul>
+      </@section>
   </@section>
 </@section>
 
@@ -2188,7 +2257,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
         #demo-css-escaping-container {
             width: 200px;
             height: 200px;
-            background-image: url("${escapeFullUrl(makeOfbizContentUrl("/images/scipio/scipio-logo-small.png?test1=value1&test2=value2;somethingelse%34"), "css")}"); 
+            background-image: url("${escapeFullUrl(makeContentUrl("/images/scipio/scipio-logo-small.png?test1=value1&test2=value2;somethingelse%34"), "css")}"); 
         }
         #demo-css-escaping-container:after {
             content: "${escapeVal("/images/scipio/scipio-logo-small.png?test1=value1&test2=value2;somethingelse%34", "css")}"
@@ -2196,7 +2265,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       </style>
       <div id="demo-css-escaping-container">
       </div>
-      <div style="width: 200px; height: 200px; background-image: url('${escapeFullUrl(makeOfbizContentUrl("/images/scipio/scipio-logo-small.png?test1=value1&test2=value2;somethingelse%34"), "css-html")}');">
+      <div style="width: 200px; height: 200px; background-image: url('${escapeFullUrl(makeContentUrl("/images/scipio/scipio-logo-small.png?test1=value1&test2=value2;somethingelse%34"), "css-html")}');">
       </div>
     </@section>
   </@section>
@@ -2468,7 +2537,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   <#assign parentFtlVar1 = "parent ftl var">
 
   <@section title="#interpretStd inline, defaults, as scalar">
-    <#assign compiledTmpl = interpretStd(r"[#ftl][#-- comment --][#assign test = 3][@heading level=6]Hello from <em>interpreted</em>![/@heading]. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}. parentFtlVar1: ${parentFtlVar1!'missing (good)'}. url: [@ofbizUrl fullPath=true]main[/@ofbizUrl]. rewrapped (escaping) special chars: ${rewrapString('//\\//\\//')}")>
+    <#assign compiledTmpl = interpretStd(r"[#ftl][#-- comment --][#assign test = 3][@heading level=6]Hello from <em>interpreted</em>![/@heading]. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}. parentFtlVar1: ${parentFtlVar1!'missing (good)'}. url: [@pageUrl fullPath=true]main[/@pageUrl]. rewrapped (escaping) special chars: ${rewrapString('//\\//\\//')}")>
     ${compiledTmpl}
   </@section>
     
@@ -2510,7 +2579,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
         because it runs from parent environment (instead of standalone/isolated), 
         bypasses ofbiz caching, and requires special syntax to evaluate the template. 
         The #interpretStd function will solve these issues and more.</em></p>
-    <#assign compiledTmpl = r"[#ftl][#-- comment --][#assign test = 3][@heading level=6]Hello from <em>interpreted</em>![/@heading]. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}. parentFtlVar1: ${parentFtlVar1!'missing (ERROR)'}. url: [@ofbizUrl fullPath=true]main[/@ofbizUrl]. rewrapped (escaping) special chars: ${rewrapString('//\\//\\//')}"?interpret>
+    <#assign compiledTmpl = r"[#ftl][#-- comment --][#assign test = 3][@heading level=6]Hello from <em>interpreted</em>![/@heading]. parentContextMyVar1: ${parentContextMyVar1!'missing (ERROR)'}. parentFtlVar1: ${parentFtlVar1!'missing (ERROR)'}. url: [@pageUrl fullPath=true]main[/@pageUrl]. rewrapped (escaping) special chars: ${rewrapString('//\\//\\//')}"?interpret>
     <@compiledTmpl/>
   </@section>
     

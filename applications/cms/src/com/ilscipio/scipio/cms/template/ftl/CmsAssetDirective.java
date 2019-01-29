@@ -91,7 +91,7 @@ import freemarker.template.TemplateModel;
  * <p>
  * TODO?: <code>@cmsAsset</code>: possibility to invoke from other renderers could be useful to reuse (with def="global").
  */
-public class AssetLoadDirective implements TemplateDirectiveModel, Serializable {
+public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -99,7 +99,7 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private static final AssetLoadDirective instance = new AssetLoadDirective();
+    private static final CmsAssetDirective DEFAULT = new CmsAssetDirective();
 
     static final RenderExceptionMode assetLiveExceptionMode = CmsRenderUtil.getDirectiveLiveRenderExceptionMode(RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms",
             "render.live.exception.directive.asset.mode")));
@@ -142,20 +142,12 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
         }
     }
 
-    public AssetLoadDirective() {
-        super();
+    public static CmsAssetDirective getInstance() {
+        return DEFAULT;
     }
 
-    public static AssetLoadDirective getInstance() {
-        return instance;
-    }
-
-    /* (non-Javadoc)
-     * @see freemarker.template.TemplateDirectiveModel#execute(freemarker.core.Environment, java.util.Map, freemarker.template.TemplateModel[], freemarker.template.TemplateDirectiveBody)
-     */
-    @SuppressWarnings("rawtypes")
     @Override
-    public void execute(Environment env, Map paramsUntyped, TemplateModel[] loopVars, TemplateDirectiveBody body)
+    public void execute(Environment env, @SuppressWarnings("rawtypes") Map paramsUntyped, TemplateModel[] loopVars, TemplateDirectiveBody body)
             throws TemplateException, IOException {
         Writer out = env.getOut();
 
@@ -306,14 +298,14 @@ public class AssetLoadDirective implements TemplateDirectiveModel, Serializable 
     /**
      * Handles a directive error.
      */
-    public static boolean handleError(Environment env, Throwable t, String errorMsg) throws CmsException, TemplateException {
+    static boolean handleError(Environment env, Throwable t, String errorMsg) throws CmsException, TemplateException {
         return CmsRenderUtil.handleDirectiveError(env, "Asset rendering failed", t, errorMsg, assetLiveExceptionMode, module);
     }
 
     /**
      * Handles nested errors.
      */
-    public static boolean handleNestedError(Environment env, Throwable t, String errorMsg) throws CmsException, TemplateException {
+    static boolean handleNestedError(Environment env, Throwable t, String errorMsg) throws CmsException, TemplateException {
         return CmsRenderUtil.handleDirectiveError(env, "Asset rendering failed", t, errorMsg, nestedLiveExceptionMode, module);
     }
 

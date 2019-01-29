@@ -125,7 +125,7 @@
 <#-- FIXME?: For now we must copy/dump all scipio macro and function defs from main namespace into the global namespace manually.
      Easier with a loop for now but this assumes all are meant to be public (not true)...
      If not done they are not accessible from #import-ed libraries and other places.
-     This is also done so that the behavior is the same as the java-based ofbiz transforms such as @ofbizUrl,
+     This is also done so that the behavior is the same as the java-based ofbiz transforms such as @pageUrl,
      which are in global namespace.
 <#list .main?keys as name>
   <#if .main[name]?is_directive && !scipioOrigMainNsNamesSet.contains(name)>

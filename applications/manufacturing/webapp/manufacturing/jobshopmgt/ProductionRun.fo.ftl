@@ -127,7 +127,7 @@ code package.
                         <fo:table-cell><fo:block>${uiLabelMap.CommonDescription}</fo:block></fo:table-cell>
                         <fo:table-cell><fo:block>${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}</fo:block></fo:table-cell>
                         <fo:table-cell><fo:block>${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}</fo:block></fo:table-cell>
-                        <fo:table-cell><fo:block>Comments</fo:block></fo:table-cell>
+                        <fo:table-cell><fo:block>${uiLabelMap.ManufacturingComments}</fo:block></fo:table-cell>
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
@@ -149,7 +149,7 @@ code package.
                                 <fo:block>${productionRunRoutingTask.estimatedMilliSeconds!}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell>
-                                <fo:block>${productionRunRoutingTask.noteId!}</fo:block>
+                                <fo:block>${Static["org.ofbiz.manufacturing.jobshopmgt.ProductionRun"].getCommentsFromProductionRunTask(delegator, productionRunRoutingTask)!}</fo:block>
                             </fo:table-cell>
                         </fo:table-row>
                     </#list>

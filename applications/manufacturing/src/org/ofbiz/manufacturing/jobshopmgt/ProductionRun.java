@@ -446,9 +446,33 @@ public class ProductionRun {
         return updateCompletionDate;
     }
     
-    public static String getCommentsFromProductionRunTask(String productionRunId) {
-        // TODO: get the comment string easily from there
-        return null;
+    /**
+     * Utility method to easily retrieve the note content out of a production run task
+     * @param delegator
+     * @param productionRun
+     * @return
+     */
+    public static String getCommentsFromProductionRunTask(Delegator delegator, GenericValue productionRun) {
+        String comment = null;
+        try {
+            if (UtilValidate.isNotEmpty(productionRun)) {
+                GenericValue productionRunComment = EntityUtil.getFirst(productionRun.getRelated("WorkEffortNote", null, null, true));
+                if (UtilValidate.isNotEmpty(productionRunComment)) {
+                    GenericValue noteData = productionRunComment.getRelatedOne("NoteData", false);
+                    if (UtilValidate.isNotEmpty(noteData)) {
+                        return noteData.getString("noteInfo");
+                    }
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.log(e);
+        }
+        return comment;
+    }
+    
+    public static String getCommentsFromProductionRunTask(Delegator delegator, String productionRunId) throws GenericEntityException {
+        GenericValue productionRun = delegator.findOne("Workeffort", UtilMisc.toMap("workEffortId", productionRunId), true);
+        return getCommentsFromProductionRunTask(delegator, productionRun);
     }
 
 }

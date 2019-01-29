@@ -228,13 +228,27 @@ public final class FreeMarkerWorker {
                 Debug.logVerbose("Adding FTL Transform " + key + " with class " + className, module);
             }
             try {
-                config.setSharedVariable(key, loader.loadClass(className).newInstance());
+                config.setSharedVariable(key, getTransformInstance(className, loader)); // SCIPIO: getTransformInstance
             } catch (Exception e) {
                 Debug.logError(e, "Could not pre-initialize dynamically loaded class: " + className + ": " + e, module);
             }
         }
     }
 
+    public static TemplateModel getTransformInstance(String className, ClassLoader loader)
+            throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException { // SCIPIO
+        return getTransformInstance(loader.loadClass(className), loader);
+    }
+    
+    public static TemplateModel getTransformInstance(Class<?> cls, ClassLoader loader)
+            throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException { // SCIPIO
+        Object transform = cls.newInstance(); // SCIPIO
+        if (transform instanceof FtlTransformFactory) {
+            transform = ((FtlTransformFactory) transform).getTransform(loader);
+        }
+        return (TemplateModel) transform;
+    }
+    
     /**
      * SCIPIO: Loads shared vars.
      */

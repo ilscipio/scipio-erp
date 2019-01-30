@@ -37,7 +37,7 @@
             "confirmMsg": 'SetupAccountingImportDatevCSVProceed',
             "confirmExtraMsg": rawLabelNoSubst(''),
             "confirmFields": eatImportDatevConfirmFields,
-            "formAction": makeOfbizUrl('setupImportDatevDataCategory'),
+            "formAction": makePageUrl('setupImportDatevDataCategory'),
             "defaultParams": wrapRawScript("function() { return; }")
         }        
     },
@@ -49,7 +49,7 @@
             "confirmMsg": rawLabelNoSubst(''),
             "confirmExtraMsg": rawLabelNoSubst(''),
             "confirmFields": eatImportElsterConfirmFields,
-            "formAction": makeOfbizUrl('setupImportElsterDataCategory'),
+            "formAction": makePageUrl('setupImportElsterDataCategory'),
             "defaultParams": wrapRawScript("function() { return; }")
         }      
     }
@@ -65,7 +65,7 @@
             "type": "form",
             "mode": "show",
             "id": "eat-newacctgtranstype",
-            "formAction": makeOfbizUrl('setupCreateAcctgTransType'),
+            "formAction": makePageUrl('setupCreateAcctgTransType'),
             "defaultParams": wrapRawScript("function() { return; }")
         }
     },
@@ -74,7 +74,7 @@
             "type": "form",
             "mode": "show",
             "id": "eat-newacctgtransentrytype",
-            "formAction": makeOfbizUrl('setupCreateAcctgTransEntryType'),
+            "formAction": makePageUrl('setupCreateAcctgTransEntryType'),
             "defaultParams": wrapRawScript("function() { return; }")
         }
     }
@@ -166,7 +166,7 @@
     
     var runMultipartAjax = function(data, typeAction) {
         jQuery.ajax({
-            url: '<@ofbizUrl>setupImportDatevDataCategory</@ofbizUrl>',
+            url: '<@pageUrl>setupImportDatevDataCategory</@pageUrl>',
             data: data,
             async: true,
             type: "POST",
@@ -249,7 +249,7 @@
 
 <#-- forms -->
 <#macro setupAcctgTransTypeForm id formActionType target params>
-    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=id name=id action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=[]/>
         <@field type="hidden" name="isAddAcctgTransType" value=(formActionType == "add")?string("Y", "N")/>
         <@field type="hidden" name="isCreateAcctgTransType" value=(formActionType == "new")?string("Y", "N")/>
@@ -285,7 +285,7 @@
     </@form>
 </#macro>
 <#macro setupAcctgTransEntryTypeForm id formActionType target params>
-    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=id name=id action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=[]/>
         <@field type="hidden" name="isAddAcctgEntryTransType" value=(formActionType == "add")?string("Y", "N")/>
         <@field type="hidden" name="isCreateAcctgEntryTransType" value=(formActionType == "new")?string("Y", "N")/>

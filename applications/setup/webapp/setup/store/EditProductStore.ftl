@@ -3,7 +3,7 @@
 <#include "component://product/webapp/catalog/store/storelib.ftl">
 
 <@section>
-    <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=submitFormId action=makePageUrl(target) method="post" validate=setupFormValidate>
             <@defaultWizardFormFields exclude=[
                 "productStoreId", <#-- ProductStore excludes -->
                 "partyId", "webSiteId"  <#-- WebSite excludes -->

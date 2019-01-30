@@ -113,9 +113,9 @@
   
     <#-- DEV NOTE: The path must be escaped using escapeVal(path, 'url') when passed as parameter -->
   
-    <#assign editPageByIdUrl = makeOfbizUrl("editPage?pageId="+escapeVal(pageId!, 'url'))>
+    <#assign editPageByIdUrl = makePageUrl("editPage?pageId="+escapeVal(pageId!, 'url'))>
     <#-- 2019-01-23: The ?webSiteId= causes conflicts and nothing but problems
-    <#assign editPageUrl = makeOfbizUrl("editPage?webSiteId=${webSiteId!}&path=${escapeVal(pagePrimaryPath, 'url')}")>-->
+    <#assign editPageUrl = makePageUrl("editPage?webSiteId=${webSiteId!}&path=${escapeVal(pagePrimaryPath, 'url')}")>-->
     <#assign editPageUrl = editPageByIdUrl>
 
     <#-- NOTES: Preview & Live links:
@@ -127,9 +127,9 @@
             rawString(webSiteConfig.accessTokenParamName)+"="+rawString(accessToken!)
           but for preview mode can be inlined into the preview mode toggle param (done like that below, to lower URL length)
       -->
-    <#assign previewUrl = makeOfbizInterWebappUrl({"controller":false, "secure":useSecurePreviewLink, "webSiteId":webSiteId, "extLoginKey": useLinkExtLoginKey, 
+    <#assign previewUrl = makeServerUrl({"controller":false, "secure":useSecurePreviewLink, "webSiteId":webSiteId, "extLoginKey": useLinkExtLoginKey, 
         "uri":(rawString(pagePrimaryPathExpanded!)+"?"+rawString(webSiteConfig.previewModeParamName)+"="+rawString(accessToken!)+"&cmsPageVersionId="+rawString(versionId!""))})/>
-    <#assign liveUrl = makeOfbizInterWebappUrl({"controller":false, "secure":useSecureLiveLink, "webSiteId":webSiteId, "extLoginKey": useLinkExtLoginKey,
+    <#assign liveUrl = makeServerUrl({"controller":false, "secure":useSecureLiveLink, "webSiteId":webSiteId, "extLoginKey": useLinkExtLoginKey,
         "uri":(rawString(pagePrimaryPathExpanded!)+(requireLiveAccessToken?then("?"+rawString(webSiteConfig.accessTokenParamName)+"="+rawString(accessToken!),"")))})/>
     
     <#-- Javascript functions -->
@@ -142,7 +142,7 @@
             var pageId = $("#pageId").val();
             $.ajax({
                   type: "POST",
-                  url: "<@ofbizUrl escapeAs='js'>activatePageVersion</@ofbizUrl>",
+                  url: "<@pageUrl escapeAs='js'>activatePageVersion</@pageUrl>",
                   data: {pageId:pageId,versionId:versionId},
                   cache:false,
                   async:true,
@@ -167,7 +167,7 @@
             } else {
                 return $.ajax({
                   type: "POST",
-                  url: "<@ofbizUrl escapeAs='js'>addPageVersion</@ofbizUrl>",
+                  url: "<@pageUrl escapeAs='js'>addPageVersion</@pageUrl>",
                   data: getFormData(),
                   cache:false,
                   async:true,
@@ -306,20 +306,20 @@
                 plugins: {
                     // Add imagur parameters to upload plugin
                     scipio_media: {
-                        serverPath: '<@ofbizUrl escapeAs='js'>getMediaFiles</@ofbizUrl>',
-                        mediaUrl: '<@ofbizContentUrl escapeAs='js'>/cms/media</@ofbizContentUrl>'
+                        serverPath: '<@pageUrl escapeAs='js'>getMediaFiles</@pageUrl>',
+                        mediaUrl: '<@contentUrl escapeAs='js'>/cms/media</@contentUrl>'
                     },
                     scipio_links: {
-                        getPagesServerPath: '<@ofbizUrl escapeAs='js'>getPages</@ofbizUrl>',
-                        getWebSitesServerPath: '<@ofbizUrl escapeAs='js'>getCmsWebSites</@ofbizUrl>',
+                        getPagesServerPath: '<@pageUrl escapeAs='js'>getPages</@pageUrl>',
+                        getWebSitesServerPath: '<@pageUrl escapeAs='js'>getCmsWebSites</@pageUrl>',
                         <#-- WARN: currentWebSiteId may become problem in future; see js source -->
                         currentWebSiteId: '${escapeVal(webSiteId!, 'js')}'
                     },
                     scipio_assets: {
-                        getAssetTypesServerPath: '<@ofbizUrl escapeAs='js'>getAssetTypes</@ofbizUrl>',
-                        getAssetsServerPath: '<@ofbizUrl escapeAs='js'>getAssets</@ofbizUrl>',
-                        getAssetAttributesServerPath: '<@ofbizUrl escapeAs='js'>getAssetAttributes</@ofbizUrl>',
-                        getWebSitesServerPath: '<@ofbizUrl escapeAs='js'>getCmsWebSites</@ofbizUrl>',
+                        getAssetTypesServerPath: '<@pageUrl escapeAs='js'>getAssetTypes</@pageUrl>',
+                        getAssetsServerPath: '<@pageUrl escapeAs='js'>getAssets</@pageUrl>',
+                        getAssetAttributesServerPath: '<@pageUrl escapeAs='js'>getAssetAttributes</@pageUrl>',
+                        getWebSitesServerPath: '<@pageUrl escapeAs='js'>getCmsWebSites</@pageUrl>',
                         <#-- WARN: currentWebSiteId may become problem in future; see js source -->
                         currentWebSiteId: '${escapeVal(webSiteId!, 'js')}'
                     }
@@ -336,7 +336,7 @@
         
         function updatePageInfo() {
             cmsCheckSubmitFieldOnlyIfChanged('settingsForm', 'description');
-            updateCmsElement("<@ofbizUrl escapeAs='js'>updatePageInfo</@ofbizUrl>", 'settingsForm', 
+            updateCmsElement("<@pageUrl escapeAs='js'>updatePageInfo</@pageUrl>", 'settingsForm', 
                 function(eventMsgs) {
                     <#-- use the pageId URL to prevent issues with path change.
                         still need to pass a website. if primary website was changed, use the new one,
@@ -352,10 +352,10 @@
         }
         
         function deletePage() {
-            deleteCmsElement("<@ofbizUrl escapeAs='js'>deletePage</@ofbizUrl>", 
+            deleteCmsElement("<@pageUrl escapeAs='js'>deletePage</@pageUrl>", 
                 { pageId : "${pageId!}" }, 
                 function(eventMsgs) {
-                    doCmsSuccessRedirect("<@ofbizUrl escapeAs='js'>pages</@ofbizUrl>", eventMsgs);
+                    doCmsSuccessRedirect("<@pageUrl escapeAs='js'>pages</@pageUrl>", eventMsgs);
                 }
             );
         }
@@ -371,7 +371,7 @@
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editPage") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewPage/>
+            <@menuitem type="link" href=makePageUrl("editPage") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewPage/>
             <@cmsCopyMenuItem target="copyPage" title=uiLabelMap.CmsCopyPage>
                  <@field type="hidden" name="pageId" value=(pageId!)/><#-- for browsing, on error -->
                  <@field type="hidden" name="versionId" value=(versionId!)/><#-- for browsing, on error -->
@@ -399,7 +399,7 @@
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
                     <@fields type="default-compact">
-                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToPage") webSiteId=((meta.webSiteId)!)>
+                        <@cmsScriptTemplateSelectForm formAction=makePageUrl("addScriptToPage") webSiteId=((meta.webSiteId)!)>
                             <input type="hidden" name="pageId" value="${pageId!}" />
                         </@cmsScriptTemplateSelectForm>
                     </@fields>
@@ -442,7 +442,7 @@
     <@section menuContent=menuContent class="+cms-edit-elem cms-edit-page"><#-- FIXME: get these classes on <body> instead... -->
             <@row>
                 <@cell columns=12>
-                    <a href="${escapeFullUrl(previewUrl, 'html')}" target="_blank"<#if (meta.description)?has_content> class="${styles.tooltip!}" title="${meta.description}"</#if>><@heading level=1><@ofbizInterWebappUrl uri=rawString(pagePrimaryPathExpanded!'') controller=false webSiteId=webSiteId escapeAs='html'/></@heading></a>
+                    <a href="${escapeFullUrl(previewUrl, 'html')}" target="_blank"<#if (meta.description)?has_content> class="${styles.tooltip!}" title="${meta.description}"</#if>><@heading level=1><@serverUrl uri=rawString(pagePrimaryPathExpanded!'') controller=false webSiteId=webSiteId escapeAs='html'/></@heading></a>
                 </@cell>
             </@row>
             <@row>
@@ -512,7 +512,7 @@
                                         <@tr alt=rowSelected selected=rowSelected>
                                            <@td><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_user!}" style="font-size:16px;margin:4px;"/></@td>
                                            <@td> ${version.createdBy!"Anonymous"}</@td>
-                                           <#assign verLinkMkrp><@ofbizUrl escapeAs="html">editPage?pageId=${escapeVal(pageId!, 'url')}&versionId=${escapeVal(version.id!, 'url')}</@ofbizUrl></#assign>
+                                           <#assign verLinkMkrp><@pageUrl escapeAs="html">editPage?pageId=${escapeVal(pageId!, 'url')}&versionId=${escapeVal(version.id!, 'url')}</@pageUrl></#assign>
                                            <@td><#if version.date?has_content><a href="${verLinkMkrp}">${rawString(version.date)?datetime}</a></#if></@td>
                                            <@td><#if version.comment?has_content>${version.comment!""}</#if></@td>
                                            <@td><a href="${verLinkMkrp}"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"/></a></@td>
@@ -540,7 +540,7 @@
                 </@cell>
                 <@cell columns=3>
                     <#if template?has_content>
-                      <@form method="post" id="settingsForm" action=makeOfbizUrl('updatePageInfo')>
+                      <@form method="post" id="settingsForm" action=makePageUrl('updatePageInfo')>
                         <@field type="hidden" name="pageId" value=(pageId!)/>
                         <@section title=uiLabelMap.CommonInformation>
                             <#-- Page Settings -->
@@ -659,7 +659,7 @@
         <#-- NEW PAGE -->
         <@row>
             <@cell columns=6 last=true>
-                <@form method="post" id="editorForm" action=makeOfbizUrl("createPage")>
+                <@form method="post" id="editorForm" action=makePageUrl("createPage")>
                     <@section title=uiLabelMap.CmsNewPage>
                       <@fields type="default-compact">
                          <input type="hidden" name="isCreate" value="Y"/>

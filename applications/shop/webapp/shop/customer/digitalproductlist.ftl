@@ -7,7 +7,7 @@ code package.
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("digitalproductedit") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.EcommerceDigitalNewProduct />
+      <@menuitem type="link" href=makePageUrl("digitalproductedit") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.EcommerceDigitalNewProduct />
     </@menu>
 </#macro>
 <@section title=uiLabelMap.PageTitleDigitalProductList menuContent=menuContent>
@@ -28,7 +28,7 @@ code package.
           <@td>${(product.description)!}
           </@td>
           <@td align="right">
-            <a href="<@ofbizUrl>digitalproductedit?productId=${supplierProduct.productId}&amp;currencyUomId=${supplierProduct.currencyUomId}&amp;minimumOrderQuantity=${supplierProduct.minimumOrderQuantity}&amp;availableFromDate=${supplierProduct.availableFromDate}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">Edit</a>
+            <a href="<@pageUrl>digitalproductedit?productId=${supplierProduct.productId}&amp;currencyUomId=${supplierProduct.currencyUomId}&amp;minimumOrderQuantity=${supplierProduct.minimumOrderQuantity}&amp;availableFromDate=${supplierProduct.availableFromDate}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">Edit</a>
           </@td>
         </@tr>
       </#list>
@@ -40,7 +40,7 @@ code package.
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("digitalproductedit") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.EcommerceDigitalNewProduct />
+      <@menuitem type="link" href=makePageUrl("digitalproductedit") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.EcommerceDigitalNewProduct />
     </@menu>
 </#macro>
 <@section title=uiLabelMap.EcommerceDigitalProductPurchaseHistoryCommission menuContent=menuContent>

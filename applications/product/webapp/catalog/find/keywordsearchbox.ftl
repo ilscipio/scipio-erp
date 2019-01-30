@@ -17,7 +17,7 @@ code package.
      }
 </@script>
 
-<form name="keywordsearchform" id="keywordSearchForm" method="post" action="<@ofbizUrl>keywordsearch?VIEW_SIZE=25&amp;PAGING=Y</@ofbizUrl>">
+<form name="keywordsearchform" id="keywordSearchForm" method="post" action="<@pageUrl>keywordsearch?VIEW_SIZE=25&amp;PAGING=Y</@pageUrl>">
   <@fields type="default-compact">
   <fieldset>
     <@field type="input" label=uiLabelMap.ProductKeywords name="SEARCH_STRING" id="keywordSearchString" size="20" maxlength="50" value=(requestParameters.SEARCH_STRING!) />
@@ -33,7 +33,7 @@ code package.
   </fieldset>
   </@fields>
 </form>
-<form name="advancedsearchform" id="advancedSearchForm" method="post" action="<@ofbizUrl>advancedsearch</@ofbizUrl>">
+<form name="advancedsearchform" id="advancedSearchForm" method="post" action="<@pageUrl>advancedsearch</@pageUrl>">
   <@fields type="default-compact">
   <fieldset>
     <@field type="lookup" label=uiLabelMap.ProductCategoryId value=(requestParameters.SEARCH_CATEGORY_ID!) formName="advancedsearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
@@ -41,41 +41,41 @@ code package.
   </fieldset>
   </@fields>
 </form>
-<form name="productjumpform" id="productJumpForm" method="post" action="<@ofbizUrl>ViewProduct</@ofbizUrl>">
+<form name="productjumpform" id="productJumpForm" method="post" action="<@pageUrl>ViewProduct</@pageUrl>">
   <@fields type="default-compact">
   <fieldset>
     <input type="hidden" name="viewSize" value="20" />
     <input type="hidden" name="viewIndex" value="1" />
     <@field type="lookup" value=(requestParameters.productId!) formName="productjumpform" name="productId" id="productJumpFormProductId" fieldFormName="LookupProduct"/>
     <@field type="select" name="DUMMYPAGE" id="dummyPage" onChange="submitProductJump()">
-        <option value="<@ofbizUrl>ViewProduct</@ofbizUrl>">-${uiLabelMap.ProductProductJump}-</option>
-        <#--<option value="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>">${uiLabelMap.ProductQuickAdmin}</option>-->
-        <option value="<@ofbizUrl>EditProduct</@ofbizUrl>">${uiLabelMap.ProductProduct}</option>
-        <option value="<@ofbizUrl>EditProductPrices</@ofbizUrl>">${uiLabelMap.ProductPrices}</option>
-        <option value="<@ofbizUrl>EditProductContent</@ofbizUrl>">${uiLabelMap.ProductContent}</option>
-        <option value="<@ofbizUrl>EditProductGeos</@ofbizUrl>">${uiLabelMap.ProductGeos}</option>        
-        <option value="<@ofbizUrl>EditProductGoodIdentifications</@ofbizUrl>">${uiLabelMap.CommonIds}</option>
-        <option value="<@ofbizUrl>EditProductCategories</@ofbizUrl>">${uiLabelMap.ProductCategories}</option>
-        <#--<option value="<@ofbizUrl>EditProductKeyword</@ofbizUrl>">${uiLabelMap.ProductKeywords}</option>-->
-        <option value="<@ofbizUrl>EditProductAssoc</@ofbizUrl>">${uiLabelMap.ProductAssociations}</option>
-        <#--<option value="<@ofbizUrl>ViewProductManufacturing</@ofbizUrl>">${uiLabelMap.ProductManufacturing}</option>-->
-        <option value="<@ofbizUrl>EditProductCosts</@ofbizUrl>">${uiLabelMap.ProductCosts}</option>
-        <option value="<@ofbizUrl>EditProductAttributes</@ofbizUrl>">${uiLabelMap.ProductAttributes}</option>
-        <option value="<@ofbizUrl>EditProductFeatures</@ofbizUrl>">${uiLabelMap.ProductFeatures}</option>
-        <option value="<@ofbizUrl>EditProductFacilities</@ofbizUrl>">${uiLabelMap.ProductFacilities}</option>
-        <#--<option value="<@ofbizUrl>EditProductFacilityLocations</@ofbizUrl>">${uiLabelMap.ProductLocations}</option>-->
-        <#--<option value="<@ofbizUrl>EditProductInventoryItems</@ofbizUrl>">${uiLabelMap.ProductInventory}</option>-->
-        <option value="<@ofbizUrl>EditProductSuppliers</@ofbizUrl>">${uiLabelMap.ProductSuppliers}</option>
-        <option value="<@ofbizUrl>ViewProductAgreements</@ofbizUrl>">${uiLabelMap.ProductAgreements}</option>
-        <#--<option value="<@ofbizUrl>EditProductGlAccounts</@ofbizUrl>">${uiLabelMap.ProductAccounts}</option>-->
-        <option value="<@ofbizUrl>EditProductPaymentMethodTypes</@ofbizUrl>">${uiLabelMap.ProductPaymentTypes}</option>
-        <option value="<@ofbizUrl>EditProductMaints</@ofbizUrl>">${uiLabelMap.ProductMaintenance}</option>
-        <#--<option value="<@ofbizUrl>EditProductMeters</@ofbizUrl>">${uiLabelMap.ProductMeters}</option>-->
-        <option value="<@ofbizUrl>EditProductSubscriptionResources</@ofbizUrl>">${uiLabelMap.ProductSubscriptionResources}</option>
-        <#--<option value="<@ofbizUrl>QuickAddVariants</@ofbizUrl>">${uiLabelMap.ProductVariants}</option>-->
-        <option value="<@ofbizUrl>EditProductConfigs</@ofbizUrl>">${uiLabelMap.ProductConfigs}</option>
-        <#--<option value="<@ofbizUrl>viewProductOrder</@ofbizUrl>">${uiLabelMap.OrderOrders}</option>-->
-        <option value="<@ofbizUrl>EditProductCommunicationEvents</@ofbizUrl>">${uiLabelMap.PartyCommunications}</option>
+        <option value="<@pageUrl>ViewProduct</@pageUrl>">-${uiLabelMap.ProductProductJump}-</option>
+        <#--<option value="<@pageUrl>EditProductQuickAdmin</@pageUrl>">${uiLabelMap.ProductQuickAdmin}</option>-->
+        <option value="<@pageUrl>EditProduct</@pageUrl>">${uiLabelMap.ProductProduct}</option>
+        <option value="<@pageUrl>EditProductPrices</@pageUrl>">${uiLabelMap.ProductPrices}</option>
+        <option value="<@pageUrl>EditProductContent</@pageUrl>">${uiLabelMap.ProductContent}</option>
+        <option value="<@pageUrl>EditProductGeos</@pageUrl>">${uiLabelMap.ProductGeos}</option>        
+        <option value="<@pageUrl>EditProductGoodIdentifications</@pageUrl>">${uiLabelMap.CommonIds}</option>
+        <option value="<@pageUrl>EditProductCategories</@pageUrl>">${uiLabelMap.ProductCategories}</option>
+        <#--<option value="<@pageUrl>EditProductKeyword</@pageUrl>">${uiLabelMap.ProductKeywords}</option>-->
+        <option value="<@pageUrl>EditProductAssoc</@pageUrl>">${uiLabelMap.ProductAssociations}</option>
+        <#--<option value="<@pageUrl>ViewProductManufacturing</@pageUrl>">${uiLabelMap.ProductManufacturing}</option>-->
+        <option value="<@pageUrl>EditProductCosts</@pageUrl>">${uiLabelMap.ProductCosts}</option>
+        <option value="<@pageUrl>EditProductAttributes</@pageUrl>">${uiLabelMap.ProductAttributes}</option>
+        <option value="<@pageUrl>EditProductFeatures</@pageUrl>">${uiLabelMap.ProductFeatures}</option>
+        <option value="<@pageUrl>EditProductFacilities</@pageUrl>">${uiLabelMap.ProductFacilities}</option>
+        <#--<option value="<@pageUrl>EditProductFacilityLocations</@pageUrl>">${uiLabelMap.ProductLocations}</option>-->
+        <#--<option value="<@pageUrl>EditProductInventoryItems</@pageUrl>">${uiLabelMap.ProductInventory}</option>-->
+        <option value="<@pageUrl>EditProductSuppliers</@pageUrl>">${uiLabelMap.ProductSuppliers}</option>
+        <option value="<@pageUrl>ViewProductAgreements</@pageUrl>">${uiLabelMap.ProductAgreements}</option>
+        <#--<option value="<@pageUrl>EditProductGlAccounts</@pageUrl>">${uiLabelMap.ProductAccounts}</option>-->
+        <option value="<@pageUrl>EditProductPaymentMethodTypes</@pageUrl>">${uiLabelMap.ProductPaymentTypes}</option>
+        <option value="<@pageUrl>EditProductMaints</@pageUrl>">${uiLabelMap.ProductMaintenance}</option>
+        <#--<option value="<@pageUrl>EditProductMeters</@pageUrl>">${uiLabelMap.ProductMeters}</option>-->
+        <option value="<@pageUrl>EditProductSubscriptionResources</@pageUrl>">${uiLabelMap.ProductSubscriptionResources}</option>
+        <#--<option value="<@pageUrl>QuickAddVariants</@pageUrl>">${uiLabelMap.ProductVariants}</option>-->
+        <option value="<@pageUrl>EditProductConfigs</@pageUrl>">${uiLabelMap.ProductConfigs}</option>
+        <#--<option value="<@pageUrl>viewProductOrder</@pageUrl>">${uiLabelMap.OrderOrders}</option>-->
+        <option value="<@pageUrl>EditProductCommunicationEvents</@pageUrl>">${uiLabelMap.PartyCommunications}</option>
     </@field>
   </fieldset>
   </@fields>

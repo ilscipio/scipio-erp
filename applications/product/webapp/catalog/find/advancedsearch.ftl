@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <@section title=uiLabelMap.ProductAdvancedSearchInCategory>
-    <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
+    <form name="advtokeywordsearchform" method="post" action="<@pageUrl>keywordsearch</@pageUrl>">
       <#-- SCIPIO: don't hardcode these
       <input type="hidden" name="VIEW_SIZE" value="25"/>
       <input type="hidden" name="PAGING" value="Y"/>-->

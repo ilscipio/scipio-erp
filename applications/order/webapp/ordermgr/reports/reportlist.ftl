@@ -10,7 +10,7 @@ they are good examples of creating detailed reports that you have a lot of
 control over. special thanks for Britton LaRoche for creating the first pass of
 these reports and helping to improve them.</p>
 
-<form method="post" name="orderreportform" action="<@ofbizUrl>orderreportjasper.pdf</@ofbizUrl>" target="OrderReport">
+<form method="post" name="orderreportform" action="<@pageUrl>orderreportjasper.pdf</@pageUrl>" target="OrderReport">
   <@field type="datetime" label="From Date" name="fromDate" value="" size="22" maxlength="25" id="fromDate1"/>
   <@field type="datetime" label="To Date" name="toDate" value="" size="22" maxlength="25" id="toDate1"/>
 <#--
@@ -27,7 +27,7 @@ these reports and helping to improve them.</p>
   <@field type="submit" tabindex="16" name="GoReport" text="Order Report" class="+${styles.link_run_sys!} ${styles.action_export!}"/>
 </form>
 
-<form method="post" name="itemreportform" action="<@ofbizUrl>orderitemreportjasper.pdf</@ofbizUrl>" target="OrderReport">
+<form method="post" name="itemreportform" action="<@pageUrl>orderitemreportjasper.pdf</@pageUrl>" target="OrderReport">
   <@field type="datetime" label="From Date" name="fromDate" value="" size="22" maxlength="25" id="fromDate2"/>
   <@field type="datetime" label="To Date" name="toDate" value="" size="22" maxlength="25" id="toDate2"/>
 <#--

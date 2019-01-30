@@ -6,7 +6,7 @@ code package.
 
 <@section title=uiLabelMap.EcommerceMyAccount>
     <@section title=uiLabelMap.PartyContactInformation>
-      <a class="${styles.link_nav!} ${styles.action_update!}" href="<@ofbizUrl>editProfile</@ofbizUrl>">${uiLabelMap.EcommerceEditProfile}</a>
+      <a class="${styles.link_nav!} ${styles.action_update!}" href="<@pageUrl>editProfile</@pageUrl>">${uiLabelMap.EcommerceEditProfile}</a>
       <label>${firstName!} ${lastName!}</label>
       <input type="hidden" id="updatedEmailContactMechId" name="emailContactMechId" value="${emailContactMechId!}" />
       <input type="hidden" id="updatedEmailAddress" name="updatedEmailAddress" value="${emailAddress!}" />
@@ -18,7 +18,7 @@ code package.
     </@section>
     <#-- Manage Addresses -->
     <@section title=uiLabelMap.EcommerceAddressBook>
-      <a class="${styles.link_nav!} ${styles.action_update!}" href="<@ofbizUrl>manageAddress</@ofbizUrl>">${uiLabelMap.EcommerceManageAddresses}</a>
+      <a class="${styles.link_nav!} ${styles.action_update!}" href="<@pageUrl>manageAddress</@pageUrl>">${uiLabelMap.EcommerceManageAddresses}</a>
       <@section title=uiLabelMap.EcommercePrimaryShippingAddress>
           <ul>
           <#if shipToContactMechId??>

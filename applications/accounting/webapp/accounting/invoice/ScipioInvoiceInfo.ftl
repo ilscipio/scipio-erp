@@ -95,7 +95,7 @@
         <#assign billingAcct = invoice.getRelatedOne("BillingAccountAndRole", false)/>
         <@tr>
             <@td class="${styles.grid_large!}2">${uiLabelMap.CommonTo}</@td>
-            <@td colspan="3"><a href="<@ofbizUrl>EditBillingAccount?billingAccountId=${invoice.billingAccountId!}</@ofbizUrl>">${billingAcct.get('description',locale)}</a></@td>
+            <@td colspan="3"><a href="<@pageUrl>EditBillingAccount?billingAccountId=${invoice.billingAccountId!}</@pageUrl>">${billingAcct.get('description',locale)}</a></@td>
         </@tr>
       </#if>
 

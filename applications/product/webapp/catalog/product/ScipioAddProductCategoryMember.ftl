@@ -1,7 +1,7 @@
 <#-- TODO: License -->
 
 <@section title=sectionTitle>
-    <form method="post" name="AddProductCategoryMember" action="<@ofbizUrl>addProductToCategory</@ofbizUrl>">
+    <form method="post" name="AddProductCategoryMember" action="<@pageUrl>addProductToCategory</@pageUrl>">
         <input type="hidden" name="productId" value="${parameters.productId!}" />    
         <@row>
             <@cell columns=12>

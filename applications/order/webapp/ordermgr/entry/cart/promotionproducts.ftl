@@ -8,9 +8,9 @@ code package.
   <@section title=uiLabelMap.OrderProductsForPromotion>
     <#if (listSize > 0)>
       <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("showPromotionDetails?productPromoId=${productPromoId!}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}") text=uiLabelMap.CommonPrevious disabled=(!(viewIndex > 0)) class="${styles.action_nav!}" />
+        <@menuitem type="link" href=makePageUrl("showPromotionDetails?productPromoId=${productPromoId!}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}") text=uiLabelMap.CommonPrevious disabled=(!(viewIndex > 0)) class="${styles.action_nav!}" />
         <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${rawLabel('CommonOf')} ${listSize}" />
-        <@menuitem type="link" href=makeOfbizUrl("showPromotionDetails?productPromoId=${productPromoId!}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}") text=uiLabelMap.CommonNext disabled=(!(listSize > highIndex)) class="${styles.action_nav!}" />
+        <@menuitem type="link" href=makePageUrl("showPromotionDetails?productPromoId=${productPromoId!}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}") text=uiLabelMap.CommonNext disabled=(!(listSize > highIndex)) class="${styles.action_nav!}" />
       </@menu>
     </#if>
 

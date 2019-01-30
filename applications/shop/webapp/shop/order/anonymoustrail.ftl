@@ -13,20 +13,20 @@ code package.
     <#-- SCIPIO: WARN: Although @menu will in theory support args maps from groovy context, at current
         time it is not well tested and could be a source of errors here... -->
     <@menu args=anontrailMenuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("setShipping") class="+${styles.action_nav!} ${trailClass.shipAddr}" text=uiLabelMap.EcommerceChangeShippingAddress />
+      <@menuitem type="link" href=makePageUrl("setShipping") class="+${styles.action_nav!} ${trailClass.shipAddr}" text=uiLabelMap.EcommerceChangeShippingAddress />
       <#if shipOptions??>
-        <@menuitem type="link" href=makeOfbizUrl("setShipOptions") class="+${styles.action_nav!} ${trailClass.shipOptions}" text=uiLabelMap.EcommerceChangeShippingOptions />
+        <@menuitem type="link" href=makePageUrl("setShipOptions") class="+${styles.action_nav!} ${trailClass.shipOptions}" text=uiLabelMap.EcommerceChangeShippingOptions />
         <#if billing??>
-          <@menuitem type="link" href=makeOfbizUrl("setBilling?resetType=Y") class="+${styles.action_nav!} ${trailClass.paymentType}" text=uiLabelMap.EcommerceChangePaymentInfo />
+          <@menuitem type="link" href=makePageUrl("setBilling?resetType=Y") class="+${styles.action_nav!} ${trailClass.paymentType}" text=uiLabelMap.EcommerceChangePaymentInfo />
         </#if>
       </#if>
     </@menu>
   <#else>
-      <@menuitem type="link" href=makeOfbizUrl("setShipping") class="+${styles.action_nav!} ${trailClass.shipAddr}" text=uiLabelMap.EcommerceChangeShippingAddress />
+      <@menuitem type="link" href=makePageUrl("setShipping") class="+${styles.action_nav!} ${trailClass.shipAddr}" text=uiLabelMap.EcommerceChangeShippingAddress />
       <#if shipOptions??>
-        <@menuitem type="link" href=makeOfbizUrl("setShipOptions") class="+${styles.action_nav!} ${trailClass.shipOptions}" text=uiLabelMap.EcommerceChangeShippingOptions />
+        <@menuitem type="link" href=makePageUrl("setShipOptions") class="+${styles.action_nav!} ${trailClass.shipOptions}" text=uiLabelMap.EcommerceChangeShippingOptions />
         <#if billing??>
-          <@menuitem type="link" href=makeOfbizUrl("setBilling?resetType=Y") class="+${styles.action_nav!} ${trailClass.paymentType}" text=uiLabelMap.EcommerceChangePaymentInfo />
+          <@menuitem type="link" href=makePageUrl("setBilling?resetType=Y") class="+${styles.action_nav!} ${trailClass.paymentType}" text=uiLabelMap.EcommerceChangePaymentInfo />
         </#if>
       </#if>
   </#if>

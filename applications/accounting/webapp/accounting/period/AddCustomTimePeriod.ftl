@@ -1,6 +1,6 @@
 <#if security.hasPermission("PERIOD_MAINT", request)>    
     <@section>
-        <form method="post" action="<@ofbizUrl>createCustomTimePeriod</@ofbizUrl>" name="createCustomTimePeriodForm">
+        <form method="post" action="<@pageUrl>createCustomTimePeriod</@pageUrl>" name="createCustomTimePeriodForm">
             <input type="hidden" name="findOrganizationPartyId" value="${findOrganizationPartyId!}" />
             <#-- <input type="hidden" name="currentCustomTimePeriodId" value="${currentCustomTimePeriodId!}" /> -->
             <input type="hidden" name="useValues" value="true" />

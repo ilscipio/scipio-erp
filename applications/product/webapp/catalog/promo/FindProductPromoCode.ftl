@@ -7,12 +7,12 @@ code package.
                      
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("FindProductPromoCode") text=uiLabelMap.CommonShowAll class="+${styles.action_nav!} ${styles.action_find!}"/>
+        <@menuitem type="link" href=makePageUrl("FindProductPromoCode") text=uiLabelMap.CommonShowAll class="+${styles.action_nav!} ${styles.action_find!}"/>
 
         <@menuitem type="generic">
             <@modal id="modal_new_importcodeset_${productPromoId!}" label=uiLabelMap.ProductPromotionUploadSetOfPromotionCodes linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductPromotionUploadSetOfPromotionCodes}</@heading>
-                 <form method="post" action="<@ofbizUrl>createBulkProductPromoCode</@ofbizUrl>" enctype="multipart/form-data">
+                 <form method="post" action="<@pageUrl>createBulkProductPromoCode</@pageUrl>" enctype="multipart/form-data">
                     <input type="hidden" name="productPromoId" value="${productPromoId!}"/>
                     <span>${uiLabelMap.ProductPromoUserEntered}:</span>
                         <select name="userEntered">
@@ -38,7 +38,7 @@ code package.
         <@menuitem type="generic">
             <@modal id="modal_new_promocodes_${productPromoId!}" label=uiLabelMap.ProductPromotionAddSetOfPromotionCodes linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductPromotionAddSetOfPromotionCodes}</@heading>
-                <form method="post" action="<@ofbizUrl>createProductPromoCodeSet</@ofbizUrl>">
+                <form method="post" action="<@pageUrl>createProductPromoCodeSet</@pageUrl>">
                     <input type="hidden" name="productPromoId" value="${productPromoId!}"/>
                     <span>${uiLabelMap.CommonQuantity}:</span><input type="text" size="5" name="quantity" />
                     <span>${uiLabelMap.ProductPromoCodeLength}:</span><input type="text" size="12" name="codeLength" />
@@ -70,9 +70,9 @@ code package.
         </@menuitem>
 
         <#if productPromoId?has_content>
-            <#assign targetUrl = makeOfbizUrl("EditProductPromoCode?productPromoId=${productPromoId}")>
+            <#assign targetUrl = makePageUrl("EditProductPromoCode?productPromoId=${productPromoId}")>
         <#else>
-            <#assign targetUrl = makeOfbizUrl("EditProductPromoCode")>
+            <#assign targetUrl = makePageUrl("EditProductPromoCode")>
         </#if>
       <#if (isCreateProductPromoCode!false) != true>
         <@menuitem type="link" href=targetUrl text=uiLabelMap.ProductNewPromotionCode class="+${styles.action_nav!} ${styles.action_add!}"/>

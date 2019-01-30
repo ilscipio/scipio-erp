@@ -9,7 +9,7 @@ code package.
     <#assign formAction="UpdateInventoryTransfer" />
 </#if>
 
-<form method="post" action="<@ofbizUrl>${formAction}</@ofbizUrl>" name="transferform">
+<form method="post" action="<@pageUrl>${formAction}</@pageUrl>" name="transferform">
     <#if !(requestParameters.inventoryTransferId?has_content)>
         <@section id="inventoryItemDetail">
             <@field type="lookup" label=uiLabelMap.ProductInventoryItemId name="inventoryItemId" size="20" maxlength="20" formName="transferform" id="inventoryItemId" fieldFormName="LookupInventoryItem" postfix=true/>             

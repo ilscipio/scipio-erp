@@ -17,19 +17,19 @@ code package.
     <#if txType?default("") == "PRDS_PAY_RELEASE">      
       <#assign dummy = setRequestAttribute("validTx", "true")>
       <@script>
-        document.manualTxForm.action = "<@ofbizUrl>processReleaseTransaction</@ofbizUrl>";
+        document.manualTxForm.action = "<@pageUrl>processReleaseTransaction</@pageUrl>";
       </@script>      
     </#if>
     <#if txType?default("") == "PRDS_PAY_REFUND">      
       <#assign dummy = setRequestAttribute("validTx", "true")>
       <@script>
-        document.manualTxForm.action = "<@ofbizUrl>processRefundTransaction</@ofbizUrl>";
+        document.manualTxForm.action = "<@pageUrl>processRefundTransaction</@pageUrl>";
       </@script>    
     </#if>
     <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_AUTH">     
         <#assign dummy = setRequestAttribute("validTx", "true")>
         <@script>
-            document.manualTxForm.action = "<@ofbizUrl>processManualCcTx</@ofbizUrl>";
+            document.manualTxForm.action = "<@pageUrl>processManualCcTx</@pageUrl>";
         </@script>     
         <hr/>      
         <@field type="input" size="30" maxlength="60" name="firstName" value=((person.firstName)!) label=uiLabelMap.PartyFirstName required=true />        

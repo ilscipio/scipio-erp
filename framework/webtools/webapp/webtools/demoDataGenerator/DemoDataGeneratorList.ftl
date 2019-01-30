@@ -8,7 +8,7 @@
 </@script>
 
 <@section title=uiLabelMap.WebtoolsDemoDataGeneratorServiceList>
-	 <form name="runDemoDataService" id="runDemoDataService" action="<@ofbizUrl>RunDemoDataGeneratorService</@ofbizUrl>" method="POST">
+	 <form name="runDemoDataService" id="runDemoDataService" action="<@pageUrl>RunDemoDataGeneratorService</@pageUrl>" method="POST">
 	 	 <input type="hidden" name="SERVICE_NAME" value="" />		
 	               
 	      <@table type="data-list" autoAltRows=true scrollable=true> 

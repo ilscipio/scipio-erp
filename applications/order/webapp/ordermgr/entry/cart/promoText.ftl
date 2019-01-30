@@ -10,14 +10,14 @@ code package.
           <#list productPromos as productPromo>
             <@tr>
               <@td>
-                <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="+${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a> ${productPromo.promoText!}
+                <a href="<@pageUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@pageUrl>" class="+${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a> ${productPromo.promoText!}
               </@td>
             </@tr>
           </#list>
         </@table>
         
         <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("showAllPromotions") text=uiLabelMap.OrderViewAllPromotions class="+${styles.action_nav!}" />
+          <@menuitem type="link" href=makePageUrl("showAllPromotions") text=uiLabelMap.OrderViewAllPromotions class="+${styles.action_nav!}" />
         </@menu>        
     </@section>
 </#if>

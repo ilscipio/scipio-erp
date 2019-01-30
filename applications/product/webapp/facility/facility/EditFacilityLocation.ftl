@@ -7,10 +7,10 @@ code package.
 <@section>
 
     <#if facilityId?? && !(facilityLocation??)>
-      <form action="<@ofbizUrl>CreateFacilityLocation</@ofbizUrl>" method="post">
+      <form action="<@pageUrl>CreateFacilityLocation</@pageUrl>" method="post">
         <input type="hidden" name="facilityId" value="${facilityId}" />
     <#elseif facilityLocation??>
-      <form action="<@ofbizUrl>UpdateFacilityLocation</@ofbizUrl>" method="post">
+      <form action="<@pageUrl>UpdateFacilityLocation</@pageUrl>" method="post">
         <input type="hidden" name="facilityId" value="${facilityId!}" />
         <input type="hidden" name="locationSeqId" value="${locationSeqId}" />
     <#else>
@@ -63,14 +63,14 @@ code package.
                     <@tr>
                         <@td><#if product??>${(product.internalName)!}</#if>[${productFacilityLocation.productId}]</@td>
                         <@td>
-                            <form method="post" action="<@ofbizUrl>updateProductFacilityLocation</@ofbizUrl>" id="lineForm${productFacilityLocation_index}">
+                            <form method="post" action="<@pageUrl>updateProductFacilityLocation</@pageUrl>" id="lineForm${productFacilityLocation_index}">
                                 <input type="hidden" name="productId" value="${(productFacilityLocation.productId)!}"/>
                                 <input type="hidden" name="facilityId" value="${(productFacilityLocation.facilityId)!}"/>
                                 <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.locationSeqId)!}"/>
                                 <input type="text" size="10" name="minimumStock" value="${(productFacilityLocation.minimumStock)!}"/>
                                 <input type="text" size="10" name="moveQuantity" value="${(productFacilityLocation.moveQuantity)!}"/>
                                 <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
-                                <a href="javascript:document.getElementById('lineForm${productFacilityLocation_index}').action='<@ofbizUrl>deleteProductFacilityLocation</@ofbizUrl>';document.getElementById('lineForm${productFacilityLocation_index}').submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
+                                <a href="javascript:document.getElementById('lineForm${productFacilityLocation_index}').action='<@pageUrl>deleteProductFacilityLocation</@pageUrl>';document.getElementById('lineForm${productFacilityLocation_index}').submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                             </form>
                         </@td>
                     </@tr>
@@ -80,7 +80,7 @@ code package.
         
           <#assign sectionTitle = uiLabelMap.ProductAddProduct/>
           <@section title=sectionTitle>
-                <form method="post" action="<@ofbizUrl>createProductFacilityLocation</@ofbizUrl>" name="createProductFacilityLocationForm">
+                <form method="post" action="<@pageUrl>createProductFacilityLocation</@pageUrl>" name="createProductFacilityLocationForm">
                     <input type="hidden" name="facilityId" value="${facilityId!}" />
                     <input type="hidden" name="locationSeqId" value="${locationSeqId!}" />
                     <input type="hidden" name="useValues" value="true" />

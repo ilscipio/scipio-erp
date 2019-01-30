@@ -19,7 +19,7 @@ code package.
       <#list reviews as review>
         <@tr>
           <@td>${review.postedDateTime!}</@td>
-          <@td><a href="<@ofbizCatalogAltUrl productId=review.productId/>" style="${styles.link_nav_info_id!}>${review.productId}</a></@td>
+          <@td><a href="<@catalogAltUrl productId=review.productId/>" style="${styles.link_nav_info_id!}>${review.productId}</a></@td>
           <@td>${review.productReview!}</@td>
           <@td>${review.productRating}</@td>
           <@td>${review.postedAnonymous!}</@td>

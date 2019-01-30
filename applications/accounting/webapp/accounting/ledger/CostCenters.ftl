@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <#if glAcctgAndAmountPercentageList?has_content && glAccountCategories?has_content>
-    <form id="costCenters" method="post" action="<@ofbizUrl>createUpdateCostCenter</@ofbizUrl>">
+    <form id="costCenters" method="post" action="<@pageUrl>createUpdateCostCenter</@pageUrl>">
         <@table type="data-list" autoAltRows=true>
             <@thead>
                 <@tr class="header-row">

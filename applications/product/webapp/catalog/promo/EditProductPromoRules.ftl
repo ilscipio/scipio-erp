@@ -10,7 +10,7 @@ code package.
         <@menuitem type="generic">
             <@modal id="modal_new_rule_${productPromoId}" label=uiLabelMap.ProductAddPromoRule linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductAddPromoRule}</@heading>
-                 <form method="post" action="<@ofbizUrl>createProductPromoRule</@ofbizUrl>">
+                 <form method="post" action="<@pageUrl>createProductPromoRule</@pageUrl>">
                     <@fields type="default-compact">
                       <input type="hidden" name="productPromoId" value="${productPromoId!}" />
                       <@field type="text" label=uiLabelMap.ProductName size="30" name="ruleName" required=true/>
@@ -23,7 +23,7 @@ code package.
         <@menuitem type="generic">
             <@modal id="modal_new_category_${productPromoId}" label=uiLabelMap.ProductAddPromoCategory linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductAddPromoCategory}</@heading>
-                <form method="post" action="<@ofbizUrl>createProductPromoCategory</@ofbizUrl>" name="createProductPromoCategoryPromotions">
+                <form method="post" action="<@pageUrl>createProductPromoCategory</@pageUrl>" name="createProductPromoCategoryPromotions">
                     <@fields type="default-compact">
                         <input type="hidden" name="productPromoId" value="${productPromoId}" />
                         <input type="hidden" name="productPromoRuleId" value="_NA_" />
@@ -50,7 +50,7 @@ code package.
         <@menuitem type="generic">
             <@modal id="modal_new_product_${productPromoId}" label=uiLabelMap.ProductAddPromoProduct linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductAddPromoProduct}</@heading>
-                 <form method="post" name="createpromoproductform" action="<@ofbizUrl>createProductPromoProduct</@ofbizUrl>">
+                 <form method="post" name="createpromoproductform" action="<@pageUrl>createProductPromoProduct</@pageUrl>">
                       <@fields type="default-compact">
                         <input type="hidden" name="productPromoId" value="${productPromoId}" />
                         <input type="hidden" name="productPromoRuleId" value="_NA_" />
@@ -94,7 +94,7 @@ code package.
       <@tr valign="middle" class="row-level-one" alt=(ruleClass == "1")>
         <@td><strong><@modal id="modal_rule_${productPromoRule.productPromoRuleId}" label=productPromoRule.ruleName>
               <@heading>${uiLabelMap.ProductRuleName}</@heading>
-              <form method="post" action="<@ofbizUrl>updateProductPromoRule</@ofbizUrl>">
+              <form method="post" action="<@pageUrl>updateProductPromoRule</@pageUrl>">
                 <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                 <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
                 <@field type="input" size="30" name="ruleName" value=(productPromoRule.ruleName)! required=true />
@@ -179,7 +179,7 @@ code package.
                               <#assign maxCondSeqId = curCondSeqId + 1>
                             </#if>
                         </#if>                                 
-                        <form method="post" action="<@ofbizUrl>updateProductPromoCond</@ofbizUrl>">
+                        <form method="post" action="<@pageUrl>updateProductPromoCond</@pageUrl>">
                           <input type="hidden" name="productPromoId" value="${(productPromoCond.productPromoId)!}"/>
                           <input type="hidden" name="productPromoRuleId" value="${(productPromoCond.productPromoRuleId)!}"/>
                           <input type="hidden" name="productPromoCondSeqId" value="${(productPromoCond.productPromoCondSeqId)!}"/>
@@ -237,7 +237,7 @@ code package.
                               	class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete />	                              
                           </@field>
                         </form>
-                        <form name="deleteProductPromoCondition_${productPromoRule_index}_${productPromoCond_index}" method="post" action="<@ofbizUrl>deleteProductPromoCond</@ofbizUrl>">
+                        <form name="deleteProductPromoCondition_${productPromoRule_index}_${productPromoCond_index}" method="post" action="<@pageUrl>deleteProductPromoCond</@pageUrl>">
                           <input type="hidden" name="productPromoId" value="${(productPromoCond.productPromoId)!}" />
                           <input type="hidden" name="productPromoRuleId" value="${(productPromoCond.productPromoRuleId)!}" />
                           <input type="hidden" name="productPromoCondSeqId" value="${(productPromoCond.productPromoCondSeqId)!}" />                              
@@ -269,7 +269,7 @@ code package.
 	                              	<@td>${condProductPromoCategory.andGroupId}</@td>
 	                              	<@td><a href="javascript:document.deleteProductPromoCategoryCondition_${productPromoRule_index}_${condProductPromoCategory_index}_${productPromoCond_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>		                        
 		                        </@tr>
-							     <form name="deleteProductPromoCategoryCondition_${productPromoRule_index}_${condProductPromoCategory_index}_${productPromoCond_index}" method="post" action="<@ofbizUrl>deleteProductPromoCategory</@ofbizUrl>">
+							     <form name="deleteProductPromoCategoryCondition_${productPromoRule_index}_${condProductPromoCategory_index}_${productPromoCond_index}" method="post" action="<@pageUrl>deleteProductPromoCategory</@pageUrl>">
 	                                <input type="hidden" name="productPromoId" value="${(condProductPromoCategory.productPromoId)!}" />
 	                                <input type="hidden" name="productPromoRuleId" value="${(condProductPromoCategory.productPromoRuleId)!}" />
 	                                <input type="hidden" name="productPromoActionSeqId" value="${(condProductPromoCategory.productPromoActionSeqId)!}" />
@@ -284,7 +284,7 @@ code package.
                       </#if>
                       <hr/>
                   	  <div>
-                          <form method="post" action="<@ofbizUrl>createProductPromoCategory</@ofbizUrl>" name="createProductPromoCategoryConditions">
+                          <form method="post" action="<@pageUrl>createProductPromoCategory</@pageUrl>" name="createProductPromoCategoryConditions">
                             <input type="hidden" name="productPromoId" value="${productPromoId}" />
                             <input type="hidden" name="productPromoRuleId" value="${productPromoCond.productPromoRuleId}" />
                             <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
@@ -324,7 +324,7 @@ code package.
 			                        <@td>${(condApplEnumeration.get("description",locale))?default(condProductPromoProduct.productPromoApplEnumId)}</@td>	                              	
 	                              	<@td><a href="javascript:document.deleteProductPromoProductCondition_${productPromoRule_index}_${productPromoCond_index}_${condProductPromoProduct_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>	                              		                        
 		                        </@tr>
-							    <form name="deleteProductPromoProductCondition_${productPromoRule_index}_${productPromoCond_index}_${condProductPromoProduct_index}" method="post" action="<@ofbizUrl>deleteProductPromoProduct</@ofbizUrl>">
+							    <form name="deleteProductPromoProductCondition_${productPromoRule_index}_${productPromoCond_index}_${condProductPromoProduct_index}" method="post" action="<@pageUrl>deleteProductPromoProduct</@pageUrl>">
 	                                <input type="hidden" name="productPromoId" value="${(condProductPromoProduct.productPromoId)!}" />
 	                                <input type="hidden" name="productPromoRuleId" value="${(condProductPromoProduct.productPromoRuleId)!}" />
 	                                <input type="hidden" name="productPromoActionSeqId" value="${(condProductPromoProduct.productPromoActionSeqId)!}" />
@@ -338,7 +338,7 @@ code package.
                       	</#if>
 		                <hr/>
 		                <div>
-	                      <form method="post" action="<@ofbizUrl>createProductPromoProduct</@ofbizUrl>"  name="createProductPromoProductConditions">
+	                      <form method="post" action="<@pageUrl>createProductPromoProduct</@pageUrl>"  name="createProductPromoProductConditions">
 	                        <input type="hidden" name="productPromoId" value="${productPromoId}" />
 	                        <input type="hidden" name="productPromoRuleId" value="${productPromoCond.productPromoRuleId}" />
 	                        <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
@@ -413,7 +413,7 @@ code package.
                 <@modal id="modal_rule_action_${(productPromoCond.productPromoRuleId)!}_${(productPromoCond.productPromoCondSeqId)!}" label=wrapAsRaw(actionLabel, 'htmlmarkup')>
                     <@section title=(uiLabelMap.ProductActionForRule + productPromoRule.productPromoRuleId)!>
 					  <#-- <b> ${uiLabelMap.ProductAction} ${(productPromoAction.productPromoActionSeqId)!}</b> -->
-                      <form method="post" action="<@ofbizUrl>updateProductPromoAction</@ofbizUrl>">
+                      <form method="post" action="<@pageUrl>updateProductPromoAction</@pageUrl>">
                         <input type="hidden" name="productPromoId" value="${(productPromoAction.productPromoId)!}" />
                         <input type="hidden" name="productPromoRuleId" value="${(productPromoAction.productPromoRuleId)!}" />
                         <input type="hidden" name="productPromoActionSeqId" value="${(productPromoAction.productPromoActionSeqId)!}" />
@@ -451,7 +451,7 @@ code package.
                         	<@field type="submit" submitType="button" href="javascript:document.deleteProductPromoAction_${productPromoRule_index}_${productPromoAction_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete />
                        	</@field>
                       </form>
-                      <form name="deleteProductPromoAction_${productPromoRule_index}_${productPromoAction_index}" method="post" action="<@ofbizUrl>deleteProductPromoAction</@ofbizUrl>">
+                      <form name="deleteProductPromoAction_${productPromoRule_index}_${productPromoAction_index}" method="post" action="<@pageUrl>deleteProductPromoAction</@pageUrl>">
                         <input type="hidden" name="productPromoId" value="${(productPromoAction.productPromoId)!}" />
                         <input type="hidden" name="productPromoRuleId" value="${(productPromoAction.productPromoRuleId)!}" />
                         <input type="hidden" name="productPromoActionSeqId" value="${(productPromoAction.productPromoActionSeqId)!}" />                        
@@ -482,7 +482,7 @@ code package.
 	                              	<@td>${actionProductPromoCategory.andGroupId}</@td>
 	                              	<@td><a href="javascript:document.deleteProductPromoCategoryAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoCategory_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>	                              	     		                        
 		                        </@tr>
-							     <form name="deleteProductPromoCategoryAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoCategory_index}" action="<@ofbizUrl>deleteProductPromoCategory</@ofbizUrl>" method="post">
+							     <form name="deleteProductPromoCategoryAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoCategory_index}" action="<@pageUrl>deleteProductPromoCategory</@pageUrl>" method="post">
                                     <input type="hidden" name="productPromoId" value="${(actionProductPromoCategory.productPromoId)!}" />
                                     <input type="hidden" name="productPromoRuleId" value="${(actionProductPromoCategory.productPromoRuleId)!}" />
                                     <input type="hidden" name="productPromoCondSeqId" value="${(actionProductPromoCategory.productPromoCondSeqId)!}" />
@@ -497,7 +497,7 @@ code package.
                         </#if>
                         <hr />
                         <div>
-                          <form method="post" action="<@ofbizUrl>createProductPromoCategory</@ofbizUrl>" name="createProductPromoCategoryActions">
+                          <form method="post" action="<@pageUrl>createProductPromoCategory</@pageUrl>" name="createProductPromoCategoryActions">
                             <input type="hidden" name="productPromoId" value="${productPromoId}" />
                             <input type="hidden" name="productPromoRuleId" value="${productPromoAction.productPromoRuleId}" />
                             <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}" />
@@ -538,7 +538,7 @@ code package.
 			                        <@td>${(actionApplEnumeration.get("description",locale))?default(actionProductPromoProduct.productPromoApplEnumId)}</@td>	                              	
 	                              	<@td><a href="javascript:document.deleteProductPromoProductAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoProduct_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>	                              		 	                              		                        
 		                        </@tr>
-							    <form name="deleteProductPromoProductAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoProduct_index}" method="post" action="<@ofbizUrl>deleteProductPromoProduct</@ofbizUrl>"> 
+							    <form name="deleteProductPromoProductAction_${productPromoRule_index}_${productPromoAction_index}_${actionProductPromoProduct_index}" method="post" action="<@pageUrl>deleteProductPromoProduct</@pageUrl>"> 
 		                            <input type="hidden" name="productPromoId" value="${(actionProductPromoProduct.productPromoId)!}" />
 		                            <input type="hidden" name="productPromoRuleId" value="${(actionProductPromoProduct.productPromoRuleId)!}" />
 		                            <input type="hidden" name="productPromoCondSeqId" value="${(actionProductPromoProduct.productPromoCondSeqId)!}" />
@@ -552,7 +552,7 @@ code package.
                       </#if>
                       <hr/>
 	                  <div>
-	                      <form method="post" action="<@ofbizUrl>createProductPromoProduct</@ofbizUrl>" name="createProductPromoProductActions">
+	                      <form method="post" action="<@pageUrl>createProductPromoProduct</@pageUrl>" name="createProductPromoProductActions">
 	                        <input type="hidden" name="productPromoId" value="${productPromoId}" />
 	                        <input type="hidden" name="productPromoRuleId" value="${productPromoAction.productPromoRuleId}" />
 	                        <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}" />
@@ -579,7 +579,7 @@ code package.
                         <@modal id="modal_new_promo_condition_${productPromoId}_${(productPromoRule.productPromoRuleId)!}" label=uiLabelMap.ProductCreateCondition linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                             <@heading>${uiLabelMap.ProductAddPromoRule}</@heading>
                                 <#-- SCIPIO: TODO: Convert to @field -->
-                                <form method="post" action="<@ofbizUrl>createProductPromoCond</@ofbizUrl>">
+                                <form method="post" action="<@pageUrl>createProductPromoCond</@pageUrl>">
                                   <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                                   <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
                                   <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
@@ -612,7 +612,7 @@ code package.
                         <@modal id="modal_new_promo_action_${productPromoId}_${(productPromoRule.productPromoRuleId)!}" label=uiLabelMap.ProductCreateAction linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                             <@heading>${uiLabelMap.ProductCreateAction}</@heading>
                                 <#-- SCIPIO: TODO: Convert to @field -->
-                                <form method="post" action="<@ofbizUrl>createProductPromoAction</@ofbizUrl>">
+                                <form method="post" action="<@pageUrl>createProductPromoAction</@pageUrl>">
                                     <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                                     <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
                                     <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
@@ -639,7 +639,7 @@ code package.
 
                     <#if (productPromoConds.size() == 0 && productPromoActions.size() == 0)>
                           <@menuitem type="generic">
-                              <form name="deleteProductPromoRule_${productPromoRule_index}" method="post" action="<@ofbizUrl>deleteProductPromoRule</@ofbizUrl>">
+                              <form name="deleteProductPromoRule_${productPromoRule_index}" method="post" action="<@pageUrl>deleteProductPromoRule</@pageUrl>">
                                 <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                                 <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
                                 <a href="javascript:document.deleteProductPromoRule_${productPromoRule_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
@@ -671,7 +671,7 @@ code package.
           - ${(promoApplEnumeration.get("description",locale))?default(promoProductPromoCategory.productPromoApplEnumId)}
           - ${uiLabelMap.ProductSubCats}? ${promoProductPromoCategory.includeSubCategories!"N"}
           - ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: ${promoProductPromoCategory.andGroupId}
-          <form name="deleteProductPromoCategoryAction_${promoProductPromoCategory_index}" method="post" action="<@ofbizUrl>deleteProductPromoCategory</@ofbizUrl>">
+          <form name="deleteProductPromoCategoryAction_${promoProductPromoCategory_index}" method="post" action="<@pageUrl>deleteProductPromoCategory</@pageUrl>">
             <input type="hidden" name="productPromoId" value="${(promoProductPromoCategory.productPromoId)!}" />
             <input type="hidden" name="productPromoRuleId" value="${(promoProductPromoCategory.productPromoRuleId)!}" />
             <input type="hidden" name="productPromoActionSeqId" value="${(promoProductPromoCategory.productPromoActionSeqId)!}" />
@@ -694,7 +694,7 @@ code package.
         <div>
           ${(promoProduct.internalName)!} [${promoProductPromoProduct.productId}]
           - ${(promoApplEnumeration.get("description",locale))?default(promoProductPromoProduct.productPromoApplEnumId)}
-          <form name="deleteProductPromoProductAction_${promoProductPromoProduct_index}" action="<@ofbizUrl>deleteProductPromoProduct</@ofbizUrl>" method="post">
+          <form name="deleteProductPromoProductAction_${promoProductPromoProduct_index}" action="<@pageUrl>deleteProductPromoProduct</@pageUrl>" method="post">
             <input type="hidden" name="productPromoId" value="${(promoProductPromoProduct.productPromoId)!}" />
             <input type="hidden" name="productPromoRuleId" value="${(promoProductPromoProduct.productPromoRuleId)!}" />
             <input type="hidden" name="productPromoActionSeqId" value="${(promoProductPromoProduct.productPromoActionSeqId)!}" />

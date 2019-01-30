@@ -7,7 +7,7 @@ code package.
 
   <p>${uiLabelMap.WebtoolsXMLImportInfo}</p>
 
-  <form method="post" action="<@ofbizUrl>entityImportDir</@ofbizUrl>">
+  <form method="post" action="<@pageUrl>entityImportDir</@pageUrl>">
     <@field type="text" name="path" value=(path!) label=uiLabelMap.WebtoolsAbsolutePath size="60"/>
     <@eiUnsafeEntityField values=parameters/>
 

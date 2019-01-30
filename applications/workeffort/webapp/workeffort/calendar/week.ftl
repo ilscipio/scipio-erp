@@ -37,8 +37,8 @@ code package.
     <@td width="15%">
       <#-- SCIPIO: FIXME: hardcoded to yyyy-MM-dd to be consistent with datepicker for now: period.start?date?string.short 
         however datepicker itself should not be hardcoded either -->
-      <a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;startTime=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("EEEE")?cap_first} ${period.start?date?string("yyyy-MM-dd")}</a><br />
-      <a href="<@ofbizUrl>${newCalEventUrl}?period=week&amp;form=edit&amp;startTime=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${addlParam!}${urlParam!}</@ofbizUrl>" class="${styles.link_nav_inline!} ${styles.action_add!}">[+]</a><#--${uiLabelMap.CommonAddNew}-->
+      <a href="<@pageUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;startTime=${period.start.time?string("#")}${urlParam!}${addlParam!}</@pageUrl>">${period.start?date?string("EEEE")?cap_first} ${period.start?date?string("yyyy-MM-dd")}</a><br />
+      <a href="<@pageUrl>${newCalEventUrl}?period=week&amp;form=edit&amp;startTime=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${addlParam!}${urlParam!}</@pageUrl>" class="${styles.link_nav_inline!} ${styles.action_add!}">[+]</a><#--${uiLabelMap.CommonAddNew}-->
     </@td>
     <#list period.calendarEntries as calEntry>
         <#if calEntry.workEffort.actualStartDate??>

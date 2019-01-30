@@ -9,7 +9,7 @@ code package.
 
 <@section><#-- title=uiLabelMap.AccountingPaymentInformation-->
   <#-- initial screen show a list of options -->
-  <form id="editPaymentOptions" method="post" action="<@ofbizUrl>setPaymentInformation</@ofbizUrl>" name="${parameters.formNameValue}">
+  <form id="editPaymentOptions" method="post" action="<@pageUrl>setPaymentInformation</@pageUrl>" name="${parameters.formNameValue}">
 
       <@fields type="default-compact" fieldArgs={"checkboxType":"simple-standard"}>
         <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>

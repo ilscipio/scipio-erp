@@ -18,7 +18,7 @@ code package.
 <#else>
 
 <@section>
-<form name="EditProduct" action="<@ofbizUrl><#if product?has_content>updateProduct<#else>createProduct</#if></@ofbizUrl>" method="post">
+<form name="EditProduct" action="<@pageUrl><#if product?has_content>updateProduct<#else>createProduct</#if></@pageUrl>" method="post">
 
   <#-- productParams is for fields that can safely accept user params values
     productParamsRestr is for fields that must not change after creation (so should explicitly disallow user params)

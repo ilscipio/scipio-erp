@@ -6,7 +6,7 @@ code package.
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", request) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", request)>
   <@section>
-    <form name="checkoutsetupform" method="post" action="<@ofbizUrl>createCustomer</@ofbizUrl>">
+    <form name="checkoutsetupform" method="post" action="<@pageUrl>createCustomer</@pageUrl>">
       <input type="hidden" name="finalizeMode" value="cust" />
       <input type="hidden" name="finalizeReqNewShipAddress" value="true" />
 

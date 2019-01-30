@@ -6,7 +6,7 @@ code package.
 
 <#-- Render the survey -->
 <#if requestAttributes.surveyWrapper?? && requestAttributes.surveyAction??>
-  <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>${requestAttributes.surveyAction}</@ofbizUrl>">
+  <form method="post" enctype="multipart/form-data" action="<@pageUrl>${requestAttributes.surveyAction}</@pageUrl>">
     ${requestAttributes.surveyWrapper.renderSurvey(context)}
   </form>
 <#else>

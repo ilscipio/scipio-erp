@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <@section title=uiLabelMap.ProductCarrierShipmentMethod>
-    <form name="addscarr" method="post" action="<@ofbizUrl>prepareCreateShipMeth</@ofbizUrl>">
+    <form name="addscarr" method="post" action="<@pageUrl>prepareCreateShipMeth</@pageUrl>">
       <@fields type="default-nolabelarea">
         <input type="hidden" name="newShipMethod" value="Y"/>
         <input type="hidden" name="productStoreId" value="${productStoreId!}"/>

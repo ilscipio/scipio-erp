@@ -5,7 +5,7 @@ code package.
 -->
 
 <@section title=uiLabelMap.EcommerceMyAccount>
-  <form id="editUserForm" method="post" action="<@ofbizUrl>updateCustomerProfile</@ofbizUrl>">
+  <form id="editUserForm" method="post" action="<@pageUrl>updateCustomerProfile</@pageUrl>">
     <fieldset class="left center">
       <input type="hidden" name="emailContactMechPurposeTypeId" value="PRIMARY_EMAIL" />
       <input type="hidden" name="emailContactMechId" value="${emailContactMechId!}" />
@@ -48,7 +48,7 @@ code package.
     </fieldset>
     <div>
       <input type="submit" id="submitEditUserForm" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonSubmit}"/>
-      <a id="cancelEditUserForm" href="<@ofbizUrl>viewprofile</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a>
+      <a id="cancelEditUserForm" href="<@pageUrl>viewprofile</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a>
     </div>
   </form>
 </@section>

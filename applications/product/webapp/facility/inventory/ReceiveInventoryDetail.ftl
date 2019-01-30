@@ -23,15 +23,15 @@
                     </@tr>
                 </@thead>
                 <#list receivedItems as item>
-                    <form name="cancelReceivedItemsForm_${item_index}" method="post" action="<@ofbizUrl>cancelReceivedItems</@ofbizUrl>">
+                    <form name="cancelReceivedItemsForm_${item_index}" method="post" action="<@pageUrl>cancelReceivedItems</@pageUrl>">
                         <input type="hidden" name="receiptId" value="${(item.receiptId)!}"/>
                         <input type="hidden" name="purchaseOrderId" value="${(item.orderId)!}"/>
                         <input type="hidden" name="facilityId" value="${facilityId!}"/>
                         <@tr>
-                            <@td><a href="<@ofbizUrl>EditShipment?shipmentId=${item.shipmentId!}</@ofbizUrl>" class="${styles.link_nav_info_id_long!}">${item.shipmentId!} ${item.shipmentItemSeqId!}</a></@td>
+                            <@td><a href="<@pageUrl>EditShipment?shipmentId=${item.shipmentId!}</@pageUrl>" class="${styles.link_nav_info_id_long!}">${item.shipmentId!} ${item.shipmentItemSeqId!}</a></@td>
                             <@td>${item.receiptId}</@td>
                             <@td>${item.getString("datetimeReceived").toString()}</@td>
-                            <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${item.orderId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${item.orderId}</a></@td>
+                            <@td><a href="<@serverUrl>/ordermgr/control/orderview?orderId=${item.orderId}</@serverUrl>" class="${styles.link_nav_info_id!}">${item.orderId}</a></@td>
                             <@td>${item.orderItemSeqId}</@td>
                             <@td>${item.productId?default("Not Found")}</@td>
                             <@td>${item.lotId!""}</@td>
@@ -52,7 +52,7 @@
     <#-- Single Product Receiving -->
     <#if product?has_content>
         <@section>
-            <form method="post" action="<@ofbizUrl>receiveSingleInventoryProduct</@ofbizUrl>" name="selectAllForm">
+            <form method="post" action="<@pageUrl>receiveSingleInventoryProduct</@pageUrl>" name="selectAllForm">
                 <#-- general request fields -->
                 <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
                 <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId!}"/>
@@ -75,7 +75,7 @@
                     ${requestParameters.productId!}
                 </@field>
                 <@field type="display" label=uiLabelMap.ProductProductName>
-                    <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_name!}">${product.internalName!}</a>
+                    <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@serverUrl>" target="catalog" class="${styles.link_nav_info_name!}">${product.internalName!}</a>
                 </@field>
                 <@field type="display" label=uiLabelMap.ProductProductDescription>
                     ${product.description!}
@@ -170,7 +170,7 @@
     <#elseif !requestParameters.shipmentId?? && (requestParameters.productId?has_content || requestParameters.purchaseOrderId?has_content)>
         <#if shipments?has_content>
             <@section title=uiLabelMap.ProductSelectShipmentReceive>
-                <form method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>" name="shipmentForm">
+                <form method="post" action="<@pageUrl>ReceiveInventory</@pageUrl>" name="shipmentForm">
                     <#-- general request fields -->
                     <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
                     <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId!}"/>                
@@ -219,9 +219,9 @@
             <#assign sectionTitle>${rawLabel('ProductReceivePurchaseOrder')} #${rawString(purchaseOrder.orderId)}</#assign>
         </#if>
         <@section title=sectionTitle>
-            <input type="hidden" id="getConvertedPrice" value="<@ofbizUrl>getConvertedPrice"</@ofbizUrl> />
+            <input type="hidden" id="getConvertedPrice" value="<@pageUrl>getConvertedPrice"</@pageUrl> />
             <input type="hidden" id="alertMessage" value="${uiLabelMap.ProductChangePerUnitPrice}" />
-            <form method="post" action="<@ofbizUrl>receiveInventoryProduct</@ofbizUrl>" name="receiveMultiPO">
+            <form method="post" action="<@pageUrl>receiveInventoryProduct</@pageUrl>" name="receiveMultiPO">
                 <#if shipment?has_content>                                                                                
                     <@field type="checkbox" name="forceShipmentReceived" value="Y" label="Set Shipment As Received"/>
                 </#if>
@@ -283,10 +283,10 @@
                                         <#if orderItem.productId??>
                                             <#assign product = orderItem.getRelatedOne("Product", true)/>
                                             <input type="hidden" name="productId_o_${orderItem_index}" value="${product.productId}"/>                                                            
-                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a>                                                            
+                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@serverUrl>" target="catalog" class="${styles.link_nav_info_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a>                                                            
                                         <#else>
                                             <@field type="input" size="12" name="productId_o_${orderItem_index}" label="${rawString(orderItemType.get('description',locale))} ${rawString(orderItem.itemDescription!)}">
-                                                <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
+                                                <a href="<@serverUrl>/catalog/control/ViewProduct?${rawString(externalKeyParam)}</@serverUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
                                             </@field>
                                         </#if>
                                     </@td>

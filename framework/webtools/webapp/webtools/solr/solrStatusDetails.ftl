@@ -126,7 +126,7 @@
               <#if configEntry.propName??> <em>(${configEntry.propName})</em></#if></@td>
           <#if (configEntry.specialType!)=="eca-toggle">
             <@td>
-            <form action="<@ofbizUrl uri="setSolrSystemProperty"/>" method="post">
+            <form action="<@pageUrl uri="setSolrSystemProperty"/>" method="post">
               <input type="hidden" name="property" value="solr.eca.enabled"/>
               <input type="hidden" name="removeIfEmpty" value="true"/>
             <@fields type="default-compact">

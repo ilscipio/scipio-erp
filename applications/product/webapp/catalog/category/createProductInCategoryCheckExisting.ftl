@@ -7,7 +7,7 @@ code package.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if productCategoryId?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategory?productCategoryId=${productCategoryId}") text="[${rawLabel('ProductBackToEditCategory')}]" class="+${styles.action_nav!} ${styles.action_cancel!}" />
+    <@menuitem type="link" href=makePageUrl("EditCategory?productCategoryId=${productCategoryId}") text="[${rawLabel('ProductBackToEditCategory')}]" class="+${styles.action_nav!} ${styles.action_cancel!}" />
   </#if>
   </@menu>
 </#macro>
@@ -38,7 +38,7 @@ code package.
             <@tr>
                 <@td>${product.internalName?default("-no internal name-")} [${product.productId}]</@td>
                 <@td>${product.productName?default("-no name-")} [${product.productId}]</@td>
-                <@td width="10%"><a href="<@ofbizUrl>ViewProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.ProductThisIsIt}]</a></@td>
+                <@td width="10%"><a href="<@pageUrl>ViewProduct?productId=${product.productId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.ProductThisIsIt}]</a></@td>
             </@tr>
           </#list>
           </@tbody>
@@ -49,7 +49,7 @@ code package.
 
       <@row>
         <@cell>
-        <form name="createProductInCategoryForm" method="post" action="<@ofbizUrl>createProductInCategory</@ofbizUrl>">
+        <form name="createProductInCategoryForm" method="post" action="<@pageUrl>createProductInCategory</@pageUrl>">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}" />
                 <#list productFeatureAndTypeDatas! as productFeatureAndTypeData>
                 <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>

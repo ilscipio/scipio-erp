@@ -62,7 +62,7 @@
     <#assign metaKeywordsAction = "/createWebSiteMetaInfoJson"/>
 </#if>
 
-<form name="cmsmeta_title" action="<@ofbizUrl>${titleAction}</@ofbizUrl>">
+<form name="cmsmeta_title" action="<@pageUrl>${titleAction}</@pageUrl>">
     <#if (title?has_content)>
         <input type="hidden" name="dataResourceId" value="${title.dataResourceId}"/>
     <#else>
@@ -72,7 +72,7 @@
     </#if>
     <input type="hidden" name="objectInfo" value=""/>
 </form>
-<form name="cmsmeta_titleProperty" action="<@ofbizUrl>${titlePropertyAction}</@ofbizUrl>">
+<form name="cmsmeta_titleProperty" action="<@pageUrl>${titlePropertyAction}</@pageUrl>">
     <#if (titleProperty?has_content)>
         <input type="hidden" name="dataResourceId" value="${titleProperty.dataResourceId}"/>
     <#else>
@@ -82,7 +82,7 @@
     </#if>
     <input type="hidden" name="objectInfo" value=""/>
 </form>
-<form name="cmsmeta_metaDescription" action="<@ofbizUrl>${metaDescriptionAction}</@ofbizUrl>">
+<form name="cmsmeta_metaDescription" action="<@pageUrl>${metaDescriptionAction}</@pageUrl>">
     <#if (metaDescription?has_content)>
         <input type="hidden" name="dataResourceId" value="${metaDescription.dataResourceId}"/>
     <#else>
@@ -92,7 +92,7 @@
     </#if>
     <input type="hidden" name="objectInfo" value=""/>
 </form>
-<form name="cmsmeta_metaKeywords" action="<@ofbizUrl>${metaKeywordsAction}</@ofbizUrl>">
+<form name="cmsmeta_metaKeywords" action="<@pageUrl>${metaKeywordsAction}</@pageUrl>">
     <#if (metaKeywords?has_content)>
         <input type="hidden" name="dataResourceId" value="${metaKeywords.dataResourceId}"/>
     <#else>

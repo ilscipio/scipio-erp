@@ -5,7 +5,7 @@ code package.
 -->
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", request) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", request)>
-  <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+  <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
     <input type="hidden" name="finalizeMode" value="removeEmptyShipGroups"/>
   </form>
 
@@ -17,7 +17,7 @@ code package.
           <@section title=sectionTitle>
             <@row>
               <@cell>
-                <form method="post" action="<@ofbizUrl>assignItemToShipGroups</@ofbizUrl>" name="assignitemtoshipgroup${shipGroupIndex}">
+                <form method="post" action="<@pageUrl>assignItemToShipGroups</@pageUrl>" name="assignitemtoshipgroup${shipGroupIndex}">
                   <input type="hidden" name="_useRowSubmit" value="N" />
                 <@table type="data-list">
                   <@thead>

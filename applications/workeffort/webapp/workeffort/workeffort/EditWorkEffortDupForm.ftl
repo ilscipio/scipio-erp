@@ -5,7 +5,7 @@ code package.
 -->
 
 <#if workEffortId?has_content>
-<form action="<@ofbizUrl>DuplicateWorkEffort</@ofbizUrl>" method="post">
+<form action="<@pageUrl>DuplicateWorkEffort</@pageUrl>" method="post">
     <input type="hidden" name="oldWorkEffortId" value="${workEffortId}"/>
     <@field type="text" size="20" maxlength="20" name="workEffortId" label=uiLabelMap.ProductDuplicateRemoveSelectedWithNewId/>
     <@field type="generic" label=uiLabelMap.CommonDuplicate>

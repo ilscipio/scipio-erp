@@ -6,13 +6,13 @@ code package.
 
 <@menu type="button">
 <#if curProductFeatureCategory??>
-  <@menuitem type="link" href=makeOfbizUrl("EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text=uiLabelMap.ProductCreateNewFeature class="+${styles.action_nav!} ${styles.action_add!}" />
+  <@menuitem type="link" href=makePageUrl("EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text=uiLabelMap.ProductCreateNewFeature class="+${styles.action_nav!} ${styles.action_add!}" />
 <#elseif productFeatureGroup??>
-  <@menuitem type="link" href=makeOfbizUrl("EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}") text="${rawLabel('CommonEdit')} ${rawString(productFeatureGroup.description!)}" class="+${styles.action_nav!} ${styles.action_add!}"/>
+  <@menuitem type="link" href=makePageUrl("EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}") text="${rawLabel('CommonEdit')} ${rawString(productFeatureGroup.description!)}" class="+${styles.action_nav!} ${styles.action_add!}"/>
 </#if>
 <#if productId?has_content>
-  <@menuitem type="link" href=makeOfbizUrl("EditProduct?productId=${productId}") text=uiLabelMap.ProductReturnToEditProduct class="+${styles.action_nav!} ${styles.action_cancel!}" />
-  <@menuitem type="link" href=makeOfbizUrl("EditProductFeatures?productId=${productId}") text=uiLabelMap.ProductReturnToEditProductFeatures class="+${styles.action_nav!} ${styles.action_cancel!}"/>
+  <@menuitem type="link" href=makePageUrl("EditProduct?productId=${productId}") text=uiLabelMap.ProductReturnToEditProduct class="+${styles.action_nav!} ${styles.action_cancel!}" />
+  <@menuitem type="link" href=makePageUrl("EditProductFeatures?productId=${productId}") text=uiLabelMap.ProductReturnToEditProductFeatures class="+${styles.action_nav!} ${styles.action_cancel!}"/>
 </#if>
 </@menu>
 
@@ -23,8 +23,8 @@ code package.
 <#-- SCIPIO: NOTE: productFeatureGroupId was not in stock; has been added by us. 
     NOTE: we added a productFeaturesPaginated flag because pagination only partly implemented by stock depending on search options (productFeatures list only paginated if productFeatureGroupId is not set) -->
 <#assign paramStr = addParamsToStr("", {"productFeatureCategoryId": productFeatureCategoryId!"", "productFeatureApplTypeId": selectedFeatureApplTypeId!"", "productId": productId!"", "productFeatureGroupId": productFeatureGroupId!""}, "&amp;", false)>
-<@paginate mode="content" url=makeOfbizUrl("ApplyFeaturesFromCategory") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paginateOn=((productFeaturesPaginated!true)==true)>
-<form method="post" action="<@ofbizUrl>ApplyFeaturesToProduct</@ofbizUrl>" name="selectAllForm">
+<@paginate mode="content" url=makePageUrl("ApplyFeaturesFromCategory") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paginateOn=((productFeaturesPaginated!true)==true)>
+<form method="post" action="<@pageUrl>ApplyFeaturesToProduct</@pageUrl>" name="selectAllForm">
   <@fields type="default-manual-widgetonly">
     <input type="hidden" name="_useRowSubmit" value="Y" />
     <input type="hidden" name="_checkGlobalScope" value="Y" />
@@ -50,7 +50,7 @@ code package.
       <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
         <@tr id="productFeatureId_tableRow_${rowCount}" valign="middle">
             <input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
-            <@td><a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${productFeature.productFeatureId}</a></@td>
+            <@td><a href="<@pageUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@pageUrl>" class="${styles.link_nav_info_id!}">${productFeature.productFeatureId}</a></@td>
             <@td>${productFeature.description!}</@td>
             <@td><#if curProductFeatureType??>${curProductFeatureType.description!}<#else> [${productFeature.productFeatureTypeId}]</#if></@td>
             <@td>

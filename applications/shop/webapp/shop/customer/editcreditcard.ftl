@@ -8,7 +8,7 @@ code package.
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.AccountingCardInfoNotBelongToYou}.</@commonMsg>
   <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
   </@menu>
 <#else>
 
@@ -18,7 +18,7 @@ code package.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
     <@menuitem type="link" href="javascript:document.editcreditcardform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
@@ -30,7 +30,7 @@ code package.
 </#if>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
 
-  <form method="post" action="<@ofbizUrl><#if !creditCard??>createCreditCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>updateCreditCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editcreditcardform">
+  <form method="post" action="<@pageUrl><#if !creditCard??>createCreditCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>updateCreditCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@pageUrl>" name="editcreditcardform">
   
   <#if creditCard??>
     <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />

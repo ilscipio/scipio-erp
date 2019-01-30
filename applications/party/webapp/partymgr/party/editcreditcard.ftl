@@ -12,7 +12,7 @@ code package.
 <@section title=sectionTitle menuContent=menuContent>
     <#macro saveCancelMenu>
       <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") text=uiLabelMap.CommonCancelDone class="+${styles.action_nav!} ${styles.action_cancel!}" />
+        <@menuitem type="link" href=makePageUrl("${donePage}?partyId=${partyId}") text=uiLabelMap.CommonCancelDone class="+${styles.action_nav!} ${styles.action_cancel!}" />
         <@menuitem type="link" href="javascript:document.editcreditcardform.submit()" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}" />
       </@menu>
     </#macro>
@@ -20,9 +20,9 @@ code package.
     <#--<@saveCancelMenu />-->
 
     <#if !creditCard??>
-      <form method="post" action="<@ofbizUrl>createCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform">
+      <form method="post" action="<@pageUrl>createCreditCard?DONE_PAGE=${donePage}</@pageUrl>" name="editcreditcardform">
     <#else>
-      <form method="post" action="<@ofbizUrl>updateCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editcreditcardform">
+      <form method="post" action="<@pageUrl>updateCreditCard?DONE_PAGE=${donePage}</@pageUrl>" name="editcreditcardform">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
@@ -35,7 +35,7 @@ code package.
         <@field type="generic" label=uiLabelMap.AccountingBillingAddress>
           <@fields type="default-manual" ignoreParentField=true>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-            <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
+            <a href="<@pageUrl>editcontactmech</@pageUrl>" class="${styles.link_nav!} ${styles.action_add!}">
               [Create New Address]</a>&nbsp;&nbsp;
             -->
             <@table type="data-complex">

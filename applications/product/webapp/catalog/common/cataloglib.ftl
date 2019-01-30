@@ -9,7 +9,7 @@
 <#function makeProductShopPageUrl productId>
   <#local productPageUrl = getPropertyValue("catalog", "shop.default.link.product.prefix")!>
   <#if productPageUrl?has_content && productId?has_content>
-    <#return makeOfbizInterWebappUrl(productPageUrl+(escapeVal(productId, 'url')))>
+    <#return makeServerUrl(productPageUrl+(escapeVal(productId, 'url')))>
   </#if>
 </#function>
 
@@ -17,7 +17,7 @@
 <#function makeCategoryShopPageUrl categoryId>
   <#local categoryPageUrl = getPropertyValue("catalog", "shop.default.link.category.prefix")!>
   <#if categoryPageUrl?has_content && categoryId?has_content>
-    <#return makeOfbizInterWebappUrl(categoryPageUrl+(escapeVal(categoryId, 'url')))>
+    <#return makeServerUrl(categoryPageUrl+(escapeVal(categoryId, 'url')))>
   </#if>
 </#function>
 

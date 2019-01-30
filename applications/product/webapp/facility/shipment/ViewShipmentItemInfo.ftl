@@ -24,14 +24,14 @@ code package.
             <#assign product = shipmentItemData.product!>
             <@tr valign="middle">
                 <@td>${shipmentItem.shipmentItemSeqId}</@td>
-                <@td colspan="2"><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${shipmentItem.productId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}" target="_blank">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
+                <@td colspan="2"><a href="<@serverUrl>/catalog/control/ViewProduct?productId=${shipmentItem.productId!}</@serverUrl>" class="${styles.link_nav_info_idname!}" target="_blank">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
                 <@td>${shipmentItem.quantity?default("&nbsp;")}</@td>
                 <@td colspan="2">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</@td>
             </@tr>
             <#list orderShipments as orderShipment>
                 <@tr valign="middle" groupLast=true>
                     <@td>&nbsp;</@td>
-                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderShipment.orderId!}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav_info_id_long!}">${orderShipment.orderId!} - ${orderShipment.orderItemSeqId!}</a></@td>
+                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderShipment.orderId!}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@serverUrl>" target="_blank" class="${styles.link_nav_info_id_long!}">${orderShipment.orderId!} - ${orderShipment.orderItemSeqId!}</a></@td>
                     <@td>&nbsp;</@td>
                     <@td>${orderShipment.quantity!}</@td>
                     <@td>&nbsp;</@td>
@@ -41,8 +41,8 @@ code package.
             <#list itemIssuances as itemIssuance>
                 <@tr valign="middle" groupLast=true>
                     <@td>&nbsp;</@td>
-                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav_info_id_long!}">${itemIssuance.orderId!} - ${itemIssuance.orderItemSeqId!}</a></@td>
-                    <@td><span>${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" target="_blank" class="${styles.link_nav_info_id!}">${itemIssuance.inventoryItemId!}</a></@td>
+                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@serverUrl>" target="_blank" class="${styles.link_nav_info_id_long!}">${itemIssuance.orderId!} - ${itemIssuance.orderItemSeqId!}</a></@td>
+                    <@td><span>${uiLabelMap.ProductInventory}</span> <a href="<@pageUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@pageUrl>" target="_blank" class="${styles.link_nav_info_id!}">${itemIssuance.inventoryItemId!}</a></@td>
                     <@td>${itemIssuance.quantity!}</@td>
                     <@td>${itemIssuance.issuedDateTime!}</@td>
                     <@td>${uiLabelMap.ProductFuturePartyRoleList}</@td>

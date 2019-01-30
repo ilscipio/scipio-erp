@@ -31,7 +31,7 @@ code package.
                         <#assign product = subscription.getRelatedOne('Product', false)!>
                         <#if product?has_content>
                             <#assign productName = Static['org.ofbiz.product.product.ProductContentWrapper'].getProductContentAsText(product, 'PRODUCT_NAME', request, "raw")!>
-                            <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${productName!product.productId}</a>
+                            <a href="<@pageUrl>product?product_id=${product.productId}</@pageUrl>" class="${styles.link_nav_info_name!}">${productName!product.productId}</a>
                         </#if>
                     </@td>
                     <@td>${subscription.fromDate!}</@td>

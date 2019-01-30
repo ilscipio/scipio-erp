@@ -20,7 +20,7 @@
 </#if>
 
 <#--<@section> already in screen-->
-    <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=submitFormId action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["facilityId"]/>
         <@field type="hidden" name="isCreateFacility" value=(facility??)?string("N","Y")/>
         

@@ -9,9 +9,9 @@ code package.
   <title>${uiLabelMap.EcommerceTellAFriend}</title>
 </head>
 <body class="ecbody">
-    <form name="tellafriend" action="<@ofbizUrl>emailFriend</@ofbizUrl>" method="post">
+    <form name="tellafriend" action="<@pageUrl>emailFriend</@pageUrl>" method="post">
         <#if (requestParameters.productId)?? || (requestParameters.productId)??>
-            <input type="hidden" name="pageUrl" value="<@ofbizCatalogAltUrl fullPath=true productCategoryId=requestParameters.categoryId!"" productId=requestParameters.productId!""/>" />
+            <input type="hidden" name="pageUrl" value="<@catalogAltUrl fullPath=true productCategoryId=requestParameters.categoryId!"" productId=requestParameters.productId!""/>" />
         <#else>
             <#assign cancel = "Y">
         </#if>

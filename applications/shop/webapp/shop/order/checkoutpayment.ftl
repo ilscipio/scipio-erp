@@ -18,7 +18,7 @@ code package.
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
-        form.action="<@ofbizUrl>checkoutoptions</@ofbizUrl>";
+        form.action="<@pageUrl>checkoutoptions</@pageUrl>";
         
         <#-- SCIPIO: must process some checkboxes -->
         if (jQuery('#newCreditCard_saveToAccount').is(":checked")) {
@@ -44,35 +44,35 @@ function submitForm(form, mode, value) {
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
-        form.action="<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/showcart</@pageUrl>";
         form.submit();
     } else if (mode == "NC") {
         // new credit card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment</@pageUrl>";
         form.submit();
     } else if (mode == "EC") {
         // edit credit card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "GC") {
         // edit gift card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editgiftcard?paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "NE") {
         // new eft account
-        form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment</@pageUrl>";
         form.submit();
     } else if (mode == "EE") {
         // edit eft account
-        form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "EG") {
         // edit gift card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "EA") { <#-- SCIPIO: new -->
         // edit address
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutpayment&contactMechId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=checkoutpayment&contactMechId="+value+"</@pageUrl>";
         form.submit();
     }
 }
@@ -122,9 +122,9 @@ jQuery(document).ready(function(){
   <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
     <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'NE', '');" class="+${styles.action_nav!} ${styles.action_add!}" text="${rawLabel('CommonAdd')} ${rawLabel('AccountingEFTAccount')}" />
   </#if>
-  <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=CC&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseCreditCard /></#if>
-  <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??><@menuitem type="link"  href=makeOfbizUrl("setBilling?paymentMethodType=GC&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseGiftCard /></#if>
-  <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=EFT&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseEFTAccount /></#if>
+  <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??><@menuitem type="link" href=makePageUrl("setBilling?paymentMethodType=CC&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseCreditCard /></#if>
+  <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??><@menuitem type="link"  href=makePageUrl("setBilling?paymentMethodType=GC&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseGiftCard /></#if>
+  <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??><@menuitem type="link" href=makePageUrl("setBilling?paymentMethodType=EFT&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseEFTAccount /></#if>
 -->
   </@menu>
 </#macro>
@@ -381,7 +381,7 @@ jQuery(document).ready(function(){
             <@section containerId="content_STRIPE" containerClass="+pay-meth-content" containerStyle="display:none;"><#-- title=uiLabelMap.AccountingPayWithStripe-->
               <@payMethInfoPanel title=uiLabelMap.AccountingPayWithStripe>
                 <#-- <p>${uiLabelMap.OrderPaymentDescStripe}</p> -->   
-                <#-- <iframe src="<@ofbizInterWebappUrl fullPath=true>/stripe/control/getStripeJs</@ofbizInterWebappUrl>" frameborder="0" width="100%" scrolling="no" style="overflow:hidden;"></iframe> -->
+                <#-- <iframe src="<@serverUrl fullPath=true>/stripe/control/getStripeJs</@serverUrl>" frameborder="0" width="100%" scrolling="no" style="overflow:hidden;"></iframe> -->
                 
                 <@render resource="component://stripe/widget/CommonScreens.xml#stripeJsAndElements" 
                   ctxVars={

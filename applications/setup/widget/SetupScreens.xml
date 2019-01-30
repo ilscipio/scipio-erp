@@ -893,7 +893,7 @@
                             <html>
                                 <html-template><![CDATA[
                                   <#include "component://setup/webapp/setup/common/common.ftl">
-                                  <@form method="get" action=makeOfbizUrl("setupCatalog") id=newCatalogFormId>
+                                  <@form method="get" action=makePageUrl("setupCatalog") id=newCatalogFormId>
                                     <@defaultWizardFormFields exclude=["prodCatalogId"]/>
                                     <@field type="hidden" name="setupContinue" value="N"/>
                                     <@field type="hidden" name="newCatalog" value="Y"/>

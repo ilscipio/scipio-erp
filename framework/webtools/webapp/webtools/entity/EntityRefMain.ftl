@@ -50,10 +50,10 @@ code package.
                             </div>
                             <div>${entity.title}&nbsp;
                                 <#if !forstatic>
-                                    <a target="main" href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@ofbizUrl>">[${uiLabelMap.WebtoolsViewData}]</a>
+                                    <a target="main" href="<@pageUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@pageUrl>">[${uiLabelMap.WebtoolsViewData}]</a>
                                 </#if>
                                 <#if !forstatic>
-                                    <a target="main" href="<@ofbizUrl>ArtifactInfo?name=${entity.entityName}&amp;type=entity</@ofbizUrl>">[${uiLabelMap.WebtoolsArtifactInfo}]</a>
+                                    <a target="main" href="<@pageUrl>ArtifactInfo?name=${entity.entityName}&amp;type=entity</@pageUrl>">[${uiLabelMap.WebtoolsArtifactInfo}]</a>
                                 </#if>
                             </div>
                             <#if entity.description?has_content &&

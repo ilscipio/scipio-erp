@@ -5,9 +5,9 @@ code package.
 -->
 
 <@menu type="button">
-  <@menuitem type="link" href=makeOfbizUrl("EditProductConfigItemContent?configItemId=${configItemId}") text="${rawLabel('ProductProduct')} ${rawLabel('ProductConfigItem')} ${rawLabel('ProductContent')} ${rawLabel('CommonList')}" class="+${styles.action_nav!}" />
+  <@menuitem type="link" href=makePageUrl("EditProductConfigItemContent?configItemId=${configItemId}") text="${rawLabel('ProductProduct')} ${rawLabel('ProductConfigItem')} ${rawLabel('ProductContent')} ${rawLabel('CommonList')}" class="+${styles.action_nav!}" />
 <#if contentId?has_content>
-  <@menuitem type="link" href=makeOfbizInterWebappUrl("/content/control/EditContent?contentId=${contentId}") target='_blank' text="${rawLabel('ProductContent')} ${rawLabel('CommonPage')}" class="+${styles.action_nav!}" />
+  <@menuitem type="link" href=makeServerUrl("/content/control/EditContent?contentId=${contentId}") target='_blank' text="${rawLabel('ProductContent')} ${rawLabel('CommonPage')}" class="+${styles.action_nav!}" />
 </#if>
 </@menu>
 <br />

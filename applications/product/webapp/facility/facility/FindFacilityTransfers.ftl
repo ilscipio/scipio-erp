@@ -1,12 +1,12 @@
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("TransferInventoryItem?facilityId=${facilityId}") text=uiLabelMap.ProductNewInventoryTransfer class="+${styles.action_run_sys!} ${styles.action_update!}" />
+        <@menuitem type="link" href=makePageUrl("TransferInventoryItem?facilityId=${facilityId}") text=uiLabelMap.ProductNewInventoryTransfer class="+${styles.action_run_sys!} ${styles.action_update!}" />
   </@menu>
 </#macro>
 
 <@section menuContent=menuContent>
-    <@paginate mode="content" url=makeOfbizUrl("FindFacilityTransfers") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=arraySize!0>
-        <form action="<@ofbizUrl>FindFacilityTransfers</@ofbizUrl>" method="post" name="findFacilityTransfers" class="basic-form">
+    <@paginate mode="content" url=makePageUrl("FindFacilityTransfers") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=arraySize!0>
+        <form action="<@pageUrl>FindFacilityTransfers</@pageUrl>" method="post" name="findFacilityTransfers" class="basic-form">
             <input type="hidden" name="facilityId" value="${facilityId}" />
             <@row>
                 <@cell columns=12>

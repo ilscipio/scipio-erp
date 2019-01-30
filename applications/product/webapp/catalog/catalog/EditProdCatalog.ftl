@@ -5,7 +5,7 @@
         <#assign actionUri = "updateProdCatalog" />
         <#assign actionLabel = uiLabelMap.CommonUpdate />
     </#if>
-        <form method="post" action="<@ofbizUrl>${actionUri}</@ofbizUrl>" name="addProductCategoryMemberForm">        
+        <form method="post" action="<@pageUrl>${actionUri}</@pageUrl>" name="addProductCategoryMemberForm">        
             <#if !prodCatalog?has_content>
               <input type="hidden" name="isCreate" value="true" />
             </#if>

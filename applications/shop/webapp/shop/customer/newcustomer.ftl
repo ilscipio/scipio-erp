@@ -72,14 +72,14 @@ code package.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav_cancel!}" text=uiLabelMap.CommonCancel/>
+    <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav_cancel!}" text=uiLabelMap.CommonCancel/>
     <@menuitem type="link" href="javascript:document.getElementById('newuserform').submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave/>
   </@menu>
 </#macro>
 <#--${uiLabelMap.PartyRequestNewAccount}-->
 <@section menuContent=menuContent menuLayoutGeneral="bottom"><#-- title=uiLabelMap.EcommerceRegister-->
   <@commonMsg type="info">
-    ${uiLabelMap.PartyAlreadyHaveAccount}, <a href="<@ofbizUrl>checkLogin/main</@ofbizUrl>" class="${styles.link_nav_inline!} ${styles.action_login!}">${uiLabelMap.CommonLoginHere}</a>.
+    ${uiLabelMap.PartyAlreadyHaveAccount}, <a href="<@pageUrl>checkLogin/main</@pageUrl>" class="${styles.link_nav_inline!} ${styles.action_login!}">${uiLabelMap.CommonLoginHere}</a>.
   </@commonMsg>
 
 
@@ -114,7 +114,7 @@ code package.
   </#if>
 </#macro>
 
-<form method="post" action="<@ofbizUrl>createcustomer${previousParams}</@ofbizUrl>" id="newuserform" name="newuserform">
+<form method="post" action="<@pageUrl>createcustomer${previousParams}</@pageUrl>" id="newuserform" name="newuserform">
   
   <@commonMsg type="info-important">${uiLabelMap.CommonFieldsMarkedAreRequired}</@commonMsg>
 

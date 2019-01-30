@@ -8,7 +8,7 @@ code package.
 <#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)/>
 <#assign currentCatalogId = Static["org.ofbiz.product.catalog.CatalogWorker"].getCurrentCatalogId(request)/>
 
-<form name="advtokeywordsearchform" id="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
+<form name="advtokeywordsearchform" id="advtokeywordsearchform" method="post" action="<@pageUrl>keywordsearch</@pageUrl>">
   <#-- SCIPIO: don't hardcode these
   <input type="hidden" name="VIEW_SIZE" value="10"/>
   <input type="hidden" name="PAGING" value="Y"/>-->
@@ -16,7 +16,7 @@ code package.
   
   <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-          <@menuitem type="link" href=makeOfbizUrl("advancedsearch?resetSearch=true") text=uiLabelMap.CommonReset class="+${styles.action_nav!} ${styles.action_update!}"/>
+          <@menuitem type="link" href=makePageUrl("advancedsearch?resetSearch=true") text=uiLabelMap.CommonReset class="+${styles.action_nav!} ${styles.action_update!}"/>
       </@menu>
   </#macro>
   <@section title=uiLabelMap.ProductAdvancedSearch menuContent=menuContent><#-- uiLabelMap.ProductAdvancedSearchInCategory -->
@@ -141,15 +141,15 @@ code package.
   <#if searchOptionsHistoryList?has_content>
     <@section title="${rawLabel('OrderLastSearches')}...">
       <div>
-        <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_clear!}">${uiLabelMap.OrderClearSearchHistory}</a>
+        <a href="<@pageUrl>clearSearchOptionsHistoryList</@pageUrl>" class="${styles.link_run_session!} ${styles.action_clear!}">${uiLabelMap.OrderClearSearchHistory}</a>
         ${uiLabelMap.OrderClearSearchHistoryNote}
       </div>
     <#list searchOptionsHistoryList as searchOptions>
     <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
         <div>
           ${uiLabelMap.EcommerceSearchNumber}${searchOptions_index + 1}
-          <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonSearch}</a>
-          <a href="<@ofbizUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefine}</a>
+          <a href="<@pageUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&amp;clearSearch=N</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonSearch}</a>
+          <a href="<@pageUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@pageUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefine}</a>
         </div>
         <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator, locale)>
         <#list constraintStrings as constraintString>

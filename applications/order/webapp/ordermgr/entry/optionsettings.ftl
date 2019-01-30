@@ -14,7 +14,7 @@ code package.
     <@alert type="warning">${uiLabelMap.CommonWarning}: ${uiLabelMap.OrderNoShipMethodAvailable} ${uiLabelMap.OrderMayNotProceedWithOrder}</@alert>
   </#if>
 
-  <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+  <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
       <input type="hidden" name="finalizeMode" value="options"/>
               
 <#list 1..cart.getShipGroupSize() as currIndex>

@@ -18,14 +18,14 @@
             <@td>${currWebSite.siteName!}</@td>
             <@td>${currWebSite.isStoreDefault!}</@td>
             <@td>
-              <form method="get" action="<@ofbizUrl uri=makeSetupStepUri("store") escapeAs="html"/>">
+              <form method="get" action="<@pageUrl uri=makeSetupStepUri("store") escapeAs="html"/>">
                 <@setupStepFields name="store" exclude=["webSiteId"]/>
                 <input type="hidden" name="webSiteId" value="${currWebSite.webSiteId}"/>
                 <@field type="submit" text=uiLabelMap.CommonSelect class="+${styles.link_nav!} ${styles.action_update!}"/>
               </form>
               
               <a href="javascript:document.setProductStoreDefaultWebSite_${currWebSite_index}.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSetDefault}</a>
-              <form name="setProductStoreDefaultWebSite_${currWebSite_index}" method="post" action="<@ofbizUrl>setProductStoreDefaultWebSite</@ofbizUrl>">
+              <form name="setProductStoreDefaultWebSite_${currWebSite_index}" method="post" action="<@pageUrl>setProductStoreDefaultWebSite</@pageUrl>">
                 <@setupStepFields name="store" exclude=["webSiteId"]/>
                 <input type="hidden" name="webSiteId" value="${currWebSite.webSiteId}"/>
               </form>

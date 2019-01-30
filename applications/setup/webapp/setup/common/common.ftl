@@ -21,7 +21,7 @@
   <#if paramStr?has_content>
     <#local paramStr = "?" + paramStr>
   </#if>
-  <#return makeOfbizUrl("setup"+name?cap_first + paramStr)>
+  <#return makePageUrl("setup"+name?cap_first + paramStr)>
 </#function>
 
 <#function makeSetupStepUri name stepState=true>
@@ -44,7 +44,7 @@
 </#macro>
 
 <#macro setupExtAppLink uri text="" class="" target="_blank" extLoginKey=true>
-  <a href="<@ofbizInterWebappUrl uri=uri extLoginKey=extLoginKey escapeAs='html'/>"<#t/>
+  <a href="<@serverUrl uri=uri extLoginKey=extLoginKey escapeAs='html'/>"<#t/>
     <#if class?has_content> class="${class}"</#if><#t/>
     <#if target?has_content> target="${target}"</#if><#t/>
     ><#if text?has_content>${escapeVal(text, 'htmlmarkup')}<#else><#nested></#if></a><#t/>

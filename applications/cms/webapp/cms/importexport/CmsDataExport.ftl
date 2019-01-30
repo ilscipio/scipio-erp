@@ -30,7 +30,7 @@ code package.
     <#--<hr />-->
     <#if (useEntityMaintCheck!false)==false || security.hasPermission("ENTITY_MAINT", request)>
       <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("CmsDataExportRaw.xml") target="_blank" text=uiLabelMap.CmsClickHereToGetData class="+${styles.action_run_sys!} ${styles.action_export!}" />
+        <@menuitem type="link" href=makePageUrl("CmsDataExportRaw.xml") target="_blank" text=uiLabelMap.CmsClickHereToGetData class="+${styles.action_run_sys!} ${styles.action_export!}" />
       </@menu>
       <#-- SCIPIO: show options that were requested; screen looks deserted and gets confusing without -->
       <@section title=uiLabelMap.CommonOptions>
@@ -240,7 +240,7 @@ code package.
     </form>
   </#if>
 
-  <form method="post" action="<@ofbizUrl>CmsDataExport</@ofbizUrl>" name="entityExport" id="entityExportForm">
+  <form method="post" action="<@pageUrl>CmsDataExport</@pageUrl>" name="entityExport" id="entityExportForm">
     <input type="hidden" name="doExport" value="Y"/>
     <input type="hidden" name="showAdvanced" value="${showAdvanced?string}"/>
   <@section title=uiLabelMap.WebtoolsExport>

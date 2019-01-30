@@ -5,7 +5,7 @@ code package.
 -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("FindProductPriceRules") text=uiLabelMap.ProductFindRule class="+${styles.action_nav!} ${styles.action_find!}" />
+    <@menuitem type="link" href=makePageUrl("FindProductPriceRules") text=uiLabelMap.ProductFindRule class="+${styles.action_nav!} ${styles.action_find!}" />
   </@menu>
 </#macro>
 <@section title=uiLabelMap.ProductGlobalPriceRule menuContent=menuContent>
@@ -24,7 +24,7 @@ code package.
           <@tr valign="middle">
             <@td><b>${productPriceRule.productPriceRuleId}</b></@td>
             <@td>
-                <form method="post" action="<@ofbizUrl>updateProductPriceRule</@ofbizUrl>" name="updateProductPriceRule">
+                <form method="post" action="<@pageUrl>updateProductPriceRule</@pageUrl>" name="updateProductPriceRule">
                     <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                     <@field type="input" size="15" name="ruleName" value=productPriceRule.ruleName />
                     <@field type="input" size="15" name="description" value=(productPriceRule.description!) />
@@ -43,7 +43,7 @@ code package.
             </@td>
             <@td align="center">&nbsp;
               <#if !productPriceConds?has_content && !productPriceActions?has_content>
-                  <form method="post" action="<@ofbizUrl>deleteProductPriceRule</@ofbizUrl>" name="deleteProductPriceRule">
+                  <form method="post" action="<@pageUrl>deleteProductPriceRule</@pageUrl>" name="deleteProductPriceRule">
                       <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                       <@field type="submit" text=uiLabelMap.CommonDelete class="${styles.link_run_sys!} ${styles.action_remove!}" />
                   </form>
@@ -69,7 +69,7 @@ code package.
                         <#if (curCondSeqId >= maxCondSeqId)><#assign maxCondSeqId = curCondSeqId + 1></#if>
                         <@td><b>${productPriceCond.productPriceCondSeqId}</b></@td>
                         <@td>
-                            <form method="post" action="<@ofbizUrl>updateProductPriceCond</@ofbizUrl>">
+                            <form method="post" action="<@pageUrl>updateProductPriceCond</@pageUrl>">
                                 <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}"/>
                                 <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}"/>
                                 <@field type="select" name="inputParamEnumId" size="1">
@@ -101,7 +101,7 @@ code package.
                             </form>
                         </@td>
                         <@td align="center">
-                         <form name="deleteProductPriceCond_${productPriceCond_index}" method="post" action="<@ofbizUrl>deleteProductPriceCond</@ofbizUrl>">
+                         <form name="deleteProductPriceCond_${productPriceCond_index}" method="post" action="<@pageUrl>deleteProductPriceCond</@pageUrl>">
                            <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}" />
                            <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}" />
                            <@field type="submit" submitType="link" href="javascript:document.deleteProductPriceCond_${productPriceCond_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete />
@@ -112,7 +112,7 @@ code package.
                   <@tfoot>
                   <@tr>
                     <@td colspan="3">
-                        <form method="post" action="<@ofbizUrl>createProductPriceCond</@ofbizUrl>">
+                        <form method="post" action="<@pageUrl>createProductPriceCond</@pageUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                             <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
                             <@field type="select" name="inputParamEnumId" size="1">
@@ -147,7 +147,7 @@ code package.
                       <@tr valign="middle">
                         <@td><b>${productPriceAction.productPriceActionSeqId}</b></@td>
                         <@td>
-                            <form method="post" action="<@ofbizUrl>updateProductPriceAction</@ofbizUrl>">
+                            <form method="post" action="<@pageUrl>updateProductPriceAction</@pageUrl>">
                                 <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}" />
                                 <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}" />
                                 <@field type="select" name="productPriceActionTypeId" size="1">
@@ -167,7 +167,7 @@ code package.
                             </form>
                         </@td>
                         <@td align="center">
-                          <form name="deleteProductPriceAction_${productPriceAction_index}" method="post" action="<@ofbizUrl>deleteProductPriceAction</@ofbizUrl>">
+                          <form name="deleteProductPriceAction_${productPriceAction_index}" method="post" action="<@pageUrl>deleteProductPriceAction</@pageUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}" />
                             <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}" />
                             <@field type="submit" submitType="link" href="javascript:document.deleteProductPriceAction_${productPriceAction_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete />
@@ -178,7 +178,7 @@ code package.
                   <@tfoot>
                   <@tr>
                     <@td colspan="3">
-                        <form method="post" action="<@ofbizUrl>createProductPriceAction</@ofbizUrl>">
+                        <form method="post" action="<@pageUrl>createProductPriceAction</@pageUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                             <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
                             <@field type="select" name="productPriceActionTypeId" size="1">

@@ -15,11 +15,11 @@ code package.
     </#if>
 
     <#if smallImageUrl?has_content>
-        <#assign imgSrc = makeOfbizContentUrl(smallImageUrl) />
+        <#assign imgSrc = makeContentUrl(smallImageUrl) />
     <#else>
         <#assign imgSrc = "https://placehold.it/300x100"/>
     </#if>
-    <#assign imgLink><@ofbizCatalogAltUrl rawParams=true productCategoryId=requestParameters.category_id!"" productId=miniProduct.productId/></#assign>
+    <#assign imgLink><@catalogAltUrl rawParams=true productCategoryId=requestParameters.category_id!"" productId=miniProduct.productId/></#assign>
 
     <#assign productImage>
         <#-- has no effect: (imgSrc!"https://placehold.it/300x100") -->
@@ -43,7 +43,7 @@ code package.
                 <@ofbizCurrency amount=priceResult.price isoCode=priceResult.currencyUsed/>
             </#if>
           </#if>
-          <a href="<@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=miniProduct.productId/>"><i class="${styles.icon} ${styles.icon_prefix}magnifying-glass ${styles.icon_prefix!}search"></i></a>
+          <a href="<@catalogAltUrl productCategoryId=requestParameters.category_id!"" productId=miniProduct.productId/>"><i class="${styles.icon} ${styles.icon_prefix}magnifying-glass ${styles.icon_prefix!}search"></i></a>
         </@pli>
         </@pul>
 

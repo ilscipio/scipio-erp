@@ -21,7 +21,7 @@ code package.
           <#assign localeSel = true>
         </#if>
         <li lang="${langAttr}" dir="${langDir}">
-            <a href="<@ofbizUrl>setSessionLocale</@ofbizUrl>?newLocale=${availableLocale.toString()}" <#if localeSel> class="localelist-selected"</#if>>${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${langAttr}]<#if localeSel> *</#if></a>
+            <a href="<@pageUrl>setSessionLocale</@pageUrl>?newLocale=${availableLocale.toString()}" <#if localeSel> class="localelist-selected"</#if>>${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${langAttr}]<#if localeSel> *</#if></a>
         </li>
     </#list>
   </ul>

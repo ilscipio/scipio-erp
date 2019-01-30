@@ -11,14 +11,14 @@ code package.
     <@cell>
     ${uiLabelMap.ProductYouSearchedFor}
     <#list searchConstraintStrings as searchConstraintString>
-      <a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</li>
+      <a href="<@pageUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@pageUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</li>
     </#list>
     </@cell>
 </@row>-->
 
 <@row>
     <@cell>
-        ${uiLabelMap.CommonSortedBy}: ${searchSortOrderString} (<a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="${styles.action_find!}">${uiLabelMap.CommonRefineSearch}</a>)
+        ${uiLabelMap.CommonSortedBy}: ${searchSortOrderString} (<a href="<@pageUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@pageUrl>" class="${styles.action_find!}">${uiLabelMap.CommonRefineSearch}</a>)
     </@cell>
 </@row>
 
@@ -35,7 +35,7 @@ code package.
       <#assign pagingEnabled = ((viewSize!1) > 0)><#-- (default is enabled) -->
     </#if>
   </#if>
-  <@paginate enabled=pagingEnabled mode="content" url=makeOfbizUrl("keywordsearch") paramStr="~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=(viewSize!1) viewIndex=(viewIndex!0) listSize=(listSize!0)>
+  <@paginate enabled=pagingEnabled mode="content" url=makePageUrl("keywordsearch") paramStr="~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=(viewSize!1) viewIndex=(viewIndex!0) listSize=(listSize!0)>
     <@grid columns=4>    
         <#list productIds as productId> 
             <#-- note that there is no boundary range because that is being done before the list is put in the content -->

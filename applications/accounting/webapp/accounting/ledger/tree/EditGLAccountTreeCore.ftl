@@ -113,7 +113,7 @@ egltHandler = new ScpAccountingTreeHandler({
     },
     markupSelectors: <@objectAsScript object=egltDefMarkupSelectors lang='js'/>,
     links: {           
-    	getGlAccountExtendedData: '<@ofbizUrl uri="getGlAccountExtendedData" escapeAs="js"/>',
+    	getGlAccountExtendedData: '<@pageUrl uri="getGlAccountExtendedData" escapeAs="js"/>',
     },
     callbacks: <@objectAsScript object=(egltCallbacks!{}) lang='js'/>,
     targetNodeInfo: <@objectAsScript object=(egltTargetNodeInfo!{}) lang='js'/>,

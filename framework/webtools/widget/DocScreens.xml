@@ -45,7 +45,7 @@ code package.
                               <@section title=getLabel('ContentContents', 'ContentUiLabels')>
                                 <ol>
                                   <li>
-                                    <@heading><a href="<@ofbizWebappUrl uri=tmplApiMasterWebappUri escapeAs='html'/>">
+                                    <@heading><a href="<@appUrl uri=tmplApiMasterWebappUri escapeAs='html'/>">
                                       ${getLabel('WebtoolsTemplateApiDocsTitle')}</a></@heading> - current, automatically generated from your local instance source files.
                                     <br/><small>Alternatively, the Scipio website provides a periodically updated version at 
                                         <a href="http://www.scipioerp.com/community/developer/freemarker-macros/" target="_blank">http://www.scipioerp.com/community/developer/freemarker-macros/</a>.</small>  

@@ -76,7 +76,7 @@ function addRemovePageViewMappings(treeId) {
         -->
 
         if (true) {
-            updateCmsElement("<@ofbizUrl escapeAs='js'>addRemovePageViewMappings</@ofbizUrl>", 
+            updateCmsElement("<@pageUrl escapeAs='js'>addRemovePageViewMappings</@pageUrl>", 
                 {
                   "pageId" : "${escapeVal(pageId, 'js')}",
                   "addViewNameList" : toServiceListArgStrRepr(addedIds),

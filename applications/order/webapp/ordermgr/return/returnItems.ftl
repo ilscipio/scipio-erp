@@ -59,16 +59,16 @@ code package.
     <#if returnHeader?has_content>
       <#if returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId?starts_with("CUSTOMER_")>
         <#list returnShipmentIds as returnShipmentId>
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/EditShipment?shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text="${rawLabel('ProductShipmentId')} ${rawString(returnShipmentId.shipmentId)}" class="+${styles.action_nav!} ${styles.action_view!}" />
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId!}&shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text=uiLabelMap.OrderReceiveReturn class="+${styles.action_nav!} ${styles.action_receive!}" />
+          <@menuitem type="link" href=makeServerUrl("/facility/control/EditShipment?shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text="${rawLabel('ProductShipmentId')} ${rawString(returnShipmentId.shipmentId)}" class="+${styles.action_nav!} ${styles.action_view!}" />
+          <@menuitem type="link" href=makeServerUrl("/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId!}&shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text=uiLabelMap.OrderReceiveReturn class="+${styles.action_nav!} ${styles.action_receive!}" />
         </#list>
       <#elseif returnHeader.statusId == "SUP_RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId == "VENDOR_RETURN">
          <#if returnShipmentIds?has_content>
            <#list returnShipmentIds as returnShipmentId>
-             <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/EditShipment?shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text="${rawLabel('ProductShipmentId')} ${rawString(returnShipmentId.shipmentId)}" class="+${styles.action_nav!} ${styles.action_view!}" />
+             <@menuitem type="link" href=makeServerUrl("/facility/control/EditShipment?shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text="${rawLabel('ProductShipmentId')} ${rawString(returnShipmentId.shipmentId)}" class="+${styles.action_nav!} ${styles.action_view!}" />
            </#list>
          <#else>
-           <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/EditShipment?primaryReturnId=${returnHeader.returnId}&partyIdTo=${toPartyId}&statusId=SHIPMENT_INPUT&shipmentTypeId=PURCHASE_RETURN") text=uiLabelMap.OrderCreateReturnShipment class="+${styles.action_nav!} ${styles.action_add!}" />
+           <@menuitem type="link" href=makeServerUrl("/facility/control/EditShipment?primaryReturnId=${returnHeader.returnId}&partyIdTo=${toPartyId}&statusId=SHIPMENT_INPUT&shipmentTypeId=PURCHASE_RETURN") text=uiLabelMap.OrderCreateReturnShipment class="+${styles.action_nav!} ${styles.action_add!}" />
          </#if>
       </#if>
     </#if>
@@ -77,7 +77,7 @@ code package.
 <@section title=uiLabelMap.PageTitleReturnItems menuContent=menuContent>
   <#-- if we're called with loadOrderItems or createReturn, then orderId would exist -->
   <#if !requestParameters.orderId?? && returnHeader?has_content>
-          <form method="post" action="<@ofbizUrl>updateReturnItems</@ofbizUrl>">
+          <form method="post" action="<@pageUrl>updateReturnItems</@pageUrl>">
           <input type="hidden" name="_useRowSubmit" value="Y" />
         <@table type="data-complex" autoAltRows=false>
           <#assign readOnly = (returnHeader.statusId != "RETURN_REQUESTED" && returnHeader.statusId != "SUP_RETURN_REQUESTED")>
@@ -140,7 +140,7 @@ code package.
                  <#assign returnItemSubTotal = item.get("returnQuantity") * item.get("returnPrice") >
               </#if>
               <@tr valign="middle" alt=alt_row>
-                <@td><a href="<@ofbizUrl>orderview?orderId=${item.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${item.orderId}</a> - ${item.orderItemSeqId!(uiLabelMap.CommonNA)}
+                <@td><a href="<@pageUrl>orderview?orderId=${item.orderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${item.orderId}</a> - ${item.orderItemSeqId!(uiLabelMap.CommonNA)}
                   <input name="orderId_o_${rowCount}" value="${item.orderId}" type="hidden" />
                   <input name="returnId_o_${rowCount}" value="${item.returnId}" type="hidden" />
                   <input name="returnItemTypeId_o_${rowCount}" value="${item.returnItemTypeId}" type="hidden" />
@@ -149,7 +149,7 @@ code package.
                 </@td>
                 <@td>
                     <#if item.get("productId")??>
-                        <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${item.productId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${item.productId}</a>
+                        <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${item.productId}</@serverUrl>" class="${styles.link_nav_info_id!}">${item.productId}</a>
                     <#else>
                         ${uiLabelMap.CommonNA}
                     </#if></@td>
@@ -169,7 +169,7 @@ code package.
                     <#if item.receivedQuantity??>
                     <br />${uiLabelMap.OrderTotalQuantityReceive}: ${item.receivedQuantity}
                         <#list shipmentReceipts! as shipmentReceipt>
-                            <br />${uiLabelMap.OrderQty}: ${shipmentReceipt.quantityAccepted}, ${shipmentReceipt.datetimeReceived}, <a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.inventoryItemId}</a>
+                            <br />${uiLabelMap.OrderQty}: ${shipmentReceipt.quantityAccepted}, ${shipmentReceipt.datetimeReceived}, <a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.inventoryItemId}</a>
                         </#list>
                     </#if>
                     </@td>
@@ -225,11 +225,11 @@ code package.
                     <#assign itemResp = item.getRelatedOne("ReturnItemResponse", false)!>
                     <#if itemResp?has_content>
                       <#if itemResp.paymentId?has_content>
-                        <div>${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonNbr}<a href="<@ofbizInterWebappUrl>/accounting/control/paymentOverview?paymentId=${itemResp.paymentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemResp.paymentId}</a></div>
+                        <div>${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/paymentOverview?paymentId=${itemResp.paymentId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${itemResp.paymentId}</a></div>
                       <#elseif itemResp.replacementOrderId?has_content>
-                        <div>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderview?orderId=${itemResp.replacementOrderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${itemResp.replacementOrderId}</a></div>
+                        <div>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}<a href="<@pageUrl>orderview?orderId=${itemResp.replacementOrderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${itemResp.replacementOrderId}</a></div>
                       <#elseif itemResp.billingAccountId?has_content>
-                        <div>${uiLabelMap.AccountingAccountId} ${uiLabelMap.CommonNbr}<a href="<@ofbizInterWebappUrl>/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${itemResp.billingAccountId}</a></div>
+                        <div>${uiLabelMap.AccountingAccountId} ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${itemResp.billingAccountId}</a></div>
                       </#if>
                     <#else>
                       <div>${uiLabelMap.CommonNone}</div>
@@ -291,7 +291,7 @@ code package.
         </form>
         <#if returnItems?has_content>
           <#list returnItems as item>
-            <form name="removeReturnItem_${item_index}" method="post" action="<@ofbizUrl>removeReturnItem</@ofbizUrl>">
+            <form name="removeReturnItem_${item_index}" method="post" action="<@pageUrl>removeReturnItem</@pageUrl>">
               <input type="hidden" name="returnId" value="${item.returnId}"/>
               <input type="hidden" name="returnItemSeqId" value="${item.returnItemSeqId}"/>
             </form>
@@ -299,7 +299,7 @@ code package.
         </#if>
         <#if returnAdjustments?has_content>
           <#list returnAdjustments as returnAdjustment>
-            <form name="removeReturnAdjustment_${returnAdjustment_index}" method="post" action="<@ofbizUrl>removeReturnAdjustment</@ofbizUrl>">
+            <form name="removeReturnAdjustment_${returnAdjustment_index}" method="post" action="<@pageUrl>removeReturnAdjustment</@pageUrl>">
               <input type="hidden" name="returnId" value="${returnAdjustment.returnId}"/>
               <input type="hidden" name="returnAdjustmentId" value="${returnAdjustment.returnAdjustmentId}"/>
             </form>
@@ -307,7 +307,7 @@ code package.
         </#if>
         <#if (returnHeader.statusId == "RETURN_REQUESTED" || returnHeader.statusId == "SUP_RETURN_REQUESTED") && (rowCount > 0)>
         <br />
-        <form name="acceptReturn" method="post" action="<@ofbizUrl>updateReturn</@ofbizUrl>">
+        <form name="acceptReturn" method="post" action="<@pageUrl>updateReturn</@pageUrl>">
           <#if returnHeader.returnHeaderTypeId?starts_with("CUSTOMER_")>
             <#assign statusId = "RETURN_ACCEPTED">
           <#else>
@@ -322,7 +322,7 @@ code package.
 
         <#if returnHeader.statusId == "RETURN_REQUESTED" || returnHeader.statusId == "SUP_RETURN_REQUESTED">
         <@section title=uiLabelMap.OrderReturnItems>
-        <form name="returnItems" method="post" action="<@ofbizUrl>returnItems</@ofbizUrl>">
+        <form name="returnItems" method="post" action="<@pageUrl>returnItems</@pageUrl>">
           <input type="hidden" name="returnId" value="${returnId}" />
             <#if partyOrders?has_content>
               <@field type="select" label=uiLabelMap.OrderOrderId tooltip=uiLabelMap.OrderReturnLoadItems name="orderId">
@@ -343,7 +343,7 @@ code package.
   <#-- if no requestParameters.orderId??, then show list of items -->
   <#elseif returnHeader?has_content>
         <#assign selectAllFormName = "returnItems"/>
-        <form name="returnItems" method="post" action="<@ofbizUrl>createReturnItems</@ofbizUrl>">
+        <form name="returnItems" method="post" action="<@pageUrl>createReturnItems</@pageUrl>">
           <input type="hidden" name="returnId" value="${returnId}" />
           <input type="hidden" name="_useRowSubmit" value="Y" />
           <#include "returnItemInc.ftl"/>

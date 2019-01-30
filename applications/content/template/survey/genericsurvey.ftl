@@ -56,7 +56,7 @@ code package.
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CONTENT">
      <#if (answer.contentId)?has_content>
       <#assign content = answer.getRelatedOne("Content", false)>
-      <a href="<@ofbizInterWebappUrl>/content/control/img?imgId=${content.dataResourceId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName!}&nbsp;&nbsp;&nbsp;
+      <a href="<@serverUrl>/content/control/img?imgId=${content.dataResourceId}</@serverUrl>" class="${styles.link_nav_info_id!}">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName!}&nbsp;&nbsp;&nbsp;
     </#if>
     <input type="file" size="15" name="${questionFieldName}"/>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">

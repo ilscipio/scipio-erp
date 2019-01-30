@@ -6,7 +6,7 @@ code package.
 
 <@section>
         <#-- checkoutsetupform is used for the order entry "continue" link -->
-        <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+        <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="term" />
         </form>
         <@row>
@@ -32,8 +32,8 @@ code package.
                                         <@td nowrap="nowrap">${orderTerm.textValue!}</@td>
                                         <@td nowrap="nowrap">${orderTerm.description!}</@td>
                                         <@td align="right">
-                                            <a href="<@ofbizUrl>setOrderTerm?termIndex=${orderTerm_index}&amp;createNew=Y</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                                            <a href="<@ofbizUrl>removeCartOrderTerm?termIndex=${orderTerm_index}</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
+                                            <a href="<@pageUrl>setOrderTerm?termIndex=${orderTerm_index}&amp;createNew=Y</@pageUrl>" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                                            <a href="<@pageUrl>removeCartOrderTerm?termIndex=${orderTerm_index}</@pageUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
                                         </@td>
                                     </@tr>
                                 </#list>
@@ -41,13 +41,13 @@ code package.
                               <@tfoot>
                                 <@tr>
                                     <@td colspan="5">
-                                      <a href="<@ofbizUrl>setOrderTerm?createNew=Y</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.CommonNew}</a>
+                                      <a href="<@pageUrl>setOrderTerm?createNew=Y</@pageUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.CommonNew}</a>
                                     </@td>
                                 </@tr>
                               </@tfoot>
                             </@table>
                         <#else>
-                            <form method="post" action="<@ofbizUrl>addOrderTerm</@ofbizUrl>" name="termform">
+                            <form method="post" action="<@pageUrl>addOrderTerm</@pageUrl>" name="termform">
                                 <input type="hidden" name="termIndex" value="${termIndex!}" />
                                     <@field type="select" label=uiLabelMap.OrderOrderTermType name="termTypeId">
                                             <option value=""></option>

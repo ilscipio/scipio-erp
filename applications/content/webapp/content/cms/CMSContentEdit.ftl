@@ -56,7 +56,7 @@ ${menuWrapper.renderMenuString()}
       <@table type="fields" width="100%" class="+boxbottom">
         <@tr>
           <@td>
-            <form mode="post" name="publishsite" action="<@ofbizUrl>linkContentToPubPt</@ofbizUrl>">
+            <form mode="post" name="publishsite" action="<@pageUrl>linkContentToPubPt</@pageUrl>">
               <input type="hidden" name="contentId" value="${contentId}"/>
               <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%">
                     <#assign rowCount = 0 />
@@ -97,7 +97,7 @@ ${menuWrapper.renderMenuString()}
       <@table type="fields" width="100%" class="+boxbottom">
         <@tr>
           <@td>
-            <form mode="post" name="updatefeatures" action="<@ofbizUrl>updateFeatures</@ofbizUrl>">
+            <form mode="post" name="updatefeatures" action="<@pageUrl>updateFeatures</@pageUrl>">
               <input type="hidden" name="contentId" value="${contentId}"/>
               <@fields type="default-manual">
               <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%">
@@ -166,7 +166,7 @@ ${menuWrapper.renderMenuString()}
             <div class="boxhead">&nbsp;Image Information</div>
           </@td>
           <@td valign="middle" align="right">
-            <a href="<@ofbizUrl>EditAddImage?contentId=${imgContentId!}dataResourceId=${imgDataResourceId!}</@ofbizUrl>" class="submenutextright">Update</a>
+            <a href="<@pageUrl>EditAddImage?contentId=${imgContentId!}dataResourceId=${imgDataResourceId!}</@pageUrl>" class="submenutextright">Update</a>
           </@td>
         </@tr>
       </@table>
@@ -179,7 +179,7 @@ ${menuWrapper.renderMenuString()}
           <@td>
               <@table type="fields" width="100%">
                 <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Image</b></div></@td><@td>&nbsp;</@td><@td><div class="tabletext">
-                    <img src="<@ofbizUrl>img?imgId=${imgDataResourceId!}</@ofbizUrl>" alt="" />
+                    <img src="<@pageUrl>img?imgId=${imgDataResourceId!}</@pageUrl>" alt="" />
                     <div></@td></@tr>
               </@table>
           </@td>
@@ -227,7 +227,7 @@ ${menuWrapper.renderMenuString()}
             <div class="boxhead">&nbsp;</div>
           </@td>
           <@td valign="middle" align="right">
-            <a href="<@ofbizUrl>EditAddContent?contentId=${content.contentId!}&amp;contentIdTo=${content.caContentIdTo!}&amp;contentAssocTypeId=${content.caContentAssocTypeId!}&amp;fromDate=${content.caFromDate!}&amp;mapKey=${content.caMapKey!}</@ofbizUrl>" class="submenutextright">Update</a>
+            <a href="<@pageUrl>EditAddContent?contentId=${content.contentId!}&amp;contentIdTo=${content.caContentIdTo!}&amp;contentAssocTypeId=${content.caContentAssocTypeId!}&amp;fromDate=${content.caFromDate!}&amp;mapKey=${content.caMapKey!}</@pageUrl>" class="submenutextright">Update</a>
           </@td>
         </@tr>
       </@table>

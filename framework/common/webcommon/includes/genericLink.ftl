@@ -5,7 +5,7 @@ code package.
 -->
 
 <#if requestParameters?? && genericLinkName?? && genericLinkTarget?? && genericLinkText??>
-<form name="${escapeVal(genericLinkName, 'html')}"<#if genericLinkWindow??> target="${escapeVal(genericLinkWindow, 'html')}"</#if> action="${escapeVal(makeOfbizUrl(genericLinkTarget), 'html')}" method="post">
+<form name="${escapeVal(genericLinkName, 'html')}"<#if genericLinkWindow??> target="${escapeVal(genericLinkWindow, 'html')}"</#if> action="${escapeVal(makePageUrl(genericLinkTarget), 'html')}" method="post">
 <#if (!excludeParameters?? || excludeParameters != "N") && requestParameters??>
 <#assign requestParameterKeys = requestParameters.keySet().iterator()>
 <#list requestParameterKeys as requestParameterKey>

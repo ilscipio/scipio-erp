@@ -42,7 +42,7 @@
     "useReqParams":useReqParams
 })>
 <#macro setupCatalogForm id formActionType target params treeFieldValues={}>
-    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=id name=id action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["prodCatalogId", "productStoreId", "partyId"]/>
         <@ectCommonTreeFormFields params=params initialValues=treeFieldValues/>
         <@field type="hidden" name="partyId" value=(partyId!)/>
@@ -140,7 +140,7 @@
 
 <div style="display:none;">
 <#macro setupDeleteCatalogForm id target isDeleteRecord>
-  <@form id=id action=makeOfbizUrl(target) method="post">
+  <@form id=id action=makePageUrl(target) method="post">
       <@defaultWizardFormFields exclude=["prodCatalogId", "productStoreId"]/>
       <@ectCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>

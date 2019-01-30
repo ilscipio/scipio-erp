@@ -9,7 +9,7 @@ code package.
 <hr />
 <#if security.hasPermission("ENTITY_MAINT", request)>
   <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl("xmldsrawdump") target="_blank" text="Click Here to Get Data (or save to file)" class="+${styles.action_run_sys!} ${styles.action_export!}" />
+    <@menuitem type="link" href=makePageUrl("xmldsrawdump") target="_blank" text="Click Here to Get Data (or save to file)" class="+${styles.action_run_sys!} ${styles.action_export!}" />
   </@menu>
 <#else>
   <@commonMsg type="error">${uiLabelMap.WebtoolsPermissionMaint}</@commonMsg>
@@ -18,8 +18,8 @@ code package.
 <#macro displayButtonBar>
   <@menu type="button">
     <@menuitem type="submit" text=uiLabelMap.WebtoolsExport class="+${styles.action_run_sys!} ${styles.action_export!}" />
-    <@menuitem type="link" href=makeOfbizUrl("xmldsdump?checkAll=true") text=uiLabelMap.WebtoolsCheckAll class="+${styles.action_run_local!} ${styles.action_select!}" />
-    <@menuitem type="link" href=makeOfbizUrl("xmldsdump") text=uiLabelMap.WebtoolsUnCheckAll class="+${styles.action_run_local!} ${styles.action_select!}" />
+    <@menuitem type="link" href=makePageUrl("xmldsdump?checkAll=true") text=uiLabelMap.WebtoolsCheckAll class="+${styles.action_run_local!} ${styles.action_select!}" />
+    <@menuitem type="link" href=makePageUrl("xmldsdump") text=uiLabelMap.WebtoolsUnCheckAll class="+${styles.action_run_local!} ${styles.action_select!}" />
   </@menu>
 </#macro>
 
@@ -51,7 +51,7 @@ code package.
                     <#list exportList as record>
                         <@tr>
                             <@td width="100">
-                                <#assign exportUrl=makeOfbizWebappUrl("/export?exportId=" + rawString(record.exportId!)) />
+                                <#assign exportUrl=makeAppUrl("/export?exportId=" + rawString(record.exportId!)) />
                                 <a href="${exportUrl!""}" target="_blank">${uiLabelMap.FormFieldTitle_downloadAction}</a>
                             </@td>
                             
@@ -66,7 +66,7 @@ code package.
                                 ${record.description!""}
                             </@td>
                             <@td>
-                                <form method="post" action="<@ofbizUrl uri="deleteEntityExport"/>" id="EntityExport_remove_${record?index}">
+                                <form method="post" action="<@pageUrl uri="deleteEntityExport"/>" id="EntityExport_remove_${record?index}">
                                   <input type="hidden" name="exportId" value="${record.exportId!}"/>
                                   <a href="javascript:jQuery('#EntityExport_remove_${record?index}').submit();void(0);">${uiLabelMap.CommonDelete}</a>
                                 </form>
@@ -91,7 +91,7 @@ code package.
       </@section>
   </#if>
   
-  <form method="post" action="<@ofbizUrl>xmldsdump</@ofbizUrl>" name="entityExport">
+  <form method="post" action="<@pageUrl>xmldsdump</@pageUrl>" name="entityExport">
 
   <@section title=uiLabelMap.WebtoolsExport>
       

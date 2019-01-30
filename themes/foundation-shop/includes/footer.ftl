@@ -23,12 +23,12 @@ code package.
       <ul class="other-links">
         <#-- language select --> 
           <li>
-              <a href="<@ofbizUrl><#if userHasAccount>viewprofile<#else>ListLocales</#if></@ofbizUrl>">
+              <a href="<@pageUrl><#if userHasAccount>viewprofile<#else>ListLocales</#if></@pageUrl>">
                 ${uiLabelMap.CommonChooseLanguage}
               </a>
           </li>
-        <li><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>">${uiLabelMap.ProductPromotions}</a></li>
-        <li><a href="<@ofbizUrl>license</@ofbizUrl>">License</a></li>  
+        <li><a href="<@pageUrl>showAllPromotions</@pageUrl>">${uiLabelMap.ProductPromotions}</a></li>
+        <li><a href="<@pageUrl>license</@pageUrl>">License</a></li>  
         <li><a href="https://www.scipioerp.com/products/faq">FAQ's</a></li>
       </ul>
     </@cell>
@@ -60,7 +60,7 @@ code package.
         <@cell columns=12>
          <small>
          ${uiLabelMap.CommonCopyright} (c) 2014-${nowTimestamp?string("yyyy")} <a href="https://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. ${uiLabelMap.CommonPoweredBy} <a href="http://www.scipioerp.com" target="_blank">SCIPIO ERP</a>.
-         View <a href="<@ofbizUrl>license</@ofbizUrl>">LICENSE</a>.
+         View <a href="<@pageUrl>license</@pageUrl>">LICENSE</a>.
          <#include "ofbizhome://runtime/svninfo.ftl" /> <#include "ofbizhome://runtime/gitinfo.ftl" />
          </small>
         </@cell>
@@ -76,7 +76,7 @@ code package.
         <#list layoutSettings.VT_FTPR_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -87,7 +87,7 @@ code package.
         <#list layoutSettings.javaScriptsFooter as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -100,7 +100,7 @@ code package.
         <#list layoutSettings.VT_FTR_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -113,7 +113,7 @@ code package.
         <#list layoutSettings.VT_BTM_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>

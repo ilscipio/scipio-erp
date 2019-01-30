@@ -32,14 +32,14 @@ code package.
           <@td>
             <#-- SCIPIO: NOTE: There is more than one kind of invoice, the PDF accessible upon creation, and additional invoices
                 created upon order completion. Just show it all for now (final invoice may have more information). -->
-            <a href="<@ofbizUrl>order.pdf?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">${orderHeader.orderId} (${uiLabelMap.CommonPdf})</a>
+            <a href="<@pageUrl>order.pdf?orderId=${orderHeader.orderId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">${orderHeader.orderId} (${uiLabelMap.CommonPdf})</a>
             <#if distinctInvoiceIds?has_content>
               <#list distinctInvoiceIds as invoiceId>
-                <a href="<@ofbizUrl>invoice.pdf?invoiceId=${invoiceId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">${invoiceId} (${uiLabelMap.CommonPdf})</a>
+                <a href="<@pageUrl>invoice.pdf?invoiceId=${invoiceId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">${invoiceId} (${uiLabelMap.CommonPdf})</a>
               </#list>
             </#if>
           </@td>
-          <@td><a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></@td>
+          <@td><a href="<@pageUrl>orderstatus?orderId=${orderHeader.orderId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></@td>
         </@tr>
       </#list>
       </@tbody>
@@ -69,7 +69,7 @@ code package.
               <@td>${porderHeader.orderId}</@td>
               <@td><@ofbizCurrency amount=porderHeader.grandTotal isoCode=porderHeader.currencyUom /></@td>
               <@td>${pstatus.get("description",locale)}</@td>
-              <@td><a href="<@ofbizUrl>orderstatus?orderId=${porderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></@td>
+              <@td><a href="<@pageUrl>orderstatus?orderId=${porderHeader.orderId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></@td>
             </@tr>
           </#list>
       </@tbody>
@@ -84,7 +84,7 @@ code package.
   <#assign sectionTitle = uiLabelMap.EcommerceDownloadsAvailableTitle/>
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("orderdownloads") class="+${styles.action_nav!} ${styles.action_export!}" text=uiLabelMap.EcommerceViewAll />
+      <@menuitem type="link" href=makePageUrl("orderdownloads") class="+${styles.action_nav!} ${styles.action_export!}" text=uiLabelMap.EcommerceViewAll />
     </@menu>
   </#macro>
   <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">

@@ -17,17 +17,17 @@ code package.
         this code was BEFORE or LEFT of title, not after
         <div class="boxlink">
             <#if ((communicationEvent.partyIdFrom!) != (userLogin.partyId)!)>
-              <a href="<@ofbizUrl>newmessage?communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyReply}</a>
+              <a href="<@pageUrl>newmessage?communicationEventId=${communicationEvent.communicationEventId}</@pageUrl>" class="submenutext">${uiLabelMap.PartyReply}</a>
             </#if>
-            <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
+            <a href="<@pageUrl>messagelist</@pageUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
         </div>
 -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <#if ((communicationEvent.partyIdFrom!) != (userLogin.partyId)!)>
-          <@menuitem type="link" href=makeOfbizUrl("newmessage?communicationEventId=${communicationEvent.communicationEventId}") text=uiLabelMap.PartyReply />
+          <@menuitem type="link" href=makePageUrl("newmessage?communicationEventId=${communicationEvent.communicationEventId}") text=uiLabelMap.PartyReply />
         </#if>
-        <@menuitem type="link" href=makeOfbizUrl("messagelist") text=uiLabelMap.EcommerceViewList />
+        <@menuitem type="link" href=makePageUrl("messagelist") text=uiLabelMap.EcommerceViewList />
     </@menu>
 </#macro>
 <@section title=uiLabelMap.EcommerceReadMessage menuContent=menuContent menuLayoutTitle="inline-title">

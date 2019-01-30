@@ -18,7 +18,7 @@ function makeExpDate() {<#-- SCIPIO: Copied from ordermgr billsettings.ftl -->
 <@section>
     <#macro saveCancelMenu>
       <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") text=uiLabelMap.CommonCancelDone class="+${styles.action_nav!} ${styles.action_cancel!}" />
+        <@menuitem type="link" href=makePageUrl("${donePage}?partyId=${partyId}") text=uiLabelMap.CommonCancelDone class="+${styles.action_nav!} ${styles.action_cancel!}" />
         <@menuitem type="link" href="javascript:document.editgiftcardform.submit()" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}" />
       </@menu>
     </#macro>
@@ -26,9 +26,9 @@ function makeExpDate() {<#-- SCIPIO: Copied from ordermgr billsettings.ftl -->
     <#--<@saveCancelMenu />-->
 
     <#if !giftCard??>
-      <form method="post" action="<@ofbizUrl>createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
+      <form method="post" action="<@pageUrl>createGiftCard?DONE_PAGE=${donePage}</@pageUrl>" name="editgiftcardform">
     <#else>
-      <form method="post" action="<@ofbizUrl>updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>" name="editgiftcardform">
+      <form method="post" action="<@pageUrl>updateGiftCard?DONE_PAGE=${donePage}</@pageUrl>" name="editgiftcardform">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>

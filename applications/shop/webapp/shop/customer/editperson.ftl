@@ -18,14 +18,14 @@ code package.
 </#if>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
     <@menuitem type="link" href="javascript:document.editpersonform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
   <#-- SCIPIO: Bugfix? action used to be this: <#if person??>updatePerson<#else>createPerson/${donePage}</#if> 
     but the view override is inconsistent with the other edit*.ftl pages. -->
-  <form id="editpersonform1" method="post" action="<@ofbizUrl><#if person??>updatePerson?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>createPerson?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editpersonform">    
+  <form id="editpersonform1" method="post" action="<@pageUrl><#if person??>updatePerson?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>createPerson?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@pageUrl>" name="editpersonform">    
 
   <input type="hidden" name="partyId" value="${person.partyId!}" />
   

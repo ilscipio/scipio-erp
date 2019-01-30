@@ -7,7 +7,7 @@ code package.
 <#-- SCIPIO: DEPRECATED? This was an alternate newcustomer template not even in use in stock ecommerce screens -->
 
 <@section title=uiLabelMap.EcommerceMyAccount>
-    <form id="newUserForm" method="post" action="<@ofbizUrl>createCustomerProfile</@ofbizUrl>">
+    <form id="newUserForm" method="post" action="<@pageUrl>createCustomerProfile</@pageUrl>">
       <fieldset class="left center">
         <legend>${uiLabelMap.PartyContactInformation}</legend>
         <input type="hidden" name="roleTypeId" value="CUSTOMER" />

@@ -72,8 +72,8 @@
       <#elseif activeSubMenuItem=="ListDocument">
           <#--Form ListDocument-->
           <@tr>
-              <@td><a class="plain" href="<@ofbizInterWebappUrl>/content/control/editContent?contentId=${contentData.contentId!}</@ofbizInterWebappUrl>">${contentData.contentName!}[${contentData.contentId!}]</a></@td>
-              <@td><a class="plain" href="<@ofbizInterWebappUrl>/content/control/showContent?contentId=${contentData.contentId!}</@ofbizInterWebappUrl>" target="_blank">${uiLabelMap.CommonView}</a></@td>
+              <@td><a class="plain" href="<@serverUrl>/content/control/editContent?contentId=${contentData.contentId!}</@serverUrl>">${contentData.contentName!}[${contentData.contentId!}]</a></@td>
+              <@td><a class="plain" href="<@serverUrl>/content/control/showContent?contentId=${contentData.contentId!}</@serverUrl>" target="_blank">${uiLabelMap.CommonView}</a></@td>
               <@td>${contentData.contentTypeId!}</@td>
               <@td>${contentData.mimeTypeId!}</@td>
               <@td>${contentData.statusId!}</@td>
@@ -83,7 +83,7 @@
               <@td>${caFromDate!}</@td>
               <@td><a href="javascript:document.listDocumentForm_${listcount}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
           </@tr>
-          <form action="<@ofbizUrl>removeDocumentFromTree</@ofbizUrl>" name="listDocumentForm_${listcount}" method="post">
+          <form action="<@pageUrl>removeDocumentFromTree</@pageUrl>" name="listDocumentForm_${listcount}" method="post">
             <input type="hidden" name="contentId" value="${contentData.contentIdStart!}"/>
             <input type="hidden" name="contentIdTo" value="${contentData.contentId!}"/>
             <input type="hidden" name="contentAssocTypeId" value="${contentData.caContentAssocTypeId!}"/>

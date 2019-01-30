@@ -19,8 +19,8 @@
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
 <#--
-<@script src=makeOfbizContentUrl("/images/jquery/plugins/jsTree/jquery.jstree.js") />
-<@script src=makeOfbizContentUrl("/images/jquery/ui/js/jquery.cookie-1.4.0.js") />-->
+<@script src=makeContentUrl("/images/jquery/plugins/jsTree/jquery.jstree.js") />
+<@script src=makeContentUrl("/images/jquery/ui/js/jquery.cookie-1.4.0.js") />-->
   
 <@script>
 <#-- some labels are not unescaped in the JSON object so we have to do this manuely -->
@@ -61,10 +61,10 @@ var rawdata = [
      ];
 
  <#-------------------------------------------------------------------------------------define Requests-->
-  var editDocumentTreeUrl = '<@ofbizUrl>views/EditDocumentTree</@ofbizUrl>';
-  var listDocument =  '<@ofbizUrl>views/ListDocument</@ofbizUrl>';
-  var editDocumentUrl = '<@ofbizUrl>views/EditDocument</@ofbizUrl>';
-  var deleteDocumentUrl = '<@ofbizUrl>removeDocumentFromTree</@ofbizUrl>';
+  var editDocumentTreeUrl = '<@pageUrl>views/EditDocumentTree</@pageUrl>';
+  var listDocument =  '<@pageUrl>views/ListDocument</@pageUrl>';
+  var editDocumentUrl = '<@pageUrl>views/EditDocument</@pageUrl>';
+  var deleteDocumentUrl = '<@pageUrl>removeDocumentFromTree</@pageUrl>';
 
  <#-------------------------------------------------------------------------------------create Tree-->
   function createTree() {
@@ -87,11 +87,11 @@ var rawdata = [
 
 <#-------------------------------------------------------------------------------------callDocument function-->
     function callDocument(id, parentCategoryStr) {
-        var checkUrl = '<@ofbizUrl>productCategoryList</@ofbizUrl>';
+        var checkUrl = '<@pageUrl>productCategoryList</@pageUrl>';
         if(checkUrl.search("http"))
-            var ajaxUrl = '<@ofbizUrl>productCategoryList</@ofbizUrl>';
+            var ajaxUrl = '<@pageUrl>productCategoryList</@pageUrl>';
         else
-            var ajaxUrl = '<@ofbizUrl>productCategoryListSecure</@ofbizUrl>';
+            var ajaxUrl = '<@pageUrl>productCategoryListSecure</@pageUrl>';
 
         //jQuerry Ajax Request
         jQuery.ajax({
@@ -183,7 +183,7 @@ var rawdata = [
     }
  <#------------------------------------------------------pagination function -->
     function nextPrevDocumentList(url){
-        url= '<@ofbizUrl>'+url+'</@ofbizUrl>';
+        url= '<@pageUrl>'+url+'</@pageUrl>';
          jQuery.ajax({
             url: url,
             type: 'POST',

@@ -23,9 +23,9 @@ code package.
                   TODO: REVIEW: it might be sane to assume the default for pcntListEditInterApp to be true instead of false... -->
               <#assign pcntListEditUri>EditPartyContents?contentId=${pContent.contentId}&amp;partyId=${pContent.partyId}&amp;partyContentTypeId=${pContent.partyContentTypeId}&amp;fromDate=${pContent.fromDate}</#assign>
               <#if (pcntListEditInterApp!false) == true>
-                <#assign pcntListEditLink><@ofbizInterWebappUrl extLoginKey=true>/partymgr/control/${pcntListEditUri}</@ofbizInterWebappUrl></#assign>
+                <#assign pcntListEditLink><@serverUrl extLoginKey=true>/partymgr/control/${pcntListEditUri}</@serverUrl></#assign>
               <#else>
-                <#assign pcntListEditLink><@ofbizUrl>${pcntListEditUri}</@ofbizUrl></#assign>
+                <#assign pcntListEditLink><@pageUrl>${pcntListEditUri}</@pageUrl></#assign>
               </#if>
               <@td class="button-col"><a href="${pcntListEditLink}">${content.contentId}</a></@td>
               
@@ -43,13 +43,13 @@ code package.
               <@td>${pContent.fromDate!}</@td>
               <@td class="button-col">
                 <#-- SCIPIO: 2018-04-10: the img? request is old and has issues with permissions and denies admins
-                <a href="<@ofbizUrl>img<#if (content.contentName?has_content)>/${content.contentName}</#if>?imgId=${(content.dataResourceId)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>-->
-                <a href="<@ofbizUrl>stream?contentId=${(content.contentId)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
+                <a href="<@pageUrl>img<#if (content.contentName?has_content)>/${content.contentName}</#if>?imgId=${(content.dataResourceId)!}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>-->
+                <a href="<@pageUrl>stream?contentId=${(content.contentId)!}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
                 
               <#if !pcntListReadOnly>
                 <#assign pcntListRemoveUri = pcntListRemoveUri!("removePartyContent/"+rawString(pcntListRemoveDonePage!"viewprofile"))><#-- SCIPIO -->
                 <#-- SCIPIO: TODO: WARN: this only removes the association, not the content itself! -->
-                <form name="removePartyContent_${pContent_index}" method="post" action="<@ofbizUrl uri=pcntListRemoveUri escapeAs='html'/>">
+                <form name="removePartyContent_${pContent_index}" method="post" action="<@pageUrl uri=pcntListRemoveUri escapeAs='html'/>">
                   <input type="hidden" name="contentId" value="${pContent.contentId}" />
                   <input type="hidden" name="partyId" value="${pContent.partyId}" />
                   <input type="hidden" name="partyContentTypeId" value="${pContent.partyContentTypeId}" />

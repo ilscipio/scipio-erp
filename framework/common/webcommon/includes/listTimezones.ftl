@@ -7,7 +7,7 @@ code package.
   <div class="screenlet-title-bar">
     <ul>
       <li class="h3">${uiLabelMap.CommonTimeZone}</li>
-      <li><a href="<@ofbizUrl>main</@ofbizUrl>">${uiLabelMap.CommonCancel}</a></li>
+      <li><a href="<@pageUrl>main</@pageUrl>">${uiLabelMap.CommonCancel}</a></li>
     </ul>
     <br class="clear"/>
   </div>
@@ -19,7 +19,7 @@ code package.
       <#assign altRow = !altRow>
       <tr<@tableRowClassAttribStr alt=altRow />>
         <td>
-          <a href="<@ofbizUrl>setSessionTimeZone</@ofbizUrl>?tzId=${availableTz.getID()}">${availableTz.getDisplayName(availableTz.useDaylightTime(), displayStyle, locale)} (${availableTz.getID()})</a>
+          <a href="<@pageUrl>setSessionTimeZone</@pageUrl>?tzId=${availableTz.getID()}">${availableTz.getDisplayName(availableTz.useDaylightTime(), displayStyle, locale)} (${availableTz.getID()})</a>
         </td>
       </tr>
     </#list>

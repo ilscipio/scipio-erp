@@ -48,7 +48,7 @@ code package.
 
   <#macro entityImportForm srcType enctype="" submitText="">
     <#if limitStrValToItems(srcType, importSrcTypeItems)??><#-- only show forms for available items -->
-      <form method="post" action="<@ofbizUrl uri=eiActionUri />"<#if enctype?has_content> enctype="${enctype}"</#if><#rt/>
+      <form method="post" action="<@pageUrl uri=eiActionUri />"<#if enctype?has_content> enctype="${enctype}"</#if><#rt/>
          <#lt/> id="entityimport-${srcType}-form" class="entityimport-form entityimport-${srcType}-form"<#if srcType != importSrcType> style="display:none;"</#if>>
         <@field type="hidden" name="importSrcType" value=srcType/>
         <#nested>

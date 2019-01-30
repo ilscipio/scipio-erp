@@ -65,7 +65,7 @@ code package.
                   <td><input type="checkbox" name="importIssuerVisible" value="Y"/></td>
                   <td><input type="text" name="aliasVisible" size="20"/></td>
                   <td>
-                    <form class="savecertform" method="post" action="<@ofbizUrl>importIssuerProvision</@ofbizUrl>">
+                    <form class="savecertform" method="post" action="<@pageUrl>importIssuerProvision</@pageUrl>">
                       <input type="hidden" name="componentName" value="${component.getComponentName()}"/>
                       <input type="hidden" name="keystoreName" value="${store.getName()}"/>
                       <input type="hidden" name="certString" value="${parameters.certString}"/>

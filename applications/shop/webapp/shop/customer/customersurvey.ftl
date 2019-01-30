@@ -8,7 +8,7 @@ code package.
 <@section title=((survey.surveyName)!)>
     <#-- Render the survey -->
     <#if surveyWrapper?has_content>
-        <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>profilesurvey/profilesurvey</@ofbizUrl>">
+        <form method="post" enctype="multipart/form-data" action="<@pageUrl>profilesurvey/profilesurvey</@pageUrl>">
           ${surveyWrapper.render(context)}
         </form>
     <#else>

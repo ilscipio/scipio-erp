@@ -7,7 +7,7 @@ code package.
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
     <#if security.hasEntityPermission("PARTYMGR", "_CREATE", request)>
-      <@menuitem type="link" href=makeOfbizUrl("editPartyAttribute?partyId=${party.partyId!}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
+      <@menuitem type="link" href=makePageUrl("editPartyAttribute?partyId=${party.partyId!}") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
     </#if>
     </@menu>
   </#macro>
@@ -31,7 +31,7 @@ code package.
                 ${attr.attrValue!}
               </@td>
               <@td class="button-col">
-                <a href="<@ofbizUrl>editPartyAttribute?partyId=${partyId!}&attrName=${attr.attrName!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
+                <a href="<@pageUrl>editPartyAttribute?partyId=${partyId!}&attrName=${attr.attrName!}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
               </@td>
             </@tr>
           </#list>

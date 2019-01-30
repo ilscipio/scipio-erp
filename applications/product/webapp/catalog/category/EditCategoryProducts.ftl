@@ -9,9 +9,9 @@ code package.
 <#--macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if activeOnly>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&activeOnly=false") text=uiLabelMap.ProductActiveAndInactive class="+${styles.action_run_sys!} ${styles.action_show!}" />
+    <@menuitem type="link" href=makePageUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&activeOnly=false") text=uiLabelMap.ProductActiveAndInactive class="+${styles.action_run_sys!} ${styles.action_show!}" />
   <#else>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&activeOnly=true") text=uiLabelMap.ProductActiveOnly class="+${styles.action_run_sys!} ${styles.action_show!}" />
+    <@menuitem type="link" href=makePageUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&activeOnly=true") text=uiLabelMap.ProductActiveOnly class="+${styles.action_run_sys!} ${styles.action_show!}" />
   </#if>
   </@menu>
 </#macro-->
@@ -19,8 +19,8 @@ code package.
 <#if (listSize > 0)>
 <@section title=uiLabelMap.ProductCategoryProductList menuContent=menuContent>
       
-        <@paginate mode="content" url=makeOfbizUrl("EditCategoryProducts") paramStr="productCategoryId=${productCategoryId!}&activeOnly=${activeOnly.toString()}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
-            <form method="post" action="<@ofbizUrl>updateCategoryProductMember</@ofbizUrl>" name="updateCategoryProductForm">
+        <@paginate mode="content" url=makePageUrl("EditCategoryProducts") paramStr="productCategoryId=${productCategoryId!}&activeOnly=${activeOnly.toString()}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
+            <form method="post" action="<@pageUrl>updateCategoryProductMember</@pageUrl>" name="updateCategoryProductForm">
               <@fields type="default-manual">
                 <input type="hidden" name="VIEW_SIZE" value="${viewSize}"/>
                 <input type="hidden" name="VIEW_INDEX" value="${viewIndex}"/>
@@ -51,11 +51,11 @@ code package.
                       <@tr valign="middle">
                         <@td>
                           <#if (product.smallImageUrl)??>
-                             <a href="<@ofbizUrl>ViewProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>"><img alt="Small Image" src="<@ofbizContentUrl>${product.smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" align="middle" /></a>
+                             <a href="<@pageUrl>ViewProduct?productId=${(productCategoryMember.productId)!}</@pageUrl>"><img alt="Small Image" src="<@contentUrl>${product.smallImageUrl}</@contentUrl>" class="cssImgSmall" align="middle" /></a>
                           </#if>
                         </@td>
                         <@td>
-                          <a href="<@ofbizUrl>ViewProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>" class="${styles.link_nav_info_idname!}"><#if product??>${(product.internalName)!}</#if> [${(productCategoryMember.productId)!}]</a>                          
+                          <a href="<@pageUrl>ViewProduct?productId=${(productCategoryMember.productId)!}</@pageUrl>" class="${styles.link_nav_info_idname!}"><#if product??>${(product.internalName)!}</#if> [${(productCategoryMember.productId)!}]</a>                          
                         </@td>
                         <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>
                         <@td class=cellClass>${(productCategoryMember.fromDate?date?string.short)!}</@td>
@@ -90,7 +90,7 @@ code package.
             </form>
             <#assign rowCount = 0>
             <#list productCategoryMembers as productCategoryMember>
-                <form name="deleteProductFromCategory_o_${rowCount}" method="post" action="<@ofbizUrl>removeCategoryProductMember</@ofbizUrl>">
+                <form name="deleteProductFromCategory_o_${rowCount}" method="post" action="<@pageUrl>removeCategoryProductMember</@pageUrl>">
                   <input type="hidden" name="VIEW_SIZE" value="${viewSize}"/>
                   <input type="hidden" name="VIEW_INDEX" value="${viewIndex}"/>
                   <input type="hidden" name="productId" value="${(productCategoryMember.productId)!}" />

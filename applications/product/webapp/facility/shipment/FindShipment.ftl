@@ -7,9 +7,9 @@ code package.
 function lookupShipments() {
     shipmentIdValue = document.lookupShipmentForm.shipmentId.value;
     if (shipmentIdValue.length > 1) {
-        document.lookupShipmentForm.action = "<@ofbizUrl>EditShipment</@ofbizUrl>";
+        document.lookupShipmentForm.action = "<@pageUrl>EditShipment</@pageUrl>";
     } else {
-        document.lookupShipmentForm.action = "<@ofbizUrl>FindShipment</@ofbizUrl>";
+        document.lookupShipmentForm.action = "<@pageUrl>FindShipment</@pageUrl>";
     }
     document.lookupShipmentForm.submit();
 }
@@ -17,14 +17,14 @@ function lookupShipments() {
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if requestParameters.facilityId?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${requestParameters.facilityId}") text=uiLabelMap.ProductQuickShipOrder class="+${styles.action_nav!} ${styles.action_send!}" />
+    <@menuitem type="link" href=makePageUrl("quickShipOrder?facilityId=${requestParameters.facilityId}") text=uiLabelMap.ProductQuickShipOrder class="+${styles.action_nav!} ${styles.action_send!}" />
   </#if>
-    <@menuitem type="link" href=makeOfbizUrl("EditShipment") text=uiLabelMap.ProductNewShipment class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makePageUrl("EditShipment") text=uiLabelMap.ProductNewShipment class="+${styles.action_nav!} ${styles.action_add!}" />
     <#--<@menuitem type="link" href="javascript:lookupShipments();" text=uiLabelMap.ProductFindShipment class="+${styles.action_nav!} ${styles.action_find!}" />-->
   </@menu>
 </#macro>
 <@section id="findOrders" menuContent=menuContent> <#-- title=uiLabelMap.ProductFindShipmentTitle -->
-        <form method="post" name="lookupShipmentForm" action="<@ofbizUrl>FindShipment</@ofbizUrl>">
+        <form method="post" name="lookupShipmentForm" action="<@pageUrl>FindShipment</@pageUrl>">
             <input type="hidden" name="lookupFlag" value="Y" />
               <@field type="input" label=uiLabelMap.ProductShipmentId name="shipmentId" value=(shipmentId!) />
               <@field type="select" label=uiLabelMap.ProductShipmentType name="shipmentTypeId">
@@ -93,7 +93,7 @@ function lookupShipments() {
   <@section id="findOrders_2" title=uiLabelMap.ProductShipments>
     <#if shipmentList?has_content>  
       <#assign paramStr = addParamsToStr(rawString(paramList!""), {"lookupFlag": "Y"}, "&amp;", false)>
-      <@paginate mode="content" url=makeOfbizUrl("FindShipment") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=shipmentList?size>
+      <@paginate mode="content" url=makePageUrl("FindShipment") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=shipmentList?size>
    
         <@table type="data-list" autoAltRows=true>
         <@thead>
@@ -113,14 +113,14 @@ function lookupShipments() {
             <#assign statusItem = delegator.findOne("StatusItem", {"statusId":shipment.statusId}, true)!/>
             <#assign shipmentType = delegator.findOne("ShipmentType", {"shipmentTypeId":shipment.shipmentTypeId}, true)!/>
             <@tr>
-              <@td><a href="<@ofbizUrl>EditShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a></@td>
+              <@td><a href="<@pageUrl>EditShipment?shipmentId=${shipment.shipmentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a></@td>
               <@td>${(shipmentType.get("description",locale))?default(shipmentType.shipmentTypeId?default(""))}</@td>
               <@td>${(statusItem.get("description",locale))?default(statusItem.statusId!(uiLabelMap.CommonNA))}</@td>
               <@td>${(originFacility.facilityName)!} [${shipment.originFacilityId!}]</@td>
               <@td>${(destinationFacility.facilityName)!} [${shipment.destinationFacilityId!}]</@td>
               <@td>${(shipment.estimatedShipDate.toString())!}</@td>
               <@td>
-                <a href="<@ofbizUrl>EditShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
+                <a href="<@pageUrl>EditShipment?shipmentId=${shipment.shipmentId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
               </@td>
             </@tr>
           </#list>

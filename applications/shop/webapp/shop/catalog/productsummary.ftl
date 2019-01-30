@@ -46,11 +46,11 @@ code package.
     <#assign productTitle = productName/>
 
     <#if smallImageUrl?has_content>
-        <#assign imgSrc = makeOfbizContentCtxPrefixUrl(smallImageUrl)>
+        <#assign imgSrc = makeContentCtxPrefixUrl(smallImageUrl)>
     <#else>
         <#assign imgSrc = "https://placehold.it/300x100"/>    
     </#if>
-    <#assign imgLink><@ofbizCatalogAltUrl rawParams=true productCategoryId=categoryId productId=product.productId/></#assign>
+    <#assign imgLink><@catalogAltUrl rawParams=true productCategoryId=categoryId productId=product.productId/></#assign>
     <#assign productImage><@img src=imgSrc type="contain" link=imgLink width="100%" height="100px"/></#assign>
 
     <#assign productDescription>
@@ -117,7 +117,7 @@ code package.
             ${productPrice}
         </@pli>
         <@pli type="button">
-            <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId productId=product.productId/>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonDetail}</a>           
+            <a href="<@catalogAltUrl productCategoryId=categoryId productId=product.productId/>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonDetail}</a>           
         </@pli>
     </@pul>   
 

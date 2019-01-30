@@ -9,11 +9,11 @@ code package.
   <@row>
     <@cell columns=6 last=true>
 
-  <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+  <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
     <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
     <input type="hidden" name="finalizeMode" value="addpty"/>
   </form>
-  <form method="post" action="<@ofbizUrl>setAdditionalParty</@ofbizUrl>" name="quickAddPartyForm">
+  <form method="post" action="<@pageUrl>setAdditionalParty</@pageUrl>" name="quickAddPartyForm">
 
   <#assign defaultFieldGridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":false})>
   <#macro partyCheckRow label id>
@@ -64,7 +64,7 @@ code package.
     <@section>
       <@heading>3) ${uiLabelMap.OrderPartySelectRoleForParty}</@heading>
       
-        <form method="post" action="<@ofbizUrl>addAdditionalParty</@ofbizUrl>" name="addAdditionalPartyForm" id="addAdditionalPartyForm">
+        <form method="post" action="<@pageUrl>addAdditionalParty</@pageUrl>" name="addAdditionalPartyForm" id="addAdditionalPartyForm">
           <@fields type="default-nolabelarea">
           <input type="hidden" name="additionalPartyId" value="${additionalPartyId}" />
           <@field type="select" label=uiLabelMap.CommonRole name="additionalRoleTypeId" id="additionalRoleTypeId" size="5" multiple=true>

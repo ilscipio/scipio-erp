@@ -72,7 +72,7 @@ code package.
     });
 </@script>
 
-<@form method="post" action=makeOfbizUrl(target) id=submitFormId name=submitFormId validate=setupFormValidate>
+<@form method="post" action=makePageUrl(target) id=submitFormId name=submitFormId validate=setupFormValidate>
     <@defaultWizardFormFields exclude=["userPartyId"] />
     <@field type="hidden" name="isCreateUser" value=(userParty??)?string("N","Y")/>
     <@field type="hidden" name="userPartyId" value=((userParty.partyId)!)/>    

@@ -10,7 +10,7 @@ code package.
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.AccountingCardInfoNotBelongToYou}.</@commonMsg>
   <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
   </@menu>
 <#else>
 
@@ -23,7 +23,7 @@ code package.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
     <@menuitem type="link" href="javascript:document.editgiftcardform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
@@ -41,7 +41,7 @@ function makeExpDate() {<#-- SCIPIO: Copied from ordermgr billsettings.ftl -->
   <#assign sectionTitle = ""/>
 </#if>
 <@section title=sectionTitle menuContent=menuContent menuLayoutGeneral="bottom">
-  <form method="post" action="<@ofbizUrl><#if !giftCard??>createGiftCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>updateGiftCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@ofbizUrl>" name="editgiftcardform">
+  <form method="post" action="<@pageUrl><#if !giftCard??>createGiftCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done<#else>updateGiftCard?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</#if></@pageUrl>" name="editgiftcardform">
     <#if giftCard??>
       <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>

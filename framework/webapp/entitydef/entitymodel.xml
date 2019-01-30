@@ -232,7 +232,7 @@ code package.
       </field>
       <field name="webappPathPrefix" type="url">
         <description>SCIPIO: URL path prefix appended between the domain/port and the webapp context path in generated links,
-            for webapp and navigation links (@ofbizUrl); must start with slash but end with no slash. (added 2018-07-27)</description>
+            for webapp and navigation links (@pageUrl); must start with slash but end with no slash. (added 2018-07-27)</description>
       </field>
       <prim-key field="webSiteId"/>
       <relation type="one" fk-name="WEB_SITE_THEME_SET" rel-entity-name="VisualThemeSet">

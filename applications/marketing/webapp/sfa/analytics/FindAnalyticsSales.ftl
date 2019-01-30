@@ -1,5 +1,5 @@
 <@section>
-    <form name="SaleOrdersByChannel" action="<@ofbizUrl>AnalyticsSales</@ofbizUrl>" method="post">
+    <form name="SaleOrdersByChannel" action="<@pageUrl>AnalyticsSales</@pageUrl>" method="post">
         <@field type="select" label=uiLabelMap.ProductProductStore name="productStoreId">
             <@field type="option" value="" 
               selected=(!productStoreId?has_content)>${uiLabelMap.CommonAny}</@field>

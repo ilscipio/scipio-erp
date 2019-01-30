@@ -10,7 +10,7 @@ code package.
 <#if searchFeatures?has_content>
   <@row>
     <@cell>
-  <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="selectAllForm">
+  <form method="post" action="<@pageUrl>LookupVariantProduct</@pageUrl>" name="selectAllForm">
         <input type="hidden" name="productId" value="${product.productId}" />
         <#list searchFeatures as searchFeature>
             <@field type="select" name=searchFeature.featureType label=(searchFeature.featureType)>
@@ -56,7 +56,7 @@ code package.
 <#if productFeatureIds??>
   <@row>
     <@cell>
-      <form method="post" action="<@ofbizUrl>LookupVariantProduct</@ofbizUrl>" name="createNewVariant">
+      <form method="post" action="<@pageUrl>LookupVariantProduct</@pageUrl>" name="createNewVariant">
         <@fields type="default-nolabelarea">
         <input type="hidden" name="productId" value="${product.productId}" />
         <input type="hidden" name="productFeatureIds" value="${productFeatureIds}" />

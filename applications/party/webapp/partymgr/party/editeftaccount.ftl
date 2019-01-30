@@ -13,8 +13,8 @@ code package.
     <#macro saveCancelMenu>
       <@menu type="button">
         <#-- this was used at bottom in original FTL, is an error?
-        <a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancelDone}</a>-->
-        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") class="+${styles.action_nav} ${styles.action_cancel}" text=uiLabelMap.CommonCancelDone />
+        <a href="<@pageUrl>backHome</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancelDone}</a>-->
+        <@menuitem type="link" href=makePageUrl("${donePage}?partyId=${partyId}") class="+${styles.action_nav} ${styles.action_cancel}" text=uiLabelMap.CommonCancelDone />
         <@menuitem type="link" href="javascript:document.editeftaccountform.submit()" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}" />
       </@menu>
     </#macro>
@@ -22,9 +22,9 @@ code package.
     <#--<@saveCancelMenu />-->
         
     <#if !eftAccount??>
-      <form method="post" action="<@ofbizUrl>createEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform">
+      <form method="post" action="<@pageUrl>createEftAccount?DONE_PAGE=${donePage}</@pageUrl>" name="editeftaccountform">
     <#else>
-      <form method="post" action="<@ofbizUrl>updateEftAccount?DONE_PAGE=${donePage}</@ofbizUrl>" name="editeftaccountform">
+      <form method="post" action="<@pageUrl>updateEftAccount?DONE_PAGE=${donePage}</@pageUrl>" name="editeftaccountform">
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
@@ -44,7 +44,7 @@ code package.
         <@field type="generic" label=(uiLabelMap.PartyBillingAddress!)>
           <@fields type="default-manual" ignoreParentField=true>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-            <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
+            <a href="<@pageUrl>editcontactmech</@pageUrl>" class="${styles.link_nav!} ${styles.action_add!}">
               [Create New Address]</a>&nbsp;&nbsp;
             -->
             <@table type="data-list" autoAltRows=true>

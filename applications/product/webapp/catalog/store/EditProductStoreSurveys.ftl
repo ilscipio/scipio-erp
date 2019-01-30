@@ -23,13 +23,13 @@ code package.
               <@tr valign="middle">
                 <@td>${surveyType.get("description",locale)}</@td>
                 <@td>${storeSurvey.groupName!}</@td>
-                <@td><a href="<@ofbizInterWebappUrl>/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_desc!}">${survey.description?default("[" + survey.surveyId + "]")}</a></@td>
+                <@td><a href="<@serverUrl>/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}</@serverUrl>" class="${styles.link_nav_info_desc!}">${survey.description?default("[" + survey.surveyId + "]")}</a></@td>
                 <@td>${storeSurvey.productId!(uiLabelMap.CommonNA)}</@td>
                 <@td>${storeSurvey.productCategoryId!(uiLabelMap.CommonNA)}</@td>
                 <@td>${storeSurvey.fromDate!?string}</@td>
                 <@td>${storeSurvey.sequenceNum!}</@td>
                 <@td>
-                  <form name="deleteProductStoreSurveyAppl_${storeSurvey_index}" method="post" action="<@ofbizUrl>deleteProductStoreSurveyAppl</@ofbizUrl>">
+                  <form name="deleteProductStoreSurveyAppl_${storeSurvey_index}" method="post" action="<@pageUrl>deleteProductStoreSurveyAppl</@pageUrl>">
                     <input type="hidden" name="productStoreId" value="${productStoreId}" />
                     <input type="hidden" name="productStoreSurveyId" value="${storeSurvey.productStoreSurveyId}" />
                     <a href="javascript:document.deleteProductStoreSurveyAppl_${storeSurvey_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
@@ -41,7 +41,7 @@ code package.
 </@section>
 
 <@section title=uiLabelMap.PageTitleAddProductStoreSurveys>
-        <form name="addSurvey" action="<@ofbizUrl>createProductStoreSurveyAppl</@ofbizUrl>" method="post">
+        <form name="addSurvey" action="<@pageUrl>createProductStoreSurveyAppl</@pageUrl>" method="post">
             <input type="hidden" name="productStoreId" value="${productStoreId}" />
               <@field type="select" label=uiLabelMap.CommonType name="surveyApplTypeId">
                     <#list surveyApplTypes as type>

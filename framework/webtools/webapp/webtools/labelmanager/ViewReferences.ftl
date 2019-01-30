@@ -26,7 +26,7 @@ code package.
                 <#list entries as entry>
                   <@tr>
                     <@td>${rowNumber}</@td>
-                    <@td><a href="<@ofbizUrl>ViewFile?fileName=${entry.getKey()}&amp;sourceKey=${parameters.sourceKey!}</@ofbizUrl>">${entry.getKey()}</a></@td>
+                    <@td><a href="<@pageUrl>ViewFile?fileName=${entry.getKey()}&amp;sourceKey=${parameters.sourceKey!}</@pageUrl>">${entry.getKey()}</a></@td>
                     <@td>${entry.getValue()}</@td>
                   </@tr>
                   <#assign totalRefs = totalRefs + entry.getValue()/>

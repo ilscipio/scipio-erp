@@ -20,7 +20,7 @@ code package.
 <#-- Purchase Orders -->
 <@section>
 <#if facilityMaps??>
-            <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+            <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="ship"/>
             <input type="hidden" name="shipToPartyId" id="shipToParty"/>
             <#if (cart.getShipGroupSize() > 1)>
@@ -28,7 +28,7 @@ code package.
             </#if>
           
         <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y") text=uiLabelMap.OrderCreateShipGroup class="+${styles.action_run_session!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makePageUrl("setShipping?createNewShipGroup=Y") text=uiLabelMap.OrderCreateShipGroup class="+${styles.action_run_session!} ${styles.action_add!}" />
         </@menu>         
 
 <#list 1..cart.getShipGroupSize() as currIndex>
@@ -71,7 +71,7 @@ code package.
                         <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                     </@td>
-                    <@td><a href="<@ofbizInterWebappUrl>/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
+                    <@td><a href="<@serverUrl>/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;contactMechId=${shippingAddress.contactMechId}</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
                   </@tr>
                   <#if shippingContactMech_has_next>
                   <@tr type="util"><@td colspan="4"><hr /></@td></@tr>
@@ -85,7 +85,7 @@ code package.
                     </@td>
                     <@td></@td>
                     <@td>
-                        <a href="<@ofbizInterWebappUrl>/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;preContactMechTypeId=POSTAL_ADDRESS</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.CommonNew}</a>
+                        <a href="<@serverUrl>/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;preContactMechTypeId=POSTAL_ADDRESS</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.CommonNew}</a>
                     </@td>
                   </@tr>
                 </#if>
@@ -121,7 +121,7 @@ code package.
                   <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                   <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                 </@td>
-              <@td><a href="<@ofbizInterWebappUrl>/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
+              <@td><a href="<@serverUrl>/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
             </@tr>
             <#if shippingContactMech_has_next>
               <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
@@ -142,7 +142,7 @@ code package.
 
 <#-- Sales Orders -->
 
-            <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+            <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="ship"/>
             <input type="hidden" name="shipToPartyId" id="shipToParty"/>
             <#if (cart.getShipGroupSize() > 1)>
@@ -150,8 +150,8 @@ code package.
             </#if>
             
     <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("setShipping?createNewShipGroup=Y") text="${rawLabel('CommonNew')} ${rawLabel('OrderShipGroup')}" class="+${styles.action_run_session!} ${styles.action_add!}" />
-        <@menuitem type="link" href=makeOfbizUrl("EditShipAddress") text=uiLabelMap.OrderCreateShippingAddress class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makePageUrl("setShipping?createNewShipGroup=Y") text="${rawLabel('CommonNew')} ${rawLabel('OrderShipGroup')}" class="+${styles.action_run_session!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makePageUrl("EditShipAddress") text=uiLabelMap.OrderCreateShippingAddress class="+${styles.action_nav!} ${styles.action_add!}" />
     </@menu> 
     
 <#list 1..cart.getShipGroupSize() as currIndex>
@@ -221,7 +221,7 @@ code package.
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                     </@td>
                     <@td>
-                      <a href="<@ofbizInterWebappUrl>/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                      <a href="<@serverUrl>/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                     </@td>
                   </@tr>
                   <#if shippingContactMech_has_next>
@@ -249,7 +249,7 @@ code package.
                         <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                       </@td>
-                    <@td><a href="<@ofbizInterWebappUrl>/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
+                    <@td><a href="<@serverUrl>/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
                   </@tr>
                   <#if shippingContactMech_has_next>
                   <@tr type="util"><@td colspan="3"><hr /></@td></@tr>

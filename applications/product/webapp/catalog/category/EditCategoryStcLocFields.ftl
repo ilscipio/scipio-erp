@@ -6,7 +6,7 @@
         <@alert type="error">${stcErrorMsg}</@alert>
     </#if>
 
-    <form action="<@ofbizUrl>updateProductCategoryContentStcLocFields</@ofbizUrl>" method="post" id="updatePccStdLocFieldsForm" name="updatePccStdLocFieldsForm">
+    <form action="<@pageUrl>updateProductCategoryContentStcLocFields</@pageUrl>" method="post" id="updatePccStdLocFieldsForm" name="updatePccStdLocFieldsForm">
         <input type="hidden" name="updatePccStcLocFields" value="Y"/>
         <input type="hidden" name="productCategoryId" value="${productCategoryId!}"/>
         

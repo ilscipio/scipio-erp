@@ -1,6 +1,6 @@
 <#if listMarketingCampaign?has_content>
     <@section> 
-        <form action="<@ofbizUrl>updateMarketingCampaign</@ofbizUrl>" method="post">
+        <form action="<@pageUrl>updateMarketingCampaign</@pageUrl>" method="post">
         
             <@table type="data-list" autoAltRows=true scrollable=true responsive=true fixedColumnsLeft=1>
                 <#-- Header Begins -->
@@ -19,7 +19,7 @@
                 <#list listMarketingCampaign as marketingCampaign>
                     <#assign status = marketingCampaign.getRelatedOne("StatusItem", false) />                   
                     <@tr>
-                        <@td><a href="<@ofbizUrl>EditMarketingCampaign?marketingCampaignId=${marketingCampaign.marketingCampaignId}</@ofbizUrl>">${marketingCampaign.marketingCampaignId}</a></@td>
+                        <@td><a href="<@pageUrl>EditMarketingCampaign?marketingCampaignId=${marketingCampaign.marketingCampaignId}</@pageUrl>">${marketingCampaign.marketingCampaignId}</a></@td>
                         <@td>${marketingCampaign.campaignName!}</@td>
                         <@td>${marketingCampaign.parentCampaignId!}</@td>                                                 
                         <@td>${status.description}</@td> 
@@ -31,7 +31,7 @@
             </@table>    
         </form>
         <#list listMarketingCampaign as marketingCampaign>
-            <form name="deleteMarketingCampaign_${marketingCampaign_index}" action="<@ofbizUrl>removeMarketingCampaign</@ofbizUrl>" method="post">
+            <form name="deleteMarketingCampaign_${marketingCampaign_index}" action="<@pageUrl>removeMarketingCampaign</@pageUrl>" method="post">
                 <@field name="marketingCampaignId" type="hidden" value=marketingCampaign.marketingCampaignId />
             </form>
         </#list>

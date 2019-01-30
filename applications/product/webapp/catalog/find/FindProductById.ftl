@@ -5,7 +5,7 @@ code package.
 -->
 
 <@section title=uiLabelMap.ProductFindProductWithIdValue>
-        <form name="idsearchform" method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>">
+        <form name="idsearchform" method="post" action="<@pageUrl>FindProductById</@pageUrl>">
           <span>${uiLabelMap.CommonId} ${uiLabelMap.CommonValue}:</span> <input type="text" name="idValue" size="20" maxlength="50" value="${idValue!}" />&nbsp;<a href="javascript:document.idsearchform.submit()" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a>
         </form>
         
@@ -21,7 +21,7 @@ code package.
                 </@td>
                 <@td>&nbsp;&nbsp;</@td>
                 <@td>
-                    <a href="<@ofbizUrl>ViewProduct?productId=${idProduct.productId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(idProduct.internalName)!}</a>
+                    <a href="<@pageUrl>ViewProduct?productId=${idProduct.productId}</@pageUrl>" class="${styles.link_nav_info_name!}">${(idProduct.internalName)!}</a>
                     (${uiLabelMap.ProductSearchResultsFound})
                 </@td>
             </@tr>
@@ -35,7 +35,7 @@ code package.
                     </@td>
                     <@td>&nbsp;&nbsp;</@td>
                     <@td>
-                        <a href="<@ofbizUrl>ViewProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(product.internalName)!}</a>
+                        <a href="<@pageUrl>ViewProduct?productId=${product.productId}</@pageUrl>" class="${styles.link_nav_info_name!}">${(product.internalName)!}</a>
                         (${uiLabelMap.ProductSearchResultsFound} ${goodIdentificationType.get("description",locale)?default(goodIdentification.goodIdentificationTypeId)}.)
                     </@td>
                 </@tr>

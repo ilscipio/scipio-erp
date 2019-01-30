@@ -9,7 +9,7 @@ code package.
 <#if product?has_content>
 
 <#-- First some general forms and scripts -->
-<form name="removeAssocForm" action="<@ofbizUrl>quickAdminUpdateProductAssoc</@ofbizUrl>">
+<form name="removeAssocForm" action="<@pageUrl>quickAdminUpdateProductAssoc</@pageUrl>">
     <input type="hidden" name="productId" value="${product.productId!}"/>
     <input type="hidden" name="PRODUCT_ID" value="${product.productId!}"/>
     <input type="hidden" name="PRODUCT_ID_TO" value=""/>
@@ -18,7 +18,7 @@ code package.
     <input type="hidden" name="UPDATE_MODE" value="DELETE"/>
     <input type="hidden" name="useValues" value="true"/>
 </form>
-<form name="removeSelectable" action="<@ofbizUrl>updateProductQuickAdminDelFeatureTypes</@ofbizUrl>">
+<form name="removeSelectable" action="<@pageUrl>updateProductQuickAdminDelFeatureTypes</@pageUrl>">
     <input type="hidden" name="productId" value="${product.productId!}"/>
     <input type="hidden" name="productFeatureTypeId" value=""/>
 </form>
@@ -45,7 +45,7 @@ function doPublish() {
   <#-- SCIPIO: Now points to shop -->
   <#assign productPageUrl = cataloglib.makeProductShopPageUrl(productId!)>
   <#if productPageUrl?has_content>
-    window.open('<@ofbizInterWebappUrl uri=productPageUrl escapeAs="js"/>');
+    window.open('<@serverUrl uri=productPageUrl escapeAs="js"/>');
     document.publish.submit();
   </#if>
 }
@@ -54,7 +54,7 @@ function doPublish() {
 
 <@section title=uiLabelMap.PageTitleEditProductQuickAdmin>
         <#-- Name update section -->
-        <form action="<@ofbizUrl>updateProductQuickAdminName</@ofbizUrl>" method="post" name="editProduct">
+        <form action="<@pageUrl>updateProductQuickAdminName</@pageUrl>" method="post" name="editProduct">
           <@fields type="default-nolabelarea">
             <input type="hidden" name="productId" value="${productId!}"/>
             <#if ((product.isVirtual)!) == "Y">
@@ -72,7 +72,7 @@ function doPublish() {
         <!-- ***************************************************** Selectable features section -->
     <@row>
       <@cell>   
-        <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>" method="post" name="selectableFeatureTypeSelector">
+        <form action="<@pageUrl>EditProductQuickAdmin</@pageUrl>" method="post" name="selectableFeatureTypeSelector">
           <@fields type="default">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <@field type="select" label=uiLabelMap.CommonType name="productFeatureTypeId" onChange="javascript:document.selectableFeatureTypeSelector.submit();">
@@ -87,7 +87,7 @@ function doPublish() {
     </@row>
     <@row>
       <@cell>
-        <form action="<@ofbizUrl>updateProductQuickAdminSelFeat</@ofbizUrl>" method="post" name="selectableFeature">
+        <form action="<@pageUrl>updateProductQuickAdminSelFeat</@pageUrl>" method="post" name="selectableFeature">
           <@fields type="default-manual">
         <input type="hidden" name="productId" value="${product.productId!}"/>
         <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)!}"/>
@@ -108,9 +108,9 @@ function doPublish() {
             <@tr valign="middle">
                 <@td nowrap="nowrap">
                   <input type="hidden" name="productId${idx}" value="${assocProduct.productId!}"/>
-                  <a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>ViewProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.productId!}</a>
+                  <a class="${styles.link_nav_info_id!}" href="<@pageUrl>ViewProduct?productId=${assocProduct.productId}</@pageUrl>">${assocProduct.productId!}</a>
                 </@td>
-                <@td nowrap="nowrap"><a class="${styles.link_nav_info_name!}" href="<@ofbizUrl>ViewProduct?productId=${assocProduct.productId}</@ofbizUrl>">${assocProduct.internalName!}</a></@td>
+                <@td nowrap="nowrap"><a class="${styles.link_nav_info_name!}" href="<@pageUrl>ViewProduct?productId=${assocProduct.productId}</@pageUrl>">${assocProduct.internalName!}</a></@td>
                 <@td colspan="2">
                     <@field type="input" name="description${idx}" size="70" maxlength="100" value=(selFeatureDesc[assocProduct.productId]!)/>
                 </@td>
@@ -132,7 +132,7 @@ function doPublish() {
                     <@table type="data-list">
                         <#list selectableFeatureTypes as selectableFeatureType>
                         <@tr><@td nowrap="nowrap"><a class="${styles.link_run_sys!} ${styles.action_remove!}" href="javascript:removeSelectable('${(selectableFeatureType.get("description",locale))!}','${selectableFeatureType.productFeatureTypeId}','${product.productId}')">x</a>
-                            <a class="${styles.link_nav_info_desc!}" href="<@ofbizUrl>EditProductQuickAdmin?productFeatureTypeId=${(selectableFeatureType.productFeatureTypeId)!}&amp;productId=${product.productId!}</@ofbizUrl>">${(selectableFeatureType.get("description",locale))!}</a></@td></@tr>
+                            <a class="${styles.link_nav_info_desc!}" href="<@pageUrl>EditProductQuickAdmin?productFeatureTypeId=${(selectableFeatureType.productFeatureTypeId)!}&amp;productId=${product.productId!}</@pageUrl>">${(selectableFeatureType.get("description",locale))!}</a></@td></@tr>
                         </#list>
                     </@table>
                 </@td>
@@ -152,7 +152,7 @@ function doPublish() {
 
 <#if ((product.isVariant)!) == "Y">
     <@section title=uiLabelMap.ProductDistinguishingFeatures>
-        <form action="<@ofbizUrl>updateProductQuickAdminDistFeat</@ofbizUrl>" method="post" name="distFeature">
+        <form action="<@pageUrl>updateProductQuickAdminDistFeat</@pageUrl>" method="post" name="distFeature">
           <@fields type="default-manual">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <@table type="data-list" autoAltRows=true>
@@ -165,7 +165,7 @@ function doPublish() {
                 <#assign idx=0/>
                 <#list distinguishingFeatures as distinguishingFeature>
                 <@tr valign="middle">
-                    <@td><a href="<@ofbizUrl>quickAdminRemoveProductFeature?productId=${productId}&amp;productFeatureId=${distinguishingFeature.productFeatureId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">x</a>&nbsp;
+                    <@td><a href="<@pageUrl>quickAdminRemoveProductFeature?productId=${productId}&amp;productFeatureId=${distinguishingFeature.productFeatureId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">x</a>&nbsp;
                     ${distinguishingFeature.productFeatureId} ${productFeatureTypeLookup.get(distinguishingFeature.productFeatureId).get("description",locale)}: ${distinguishingFeature.get("description",locale)}
                     &nbsp;
                     </@td>
@@ -181,7 +181,7 @@ function doPublish() {
 <!-- ***************************************************** end Selectable features section -->
 <@section title=uiLabelMap.ProductShippingDimensionsAndWeights>
         <!-- ***************************************************** Shipping dimensions section -->
-        <form action="<@ofbizUrl>updateProductQuickAdminShipping</@ofbizUrl>" method="post" name="updateShipping">
+        <form action="<@pageUrl>updateProductQuickAdminShipping</@pageUrl>" method="post" name="updateShipping">
           <@fields type="default-manual">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="heightUomId" value="LEN_in"/>
@@ -216,9 +216,9 @@ function doPublish() {
                     <@td><@field type="input" name="~ml${idx}" size="6" maxlength="20" value=(featureMl.get(assocProduct.productId)!)/></@td>
                     <@td><@field type="input" name="~ntwt${idx}" size="6" maxlength="20" value=(featureNtwt.get(assocProduct.productId)!)/></@td>
                     <@td><@field type="input" name="~grams${idx}" size="6" maxlength="20" value=(featureGrams.get(assocProduct.productId)!)/></@td>
-                    <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProductFeatures?productId=${assocProduct.productId}</@ofbizUrl>">${featureHazmat.get(assocProduct.productId)!}</a></@td>
-                    <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>ViewProduct?productId=${assocProduct.productId}</@ofbizUrl>">${featureSalesThru.get(assocProduct.productId)!}</a></@td>
-                    <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>EditProductAssoc?productId=${assocProduct.productId}</@ofbizUrl>">${featureThruDate.get(assocProduct.productId)!}</a></@td>
+                    <@td><a class="${styles.link_nav_info_id!}" href="<@pageUrl>EditProductFeatures?productId=${assocProduct.productId}</@pageUrl>">${featureHazmat.get(assocProduct.productId)!}</a></@td>
+                    <@td><a class="${styles.link_nav_info_id!}" href="<@pageUrl>ViewProduct?productId=${assocProduct.productId}</@pageUrl>">${featureSalesThru.get(assocProduct.productId)!}</a></@td>
+                    <@td><a class="${styles.link_nav_info_id!}" href="<@pageUrl>EditProductAssoc?productId=${assocProduct.productId}</@pageUrl>">${featureThruDate.get(assocProduct.productId)!}</a></@td>
                 </@tr>
                 <#assign idx = idx + 1/>
             </#list>
@@ -238,9 +238,9 @@ function doPublish() {
                     <@td><@field type="input" name="~ml" size="6" maxlength="20" value=(ml!) /></@td>
                     <@td><@field type="input" name="~ntwt" size="6" maxlength="20" value=(ntwt!) /></@td>
                     <@td><@field type="input" name="~grams" size="6" maxlength="20" value=(grams!) /></@td>
-                    <@td><a class="${styles.link_nav_info_value!}" href="<@ofbizUrl>EditProductFeatures?productId=${product.productId}</@ofbizUrl>">${hazmat!}</a></@td>
-                    <@td><a class="${styles.link_nav_info_date!}" href="<@ofbizUrl>ViewProduct?productId=${product.productId}</@ofbizUrl>">${salesthru!}</a></@td>
-                    <@td><a class="${styles.link_nav_info_date!}" href="<@ofbizUrl>EditProductAssoc?productId=${product.productId}</@ofbizUrl>">${thrudate!}</a></@td>
+                    <@td><a class="${styles.link_nav_info_value!}" href="<@pageUrl>EditProductFeatures?productId=${product.productId}</@pageUrl>">${hazmat!}</a></@td>
+                    <@td><a class="${styles.link_nav_info_date!}" href="<@pageUrl>ViewProduct?productId=${product.productId}</@pageUrl>">${salesthru!}</a></@td>
+                    <@td><a class="${styles.link_nav_info_date!}" href="<@pageUrl>EditProductAssoc?productId=${product.productId}</@pageUrl>">${thrudate!}</a></@td>
                 </@tr>
               <@tfoot>
                 <@tr>
@@ -262,7 +262,7 @@ function doPublish() {
         <#if addedFeatureTypeIds?has_content || standardFeatureAppls?has_content>
           <@section>
             <#if addedFeatureTypeIds?has_content>
-            <form method="post" action="<@ofbizUrl>quickAdminApplyFeatureToProduct</@ofbizUrl>" name="addFeatureById">
+            <form method="post" action="<@pageUrl>quickAdminApplyFeatureToProduct</@pageUrl>" name="addFeatureById">
               <@fields type="default-manual">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="productFeatureApplTypeId" value="STANDARD_FEATURE"/>
@@ -296,7 +296,7 @@ function doPublish() {
                     <#assign featureId = standardFeatureAppl.productFeatureId/>
                     <@tr valign="middle">
                         <@td colspan="2">
-                          <form name="quickAdminRemoveFeature_${standardFeatureAppl_index}" action="<@ofbizUrl>quickAdminRemoveFeatureFromProduct</@ofbizUrl>" method="post">
+                          <form name="quickAdminRemoveFeature_${standardFeatureAppl_index}" action="<@pageUrl>quickAdminRemoveFeatureFromProduct</@pageUrl>" method="post">
                             <input type="hidden" name="productId" value="${standardFeatureAppl.productId!}" />
                             <input type="hidden" name="productFeatureId" value="${featureId!}" />
                             <input type="hidden" name="fromDate" value="${(standardFeatureAppl.fromDate)!}" />
@@ -314,7 +314,7 @@ function doPublish() {
     </@row>
     <@row>
       <@cell>
-        <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>">
+        <form action="<@pageUrl>EditProductQuickAdmin</@pageUrl>">
           <@fields type="default-manual">
             <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)!}"/>
             <input type="hidden" name="productId" value="${product.productId!}"/>
@@ -335,7 +335,7 @@ function doPublish() {
         <!--  **************************************************** Categories section -->
     <@row>
       <@cell>
-        <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>">
+        <form action="<@pageUrl>quickAdminAddCategories</@pageUrl>">
           <@fields type="default-nolabelarea">
             <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
             <input type="hidden" name="productId" value="${product.productId!}"/>
@@ -356,7 +356,7 @@ function doPublish() {
                 <#assign prodCat = prodCatMemb.getRelatedOne("ProductCategory", false)/>
                 <@tr valign="middle">
                     <@td colspan="2">
-                      <form name="quickAdminRemoveProductFromCategory_${prodCatMemb_index}" action="<@ofbizUrl>quickAdminRemoveProductFromCategory</@ofbizUrl>" method="post">
+                      <form name="quickAdminRemoveProductFromCategory_${prodCatMemb_index}" action="<@pageUrl>quickAdminRemoveProductFromCategory</@pageUrl>" method="post">
                         <input type="hidden" name="productId" value="${prodCatMemb.productId!}" />
                         <input type="hidden" name="productCategoryId" value="${prodCatMemb.productCategoryId}" />
                         <input type="hidden" name="fromDate" value="${(prodCatMemb.fromDate)!}" />
@@ -377,7 +377,7 @@ function doPublish() {
   <#if (showPublish == "true")>
     <@row>
       <@cell>
-        <form action="<@ofbizUrl>quickAdminAddCategories</@ofbizUrl>" name="publish">
+        <form action="<@pageUrl>quickAdminAddCategories</@pageUrl>" name="publish">
           <@fields type="default-nolabelarea">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="categoryId" value="${allCategoryId!}"/>
@@ -390,7 +390,7 @@ function doPublish() {
   <#else>
     <@row>
       <@cell>
-        <form  action="<@ofbizUrl>quickAdminUnPublish</@ofbizUrl>" name="unpublish">
+        <form  action="<@pageUrl>quickAdminUnPublish</@pageUrl>" name="unpublish">
           <@fields type="default-nolabelarea">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="productCategoryId" value="${allCategoryId!}"/>

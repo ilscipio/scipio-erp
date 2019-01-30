@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<@script src=makeOfbizContentUrl("/images/imagemanagement/sizzle.min.js") />
+<@script src=makeContentUrl("/images/imagemanagement/sizzle.min.js") />
 <@script>
 <#-- SCIPIO: this breaks everything (?)
 jQuery.noConflict();-->

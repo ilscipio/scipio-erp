@@ -5,10 +5,10 @@ code package.
 -->
 
 <#if facility?? && facilityId?has_content>
-  <form action="<@ofbizUrl>UpdateFacility</@ofbizUrl>" name="EditFacilityForm" method="post" class="basic-form">
+  <form action="<@pageUrl>UpdateFacility</@pageUrl>" name="EditFacilityForm" method="post" class="basic-form">
   <input type="hidden" name="facilityId" value="${facilityId!}" />
 <#else>
-  <form action="<@ofbizUrl>CreateFacility</@ofbizUrl>" name="EditFacilityForm" method="post" class="basic-form">
+  <form action="<@pageUrl>CreateFacility</@pageUrl>" name="EditFacilityForm" method="post" class="basic-form">
   <#if facilityId??>
     <@commonMsg type="error">${uiLabelMap.ProductCouldNotFindFacilityWithId} "${facilityId!}".</@commonMsg>
   </#if>

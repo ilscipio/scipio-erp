@@ -28,7 +28,7 @@
 
 <#-- CORE INCLUDE -->
 <@section title=uiLabelMap.SetupAccountingPreferences>		
-	<@form method="post" action=makeOfbizUrl(acctgPreferencesActionUrl!) id="setupAccounting-preferences-form">
+	<@form method="post" action=makePageUrl(acctgPreferencesActionUrl!) id="setupAccounting-preferences-form">
 	    <#-- TODO: REVIEW: may make a difference later -->
 	    <@defaultWizardFormFields exclude=["topGlAccountId"]/>
 	    <@field type="hidden" name="partyId" value=orgPartyId! />

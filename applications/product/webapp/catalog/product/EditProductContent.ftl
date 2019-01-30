@@ -21,13 +21,13 @@ code package.
           <div>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName!}</b></div>
           <div>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse!}</b></div>
           <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
-          <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>">${imageUrl!}</a></b></div>
+          <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@contentUrl>${imageUrl!}</@contentUrl>">${imageUrl!}</a></b></div>
         </#if>
         <br />
     </#if>
     
     <@section>
-        <form action="<@ofbizUrl>updateProductContent</@ofbizUrl>" method="post" name="productForm">
+        <form action="<@pageUrl>updateProductContent</@pageUrl>" method="post" name="productForm">
             <input type="hidden" name="productId" value="${productId!}"/>
             <@field type="input" label=uiLabelMap.ProductProductName name="productName" value=((product.productName)!) size="30" maxlength="60"/>
             <@field type="textarea" label=uiLabelMap.ProductProductDescription name="description" cols="60" rows="2">${(product.description)!}</@field>
@@ -38,7 +38,7 @@ code package.
             <#-- SCIPIO: FIXME: same pattern copy-pasted... -->
             <#assign labelDetail>
               <#if (product.smallImageUrl)??>
-                <a href="<@ofbizContentUrl>${(product.smallImageUrl)!}</@ofbizContentUrl>" target="_blank"><img alt="Small Image" src="<@ofbizContentUrl>${(product.smallImageUrl)!}</@ofbizContentUrl>" class="cssImgSmall"/></a>
+                <a href="<@contentUrl>${(product.smallImageUrl)!}</@contentUrl>" target="_blank"><img alt="Small Image" src="<@contentUrl>${(product.smallImageUrl)!}</@contentUrl>" class="cssImgSmall"/></a>
               </#if>
             </#assign>
             <@field type="generic" label=uiLabelMap.ProductSmallImage labelDetail=labelDetail>
@@ -54,7 +54,7 @@ code package.
             </@field>
             <#assign labelDetail>
               <#if (product.mediumImageUrl)??>
-                <a href="<@ofbizContentUrl>${product.mediumImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Medium Image" src="<@ofbizContentUrl>${product.mediumImageUrl}</@ofbizContentUrl>" class="cssImgSmall"/></a>
+                <a href="<@contentUrl>${product.mediumImageUrl}</@contentUrl>" target="_blank"><img alt="Medium Image" src="<@contentUrl>${product.mediumImageUrl}</@contentUrl>" class="cssImgSmall"/></a>
               </#if>
             </#assign>
             <@field type="generic" label=uiLabelMap.ProductMediumImage labelDetail=labelDetail>
@@ -70,7 +70,7 @@ code package.
             </@field>
             <#assign labelDetail>
               <#if (product.largeImageUrl)??>
-                <a href="<@ofbizContentUrl>${product.largeImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Large Image" src="<@ofbizContentUrl>${product.largeImageUrl}</@ofbizContentUrl>" class="cssImgSmall"/></a>
+                <a href="<@contentUrl>${product.largeImageUrl}</@contentUrl>" target="_blank"><img alt="Large Image" src="<@contentUrl>${product.largeImageUrl}</@contentUrl>" class="cssImgSmall"/></a>
               </#if>
             </#assign>
             <@field type="generic" label=uiLabelMap.ProductLargeImage labelDetail=labelDetail>
@@ -86,7 +86,7 @@ code package.
             </@field>
             <#assign labelDetail>
               <#if (product.detailImageUrl)??>
-                <a href="<@ofbizContentUrl>${product.detailImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Detail Image" src="<@ofbizContentUrl>${product.detailImageUrl}</@ofbizContentUrl>" class="cssImgSmall"/></a>
+                <a href="<@contentUrl>${product.detailImageUrl}</@contentUrl>" target="_blank"><img alt="Detail Image" src="<@contentUrl>${product.detailImageUrl}</@contentUrl>" class="cssImgSmall"/></a>
               </#if>
             </#assign>
             <@field type="generic" label=uiLabelMap.ProductDetailImage labelDetail=labelDetail>
@@ -102,7 +102,7 @@ code package.
             </@field>
             <#assign labelDetail>
                   <#if (product.originalImageUrl)??>
-                    <a href="<@ofbizContentUrl>${product.originalImageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Original Image" src="<@ofbizContentUrl>${product.originalImageUrl}</@ofbizContentUrl>" class="cssImgSmall"/></a>
+                    <a href="<@contentUrl>${product.originalImageUrl}</@contentUrl>" target="_blank"><img alt="Original Image" src="<@contentUrl>${product.originalImageUrl}</@contentUrl>" class="cssImgSmall"/></a>
                   </#if>
             </#assign>
             <@field type="generic" label=uiLabelMap.ProductOriginalImage labelDetail=labelDetail>
@@ -127,16 +127,16 @@ code package.
     </@section>
     
     <@section title=uiLabelMap.ProductUploadImage>
-        <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>" name="imageUploadForm">
+        <form method="post" enctype="multipart/form-data" action="<@pageUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@pageUrl>" name="imageUploadForm">
           <@fields type="default-nolabelarea">
             <p><em>${uiLabelMap.ProductOriginalImageMessage} : &dollar;{ofbiz.home}/applications/product/config/ImageProperties.xml</em></p>
             <@field type="file" size="50" name="fname"/>
             <@field type="generic">
-                <@field type="radio" name="upload_file_type_bogus" value="small" onClick="setUploadUrl('${escapeVal(makeOfbizUrl('UploadProductImage?productId=${productId}&upload_file_type=small'), 'js')}');" label=uiLabelMap.CommonSmall/>
-                <@field type="radio" name="upload_file_type_bogus" value="medium" onClick="setUploadUrl('${escapeVal(makeOfbizUrl('UploadProductImage?productId=${productId}&upload_file_type=medium'), 'js')}');" label=uiLabelMap.CommonMedium/>
-                <@field type="radio" name="upload_file_type_bogus" value="large" onClick="setUploadUrl('${escapeVal(makeOfbizUrl('UploadProductImage?productId=${productId}&upload_file_type=large'), 'js')}');" label=uiLabelMap.CommonLarge/>
-                <@field type="radio" name="upload_file_type_bogus" value="detail" onClick="setUploadUrl('${escapeVal(makeOfbizUrl('UploadProductImage?productId=${productId}&upload_file_type=detail'), 'js')}');" label=uiLabelMap.CommonDetail/>
-                <@field type="radio" name="upload_file_type_bogus" value="original" checked=true onClick="setUploadUrl('${escapeVal(makeOfbizUrl('UploadProductImage?productId=${productId}&upload_file_type=original'), 'js')}');" label=uiLabelMap.ProductOriginal/>
+                <@field type="radio" name="upload_file_type_bogus" value="small" onClick="setUploadUrl('${escapeVal(makePageUrl('UploadProductImage?productId=${productId}&upload_file_type=small'), 'js')}');" label=uiLabelMap.CommonSmall/>
+                <@field type="radio" name="upload_file_type_bogus" value="medium" onClick="setUploadUrl('${escapeVal(makePageUrl('UploadProductImage?productId=${productId}&upload_file_type=medium'), 'js')}');" label=uiLabelMap.CommonMedium/>
+                <@field type="radio" name="upload_file_type_bogus" value="large" onClick="setUploadUrl('${escapeVal(makePageUrl('UploadProductImage?productId=${productId}&upload_file_type=large'), 'js')}');" label=uiLabelMap.CommonLarge/>
+                <@field type="radio" name="upload_file_type_bogus" value="detail" onClick="setUploadUrl('${escapeVal(makePageUrl('UploadProductImage?productId=${productId}&upload_file_type=detail'), 'js')}');" label=uiLabelMap.CommonDetail/>
+                <@field type="radio" name="upload_file_type_bogus" value="original" checked=true onClick="setUploadUrl('${escapeVal(makePageUrl('UploadProductImage?productId=${productId}&upload_file_type=original'), 'js')}');" label=uiLabelMap.ProductOriginal/>
             </@field>
             <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_import!}" text=uiLabelMap.ProductUploadImage/>
           </@fields>

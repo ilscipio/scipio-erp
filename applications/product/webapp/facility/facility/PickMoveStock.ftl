@@ -19,12 +19,12 @@ code package.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("PickMoveStockSimple?facilityId=${facilityId!}") text=uiLabelMap.CommonPrint class="+${styles.action_run_sys!} ${styles.action_export!}" />
+    <@menuitem type="link" href=makePageUrl("PickMoveStockSimple?facilityId=${facilityId!}") text=uiLabelMap.CommonPrint class="+${styles.action_run_sys!} ${styles.action_export!}" />
   </@menu>
 </#macro>
 <@section title=uiLabelMap.ProductStockMovesNeeded menuContent=menuContent>
         <#if moveByOisgirInfoList?has_content || moveByPflInfoList?has_content>
-          <form method="post" action="<@ofbizUrl>processPhysicalStockMove</@ofbizUrl>" name="selectAllForm">
+          <form method="post" action="<@pageUrl>processPhysicalStockMove</@pageUrl>" name="selectAllForm">
               <#-- general request fields -->
               <input type="hidden" name="facilityId" value="${facilityId!}" />
               <input type="hidden" name="_useRowSubmit" value="Y" />
@@ -136,7 +136,7 @@ code package.
 </@section>      
       
 <@section title=uiLabelMap.ProductQuickStockMove>
-        <form method="post" action="<@ofbizUrl>processQuickStockMove</@ofbizUrl>" name="quickStockMove">
+        <form method="post" action="<@pageUrl>processQuickStockMove</@pageUrl>" name="quickStockMove">
             <input type="hidden" name="facilityId" value="${facilityId!}" />
                 <@field type="lookup" label=uiLabelMap.ProductProduct formName="quickStockMove" name="productId" id="productId" fieldFormName="LookupProduct"/>
                 <@field type="lookup" label=uiLabelMap.ProductFromLocation formName="quickStockMove" name="locationSeqId" id="locationSeqId" fieldFormName="LookupFacilityLocation?facilityId=${facilityId}&amp;locationTypeEnumId=FLT_PICKLOC"/>

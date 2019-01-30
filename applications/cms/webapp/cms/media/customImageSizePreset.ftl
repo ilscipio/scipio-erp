@@ -9,7 +9,7 @@
                     <@modal id="modal_new_image_size_preset" label=uiLabelMap.CmsCreateCustomImageSizePreset linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                         <@heading>${uiLabelMap.CmsCreateCustomImageSizePreset}</@heading>
                         <div class="cmsmedia-customvariantsize-area">
-                            <form method="post" action="<@ofbizUrl>createCustomImageSizePreset</@ofbizUrl>" name="customVariantSizesForm">
+                            <form method="post" action="<@pageUrl>createCustomImageSizePreset</@pageUrl>" name="customVariantSizesForm">
                                 <@field type="text" label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
                                 <hr/>
                                 <div class="cmsmedia-customvariantsize-method customVariantSizesForm">
@@ -29,7 +29,7 @@
 <@section title=uiLabelMap.CmsCustomImageSizePresets menuContent=menuContent id="customImagePresets">
     <#if customImageSizePresets?has_content>
         <@section>
-            <@paginate mode="content" url=makeOfbizUrl("customImageSizePresets") viewSize=(viewSize!10) viewIndex=(viewIndex!0) listSize=(listSize!0)>
+            <@paginate mode="content" url=makePageUrl("customImageSizePresets") viewSize=(viewSize!10) viewIndex=(viewIndex!0) listSize=(listSize!0)>
                 
                     <@table type="data-list" autoAltRows=true>
                         <@thead>
@@ -48,7 +48,7 @@
                                     <@td>${preset.presetId}</@td>
                                     <@td><@field type="text" name="presetName" value=preset.presetName! required=true /></@td>
                                     <@td>
-                                        <a href="javascript:document.forms['customImageSizePresets_${preset_index}'].action='${makeOfbizUrl('updateCustomImageSizePreset')}'; 
+                                        <a href="javascript:document.forms['customImageSizePresets_${preset_index}'].action='${makePageUrl('updateCustomImageSizePreset')}'; 
                                             document.forms['customImageSizePresets_${preset_index}'].submit();" 
                                             class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                                     </@td>

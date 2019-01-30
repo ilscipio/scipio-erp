@@ -7,7 +7,7 @@ code package.
                 <@alert type="info">${uiLabelMap.ProductPromoStoreAddInstructions}</@alert>
 
                 <@section title=uiLabelMap.ProductAddStorePromo>
-                    <form method="post" action="<@ofbizUrl>promo_createProductStorePromoAppl</@ofbizUrl>" name="addProductPromoToCatalog">
+                    <form method="post" action="<@pageUrl>promo_createProductStorePromoAppl</@pageUrl>" name="addProductPromoToCatalog">
                       <@fields type="default-compact">
                         <@row>
                             <@cell columns=4>
@@ -46,7 +46,7 @@ code package.
                             <#assign line = line + 1>
                             <#assign productStore = productStorePromoAppl.getRelatedOne("ProductStore", false)>
                             <@tr valign="middle">
-                                <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_idname!}"><#if productStore??>${(productStore.storeName)!(productStore.productStoreId)!""}<#else>${productStorePromoAppl.productStoreId!""}</#if></a></@td>
+                                <@td><a href="<@serverUrl>/catalog/control/EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@serverUrl>" class="${styles.link_nav_info_idname!}"><#if productStore??>${(productStore.storeName)!(productStore.productStoreId)!""}<#else>${productStorePromoAppl.productStoreId!""}</#if></a></@td>
                                 <#assign hasntStarted = false>
                                 <#if (productStorePromoAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productStorePromoAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                                 <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>
@@ -55,7 +55,7 @@ code package.
 
                                     <#assign hasExpired = false>
                                     <#if (productStorePromoAppl.getTimestamp("thruDate"))?? && nowTimestamp.after(productStorePromoAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-                                    <form method="post" action="<@ofbizUrl>promo_updateProductStorePromoAppl</@ofbizUrl>" name="lineForm${line}">
+                                    <form method="post" action="<@pageUrl>promo_updateProductStorePromoAppl</@pageUrl>" name="lineForm${line}">
                                         <@row>
                                         <@cell columns=8>
                                             <input type="hidden" name="productStoreId" value="${productStorePromoAppl.productStoreId}" />
@@ -72,7 +72,7 @@ code package.
                                     </form>
                                 </@td>
                                 <@td align="center">
-                                   <form method="post" action="<@ofbizUrl>promo_deleteProductStorePromoAppl</@ofbizUrl>">
+                                   <form method="post" action="<@pageUrl>promo_deleteProductStorePromoAppl</@pageUrl>">
                                        <input type="hidden" name="productStoreId" value="${productStorePromoAppl.productStoreId}" />
                                        <input type="hidden" name="productPromoId" value="${productStorePromoAppl.productPromoId}" />
                                        <input type="hidden" name="fromDate" value="${productStorePromoAppl.fromDate}" />

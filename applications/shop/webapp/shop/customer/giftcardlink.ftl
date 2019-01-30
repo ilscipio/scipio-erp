@@ -9,7 +9,7 @@ code package.
 
 <p>${uiLabelMap.AccountingEnterGiftCardLink}.</p>
 
-<form name="gclink" method="post" action="<@ofbizUrl>linkgiftcard</@ofbizUrl>">
+<form name="gclink" method="post" action="<@pageUrl>linkgiftcard</@pageUrl>">
   <input type="hidden" name="paymentConfig" value="${paymentProperties!"payment.properties"}" />
   <#if userLogin?has_content>
     <input type="hidden" name="partyId" value="${userLogin.partyId}" />

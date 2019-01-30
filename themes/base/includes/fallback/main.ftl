@@ -1,6 +1,6 @@
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<#assign logo><img src="<@ofbizContentUrl escapeAs='html'>/images/scipio/scipio-logo-small.png</@ofbizContentUrl>"/></#assign>
+<#assign logo><img src="<@contentUrl escapeAs='html'>/images/scipio/scipio-logo-small.png</@contentUrl>"/></#assign>
 
 <@row>
 	<#-- NOTE: login_wrap contains grid size -->
@@ -17,7 +17,7 @@
 		    	We have detected that there is no <i>WebSite</i> record matching the webSiteId defined as a context-param in this webapp web.xml descriptor for <strong>${webSiteIdNotFound!""}</strong>. 
 		    	This is due the system not being properly configured. In order to solve this, follow our <a href="${scipioSetupUrl!}" class="${styles.link_run_local_inline!} ${styles.text_color_alert!}">setup wizard</a> to fullfil all the missing gaps.		    	 
 	    	</p>	    	
-	    	<#-- <@ofbizInterWebappUrl uri="main" webSiteId="setup" /> -->	    	
+	    	<#-- <@serverUrl uri="main" webSiteId="setup" /> -->	    	
 	    	<p class="${styles.text_left}">
 	    		Alternatively you can load our demo data in order to have the system properly setup without requiring any further action. You must issue this command to do so:
 	    		<pre>

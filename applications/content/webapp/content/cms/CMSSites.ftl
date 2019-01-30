@@ -26,7 +26,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 <@table type="generic" border="0" width="100%" cellspacing="0" cellpadding="0" class="+boxoutside">
   <@tr>
     <@td width='100%'>
-      <form name="userform" method="post" action="<@ofbizUrl>CMSSites</@ofbizUrl>" >
+      <form name="userform" method="post" action="<@pageUrl>CMSSites</@pageUrl>" >
       <@table type="fields" width="100%" class="+appTitle">
         <@tr>
           <@td colspan="1" valign="middle" align="right">
@@ -50,7 +50,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
       <@table type="fields" width="100%" class="+boxbottom">
         <@tr>
           <@td>
-            <form method="post" name="publishsite" action="<@ofbizUrl>linkContentToPubPt</@ofbizUrl>">
+            <form method="post" name="publishsite" action="<@pageUrl>linkContentToPubPt</@pageUrl>">
               <@table type="generic" width="100%" border="0" cellpadding="1">
                 <#assign rowCount = 0 />
                 <@showSites forumId=rootForumId />
@@ -60,7 +60,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
         </@tr>
         <@tr>
          <@td>
-            <a class="${styles.link_nav!} ${styles.action_add!}" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${rootForumId}</@ofbizUrl>">Add Top Level Forum</a>
+            <a class="${styles.link_nav!} ${styles.action_add!}" href="<@pageUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${rootForumId}</@pageUrl>">Add Top Level Forum</a>
          </@td >
         </@tr>
 
@@ -114,19 +114,19 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
             ${plusMinus} ${content.contentName!}
          </@td >
          <@td>
-            <a class="${styles.link_nav!} ${styles.action_update!}" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;moderatedSiteId=${content.contentId}</@ofbizUrl>">Moderate</a>
+            <a class="${styles.link_nav!} ${styles.action_update!}" href="<@pageUrl>CMSSites?rootForumId=${rootForumId}&amp;moderatedSiteId=${content.contentId}</@pageUrl>">Moderate</a>
          </@td >
          <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
          <@td>
-            <a class="${styles.link_nav!} ${styles.action_view!}" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;permRoleSiteId=${content.contentId}</@ofbizUrl>">User Roles</a>
+            <a class="${styles.link_nav!} ${styles.action_view!}" href="<@pageUrl>CMSSites?rootForumId=${rootForumId}&amp;permRoleSiteId=${content.contentId}</@pageUrl>">User Roles</a>
          </@td >
          <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
          <@td>
-            <a class="${styles.link_nav!} ${styles.action_add!}" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${content.contentId}</@ofbizUrl>">Add Child Forum</a>
+            <a class="${styles.link_nav!} ${styles.action_add!}" href="<@pageUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${content.contentId}</@pageUrl>">Add Child Forum</a>
          </@td >
          <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
          <@td>
-            <a class="${styles.link_run_sys!} ${styles.action_remove!}" href="<@ofbizUrl>removeSite?rootForumId=${rootForumId}&amp;contentId=${content.contentId}&amp;contentIdTo=${forumId}&amp;contentAssocTypeId=SUBSITE</@ofbizUrl>">Remove Site</a>
+            <a class="${styles.link_run_sys!} ${styles.action_remove!}" href="<@pageUrl>removeSite?rootForumId=${rootForumId}&amp;contentId=${content.contentId}&amp;contentIdTo=${forumId}&amp;contentAssocTypeId=SUBSITE</@pageUrl>">Remove Site</a>
          </@td>
        </@tr>
        <#assign rowCount = rowCount + 1 />
@@ -138,7 +138,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 <#macro moderateSite forumId rootForumId >
 <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%">
- <form name="mostrecent" method="post" action="<@ofbizUrl>publishResponse</@ofbizUrl>"/>
+ <form name="mostrecent" method="post" action="<@pageUrl>publishResponse</@pageUrl>"/>
   <#assign row=0/>
   <#list mostRecentList as content>
     <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_PUBLISH" subContentId=forumId >
@@ -148,7 +148,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
           <@td> <b>name:</b>${content.contentName} </@td>
       <@injectNodeTrailCsv subContentId=content.contentId redo="true" contentAssocTypeId="PUBLISH_LINK">
           <@td>
-          <a class="tabButton" href="<@ofbizUrl>CMSContentEdit?contentId=${content.contentId}&amp;nodeTrailCsv=${nodeTrailCsv!}</@ofbizUrl>" >View</a>
+          <a class="tabButton" href="<@pageUrl>CMSContentEdit?contentId=${content.contentId}&amp;nodeTrailCsv=${nodeTrailCsv!}</@pageUrl>" >View</a>
           </@td>
           <@td>
           <b>submitted:</b>
@@ -196,7 +196,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%">
   <@tr>
     <@td width='100%'>
-      <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
+      <form name="siteRoleForm" method="post" action="<@pageUrl>updateSiteRoles</@pageUrl>">
         <@fields type="default-manual">
       <input type="hidden" name="permRoleSiteId" value="${forumId}"/>
       <input type="hidden" name="forumId" value="${forumId}"/>

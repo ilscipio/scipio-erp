@@ -9,7 +9,7 @@ code package.
   <#-- New in Ofbiz 14.12 -->
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-       <@menuitem type="link" href=makeOfbizUrl("orderShipping?orderId=${orderId}") text=uiLabelMap.OrderShipmentInformationByOISG class="+${styles.action_nav!} ${styles.action_view!}" />
+       <@menuitem type="link" href=makePageUrl("orderShipping?orderId=${orderId}") text=uiLabelMap.OrderShipmentInformationByOISG class="+${styles.action_nav!} ${styles.action_view!}" />
     </@menu>
   </#macro>
   <@section title=uiLabelMap.OrderShipmentInformation menuContent=menuContent>
@@ -41,7 +41,7 @@ code package.
               <#if (quantityOrdered > 0) >
           <@tr>
               <@td><a name="orderItem${index}">${orderItem.orderItemSeqId}</a></@td>
-              <@td><#if product.internalName?has_content>${product.internalName!}<br/></#if>[<a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${orderItem.productId!}</@ofbizInterWebappUrl>" class="link">${orderItem.productId!}</a>]</@td>
+              <@td><#if product.internalName?has_content>${product.internalName!}<br/></#if>[<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${orderItem.productId!}</@serverUrl>" class="link">${orderItem.productId!}</a>]</@td>
               <@td>${quantityOrdered}</@td>
               <@td>${quantityNotAvailable}</@td>
               <@td colspan="2">
@@ -58,7 +58,7 @@ code package.
           </@tr>
           <@tr>
             <@td colspan="5">
-              <form method="post" action="<@ofbizUrl>UpdateOrderItemShipGroupAssoc?view=OISGA</@ofbizUrl>" name="UpdateOrderItemShipGroupAssoc${index}"/>
+              <form method="post" action="<@pageUrl>UpdateOrderItemShipGroupAssoc?view=OISGA</@pageUrl>" name="UpdateOrderItemShipGroupAssoc${index}"/>
                 <input type="hidden" name="orderId" value="${orderId}"/>
                 <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
                 
@@ -79,15 +79,15 @@ code package.
                       <div> [${OISG.shipGroupSeqId}] <#if OISG.shipByDate?has_content>, ${uiLabelMap.OrderShipBeforeDate} : ${OISG.shipByDate?date}</#if></div>
                           <#if orderType == "SALES_ORDER">
                               <#list orderShipments as orderShipment>
-                      <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="<@ofbizInterWebappUrl>/facility/control/EditShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
                               </#list>
                           <#elseif orderType == "PURCHASE_ORDER">
                               <#list orderShipments as orderShipment>
                                   <#if orderShipment.quantity?has_content & orderShipment.quantity != 0.0>
-                      <div>${uiLabelMap.OrderPlannedInReceive} : </b><a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedInReceive} : </b><a target="facility" href="<@serverUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
                                   <#else>
                                       <#assign shipmentItem = orderShipment.getShipmentItem()>
-                      <div>${uiLabelMap.OrderPlannedRejected} : </b><a target="facility" href="<@ofbizInterWebappUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${shipmentItem.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedRejected} : </b><a target="facility" href="<@serverUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${shipmentItem.quantity!}</div>
                                   </#if>
                               </#list>
                           </#if>
@@ -116,7 +116,7 @@ code package.
               
               <@td colspan="3">&nbsp;</@td>
               <@td colspan="2">
-                <form method="post" action="<@ofbizUrl>AddOrderItemShipGroupAssoc?view=OISGA</@ofbizUrl>" name="addOISGForm${index}"/>
+                <form method="post" action="<@pageUrl>AddOrderItemShipGroupAssoc?view=OISGA</@pageUrl>" name="addOISGForm${index}"/>
                 <input type="hidden" name="editQuantity" value="edit"/>
                 <input type="hidden" name="editQuantityIndex" value="${index}"/>
                 <input type="hidden" name="orderId" value="${orderId}"/>
@@ -170,17 +170,17 @@ code package.
     <#macro menuContent menuArgs={}>
        <@menu args=menuArgs>
          <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${escapeVal(rawLabel('CommonExpand'), 'js')}', '${escapeVal(rawLabel('CommonCollapse'), 'js')}');" text=" " title="Collapse" class="+${styles.action_run_local!} ${styles.action_hide!}" />-->
-         <@menuitem type="link" href=makeOfbizUrl("shipGroups.pdf?orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${rawLabel('OrderShipGroup')} PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
+         <@menuitem type="link" href=makePageUrl("shipGroups.pdf?orderId=${orderId}&shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${rawLabel('OrderShipGroup')} PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
          <#-- Foundation: Button migrated from removed header to access OISGA -->
          <#if !parameters.view?has_content>
-           <@menuitem type="link" href=makeOfbizUrl("orderShipping?orderId=${orderId}&view=OISGA") text=uiLabelMap.OrderShipmentInformationByOrderItem class="+${styles.action_run_sys!} ${styles.action_view!}" />
+           <@menuitem type="link" href=makePageUrl("orderShipping?orderId=${orderId}&view=OISGA") text=uiLabelMap.OrderShipmentInformationByOrderItem class="+${styles.action_run_sys!} ${styles.action_view!}" />
          </#if>
        </@menu>
     </#macro>
     <@section title="${rawLabel('OrderShipmentInformation')} - ${rawString(shipGroup.shipGroupSeqId)}" menuContent=menuContent>
         <@fields type="default-manual">
             <@table type="fields">
-                    <form name="updateOrderItemShipGroup" method="post" action="<@ofbizUrl>updateShipGroupShipInfo</@ofbizUrl>">
+                    <form name="updateOrderItemShipGroup" method="post" action="<@pageUrl>updateShipGroupShipInfo</@pageUrl>">
                         <input type="hidden" name="orderId" value="${orderId!}"/>
                         <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId!}"/>
                         <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
@@ -345,7 +345,7 @@ code package.
            <@tr>
               <@td colspan="2" valign="top" width="100%" align="center">
                    <a href="javascript:document.deleteOISG_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.DeleteOrderItemShipGroup}</a>
-                   <form name="deleteOISG_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizInterWebappUrl>/ordermgr/control/DeleteOrderItemShipGroup</@ofbizInterWebappUrl>">
+                   <form name="deleteOISG_${shipGroup.shipGroupSeqId}" method="post" action="<@serverUrl>/ordermgr/control/DeleteOrderItemShipGroup</@serverUrl>">
                      <input type="hidden" name="orderId" value="${orderId}"/>
                      <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                    </form>
@@ -375,7 +375,7 @@ code package.
                       ${uiLabelMap.OrderOnlineUPSShippingEstimates}
                     </@td>
                   </@tr>
-                  <form name="UpdateShippingMethod" method="post" action="<@ofbizUrl>updateShippingMethodAndCharges</@ofbizUrl>">
+                  <form name="UpdateShippingMethod" method="post" action="<@pageUrl>updateShippingMethodAndCharges</@pageUrl>">
                     <#list shippingRateList as shippingRate>
                       <@tr>
                         <@td>
@@ -447,7 +447,7 @@ code package.
                 <#if shipGroup.maySplit?upper_case == "N">
                     <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>
                       <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
-                        <form name="allowordersplit_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizUrl>allowordersplit</@ofbizUrl>">
+                        <form name="allowordersplit_${shipGroup.shipGroupSeqId}" method="post" action="<@pageUrl>allowordersplit</@pageUrl>">
                           <input type="hidden" name="orderId" value="${orderId}"/>
                           <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                         </form>
@@ -468,7 +468,7 @@ code package.
           </@td>
           <@td align="left" valign="top" width="80%">
             <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
-              <form id="updateShippingInstructionsForm_${shipGroup.shipGroupSeqId}" name="updateShippingInstructionsForm" method="post" action="<@ofbizUrl>setShippingInstructions</@ofbizUrl>">
+              <form id="updateShippingInstructionsForm_${shipGroup.shipGroupSeqId}" name="updateShippingInstructionsForm" method="post" action="<@pageUrl>setShippingInstructions</@pageUrl>">
                 <input type="hidden" name="orderId" value="${orderHeader.orderId}"/>
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                 <@row>
@@ -497,7 +497,7 @@ code package.
             ${uiLabelMap.OrderGiftMessage}
           </@td>
           <@td>
-            <form id="setGiftMessageForm_${shipGroup.shipGroupSeqId}" name="setGiftMessageForm" method="post" action="<@ofbizUrl>setGiftMessage</@ofbizUrl>">
+            <form id="setGiftMessageForm_${shipGroup.shipGroupSeqId}" name="setGiftMessageForm" method="post" action="<@pageUrl>setGiftMessage</@pageUrl>">
               <input type="hidden" name="orderId" value="${orderHeader.orderId}"/>
               <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
               <@row>
@@ -518,7 +518,7 @@ code package.
               ${uiLabelMap.OrderShipBeforeDate}
             </@td>
             <@td>
-                <form name="setShipGroupDates_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizUrl>updateOrderItemShipGroup</@ofbizUrl>">
+                <form name="setShipGroupDates_${shipGroup.shipGroupSeqId}" method="post" action="<@pageUrl>updateOrderItemShipGroup</@pageUrl>">
                     <input type="hidden" name="orderId" value="${orderHeader.orderId}"/>
                     <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                     <@row>
@@ -537,7 +537,7 @@ code package.
               ${uiLabelMap.OrderShipAfterDate}
             </@td>
             <@td >
-                <form name="setShipGroupDates_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizUrl>updateOrderItemShipGroup</@ofbizUrl>">
+                <form name="setShipGroupDates_${shipGroup.shipGroupSeqId}" method="post" action="<@pageUrl>updateOrderItemShipGroup</@pageUrl>">
                     <input type="hidden" name="orderId" value="${orderHeader.orderId}"/>
                     <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                     <@row>
@@ -559,11 +559,11 @@ code package.
              <#if orderHeader.orderTypeId == "SALES_ORDER">
                <#if !shipGroup.supplierPartyId?has_content>
                  <#if orderHeader.statusId == "ORDER_APPROVED">
-                 <a href="<@ofbizInterWebappUrl>/facility/control/PackOrder?facilityId=${storeFacilityId!}&amp;orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderPackShipmentForShipGroup}</a>
+                 <a href="<@serverUrl>/facility/control/PackOrder?facilityId=${storeFacilityId!}&amp;orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderPackShipmentForShipGroup}</a>
                  <br />
                  </#if>
                  <a href="javascript:document.createShipment_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderNewShipmentForShipGroup}</a>
-                 <form name="createShipment_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizInterWebappUrl>/facility/control/createShipment</@ofbizInterWebappUrl>">
+                 <form name="createShipment_${shipGroup.shipGroupSeqId}" method="post" action="<@serverUrl>/facility/control/createShipment</@serverUrl>">
                    <input type="hidden" name="primaryOrderId" value="${orderId}"/>
                    <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                    <input type="hidden" name="statusId" value="SHIPMENT_INPUT" />
@@ -575,7 +575,7 @@ code package.
                <#assign facilities = facilitiesForShipGroup.get(shipGroup.shipGroupSeqId)>
                <#if facilities?has_content>
                    <div>
-                    <form name="createShipment2_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizInterWebappUrl>/facility/control/createShipment</@ofbizInterWebappUrl>">
+                    <form name="createShipment2_${shipGroup.shipGroupSeqId}" method="post" action="<@serverUrl>/facility/control/createShipment</@serverUrl>">
                        <input type="hidden" name="primaryOrderId" value="${orderId}"/>
                        <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                        <input type="hidden" name="shipmentTypeId" value="PURCHASE_SHIPMENT"/>
@@ -594,12 +594,12 @@ code package.
                <#else>
                    <a href="javascript:document.quickDropShipOrder_${shipGroup_index}.submit();" class="${styles.link_run_sys!} ${styles.action_complete!}">${uiLabelMap.ProductShipmentQuickComplete}</a>
                    <a href="javascript:document.createShipment3_${shipGroup.shipGroupSeqId}.submit();" class="${styles.link_run_sys_long!} ${styles.action_add!}">${uiLabelMap.OrderNewDropShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]</a>
-                   <form name="quickDropShipOrder_${shipGroup_index}" method="post" action="<@ofbizUrl>quickDropShipOrder</@ofbizUrl>">
+                   <form name="quickDropShipOrder_${shipGroup_index}" method="post" action="<@pageUrl>quickDropShipOrder</@pageUrl>">
                         <input type="hidden" name="orderId" value="${orderId}"/>
                         <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                         <input type="hidden" name="externalLoginKey" value="${externalLoginKey}" />
                     </form>
-                    <form name="createShipment3_${shipGroup.shipGroupSeqId}" method="post" action="<@ofbizInterWebappUrl>/facility/control/createShipment</@ofbizInterWebappUrl>">
+                    <form name="createShipment3_${shipGroup.shipGroupSeqId}" method="post" action="<@serverUrl>/facility/control/createShipment</@serverUrl>">
                         <input type="hidden" name="primaryOrderId" value="${orderId}"/>
                         <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                         <input type="hidden" name="shipmentTypeId" value="DROP_SHIPMENT" />

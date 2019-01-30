@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<@script src=makeOfbizContentUrl("/images/imagemanagement/sizzle.min.js") />
+<@script src=makeContentUrl("/images/imagemanagement/sizzle.min.js") />
 <@script>
 <#-- SCIPIO: this breaks everything (?)
 jQuery.noConflict();-->
@@ -40,7 +40,7 @@ jQuery(document).ready(function(){
                                 </li>
                             <#else>
                                 <li>
-                                        <b><a href="<@ofbizUrl>ImageApprove</@ofbizUrl>" class="text">${userLoginAndPartyDetails.firstName!} ${userLoginAndPartyDetails.middleName!} ${userLoginAndPartyDetails.lastName!} (${imageApproveSize})</a></b>
+                                        <b><a href="<@pageUrl>ImageApprove</@pageUrl>" class="text">${userLoginAndPartyDetails.firstName!} ${userLoginAndPartyDetails.middleName!} ${userLoginAndPartyDetails.lastName!} (${imageApproveSize})</a></b>
                                 </li>
                             </#if>
                         <#else>
@@ -50,7 +50,7 @@ jQuery(document).ready(function(){
                                 </li>
                             <#else>
                                 <li>
-                                        <b><a href="<@ofbizUrl>ListPeopleApproved?createdByUserLogin=${userLoginAndPartyDetails.userLoginId}</@ofbizUrl>" class="text">${userLoginAndPartyDetails.firstName!} ${userLoginAndPartyDetails.middleName!} ${userLoginAndPartyDetails.lastName!} (${imageApproveSize})</a></b>
+                                        <b><a href="<@pageUrl>ListPeopleApproved?createdByUserLogin=${userLoginAndPartyDetails.userLoginId}</@pageUrl>" class="text">${userLoginAndPartyDetails.firstName!} ${userLoginAndPartyDetails.middleName!} ${userLoginAndPartyDetails.lastName!} (${imageApproveSize})</a></b>
                                 </li>
                             </#if>
                         </#if>
@@ -63,7 +63,7 @@ jQuery(document).ready(function(){
             <#-- SCIPIO: too confusing:
             <a href="javascript:void(0)" class="${styles.link_run_sys!} ${styles.action_find!} ${styles.disabled!}">Rejected</a>-->
         <#else>
-            <a href="<@ofbizUrl>ListPeopleRejected</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">Rejected</a>
+            <a href="<@pageUrl>ListPeopleRejected</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">Rejected</a>
         </#if>
 <#else>
   <@commonMsg type="result-norecord"/>

@@ -39,7 +39,7 @@ code package.
               <#else>
                 <@td valign="top">
                     <#if orderItem.productId??>
-                      <a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>">${orderItem.productId} - ${orderItem.itemDescription}</a>
+                      <a href="<@pageUrl>product?product_id=${orderItem.productId}</@pageUrl>">${orderItem.productId} - ${orderItem.itemDescription}</a>
                     <#else>
                       <b>${(itemType.description)!}</b> : ${orderItem.itemDescription!}
                     </#if>

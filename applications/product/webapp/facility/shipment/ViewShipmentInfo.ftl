@@ -20,11 +20,11 @@ code package.
           </@tr>
           <@tr>
             <@td width="20%" align="right">${uiLabelMap.ProductPrimaryOrderId}</@td>
-            <@td width="80%"><#if shipment.primaryOrderId??><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipment.primaryOrderId}</a></#if></@td>
+            <@td width="80%"><#if shipment.primaryOrderId??><a href="<@serverUrl>/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipment.primaryOrderId}</a></#if></@td>
           </@tr>
           <@tr>
             <@td width="20%" align="right">${uiLabelMap.ProductPrimaryReturnId}</@td>
-            <@td width="80%"><#if shipment.primaryReturnId??><a href="<@ofbizInterWebappUrl>/ordermgr/control/returnMain?returnId=${shipment.primaryReturnId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipment.primaryReturnId}</a></#if></@td>
+            <@td width="80%"><#if shipment.primaryReturnId??><a href="<@serverUrl>/ordermgr/control/returnMain?returnId=${shipment.primaryReturnId}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipment.primaryReturnId}</a></#if></@td>
           </@tr>
           <@tr>
             <@td width="20%" align="right">${uiLabelMap.ProductPrimaryShipGroupSeqId}</@td>

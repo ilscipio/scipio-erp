@@ -13,7 +13,7 @@ code package.
     <@heading level=1>${uiLabelMap.CommonPasswordChange}</@heading>
   </div>
   <@section id="login-box-content">
-    <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
+    <form method="post" action="<@pageUrl>login</@pageUrl>" name="loginform">
       <input type="hidden" name="requirePasswordChange" value="Y"/>
       <input type="hidden" name="USERNAME" value="${username}"/>
       <input type="hidden" name="userTenantId" value="${tenantId!}"/>

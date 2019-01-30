@@ -9,7 +9,7 @@ code package.
 
 <div style="border-bottom: 1px solid #ccc; margin-bottom: 20px">
     <p>
-        <b>${uiLabelMap.AccountingAccountNumber}:</b> <a href="<@ofbizInterWebappUrl>/accounting/control/EditFinAccount?finAccountId=${ownedFinAccount.finAccountId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>"
+        <b>${uiLabelMap.AccountingAccountNumber}:</b> <a href="<@serverUrl>/accounting/control/EditFinAccount?finAccountId=${ownedFinAccount.finAccountId}${rawString(externalKeyParam)}</@serverUrl>"
              class="${styles.link_nav_info_id!}">${ownedFinAccount.finAccountId}</a>
         <b>${uiLabelMap.AccountingAccountType}:</b> ${(ownedFinAccountType.description)!(uiLabelMap.CommonNA)}
         <b>${uiLabelMap.FormFieldTitle_finAccountName}:</b> ${ownedFinAccount.finAccountName!}

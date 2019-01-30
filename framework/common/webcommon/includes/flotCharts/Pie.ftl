@@ -3,9 +3,9 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<@script src=makeOfbizContentUrl("/images/jquery/plugins/flot/excanvas.min.js") />
-<@script src=makeOfbizContentUrl("/images/jquery/plugins/flot/jquery.flot.js") />
-<@script src=makeOfbizContentUrl("/images/jquery/plugins/flot/jquery.flot.pie.js") />
+<@script src=makeContentUrl("/images/jquery/plugins/flot/excanvas.min.js") />
+<@script src=makeContentUrl("/images/jquery/plugins/flot/jquery.flot.js") />
+<@script src=makeContentUrl("/images/jquery/plugins/flot/jquery.flot.pie.js") />
 
 
 <div id="${chartId}Div" style="width:800px;height:300px;"></div>

@@ -54,7 +54,7 @@ code package.
                                         <screenlet>
                                             <platform-specific><html><html-template><![CDATA[
                                                 <@heading>${uiLabelMap.WorkEffortTimesheet}: ${currentTimesheet.fromDate!} - ${currentTimesheet.thruDate!}
-                                                    <a href="<@ofbizUrl uri=('EditTimesheet?timesheetId='+rawString(currentTimesheet.timesheetId)) escapeAs='html'/>">[${currentTimesheet.timesheetId}]</a></@heading>
+                                                    <a href="<@pageUrl uri=('EditTimesheet?timesheetId='+rawString(currentTimesheet.timesheetId)) escapeAs='html'/>">[${currentTimesheet.timesheetId}]</a></@heading>
                                                 <#if currentTimesheet.comments?has_content><p>${currentTimesheet.comments}</p></#if>
                                             ]]></html-template></html></platform-specific>
                                             <!--<container>

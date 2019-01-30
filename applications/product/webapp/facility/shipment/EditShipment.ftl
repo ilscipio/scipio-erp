@@ -45,7 +45,7 @@
         <#if shipment?has_content>
             <@field type="display" name="primaryOrderId" label=uiLabelMap.ProductPrimaryOrderId value=(shipment.primaryOrderId!)>
               <#if shipment.primaryOrderId?has_content><#-- SCIPIO: 2018-06-08: don't crash if not set -->
-                <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}</@ofbizInterWebappUrl>">${shipment.primaryOrderId}</a>
+                <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}</@serverUrl>">${shipment.primaryOrderId}</a>
               </#if>
             </@field>
         <#else>

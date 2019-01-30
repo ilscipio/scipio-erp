@@ -6,19 +6,19 @@ code package.
 <#assign selected = activeSubMenuItem?default("void")>
 <#if returnHeader??>
     <@menu type="button">
-      <@menuitem type="link" href=makeOfbizUrl("returnMain?returnId=${returnId!}") text=uiLabelMap.OrderReturnHeader selected=(selected=="OrderReturnHeader") class="+${styles.action_nav!} ${styles.action_terminate!}" />
-      <@menuitem type="link" href=makeOfbizUrl("returnItems?returnId=${returnId!}") text=uiLabelMap.OrderReturnItems selected=(selected=="OrderReturnItems") class="+${styles.action_nav!} ${styles.action_terminate!}" />
-      <@menuitem type="link" href=makeOfbizUrl("ReturnHistory?returnId=${returnId!}") text=uiLabelMap.OrderReturnHistory selected=(selected=="OrderReturnHistory") class="+${styles.action_nav!} ${styles.action_view!}" />
+      <@menuitem type="link" href=makePageUrl("returnMain?returnId=${returnId!}") text=uiLabelMap.OrderReturnHeader selected=(selected=="OrderReturnHeader") class="+${styles.action_nav!} ${styles.action_terminate!}" />
+      <@menuitem type="link" href=makePageUrl("returnItems?returnId=${returnId!}") text=uiLabelMap.OrderReturnItems selected=(selected=="OrderReturnItems") class="+${styles.action_nav!} ${styles.action_terminate!}" />
+      <@menuitem type="link" href=makePageUrl("ReturnHistory?returnId=${returnId!}") text=uiLabelMap.OrderReturnHistory selected=(selected=="OrderReturnHistory") class="+${styles.action_nav!} ${styles.action_view!}" />
     </@menu>
   <#if selected != "OrderReturnHistory">
     <@menu type="button" class="+button-style-1">
-      <@menuitem type="link" href=makeOfbizUrl("return.pdf?returnId=${returnId!}") text="PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}" />
+      <@menuitem type="link" href=makePageUrl("return.pdf?returnId=${returnId!}") text="PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}" />
       <#if returnId??>
         <#assign returnItems = delegator.findByAnd("ReturnItem", {"returnId":returnId, "returnTypeId":"RTN_REFUND"}, null, false)/>
         <#if returnItems?has_content>
           <#assign orderId = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(returnItems)).getString("orderId")/>
           <#assign partyId = "${(returnHeader.fromPartyId)!}"/>
-          <@menuitem type="link" href=makeOfbizUrl("setOrderCurrencyAgreementShipDates?partyId=${partyId!}&originOrderId=${orderId!}") text="${rawLabel('OrderCreateExchangeOrder')} ${rawLabel('CommonFor')} ${rawString(orderId!)}" class="+${styles.action_run_sys!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makePageUrl("setOrderCurrencyAgreementShipDates?partyId=${partyId!}&originOrderId=${orderId!}") text="${rawLabel('OrderCreateExchangeOrder')} ${rawLabel('CommonFor')} ${rawString(orderId!)}" class="+${styles.action_run_sys!} ${styles.action_add!}" />
         </#if>
         <#if "RETURN_ACCEPTED" == returnHeader.statusId>
           <#assign returnItems = delegator.findByAnd("ReturnItem", {"returnId" : returnId}, null, false)/>
@@ -33,7 +33,7 @@ code package.
                 <#if shipmentRouteSegment??>
                   <#if "UPS" == shipmentRouteSegment.carrierPartyId!>
                     <@menuitem type="link" href="javascript:document.upsEmailReturnLabel.submit();" text=uiLabelMap.ProductEmailReturnShippingLabelUPS class="+${styles.action_run_sys!} ${styles.action_send!}">
-                      <form name="upsEmailReturnLabel" method="post" action="<@ofbizUrl>upsEmailReturnLabelReturn</@ofbizUrl>">
+                      <form name="upsEmailReturnLabel" method="post" action="<@pageUrl>upsEmailReturnLabelReturn</@pageUrl>">
                         <input type="hidden" name="returnId" value="${returnId}"/>
                         <input type="hidden" name="shipmentId" value="${shipGroupShipment.shipmentId}"/>
                         <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}" />

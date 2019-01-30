@@ -7,16 +7,16 @@ code package.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if techDataCalendar?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("EditCalendar") text=uiLabelMap.ManufacturingNewCalendar class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makePageUrl("EditCalendar") text=uiLabelMap.ManufacturingNewCalendar class="+${styles.action_nav!} ${styles.action_add!}" />
   </#if>
   </@menu>
 </#macro>
 <@section menuContent=menuContent>
 
 <#if techDataCalendar?has_content>
-  <#assign formActionUrl><@ofbizUrl escapeAs='html'>UpdateCalendar</@ofbizUrl></#assign>
+  <#assign formActionUrl><@pageUrl escapeAs='html'>UpdateCalendar</@pageUrl></#assign>
 <#else>
-  <#assign formActionUrl><@ofbizUrl escapeAs='html'>CreateCalendar</@ofbizUrl></#assign>
+  <#assign formActionUrl><@pageUrl escapeAs='html'>CreateCalendar</@pageUrl></#assign>
 </#if>
 
   <form name="calendarform" method="post" action="${formActionUrl}">

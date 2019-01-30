@@ -114,7 +114,7 @@ function setServiceName(selection) {
                 <div class="align-float">
                     <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
                         <option value="">${uiLabelMap.AccountingSelectAction}</options>
-                        <option value="<@ofbizUrl>createPaymentBatch</@ofbizUrl>" id="processBatchPayment">${uiLabelMap.AccountingCreateBatch}</option>
+                        <option value="<@pageUrl>createPaymentBatch</@pageUrl>" id="processBatchPayment">${uiLabelMap.AccountingCreateBatch}</option>
                         <option value="massPaymentsToNotPaid">${uiLabelMap.AccountingPaymentStatusToNotPaid}</option>
                         <option value="massPaymentsToReceived">${uiLabelMap.AccountingInvoiceStatusToReceived}</option>
                         <option value="massPaymentsToConfirmed">${uiLabelMap.AccountingPaymentTabStatusToConfirmed}</option>
@@ -125,7 +125,7 @@ function setServiceName(selection) {
                     <input type="hidden" name="organizationPartyId" value="${organizationPartyId!}" />
                     <input type="hidden" name="paymentGroupTypeId" value="BATCH_PAYMENT" />
                     <input type="hidden" name="groupInOneTransaction" value="Y" />
-                    <input type="hidden" name="paymentStatusChange" id="paymentStatusChange" value="<@ofbizUrl>massChangePaymentStatus</@ofbizUrl>" />
+                    <input type="hidden" name="paymentStatusChange" id="paymentStatusChange" value="<@pageUrl>massChangePaymentStatus</@pageUrl>" />
                     <input type="hidden" name="statusId" id="statusId" value="${parameters.statusId!}" />
                     <#if finAccountId?has_content>
                         <input type="hidden" name="finAccountId" value="${finAccountId!}" />
@@ -173,7 +173,7 @@ function setServiceName(selection) {
                   <@tbody>
                     <#list paymentList as payment>
                       <@tr>
-                        <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${payment.paymentId}</a></@td>
+                        <@td><a href="<@pageUrl>paymentOverview?paymentId=${payment.paymentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${payment.paymentId}</a></@td>
                         <@td>
                           ${payment.paymentTypeDesc!payment.paymentTypeId}
                         </@td>
@@ -182,10 +182,10 @@ function setServiceName(selection) {
                         </@td>
                         <@td>${(payment.comments)!}</@td>
                         <@td>
-                          <a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${payment.partyIdFrom}</@ofbizInterWebappUrl>">${(payment.partyFromFirstName)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}[${(payment.partyIdFrom)!}]</a>
+                          <a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${payment.partyIdFrom}</@serverUrl>">${(payment.partyFromFirstName)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}[${(payment.partyIdFrom)!}]</a>
                         </@td>
                         <@td>
-                          <a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${payment.partyIdTo}</@ofbizInterWebappUrl>">${(payment.partyToFirstName)!} ${(payment.partyToLastName)!} ${(payment.partyToGroupName)!}[${(payment.partyIdTo)!}]</a>
+                          <a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${payment.partyIdTo}</@serverUrl>">${(payment.partyToFirstName)!} ${(payment.partyToLastName)!} ${(payment.partyToGroupName)!}[${(payment.partyIdTo)!}]</a>
                         </@td>
                         <@td>${payment.effectiveDate!}</@td>
                         <@td><@ofbizCurrency amount = payment.amount isoCode = payment.currencyUomId /></@td>

@@ -15,7 +15,7 @@ code package.
        window.close();
 </@script>
 <div id="rmvinternalorg" title="Remove Internal Organization">
-    <form name="removeInternalOrg" method="post" action="<@ofbizUrl>removeInternalOrg</@ofbizUrl>">
+    <form name="removeInternalOrg" method="post" action="<@pageUrl>removeInternalOrg</@pageUrl>">
         <input type="hidden" name="partyId" value="${parameters.partyId!}"/>
         <input type="hidden" name="parentpartyId" value="${parameters.parentpartyId!}"/>
     </form>

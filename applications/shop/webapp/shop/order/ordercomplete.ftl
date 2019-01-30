@@ -26,7 +26,7 @@ code package.
 
   <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
   <#if subscriptions && validPaymentMethodTypeForSubscriptions> 
-    <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus</@ofbizUrl>" method="post">
+    <form name="addCommonToCartForm" action="<@pageUrl>addordertocart/orderstatus</@pageUrl>" method="post">
         <input type="hidden" name="add_all" value="false" />
         <input type="hidden" name="orderId" value="${orderHeader.orderId}" />
   </#if>       
@@ -37,7 +37,7 @@ code package.
   
   <#if !printable>
     <@menu type="button">
-      <@menuitem type="link" href=makeOfbizUrl("main") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.EcommerceContinueShopping />
+      <@menuitem type="link" href=makePageUrl("main") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.EcommerceContinueShopping />
     </@menu>
   </#if>
 <#else>

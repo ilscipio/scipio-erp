@@ -36,7 +36,7 @@ code package.
               <@td><#if workEffort.actualStartDate??>${workEffort.actualStartDate}<#else>${workEffort.estimatedStartDate}</#if></@td>
               <@td><#if workEffort.actualCompletionDate??>${workEffort.actualCompletionDate}<#else>${workEffort.estimatedCompletionDate}</#if></@td>
               <@td>${workEffort.getRelatedOne("WorkEffortType", false).get("description",locale)}</@td>
-              <@td class="button-col"><a href="<@ofbizUrl>EditWorkEffort?workEffortId=${workEffort.workEffortId}${addlParam!}</@ofbizUrl>">${workEffort.workEffortName}</a></@td>
+              <@td class="button-col"><a href="<@pageUrl>EditWorkEffort?workEffortId=${workEffort.workEffortId}${addlParam!}</@pageUrl>">${workEffort.workEffortName}</a></@td>
             </@tr>
           </#list>
         </#if>

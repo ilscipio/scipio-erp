@@ -13,7 +13,7 @@ code package.
   <@cell>
 <#-- FIXME?: should specify a form/fields type here that implies manual row/cell markup 
      instead of norows=true nocells=true-->
-<form id="addAdditionalImagesForm" method="post" action="<@ofbizUrl>addAdditionalImagesForProduct</@ofbizUrl>" enctype="multipart/form-data">
+<form id="addAdditionalImagesForm" method="post" action="<@pageUrl>addAdditionalImagesForProduct</@pageUrl>" enctype="multipart/form-data">
   <@fields type="default-manual">
   <input id="additionalImageProductId" type="hidden" name="productId" value="${productId!}" />
     <#macro imageField name imageHtml id="">
@@ -32,22 +32,22 @@ code package.
     </#macro>
      
       <#assign imageHtml>
-        <#if productAdditionalImage1?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage1}</@ofbizContentUrl>" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_view!}"><img src="<@ofbizContentUrl>${productAdditionalImage1}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if>
+        <#if productAdditionalImage1?has_content><a href="javascript:void(0);" swapDetail="<@contentUrl>${productAdditionalImage1}</@contentUrl>" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_view!}"><img src="<@contentUrl>${productAdditionalImage1}</@contentUrl>" class="cssImgSmall" alt="" /></a></#if>
       </#assign>
       <@imageField id="additionalImageOne" name="additionalImageOne" imageHtml=imageHtml />
       
       <#assign imageHtml>
-        <#if productAdditionalImage2?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage2}</@ofbizContentUrl>" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_view!}"><img src="<@ofbizContentUrl>${productAdditionalImage2}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if>
+        <#if productAdditionalImage2?has_content><a href="javascript:void(0);" swapDetail="<@contentUrl>${productAdditionalImage2}</@contentUrl>" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_view!}"><img src="<@contentUrl>${productAdditionalImage2}</@contentUrl>" class="cssImgSmall" alt="" /></a></#if>
       </#assign>
       <@imageField name="additionalImageTwo" imageHtml=imageHtml />
   
       <#assign imageHtml>
-        <#if productAdditionalImage3?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage3}</@ofbizContentUrl>" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_view!}"><img src="<@ofbizContentUrl>${productAdditionalImage3}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if>
+        <#if productAdditionalImage3?has_content><a href="javascript:void(0);" swapDetail="<@contentUrl>${productAdditionalImage3}</@contentUrl>" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_view!}"><img src="<@contentUrl>${productAdditionalImage3}</@contentUrl>" class="cssImgSmall" alt="" /></a></#if>
       </#assign>
       <@imageField name="additionalImageThree" imageHtml=imageHtml />
       
       <#assign imageHtml>
-        <#if productAdditionalImage4?has_content><a href="javascript:void(0);" swapDetail="<@ofbizContentUrl>${productAdditionalImage4}</@ofbizContentUrl>" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_view!}"><img src="<@ofbizContentUrl>${productAdditionalImage4}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a></#if>
+        <#if productAdditionalImage4?has_content><a href="javascript:void(0);" swapDetail="<@contentUrl>${productAdditionalImage4}</@contentUrl>" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_view!}"><img src="<@contentUrl>${productAdditionalImage4}</@contentUrl>" class="cssImgSmall" alt="" /></a></#if>
       </#assign>
       <@imageField name="additionalImageFour" imageHtml=imageHtml />
       

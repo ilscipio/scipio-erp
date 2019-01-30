@@ -2,7 +2,7 @@
 
 <#if productCategoryId?has_content>
     <@section title=uiLabelMap.ProductCategoryUploadImage id="productCategoryAttachContent">
-        <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadCategoryImage</@ofbizUrl>" name="imageUploadForm" id="imageUploadForm">
+        <form method="post" enctype="multipart/form-data" action="<@pageUrl>UploadCategoryImage</@pageUrl>" name="imageUploadForm" id="imageUploadForm">
             <input type="hidden" name="productCategoryId" value="${productCategoryId}"/>
             <#assign progressOptions = {
                 "formSel" : "#imageUploadForm",

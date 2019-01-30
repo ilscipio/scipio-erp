@@ -14,7 +14,7 @@ function win_cancel() {
 </@script>
 
 <@section>
-<form name="addSubSite" method="post" action="<@ofbizUrl>postNewSubSite?rootForumId=${requestParameters.rootForumId}</@ofbizUrl>">
+<form name="addSubSite" method="post" action="<@pageUrl>postNewSubSite?rootForumId=${requestParameters.rootForumId}</@pageUrl>">
   <@field type="input" label="Site Name:" size="20" name="contentName"/>
   <@field type="input" label="Site Description:" size="40" name="description"/>
   <@field type="select" label="Posted Msg Default Status:" name="statusId">

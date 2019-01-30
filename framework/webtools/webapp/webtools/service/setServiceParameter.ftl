@@ -5,7 +5,7 @@ code package.
 -->
 <#include "component://webtools/webapp/webtools/service/servicecommon.ftl">
 
-<form name="scheduleForm" method="post" action="<@ofbizUrl>scheduleService</@ofbizUrl>">
+<form name="scheduleForm" method="post" action="<@pageUrl>scheduleService</@pageUrl>">
 
     <#list scheduleOptions as scheduleOption>
       <input type="hidden" name="${scheduleOption.name}" value="${scheduleOption.value}"/>

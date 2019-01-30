@@ -41,7 +41,7 @@
     "useReqParams":useReqParams
 })>
 <#macro setupGlAccountForm id formActionType target params treeFieldValues={}>
-    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=id name=id action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=[]/>
         <@acctgCommonTreeFormFields params=params initialValues=treeFieldValues/>
        
@@ -136,7 +136,7 @@
 
 <div style="display:none;">
 <#macro setupDeleteGlAccountForm id target isDeleteRecord>
-  <@form id=id action=makeOfbizUrl(target) method="post">
+  <@form id=id action=makePageUrl(target) method="post">
       <@defaultWizardFormFields exclude=["topGlAccountId"]/>
       <@acctgCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>

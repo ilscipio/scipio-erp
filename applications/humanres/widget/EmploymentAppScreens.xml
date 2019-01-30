@@ -158,8 +158,8 @@
             <widgets>
                 <platform-specific><html><html-template><![CDATA[
                     <#-- NOTE: this code works around escaping in a safe manner. TODO: use a utility later -->
-                    <#assign posLink><a href="<@ofbizUrl uri="FindEmplPositions"/>">${getLabel('HumanResEmployeePosition')}</a></#assign>
-                    <#assign jobReqLink><a href="<@ofbizUrl uri="FindJobRequisitions"/>">${getLabel('HumanResJobRequisition')}</a></#assign>
+                    <#assign posLink><a href="<@pageUrl uri="FindEmplPositions"/>">${getLabel('HumanResEmployeePosition')}</a></#assign>
+                    <#assign jobReqLink><a href="<@pageUrl uri="FindJobRequisitions"/>">${getLabel('HumanResJobRequisition')}</a></#assign>
                     <@alert type="info">** ${getLabel('HumanResEitherPositionOrRequisitionMustBeSpecifiedSubst','',{"position":"POS","jobReq":"JOBREQ"})?replace("POS", posLink)?replace("JOBREQ", jobReqLink)}</@alert>
                 ]]></html-template></html></platform-specific>
             </widgets>

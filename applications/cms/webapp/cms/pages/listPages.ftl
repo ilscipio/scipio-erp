@@ -2,13 +2,13 @@
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("editPage") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewPage/>
+        <@menuitem type="link" href=makePageUrl("editPage") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewPage/>
     </@menu>  
 </#macro>
 <@section title=uiLabelMap.CommonPages menuContent=menuContent>
 
   <@section>
-    <@form action=makeOfbizUrl("pages") method="post">
+    <@form action=makePageUrl("pages") method="post">
         <@webSiteSelectField name="webSiteId" value=(webSiteId!) valueUnsafe=true required=false
             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')}" emptyLabel=uiLabelMap.CommonAny />
         <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonFind />
@@ -17,7 +17,7 @@
 
   <#if pages?has_content>
     <#assign paramStr = addParamsToStr("", {"webSiteId": rawString(webSiteId!"")}, "&", false)>
-    <@paginate mode="content" url=makeOfbizUrl("pages") paramStr=paramStr viewSize=(viewSize!50) viewIndex=(viewIndex!0) listSize=(listSize!0)>
+    <@paginate mode="content" url=makePageUrl("pages") paramStr=paramStr viewSize=(viewSize!50) viewIndex=(viewIndex!0) listSize=(listSize!0)>
         <@table type="data-list" autoAltRows=true>
             <@thead>
                 <@tr class="header-row">
@@ -50,17 +50,17 @@
                       <#-- 2019-01-23: The ?webSiteId= causes conflicts and nothing but problems
                       <#if item.path?has_content>
                         <#assign editPageLink = "editPage?path=${escapeVal(item.path, 'url')}&webSiteId=${item.webSiteId!item.defaultWebSiteId!}">
-                        <a href="<@ofbizUrl uri=editPageLink escapeAs='html'/>">${escapeFullUrl(item.path, 'html')}</a>
+                        <a href="<@pageUrl uri=editPageLink escapeAs='html'/>">${escapeFullUrl(item.path, 'html')}</a>
                       <#else>
                         <#assign editPageLink = "editPage?pageId=${item.id}&webSiteId=${item.webSiteId!item.defaultWebSiteId!}">
                       </#if>-->
                       <#assign editPageUri = "editPage?pageId=${escapeVal(item.id, 'url')}"><#-- &webSiteId=${escapeVal(item.webSiteId!item.defaultWebSiteId!, 'url')} -->
                       <#if item.path?has_content>
-                        <a href="<@ofbizUrl uri=editPageUri escapeAs='html'/>">${escapeFullUrl(item.path, 'html')}</a>
+                        <a href="<@pageUrl uri=editPageUri escapeAs='html'/>">${escapeFullUrl(item.path, 'html')}</a>
                       </#if>
                     </@td>
                     <#-- FIXME: the name should always get the pageId link, but right now the javascript has issues -->
-                    <@td><a href="<@ofbizUrl uri=editPageUri escapeAs='html'/>">${item.name!}</a></@td>
+                    <@td><a href="<@pageUrl uri=editPageUri escapeAs='html'/>">${item.name!}</a></@td>
                     <@td>${makeShortCmsDesc(item.description!)}</@td>
                 </@tr>
             </#list>

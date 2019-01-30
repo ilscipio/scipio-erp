@@ -6,7 +6,7 @@ code package.
 
 <#if security.hasEntityPermission("MANUAL", "_PAYMENT", request) || security.hasEntityPermission("ACCOUNTING", "_CREATE", request)>
     <#assign dummy = setRequestAttribute("validTx", "false")>
-    <form name="manualTxForm" method="post" action="<@ofbizUrl>manualETx</@ofbizUrl>">
+    <form name="manualTxForm" method="post" action="<@pageUrl>manualETx</@pageUrl>">
         <#if requestParameters.paymentMethodId??>
         <input type="hidden" name="paymentMethodId" value="${requestParameters.paymentMethodId}" />
         </#if>

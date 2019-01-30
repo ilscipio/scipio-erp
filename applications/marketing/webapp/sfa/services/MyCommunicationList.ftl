@@ -1,6 +1,6 @@
 <#if commEventList?has_content>
     <@section>
-        <form action="<@ofbizUrl>deleteCommunicationEvents</@ofbizUrl>" method="post">        
+        <form action="<@pageUrl>deleteCommunicationEvents</@pageUrl>" method="post">        
             <@table type="data-list" autoAltRows=true scrollable=true responsive=true>
                 <#-- Header Begins -->
                 <@thead>
@@ -30,7 +30,7 @@
                             <#if commEvent.subject?length &gt; 25>
                                 <#assign subject = commEvent.subject[0..<25] + "..." />
                             </#if>
-                            <a href="<@ofbizInterWebappUrl>/partymgr/control/EditCommunicationEvent?communicationEventId=${commEvent.communicationEventId}&partyId=${commEvent.partyId}</@ofbizInterWebappUrl>">${subject}</a>
+                            <a href="<@serverUrl>/partymgr/control/EditCommunicationEvent?communicationEventId=${commEvent.communicationEventId}&partyId=${commEvent.partyId}</@serverUrl>">${subject}</a>
                           </#if>
                         </@td>
                         <@td>${commEventStatus.description}</@td>

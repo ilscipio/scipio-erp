@@ -12,16 +12,16 @@ function lookupInventory() {
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
       <#if requestParameters.hideFields?default("N") == "Y">
-        <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=N${paramList}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}" />
+        <@menuitem type="link" href=makePageUrl("FindInventoryEventPlan?hideFields=N${paramList}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}" />
       <#else>
         <#if inventoryList??>
-            <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=Y${paramList}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}" />
+            <@menuitem type="link" href=makePageUrl("FindInventoryEventPlan?hideFields=Y${paramList}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}" />
         </#if>
       </#if>
   </@menu>
 </#macro>
 <@section title=uiLabelMap.PageTitleFindInventoryEventPlan menuContent=menuContent>
-    <form method="post" name="lookupinventory" action="<@ofbizUrl>FindInventoryEventPlan</@ofbizUrl>">
+    <form method="post" name="lookupinventory" action="<@pageUrl>FindInventoryEventPlan</@pageUrl>">
     <input type="hidden" name="lookupFlag" value="Y"/>
     <input type="hidden" name="hideFields" value="Y"/>
       <#if requestParameters.hideFields?default("N") != "Y">
@@ -44,7 +44,7 @@ document.lookupinventory.productId.focus();
 
     <#-- SCIPIO: FIXME?: I'm not sure this search works properly... -->
     <#assign paramStr = addParamsToStr(rawString(paramList!""), {"hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
-    <@paginate mode="content" url=makeOfbizUrl("FindInventoryEventPlan") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
+    <@paginate mode="content" url=makePageUrl("FindInventoryEventPlan") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
       <@table type="data-complex" autoAltRows=false>
        <@thead>
         <@tr class="header-row">

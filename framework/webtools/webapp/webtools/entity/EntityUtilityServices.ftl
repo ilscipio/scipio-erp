@@ -1,6 +1,6 @@
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("SolrServices") text=uiLabelMap.SolrSolrServices class="+${styles.action_nav!}" />
+    <@menuitem type="link" href=makePageUrl("SolrServices") text=uiLabelMap.SolrSolrServices class="+${styles.action_nav!}" />
   </@menu>
 </#macro>
 <@section menuContent=menuContent>
@@ -19,21 +19,21 @@
         </@thead>
 
           <@tr>
-            <@td><a href="<@ofbizUrl>scheduleServiceSync?SERVICE_NAME=reloadVisualThemeResources&POOL_NAME=pool&_RUN_SYNC_=Y&visualThemeId=</@ofbizUrl>">Visual Theme Resources - Reload All, Now</a></@td>
+            <@td><a href="<@pageUrl>scheduleServiceSync?SERVICE_NAME=reloadVisualThemeResources&POOL_NAME=pool&_RUN_SYNC_=Y&visualThemeId=</@pageUrl>">Visual Theme Resources - Reload All, Now</a></@td>
             <#--<@td>${service.engineName}</@td>-->
             <#--<@td>${service.defaultEntityName}</@td>-->
             <@td>reloadVisualThemeResources</@td>
             <#--<@td>${service.location}</@td>-->
-            <#--@td><a href="<@ofbizUrl>${url!}?constraint=definitionLocation@${service.definitionLocation}</@ofbizUrl>">${service.definitionLocation}</a></@td-->
+            <#--@td><a href="<@pageUrl>${url!}?constraint=definitionLocation@${service.definitionLocation}</@pageUrl>">${service.definitionLocation}</a></@td-->
           </@tr>
 
           <@tr>
-            <@td><a href="<@ofbizUrl>setSyncServiceParameters?SERVICE_NAME=reloadVisualThemeResources&POOL_NAME=pool&_RUN_SYNC_=Y</@ofbizUrl>">Visual Theme Resources - Reload, Configurable</a></@td>
+            <@td><a href="<@pageUrl>setSyncServiceParameters?SERVICE_NAME=reloadVisualThemeResources&POOL_NAME=pool&_RUN_SYNC_=Y</@pageUrl>">Visual Theme Resources - Reload, Configurable</a></@td>
             <#--<@td>${service.engineName}</@td>-->
             <#--<@td>${service.defaultEntityName}</@td>-->
             <@td>reloadVisualThemeResources</@td>
             <#--<@td>${service.location}</@td>-->
-            <#--@td><a href="<@ofbizUrl>${url!}?constraint=definitionLocation@${service.definitionLocation}</@ofbizUrl>">${service.definitionLocation}</a></@td-->
+            <#--@td><a href="<@pageUrl>${url!}?constraint=definitionLocation@${service.definitionLocation}</@pageUrl>">${service.definitionLocation}</a></@td-->
           </@tr>
 
       </@table>

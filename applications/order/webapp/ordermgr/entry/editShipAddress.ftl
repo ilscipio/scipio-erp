@@ -8,10 +8,10 @@ code package.
 
   <@section>
     <#if postalAddress?has_content>
-      <form method="post" action="<@ofbizUrl>updatePostalAddressOrderEntry</@ofbizUrl>" name="checkoutsetupform" id="checkoutsetupform">
+      <form method="post" action="<@pageUrl>updatePostalAddressOrderEntry</@pageUrl>" name="checkoutsetupform" id="checkoutsetupform">
         <input type="hidden" name="contactMechId" value="${shipContactMechId!}"/>
     <#else>
-      <form method="post" action="<@ofbizUrl>createPostalAddress</@ofbizUrl>" name="checkoutsetupform" id="checkoutsetupform">
+      <form method="post" action="<@pageUrl>createPostalAddress</@pageUrl>" name="checkoutsetupform" id="checkoutsetupform">
         <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS"/>
         <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
     </#if>

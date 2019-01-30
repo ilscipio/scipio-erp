@@ -6,12 +6,12 @@ code package.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("addressMatchMap") text=uiLabelMap.PageTitleAddressMatchMap class="+${styles.action_nav!}" />
+    <@menuitem type="link" href=makePageUrl("addressMatchMap") text=uiLabelMap.PageTitleAddressMatchMap class="+${styles.action_nav!}" />
   </@menu>
 </#macro>
 <@section id="address-match-map" menuContent=menuContent>
 
-      <form name="matchform" method="post" action="<@ofbizUrl>findAddressMatch?match=true</@ofbizUrl>">
+      <form name="matchform" method="post" action="<@pageUrl>findAddressMatch?match=true</@pageUrl>">
         <@field type="input" name="lastName" label=uiLabelMap.PartyLastName value=(parameters.lastName!) required=true />
         <@field type="input" name="firstName" label=uiLabelMap.PartyFirstName value=(parameters.firstName!) required=true />
         <@field type="input" name="address1" label=uiLabelMap.CommonAddress1 value=(parameters.address1!) required=true />
@@ -71,7 +71,7 @@ code package.
                     <@td>${Static["org.ofbiz.party.party.PartyWorker"].makeMatchingString(delegator, match.address2!(uiLabelMap.CommonNA))}</@td>
                     <@td>${match.city}</@td>
                     <@td>${match.postalCode}</@td>
-                    <@td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${match.partyId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${match.partyId}</a></@td>
+                    <@td class="button-col"><a href="<@pageUrl>viewprofile?partyId=${match.partyId}</@pageUrl>" class="${styles.link_nav_info_id!}">${match.partyId}</a></@td>
                   </@tr>
                 </#list>
                 </@tbody>

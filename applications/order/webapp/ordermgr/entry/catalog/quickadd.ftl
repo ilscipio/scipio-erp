@@ -11,7 +11,7 @@ code package.
         <@heading>${productCategory.categoryName!}</@heading>
       </@cell>
       <@cell columns=6 class="+${styles.text_right!}">
-        <form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>">
+        <form name="choosequickaddform" method="post" action="<@pageUrl>quickadd</@pageUrl>">
         <@fields type="default-nolabelarea">
           <@field type="select" name="category_id">
             <option value="${productCategory.productCategoryId}">${productCategory.categoryName!}</option>
@@ -33,7 +33,7 @@ code package.
       <@row>
         <@cell>
             <#if productCategory.categoryImageUrl??>
-              <img src="<@ofbizContentUrl>${productCategory.categoryImageUrl}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgLarge" alt="" />
+              <img src="<@contentUrl>${productCategory.categoryImageUrl}</@contentUrl>" vspace="5" hspace="5" class="cssImgLarge" alt="" />
             </#if>
             ${productCategory.longDescription!}
         </@cell>
@@ -46,7 +46,7 @@ code package.
   <@section>
     <@row>
       <@cell>
-  <form method="post" action="<@ofbizUrl>addtocartbulk</@ofbizUrl>" name="bulkaddform">
+  <form method="post" action="<@pageUrl>addtocartbulk</@pageUrl>" name="bulkaddform">
   <@fields type="default-nolabelarea">
     <input type="hidden" name="category_id" value="${categoryId}" />
     <@field type="submit" submitType="link" href="javascript:document.bulkaddform.submit()" class="${styles.link_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddAllToCart />

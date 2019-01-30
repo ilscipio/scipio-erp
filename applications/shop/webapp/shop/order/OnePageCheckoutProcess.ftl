@@ -50,7 +50,7 @@ code package.
 
 <#-- ============================================================= -->
           <div id="editShippingPanel" style="display: none;">
-            <form id="shippingForm" action="<@ofbizUrl>createUpdateShippingAddress</@ofbizUrl>" method="post">
+            <form id="shippingForm" action="<@pageUrl>createUpdateShippingAddress</@pageUrl>" method="post">
                 <fieldset>
                   <input type="hidden" id="shipToContactMechId" name="shipToContactMechId" value="${shipToContactMechId!}" />
                   <input type="hidden" id="billToContactMechIdInShipingForm" name="billToContactMechId" value="${billToContactMechId!}" />
@@ -293,7 +293,7 @@ code package.
 <#-- ========================================================================================================================== -->
         <@section title="${rawLabel('EcommerceStep')} 5: ${rawLabel('OrderSubmitOrder')}">
           <div id="orderSubmitPanel" style="display: none;">
-            <form id="orderSubmitForm" action="<@ofbizUrl>onePageProcessOrder</@ofbizUrl>" method="post">
+            <form id="orderSubmitForm" action="<@pageUrl>onePageProcessOrder</@pageUrl>" method="post">
                 <#--<fieldset>-->
                   <@field type="submitarea">
                     <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" id="processOrderButton" name="processOrderButton" text=uiLabelMap.OrderSubmitOrder />
@@ -311,7 +311,7 @@ code package.
     <#assign sectionStyle><#if shoppingCart?has_content && (shoppingCart.size() > 0)>display: none;</#if></#assign>
     <@section id="emptyCartCheckoutPanel" style=sectionStyle>
         <@heading relLevel=+1>${uiLabelMap.EcommerceStep} 1: ${uiLabelMap.PageTitleShoppingCart}</@heading>
-        <p>You currently have no items in your cart. Click <a href="<@ofbizUrl>main</@ofbizUrl>">here</a> to view our products.</p>
+        <p>You currently have no items in your cart. Click <a href="<@pageUrl>main</@pageUrl>">here</a> to view our products.</p>
         <@heading relLevel=+1>${uiLabelMap.EcommerceStep} 2: ${uiLabelMap.FacilityShipping}</@heading>
         <@heading relLevel=+1>${uiLabelMap.EcommerceStep} 3: ${uiLabelMap.PageTitleShippingOptions}</@heading>
         <@heading relLevel=+1>${uiLabelMap.EcommerceStep} 4: ${uiLabelMap.AccountingBilling}</@heading>

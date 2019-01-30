@@ -35,13 +35,13 @@
 </@table>
 
 <#list productStoreCatalogList as pscat>
-  <@form method="get" action=makeOfbizUrl("setupCatalog") id=("setupCatalog-editCatalog-"+rawString(pscat.prodCatalogId))>
+  <@form method="get" action=makePageUrl("setupCatalog") id=("setupCatalog-editCatalog-"+rawString(pscat.prodCatalogId))>
     <@defaultWizardFormFields exclude=["prodCatalogId"]/>
     <@field type="hidden" name="setupContinue" value="N"/>
     <@field type="hidden" name="prodCatalogId" value=pscat.prodCatalogId/>
   </@form>
   
-  <@form method="get" action=makeOfbizUrl("setupDeleteCatalog") id=("setupCatalog-deleteCatalog-"+rawString(pscat.prodCatalogId))>
+  <@form method="get" action=makePageUrl("setupDeleteCatalog") id=("setupCatalog-deleteCatalog-"+rawString(pscat.prodCatalogId))>
     <@defaultWizardFormFields exclude=["prodCatalogId", "productStoreId"]/>
     <@field type="hidden" name="setupContinue" value="N"/>
     <@field type="hidden" name="isDeleteCatalog" value="Y"/>

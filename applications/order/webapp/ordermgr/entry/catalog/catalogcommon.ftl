@@ -31,7 +31,7 @@ code package.
         <#assign productLargeImageUrl = firstLargeImage />
     </#if>
     <#if productLargeImageUrl?has_content>
-        <#assign largeImage = makeOfbizContentCtxPrefixUrl(productLargeImageUrl)/>
+        <#assign largeImage = makeContentCtxPrefixUrl(productLargeImageUrl)/>
     <#else>
         <#assign largeImage = "https://placehold.it/800x300">
     </#if>
@@ -42,19 +42,19 @@ code package.
       <div class="product-image-thumbs">
         <ul class="clearing-thumbs" data-clearing>
             <#if productAdditionalImage1?has_content>
-                <#assign largeImage = makeOfbizContentCtxPrefixUrl(productAdditionalImage1)/>
+                <#assign largeImage = makeContentCtxPrefixUrl(productAdditionalImage1)/>
                 <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover" class=""/></li>
             </#if>
             <#if productAdditionalImage2?has_content>
-                <#assign largeImage = makeOfbizContentCtxPrefixUrl(productAdditionalImage2)/>
+                <#assign largeImage = makeContentCtxPrefixUrl(productAdditionalImage2)/>
                <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
             <#if productAdditionalImage3?has_content>
-                <#assign largeImage = makeOfbizContentCtxPrefixUrl(productAdditionalImage3)/>
+                <#assign largeImage = makeContentCtxPrefixUrl(productAdditionalImage3)/>
                 <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
             <#if productAdditionalImage4?has_content>
-                <#assign largeImage = makeOfbizContentCtxPrefixUrl(productAdditionalImage4)/>
+                <#assign largeImage = makeContentCtxPrefixUrl(productAdditionalImage4)/>
                 <li><@img src=largeImage link=largeImage width="auto" height="80px" type="cover"/></li>
             </#if>
         </ul>
@@ -157,7 +157,7 @@ code package.
                             <#assign assocProductId = productAssoc.productId />
                         </#if>
                         <#--
-                          <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">
+                          <a href="<@pageUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@pageUrl>" class="${styles.link_nav_info_id!}">
                             ${assocProductId}
                           </a>
                         <#if productAssoc.reason?has_content>

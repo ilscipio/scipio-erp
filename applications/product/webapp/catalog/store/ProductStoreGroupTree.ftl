@@ -22,7 +22,7 @@ var rawdata = [
     <#list parentGroupList as parentGroup>
                    {
                     "data": {"title" : unescapeHtmlText("<#if parentGroup.productStoreGroupName??>${parentGroup.productStoreGroupName?js_string} [${parentGroup.productStoreGroupId?js_string}]</#if>"),
-                                  "attr": {"href" : "<@ofbizUrl>EditProductStoreGroupAndAssoc</@ofbizUrl>","onClick" : "callDocument('${parentGroup.productStoreGroupId?js_string}');"}},
+                                  "attr": {"href" : "<@pageUrl>EditProductStoreGroupAndAssoc</@pageUrl>","onClick" : "callDocument('${parentGroup.productStoreGroupId?js_string}');"}},
                     "attr": {"parentGroupId" : "${parentGroup.productStoreGroupId?js_string}"}, 
                     "state" : "closed"
                     }<#if parentGroup_has_next>,</#if>
@@ -36,7 +36,7 @@ var rawdata = [
         "plugins" : [ "themes", "json_data","ui" ,"cookies", "types"],
             "json_data" : {
                 "data" : rawdata,
-                "ajax" : { "url" : "<@ofbizUrl>getProductStoreGroupRollupHierarchy</@ofbizUrl>",
+                "ajax" : { "url" : "<@pageUrl>getProductStoreGroupRollupHierarchy</@pageUrl>",
                            "type" : "POST",
                            "data" : function (n) {
                                return {

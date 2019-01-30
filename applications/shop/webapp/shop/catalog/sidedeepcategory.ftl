@@ -31,7 +31,7 @@ code package.
     <#if curCategoryId?has_content && curCategoryId == productCategoryId>
       <#assign activeTarget = true>
     </#if>
-    <#assign categoryUrl><@ofbizCatalogUrl rawParams=true currentCategoryId=productCategoryId previousCategoryId=previousCategoryId/></#assign>
+    <#assign categoryUrl><@catalogUrl rawParams=true currentCategoryId=productCategoryId previousCategoryId=previousCategoryId/></#assign>
     <#assign linkText>${rawString(catInfo.displayName!"")} <#if (count?number > 0)>(${count})</#if></#assign>
     <#local class = addClassArg(class, "menu-${level}")>
     <@menuitem type="link" href=categoryUrl text=linkText class=class active=active activeTarget=activeTarget>

@@ -61,7 +61,7 @@ code package.
             <@tr>
               <@td class="${styles.grid_large!}2">${uiLabelMap.ProductOemPartyId}
               </@td>
-              <@td colspan="3"><a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${product.manufacturerPartyId!}</@ofbizInterWebappUrl>">${(manufacturer.get("description",locale))!product.manufacturerPartyId}</a></@td>
+              <@td colspan="3"><a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${product.manufacturerPartyId!}</@serverUrl>">${(manufacturer.get("description",locale))!product.manufacturerPartyId}</a></@td>
             </@tr>
         </#if>
 

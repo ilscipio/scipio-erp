@@ -17,7 +17,7 @@ code package.
            <@tbody>
                 <#list orders?sort_by("pickSheetPrintedDate") as order>
                     <@tr>
-                        <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${order.orderId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" target="_blank">${order.orderId!}</a></@td>
+                        <@td><a href="<@serverUrl>/ordermgr/control/orderview?orderId=${order.orderId!}</@serverUrl>" class="${styles.link_nav_info_id!}" target="_blank">${order.orderId!}</a></@td>
                         <@td>${order.pickSheetPrintedDate!}</@td>
                         <@td><#if "Y" == order.isVerified>${uiLabelMap.CommonY}</#if></@td>
                     </@tr>

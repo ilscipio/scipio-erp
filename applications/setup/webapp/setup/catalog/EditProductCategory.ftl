@@ -61,7 +61,7 @@
     "useReqParams":useReqParams
 })>
 <#macro setupCategoryForm id formActionType target params>
-    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=id name=id action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["productCategoryId", "prodCatalogId", "productStoreId", "partyId"]/>
         <@ectCommonTreeFormFields params=params/>
         <@field type="hidden" name="partyId" value=(partyId!)/>
@@ -202,7 +202,7 @@
 
 <div style="display:none;">
 <#macro setupDeleteCategoryForm id target isDeleteRecord>
-  <@form id=id action=makeOfbizUrl(target) method="post">
+  <@form id=id action=makePageUrl(target) method="post">
       <@defaultWizardFormFields exclude=["productCategoryId", "prodCatalogId", "productStoreId"]/>
       <@ectCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>
@@ -228,7 +228,7 @@
   <@setupDeleteCategoryForm id="ect-removecategoryassoc-form" target="setupDeleteCategory" isDeleteRecord=false/>
   
 <#macro setupCopyMoveAssocCategoryForm id target formActionType>
-  <@form id=id action=makeOfbizUrl(target) method="post">
+  <@form id=id action=makePageUrl(target) method="post">
       <@defaultWizardFormFields exclude=["productCategoryId", "prodCatalogId", "productStoreId"]/>
       <@ectCommonTreeFormFields params={}/>
       <@field type="hidden" name="setupContinue" value="N"/>

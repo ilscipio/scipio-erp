@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<form id="addMultipleImagesForm" name="addMultipleImagesForm" method="post" action="<@ofbizUrl>addImageForProduct</@ofbizUrl>" enctype="multipart/form-data">
+<form id="addMultipleImagesForm" name="addMultipleImagesForm" method="post" action="<@pageUrl>addImageForProduct</@pageUrl>" enctype="multipart/form-data">
 
   <@field type="lookup" label=uiLabelMap.ProductProductId name="productId" id="productId" formName="addMultipleImagesForm" fieldFormName="LookupProduct" value=(productId!)/>
 

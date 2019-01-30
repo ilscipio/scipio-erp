@@ -433,7 +433,7 @@
 <#-- TODO?: we could support more editable fields, but to avoid issues and simplify, we are setting the script reference read-only here  -->
 <#macro cmsScriptTemplateSelectFormEditFields scriptTmpl>
         <#local nameMarkup>${scriptTmpl.templateName!scriptTmpl.id} <#t/>
-            (<a href="<@ofbizUrl>editScript?scriptTemplateId=${scriptTmpl.id}</@ofbizUrl>">${scriptTmpl.id}</a>)</#local>
+            (<a href="<@pageUrl>editScript?scriptTemplateId=${scriptTmpl.id}</@pageUrl>">${scriptTmpl.id}</a>)</#local>
         <@field type="display" label=uiLabelMap.CmsScriptName name="scriptName" value=wrapAsRaw({'raw':rawString(scriptTmpl.templateName!scriptTmpl.id), 'htmlmarkup':nameMarkup})/>
         <@field type="display" label=uiLabelMap.CommonWebsite name="webSiteId" value=(scriptTmpl.webSiteId!"-")/>
         <@field type="display" label=uiLabelMap.CmsQualifiedName name="qualifiedName" value=(scriptTmpl.qualifiedName!"")/>
@@ -456,7 +456,7 @@
                 </@tr>
             </@thead>
             <#list scriptTemplates as scriptTmpl><#-- NOTE: should be already sorted by LinkedHashMap -->
-                <#local editUrlHtml = escapeVal(makeOfbizUrl("editScript?scriptTemplateId="+rawString(scriptTmpl.id)), "html")>
+                <#local editUrlHtml = escapeVal(makePageUrl("editScript?scriptTemplateId="+rawString(scriptTmpl.id)), "html")>
                 <@tr>
                    <@td>${scriptTmpl.inputPosition!}</@td>
                    <@td><a href="${editUrlHtml}">${scriptTmpl.id!}</a></@td>
@@ -491,7 +491,7 @@
         <#list scriptTemplates as scriptTmpl>
           <@modal id="edit_script_${rawString(scriptTmpl.assocId)}">
             <@heading>${uiLabelMap.CmsEditScript}</@heading>
-            <form method="post" action="<@ofbizUrl>${updateAction}</@ofbizUrl>" id="edit-script-form-${escapeVal(scriptTmpl.assocId, 'html')}">
+            <form method="post" action="<@pageUrl>${updateAction}</@pageUrl>" id="edit-script-form-${escapeVal(scriptTmpl.assocId, 'html')}">
             <@fields type="default-compact">
               <input type="hidden" name="scriptAssocId" value="${scriptTmpl.assocId}" />
             <#list updateFields?keys as fieldName>
@@ -506,7 +506,7 @@
       </#if>
       <#if deleteAction?has_content>
         <#list scriptTemplates as scriptTmpl>
-            <form id="remove_script_${escapeVal(scriptTmpl.assocId, 'html')}" method="post" action="<@ofbizUrl>${deleteAction}</@ofbizUrl>">
+            <form id="remove_script_${escapeVal(scriptTmpl.assocId, 'html')}" method="post" action="<@pageUrl>${deleteAction}</@pageUrl>">
                 <input type="hidden" name="scriptAssocId" value="${scriptTmpl.assocId}"/>
                 <input type="hidden" name="scriptTemplateId" value="${scriptTmpl.id}"/>
               <#list updateFields?keys as fieldName>
@@ -628,7 +628,7 @@
 
                 $.ajax({
                       type: "POST",
-                      url: "<@ofbizUrl escapeAs='js'>exportCmsDataAsXmlJson</@ofbizUrl>",
+                      url: "<@pageUrl escapeAs='js'>exportCmsDataAsXmlJson</@pageUrl>",
                       data: params,
                       cache:false,
                       async:true,
@@ -663,7 +663,7 @@
         <@heading>${escapeVal(title, 'htmlmarkup')}</@heading>
         <@alert type="warning">${uiLabelMap.CommonFunctionalityWorkInProgressWarning} [2017-12-04]</@alert>
         <@fields type="default-compact">
-            <form action="<@ofbizUrl uri=target/>" method="post" id="cms-copy-object-form">
+            <form action="<@pageUrl uri=target/>" method="post" id="cms-copy-object-form">
                 <#nested/>
                 <@field type="submit" text=uiLabelMap.CommonSubmit class="${styles.link_run_sys!} ${styles.action_copy!}" />
             </form>

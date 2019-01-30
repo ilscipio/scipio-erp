@@ -87,7 +87,7 @@ code package.
                     <#elseif question.surveyQuestionTypeId == "CONTENT">
                        <#if answer.contentId?has_content>
                          <#assign content = answer.getRelatedOne("Content", false)>
-                         <a href="<@ofbizUrl>img?imgId=${content.dataResourceId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName!}
+                         <a href="<@pageUrl>img?imgId=${content.dataResourceId}</@pageUrl>" class="${styles.link_nav_info_id!}">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName!}
                        </#if>
                     </#if>
                   </#list>

@@ -35,7 +35,7 @@
             <@tr>
               <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.FormFieldTitle_glReconciliationId}</@td>
               <@td colspan="3">
-                <a href="<@ofbizUrl>ViewGlReconciliationWithTransaction?glReconciliationId=${finAccountTrans.glReconciliationId!}&finAccountId=${finAccountTrans.finAccountId!}</@ofbizUrl>">${finAccountTrans.glReconciliationId!}</a>
+                <a href="<@pageUrl>ViewGlReconciliationWithTransaction?glReconciliationId=${finAccountTrans.glReconciliationId!}&finAccountId=${finAccountTrans.finAccountId!}</@pageUrl>">${finAccountTrans.glReconciliationId!}</a>
               </@td>
             </@tr>
         </#if>

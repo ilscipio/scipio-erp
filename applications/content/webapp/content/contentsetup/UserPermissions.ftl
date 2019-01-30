@@ -42,7 +42,7 @@ function call_fieldlookup3(view_name) {
 <#-- ============================================================= -->
 
 <@section title="WebSitePublishPoint">
-  <form name="userform" method="post" action="<@ofbizUrl>UserPermissions</@ofbizUrl>">
+  <form name="userform" method="post" action="<@pageUrl>UserPermissions</@pageUrl>">
      <input type="hidden" name="partyId" value="${partyId!}"/>
      <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
      <@field type="input" name="webSitePublishPoint" size="20" value=(webSitePublishPoint!) />
@@ -51,7 +51,7 @@ function call_fieldlookup3(view_name) {
 </@section>
 
 <@section>
-  <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
+  <form name="siteRoleForm" method="post" action="<@pageUrl>updateSiteRoles</@pageUrl>">
   <@fields type="default-manual">
       <@table type="data-list" class="+${styles.table_spacing_small_hint!}">
         <@tr>

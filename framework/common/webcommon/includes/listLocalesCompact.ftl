@@ -14,7 +14,7 @@ code package.
   <#assign setLocalesTargetViewStr = "/" + setLocalesTargetView>
 </#if>
 
-<form method="get" action="<@ofbizUrl>${setLocalesTarget}${setLocalesTargetViewStr}</@ofbizUrl>">
+<form method="get" action="<@pageUrl>${setLocalesTarget}${setLocalesTargetViewStr}</@pageUrl>">
 <@fields type="default-nolabelarea">
   <@field type="select" name="newLocale">
     <#assign altRow = true>

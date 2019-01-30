@@ -13,7 +13,7 @@ code package.
           ${Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "PRODUCT_NAME", request, "raw")}
         </@td>
         <@td>
-          <form method="post" action="<@ofbizUrl>removeFromCompare</@ofbizUrl>" name="removeFromCompare${product_index}form">
+          <form method="post" action="<@pageUrl>removeFromCompare</@pageUrl>" name="removeFromCompare${product_index}form">
             <input type="hidden" name="productId" value="${product.productId}"/>
           </form>
           <a href="javascript:document.removeFromCompare${product_index}form.submit()" class="${styles.link_run_session!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
@@ -22,8 +22,8 @@ code package.
     </#list>
   </@table>
   <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl("clearCompareList") text=uiLabelMap.CommonClearAll class="+${styles.action_run_session!} ${styles.action_clear!}" />
-    <@menuitem type="link" href="javascript:popUp('${escapeVal(makeOfbizUrl('compareProducts'), 'js')}', 'compareProducts', '650', '750')" text=uiLabelMap.ProductCompareProducts class="+${styles.action_nav!} ${styles.action_view!}" />
+    <@menuitem type="link" href=makePageUrl("clearCompareList") text=uiLabelMap.CommonClearAll class="+${styles.action_run_session!} ${styles.action_clear!}" />
+    <@menuitem type="link" href="javascript:popUp('${escapeVal(makePageUrl('compareProducts'), 'js')}', 'compareProducts', '650', '750')" text=uiLabelMap.ProductCompareProducts class="+${styles.action_nav!} ${styles.action_view!}" />
   </@menu>
 <#else>
   <@commonMsg type="result-norecord">${uiLabelMap.ProductNoProductsToCompare}</@commonMsg>

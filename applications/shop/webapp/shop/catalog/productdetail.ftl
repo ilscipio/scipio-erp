@@ -177,7 +177,7 @@ code package.
              except it's not friendly to have this check in additem submit... isVirtual method is gone...
              server _should_ do this check anyway...
         if (isVirtual(addProductId)) {
-            document.location = '<@ofbizUrl>product?category_id=${escapeVal(categoryId!, 'js')}&amp;product_id=</@ofbizUrl>' + addProductId;
+            document.location = '<@pageUrl>product?category_id=${escapeVal(categoryId!, 'js')}&amp;product_id=</@pageUrl>' + addProductId;
             return;
         }
         -->
@@ -326,7 +326,7 @@ code package.
             
             <div id="product-add-cart">
               <#-- onePageCheckout-->
-              <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="addform">
+              <form method="post" action="<@pageUrl>additem</@pageUrl>" name="addform">
                 <input type="hidden" name="goToOnePageCheckout" value="true" />
                     <#assign urlFile = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "URL_FILE", request,"raw") />                    
                     <#assign inStock = true />
@@ -491,7 +491,7 @@ code package.
             <#-- SCIPIO: Shopping list functionality - disabled for now
             <div id="product-shopping-list">
                 <#if userHasAccount>
-                    <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+                    <form name="addToShoppingList" method="post" action="<@pageUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@pageUrl>">
                         <fieldset>
                             <input type="hidden" name="productId" value="${product.productId}" />
                             <input type="hidden" name="product_id" value="${product.productId}" />
@@ -517,7 +517,7 @@ code package.
                         </fieldset>
                     </form>
                 <#else>                
-                    ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/ShowCart</@ofbizUrl>">${uiLabelMap.CommonBeLogged}</a>
+                    ${uiLabelMap.OrderYouMust} <a href="<@pageUrl>checkLogin/ShowCart</@pageUrl>">${uiLabelMap.CommonBeLogged}</a>
                     ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.&nbsp;
                 </#if>
             </div>
@@ -531,7 +531,7 @@ code package.
 
 <#-- SCIPIO: show tell a friend details only in shop application     
 <div id="product-tell-a-friend">
-    <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" >${uiLabelMap.CommonTellAFriend}</a>
+    <a href="javascript:popUpSmall('<@pageUrl>tellafriend?productId=${product.productId}</@pageUrl>','tellafriend');" >${uiLabelMap.CommonTellAFriend}</a>
 </div>
 -->   
      
@@ -583,7 +583,7 @@ code package.
                         </#if>
 
                         <div class="product-virtual-swatch-item">
-                           <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" width="60" height="60" alt="" /></a>                        
+                           <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@contentUrl ctxPrefix=true>${imageUrl}</@contentUrl>" width="60" height="60" alt="" /></a>                        
                            <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="linktext">${key}</a>
                            <div class="clear"></div>
                         </div>
@@ -621,7 +621,7 @@ code package.
 <@section>
   <#-- Product Reviews -->
   <@render resource="component://shop/widget/CatalogScreens.xml#inlineproductreview" reqAttribs={"productId": product.productId!"", "categoryId": requestParameters.category_id!"","productReviews":productReviews!,"numRatings":numRatings!,"averageRating":averageRating!} />
-  <#-- <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductReviewThisProduct}!</a> -->
+  <#-- <a href="<@pageUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductReviewThisProduct}!</a> -->
 </@section>
 
 </div>

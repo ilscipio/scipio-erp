@@ -17,7 +17,7 @@ code package.
 
 <#-- SCIPIO: use more helpful drop-down instead, to do away with the intermediate screen which is clumsy
 <#if (parameters.firstName?has_content || parameters.lastName?has_content)>
-  <#assign createUrl = makeOfbizUrl("editperson?create_new=Y&lastName=${rawString(parameters.lastName!)}&firstName=${rawString(parameters.firstName!)}")/>
+  <#assign createUrl = makePageUrl("editperson?create_new=Y&lastName=${rawString(parameters.lastName!)}&firstName=${rawString(parameters.firstName!)}")/>
 <#elseif (parameters.groupName?has_content)>
   <#assign createUrl = "editpartygroup?create_new=Y&groupName=${rawString(parameters.groupName!)}"/>
 <#else>
@@ -32,9 +32,9 @@ code package.
     </@menuitem>
 <#if partyList?has_content>    
   <#if hideFields == "Y">
-    <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=N&sortField=${sortField!}${rawString(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!} ${styles.collapsed!}" />
+    <@menuitem type="link" href=makePageUrl("findparty?hideFields=N&sortField=${sortField!}${rawString(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!} ${styles.collapsed!}" />
   <#else>
-    <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=Y&sortField=${sortField!}${rawString(paramList)}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!} ${styles.expanded!}" />
+    <@menuitem type="link" href=makePageUrl("findparty?hideFields=Y&sortField=${sortField!}${rawString(paramList)}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!} ${styles.expanded!}" />
   </#if>
 </#if>  
   </@menu>
@@ -44,9 +44,9 @@ code package.
       <#-- NOTE: this form is setup to allow a search by partial partyId or userLoginId; to change it to go directly to
           the viewprofile page when these are entered add the follow attribute to the form element:
 
-           onsubmit="javascript:lookupParty('<@ofbizUrl>viewprofile</@ofbizUrl>');"
+           onsubmit="javascript:lookupParty('<@pageUrl>viewprofile</@pageUrl>');"
        -->
-      <form method="post" name="lookupparty" action="<@ofbizUrl>findparty</@ofbizUrl>" class="basic-form">
+      <form method="post" name="lookupparty" action="<@pageUrl>findparty</@pageUrl>" class="basic-form">
         <input type="hidden" name="lookupFlag" value="Y"/>
         <input type="hidden" name="hideFields" value="Y"/>
         
@@ -132,7 +132,7 @@ code package.
       
   <#if partyList?has_content>
     <#assign paramStr = addParamsToStr(rawString(paramList!""), {"showAll": showAll!"", "hideFields": hideFields!"", "sortField" : sortField!""}, "&", false)>
-    <@paginate mode="content" url=makeOfbizUrl("findparty") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=partyListSize!0 altParam=false paramStr=paramStr viewIndexFirst=0>
+    <@paginate mode="content" url=makePageUrl("findparty") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=partyListSize!0 altParam=false paramStr=paramStr viewIndexFirst=0>
     
     <@table type="data-list" autoAltRows=true>
      <@thead>
@@ -162,12 +162,12 @@ code package.
         <@th>${uiLabelMap.PartyType}</@th>
         <@th>${uiLabelMap.PartyMainRole}</@th>
         <@th>
-            <a href="<@ofbizUrl>findparty</@ofbizUrl>?<#if sortField?has_content><#if sortField == "createdDate">sortField=-createdDate<#elseif sortField == "-createdDate">sortField=createdDate<#else>sortField=createdDate</#if><#else>sortField=createdDate</#if>${rawString(paramList!)?html}&amp;VIEW_SIZE=${viewSize!}&amp;VIEW_INDEX=${viewIndex!}" 
+            <a href="<@pageUrl>findparty</@pageUrl>?<#if sortField?has_content><#if sortField == "createdDate">sortField=-createdDate<#elseif sortField == "-createdDate">sortField=createdDate<#else>sortField=createdDate</#if><#else>sortField=createdDate</#if>${rawString(paramList!)?html}&amp;VIEW_SIZE=${viewSize!}&amp;VIEW_INDEX=${viewIndex!}" 
                 <#if sortField?has_content><#if sortField == "createdDate">class="sort-order-desc"<#elseif sortField == "-createdDate">class="sort-order-asc"<#else>class="sort-order"</#if><#else>class="sort-order"</#if>>${uiLabelMap.FormFieldTitle_createdDate}
             </a>
         </@th>
         <@th>
-            <a href="<@ofbizUrl>findparty</@ofbizUrl>?<#if sortField?has_content><#if sortField == "lastModifiedDate">sortField=-lastModifiedDate<#elseif sortField == "-lastModifiedDate">sortField=lastModifiedDate<#else>sortField=lastModifiedDate</#if><#else>sortField=lastModifiedDate</#if>${rawString(paramList!)?html}&amp;VIEW_SIZE=${viewSize!}&amp;VIEW_INDEX=${viewIndex!}" 
+            <a href="<@pageUrl>findparty</@pageUrl>?<#if sortField?has_content><#if sortField == "lastModifiedDate">sortField=-lastModifiedDate<#elseif sortField == "-lastModifiedDate">sortField=lastModifiedDate<#else>sortField=lastModifiedDate</#if><#else>sortField=lastModifiedDate</#if>${rawString(paramList!)?html}&amp;VIEW_SIZE=${viewSize!}&amp;VIEW_INDEX=${viewIndex!}" 
                 <#if sortField?has_content><#if sortField == "lastModifiedDate">class="sort-order-desc"<#elseif sortField == "-lastModifiedDate">class="sort-order-asc"<#else>class="sort-order"</#if><#else>class="sort-order"</#if>>${uiLabelMap.FormFieldTitle_lastModifiedDate}
             </a>
         </@th>
@@ -179,7 +179,7 @@ code package.
     <#list partyList as partyRow>
       <#assign partyType = partyRow.getRelatedOne("PartyType", false)!>
       <@tr>
-        <@td><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></@td>
+        <@td><a href="<@pageUrl>viewprofile?partyId=${partyRow.partyId}</@pageUrl>">${partyRow.partyId}</a></@td>
         <@td>
       <#if partyRow.containsKey("userLoginId")>
           ${partyRow.userLoginId!(uiLabelMap.CommonNA)}
@@ -256,10 +256,10 @@ code package.
         <@td>${partyDate.lastModifiedDate!}</@td>
         <@td class="button-col">
           <@menu type="button-dropdown" title=uiLabelMap.CommonActions><#-- SCIPIO: too many actions, so made into dropdown: type="button" -->
-          <@menuitem type="link" href=makeOfbizUrl("viewprofile?partyId=${partyRow.partyId}") text=uiLabelMap.CommonDetails class="+${styles.action_nav!}" />
+          <@menuitem type="link" href=makePageUrl("viewprofile?partyId=${partyRow.partyId}") text=uiLabelMap.CommonDetails class="+${styles.action_nav!}" />
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", request)>
           <@menuitem type="link" href="javascript:document.searchorders_o_${rowCount}.submit()" text=uiLabelMap.OrderOrders class="+${styles.action_run_sys!} ${styles.action_find!}">
-            <form name="searchorders_o_${rowCount}" method="post" action="<@ofbizInterWebappUrl>/ordermgr/control/searchorders</@ofbizInterWebappUrl>">
+            <form name="searchorders_o_${rowCount}" method="post" action="<@serverUrl>/ordermgr/control/searchorders</@serverUrl>">
               <input type="hidden" name="lookupFlag" value="Y" />
               <input type="hidden" name="hideFields" value="Y" />
               <input type="hidden" name="partyId" value="${partyRow.partyId}" />
@@ -267,11 +267,11 @@ code package.
               <input type="hidden" name="viewSize" value="20" />
             </form>
           </@menuitem>
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/FindQuote?partyId=${partyRow.partyId + rawString(externalKeyParam)}") text=uiLabelMap.OrderOrderQuotes class="+${styles.action_nav!} ${styles.action_find!}" />
+          <@menuitem type="link" href=makeServerUrl("/ordermgr/control/FindQuote?partyId=${partyRow.partyId + rawString(externalKeyParam)}") text=uiLabelMap.OrderOrderQuotes class="+${styles.action_nav!} ${styles.action_find!}" />
       </#if>
       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", request)>
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/checkinits?partyId=${partyRow.partyId + rawString(externalKeyParam)}") text=uiLabelMap.OrderNewOrder class="+${styles.action_nav!} ${styles.action_add!}" />
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/ordermgr/control/EditQuote?partyId=${partyRow.partyId + rawString(externalKeyParam)}") text=uiLabelMap.OrderNewQuote class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeServerUrl("/ordermgr/control/checkinits?partyId=${partyRow.partyId + rawString(externalKeyParam)}") text=uiLabelMap.OrderNewOrder class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makeServerUrl("/ordermgr/control/EditQuote?partyId=${partyRow.partyId + rawString(externalKeyParam)}") text=uiLabelMap.OrderNewQuote class="+${styles.action_nav!} ${styles.action_add!}" />
       </#if>
           </@menu>
         </@td>

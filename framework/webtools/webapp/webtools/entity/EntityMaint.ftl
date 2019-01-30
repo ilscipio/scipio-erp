@@ -8,7 +8,7 @@ code package.
 <@row>
 <@cell columns=6>
        <@heading relLevel=+1>${uiLabelMap.CommonGroup}</@heading>
-       <form action="<@ofbizUrl>entitymaint</@ofbizUrl>">
+       <form action="<@pageUrl>entitymaint</@pageUrl>">
         <@field type="select" name="filterByGroupName" label=uiLabelMap.WebtoolsGroupName>
              <option value="">${uiLabelMap.CommonAll}</option>
              <#list entityGroups as group>
@@ -73,18 +73,18 @@ code package.
             <@td class="button-col">
               <#if entity.viewEntity == 'Y'>
                 <#if entity.entityPermissionView == 'Y'>
-                  <a href="<@ofbizUrl>ViewRelations?entityName=${entity.entityName}</@ofbizUrl>">${uiLabelMap.WebtoolsReln}</a>
-                  <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}</@ofbizUrl>">${uiLabelMap.WebtoolsFind}</a>
-                  <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@ofbizUrl>">${uiLabelMap.WebtoolsAll}</a>
+                  <a href="<@pageUrl>ViewRelations?entityName=${entity.entityName}</@pageUrl>">${uiLabelMap.WebtoolsReln}</a>
+                  <a href="<@pageUrl>FindGeneric?entityName=${entity.entityName}</@pageUrl>">${uiLabelMap.WebtoolsFind}</a>
+                  <a href="<@pageUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@pageUrl>">${uiLabelMap.WebtoolsAll}</a>
                 </#if>
               <#else>
                 <#if entity.entityPermissionCreate == 'Y'>
-                  <a href="<@ofbizUrl>ViewGeneric?entityName=${entity.entityName}</@ofbizUrl>" title="${uiLabelMap.CommonCreateNew}">${uiLabelMap.WebtoolsCreate}</a>
+                  <a href="<@pageUrl>ViewGeneric?entityName=${entity.entityName}</@pageUrl>" title="${uiLabelMap.CommonCreateNew}">${uiLabelMap.WebtoolsCreate}</a>
                 </#if>
                 <#if entity.entityPermissionView == 'Y'>
-                  <a href="<@ofbizUrl>ViewRelations?entityName=${entity.entityName}</@ofbizUrl>" title="${uiLabelMap.WebtoolsViewRelations}">${uiLabelMap.WebtoolsReln}</a>
-                  <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}</@ofbizUrl>" title="${uiLabelMap.WebtoolsFindRecord}">${uiLabelMap.WebtoolsFind}</a>
-                  <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@ofbizUrl>" title="${uiLabelMap.WebtoolsFindAllRecords}">${uiLabelMap.WebtoolsAll}</a>
+                  <a href="<@pageUrl>ViewRelations?entityName=${entity.entityName}</@pageUrl>" title="${uiLabelMap.WebtoolsViewRelations}">${uiLabelMap.WebtoolsReln}</a>
+                  <a href="<@pageUrl>FindGeneric?entityName=${entity.entityName}</@pageUrl>" title="${uiLabelMap.WebtoolsFindRecord}">${uiLabelMap.WebtoolsFind}</a>
+                  <a href="<@pageUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@pageUrl>" title="${uiLabelMap.WebtoolsFindAllRecords}">${uiLabelMap.WebtoolsAll}</a>
                 </#if>
               </#if>
             </@td>

@@ -8,7 +8,7 @@ code package.
   <div class="screenlet-title-bar">
     <ul>
       <li class="h3">${uiLabelMap.CommonAvailablePortlets}</li>
-      <li><a href="<@ofbizUrl>ManagePortalPages?portalPageId=${parameters.portalPageId}&amp;parentPortalPageId=${parameters.parentPortalPageId}</@ofbizUrl>">${uiLabelMap.CommonCancel}</a></li>
+      <li><a href="<@pageUrl>ManagePortalPages?portalPageId=${parameters.portalPageId}&amp;parentPortalPageId=${parameters.parentPortalPageId}</@pageUrl>">${uiLabelMap.CommonCancel}</a></li>
     </ul>
     <br class="clear"/>
   </div>
@@ -24,7 +24,7 @@ code package.
         </#if>
           <td>
             <div class="h3">
-              <form method="post" action="<@ofbizUrl>createPortalPagePortlet</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)" name="createPortalPortlet_${portalPortlet.portalPortletId}"><input name="portalPortletId" value="${portalPortlet.portalPortletId}" type="hidden"/><input name="portalPageId" value="${parameters.portalPageId}" type="hidden"/><input name="columnSeqId" value="${parameters.columnSeqId}" type="hidden"/></form><a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document.createPortalPortlet_${portalPortlet.portalPortletId}.submit()">${uiLabelMap.CommonAdd}: ${portalPortlet.portletName}</a>
+              <form method="post" action="<@pageUrl>createPortalPagePortlet</@pageUrl>" onsubmit="javascript:submitFormDisableSubmits(this)" name="createPortalPortlet_${portalPortlet.portalPortletId}"><input name="portalPortletId" value="${portalPortlet.portalPortletId}" type="hidden"/><input name="portalPageId" value="${parameters.portalPageId}" type="hidden"/><input name="columnSeqId" value="${parameters.columnSeqId}" type="hidden"/></form><a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document.createPortalPortlet_${portalPortlet.portalPortletId}.submit()">${uiLabelMap.CommonAdd}: ${portalPortlet.portletName}</a>
             </div>
             <div>
               ${portalPortlet.description!}
@@ -36,7 +36,7 @@ code package.
           <td>
             <#if portalPortlet.screenshot?has_content>
               <div class="screenshot">
-                <a href="<@ofbizContentUrl>${portalPortlet.screenshot}</@ofbizContentUrl>"><img src="<@ofbizContentUrl>${portalPortlet.screenshot}</@ofbizContentUrl>" width="250" alt=""/></a>
+                <a href="<@contentUrl>${portalPortlet.screenshot}</@contentUrl>"><img src="<@contentUrl>${portalPortlet.screenshot}</@contentUrl>" width="250" alt=""/></a>
               </div>
             </#if>
           </td>

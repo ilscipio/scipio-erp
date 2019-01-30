@@ -5,7 +5,7 @@ code package.
 -->
 
 <@section title=uiLabelMap.ProductQuickCreateVirtualFromVariants>
-    <form action="<@ofbizUrl>quickCreateVirtualWithVariants</@ofbizUrl>" method="post" name="quickCreateVirtualWithVariants">
+    <form action="<@pageUrl>quickCreateVirtualWithVariants</@pageUrl>" method="post" name="quickCreateVirtualWithVariants">
         <@field type="textarea" label=uiLabelMap.ProductVariantProductIds name="variantProductIdsBag" rows="6" cols="20"></@field>
         
         <@field type="select" label="Hazmat" name="productFeatureIdOne">

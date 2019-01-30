@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<form method="post" name="lookuporder" id="lookuporder" action="<@ofbizUrl>FindRequest</@ofbizUrl>" >
+<form method="post" name="lookuporder" id="lookuporder" action="<@pageUrl>FindRequest</@pageUrl>" >
 <input type="hidden" name="viewSize" value="${viewSize}"/>
 <input type="hidden" name="viewIndex" value="${viewIndex}"/>
 
@@ -25,5 +25,5 @@ code package.
     </@cell>
   </@row>    
 </@section>
-<input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:lookupOrders(true);"/>
+<input type="image" src="<@contentUrl>/images/spacer.gif</@contentUrl>" onclick="javascript:lookupOrders(true);"/>
 </form>

@@ -37,7 +37,7 @@ code package.
 
 <@fields type="default" ignoreParentField=true>
     <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-    <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
+    <a href="<@pageUrl>editcontactmech</@pageUrl>" class="${styles.link_nav!} ${styles.action_add!}">
       [Create New Address]</a>&nbsp;&nbsp;
     -->
 

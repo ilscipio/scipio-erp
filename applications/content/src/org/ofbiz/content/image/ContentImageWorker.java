@@ -51,7 +51,7 @@ public abstract class ContentImageWorker {
      * Special image size type name designating the original (unscaled/unmodified) image.
      * <p>
      * This should be the same value as {@link org.ofbiz.webapp.content.ContentRequestWorker#ORIGINAL_SIZETYPE}
-     * which is used in the <code>@ofbizContentUrl</code> macro.
+     * which is used in the <code>@contentUrl</code> macro.
      */
     public static final String ORIGINAL_SIZETYPE = "original";
 

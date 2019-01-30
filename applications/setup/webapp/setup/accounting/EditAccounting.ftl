@@ -28,27 +28,27 @@ code package.
 	    "glAccountsTab": {
 	    	"formId": "",
 	    	"disabled": ${(!topGlAccountId?has_content)?string},
-	    	"contentUrl": "<@ofbizUrl>setupGlAccountsTab</@ofbizUrl>"	    	 
+	    	"contentUrl": "<@pageUrl>setupGlAccountsTab</@pageUrl>"	    	 
 	    },
 	    "fiscalPeriodsTab": {
 	    	"formId": "",
 	    	"disabled": ${(!topGlAccountId?has_content)?string},
-	    	"contentUrl": "<@ofbizUrl>setupFiscalPeriodsTab</@ofbizUrl>"
+	    	"contentUrl": "<@pageUrl>setupFiscalPeriodsTab</@pageUrl>"
 	    },
 	    "accountingTransactionsTab": {
 	    	"formId": "",
 	    	"disabled": ${(!topGlAccountId?has_content)?string},
-	    	"contentUrl": "<@ofbizUrl>setupAccountingTransactionsTab</@ofbizUrl>"
+	    	"contentUrl": "<@pageUrl>setupAccountingTransactionsTab</@pageUrl>"
 	    },
 	    "journalTab": {
 	    	"formId": "setupAccounting-selectJournalEntry-form",
 	    	"disabled": ${(!topGlAccountId?has_content)?string},
-	    	"contentUrl": "<@ofbizUrl>setupJournalTab</@ofbizUrl>"
+	    	"contentUrl": "<@pageUrl>setupJournalTab</@pageUrl>"
 	    },
 	    "taxAuthTab": {
 	    	"formId": "",
 	    	"disabled": ${(!topGlAccountId?has_content)?string},
-	    	"contentUrl": "<@ofbizUrl>setupTaxAuthTab</@ofbizUrl>"
+	    	"contentUrl": "<@pageUrl>setupTaxAuthTab</@pageUrl>"
 	    }
 	}
 

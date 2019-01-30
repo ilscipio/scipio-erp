@@ -22,28 +22,28 @@ code package.
     <body>
         <div class="listtext">
             <#if !forstatic>
-                <a href="<@ofbizUrl>main</@ofbizUrl>" target="main">${uiLabelMap.WebtoolsPopupWebToolsMain}</a><br/>
-                <a href="<@ofbizUrl>view/entityref_main</@ofbizUrl>" target="entityFrame">${uiLabelMap.WebtoolsEntityReferenceMainPage}</a><br/>
-                <a href="<@ofbizUrl>view/checkdb</@ofbizUrl>" target="entityFrame">${uiLabelMap.WebtoolsCheckUpdateDatabase}</a>
+                <a href="<@pageUrl>main</@pageUrl>" target="main">${uiLabelMap.WebtoolsPopupWebToolsMain}</a><br/>
+                <a href="<@pageUrl>view/entityref_main</@pageUrl>" target="entityFrame">${uiLabelMap.WebtoolsEntityReferenceMainPage}</a><br/>
+                <a href="<@pageUrl>view/checkdb</@pageUrl>" target="entityFrame">${uiLabelMap.WebtoolsCheckUpdateDatabase}</a>
                 <hr />
                 <#-- want to leave these out because they are only working so-so, and cause people more problems that they solve, IMHO
-                <a href="<@ofbizUrl>ModelWriter</@ofbizUrl>" target="_blank">Generate Entity Model XML (all in one)</a><br/>
-                <a href="<@ofbizUrl>ModelWriter?savetofile=true</@ofbizUrl>" target="_blank">Save Entity Model XML to Files</a><br/>
+                <a href="<@pageUrl>ModelWriter</@pageUrl>" target="_blank">Generate Entity Model XML (all in one)</a><br/>
+                <a href="<@pageUrl>ModelWriter?savetofile=true</@pageUrl>" target="_blank">Save Entity Model XML to Files</a><br/>
                 -->
                 <#-- this is not working now anyway...
-                <a href="<@ofbizUrl>ModelGroupWriter</@ofbizUrl>" target="_blank">Generate Entity Group XML</a><br/>
-                <a href="<@ofbizUrl>ModelGroupWriter?savetofile=true</@ofbizUrl>" target="_blank">Save Entity Group XML to File</a><br/>
+                <a href="<@pageUrl>ModelGroupWriter</@pageUrl>" target="_blank">Generate Entity Group XML</a><br/>
+                <a href="<@pageUrl>ModelGroupWriter?savetofile=true</@pageUrl>" target="_blank">Save Entity Group XML to File</a><br/>
                 -->
-                <a href="<@ofbizUrl>view/ModelInduceFromDb</@ofbizUrl>" target="_blank">${uiLabelMap.WebtoolsInduceModelXMLFromDatabase}</a><br/>
+                <a href="<@pageUrl>view/ModelInduceFromDb</@pageUrl>" target="_blank">${uiLabelMap.WebtoolsInduceModelXMLFromDatabase}</a><br/>
             </#if>
             <#if packageNames?has_content>
                 <hr />
                 <div class="section-header">${uiLabelMap.WebtoolsEntityPackages}</div>
                 <#list packageNames as packageName>
                     <#if forstatic>
-                        <a href="<@ofbizUrl>view/entityref_main?forstatic=true#${packageName}</@ofbizUrl>" target="entityFrame">${packageName}</a><br />
+                        <a href="<@pageUrl>view/entityref_main?forstatic=true#${packageName}</@pageUrl>" target="entityFrame">${packageName}</a><br />
                     <#else>
-                        <a href="<@ofbizUrl>view/entityref_main#${packageName}</@ofbizUrl>" target="entityFrame">${packageName}</a><br />
+                        <a href="<@pageUrl>view/entityref_main#${packageName}</@pageUrl>" target="entityFrame">${packageName}</a><br />
                     </#if>
                 </#list>
             </#if>
@@ -52,9 +52,9 @@ code package.
                 <div class="section-header">${uiLabelMap.WebtoolsEntitiesAlpha}</div>
                 <#list entitiesList as entity>
                     <#if forstatic>
-                        <a href="<@ofbizUrl>view/entityref_main?forstatic=true#${entity.entityName}</@ofbizUrl>" target="entityFrame">${entity.entityName}</a>
+                        <a href="<@pageUrl>view/entityref_main?forstatic=true#${entity.entityName}</@pageUrl>" target="entityFrame">${entity.entityName}</a>
                     <#else>
-                        <a href="<@ofbizUrl>view/entityref_main#${entity.entityName}${entity.url!}</@ofbizUrl>" target="entityFrame">${entity.entityName}</a>
+                        <a href="<@pageUrl>view/entityref_main#${entity.entityName}${entity.url!}</@pageUrl>" target="entityFrame">${entity.entityName}</a>
                     </#if>
                     <br />
                 </#list>

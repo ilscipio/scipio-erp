@@ -26,7 +26,7 @@ code package.
               <@td>${downloadOrderRoleAndProductContentInfo.contentName!}</@td>
               <@td>${downloadOrderRoleAndProductContentInfo.description!}</@td>
               <@td>
-                <a href="<@ofbizUrl>downloadDigitalProduct?dataResourceId=${downloadOrderRoleAndProductContentInfo.dataResourceId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">Download</a>
+                <a href="<@pageUrl>downloadDigitalProduct?dataResourceId=${downloadOrderRoleAndProductContentInfo.dataResourceId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_export!}">Download</a>
               </@td>
             </@tr>
           </#list>

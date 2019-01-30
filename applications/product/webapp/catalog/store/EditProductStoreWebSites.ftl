@@ -8,8 +8,8 @@ code package.
 <#if productStoreId?has_content>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <#-- SCIPIO: This is now accessible internally from product app: makeOfbizInterWebappUrl("/content/control/EditWebSite...&externalLoginKey=${requestAttributes.externalLoginKey} -->
-    <@menuitem type="link" href=makeOfbizUrl("EditWebSite?productStoreId=${productStoreId}") text=uiLabelMap.ProductCreateNewProductStoreWebSite class="+${styles.action_nav!} ${styles.action_add!}" />
+    <#-- SCIPIO: This is now accessible internally from product app: makeServerUrl("/content/control/EditWebSite...&externalLoginKey=${requestAttributes.externalLoginKey} -->
+    <@menuitem type="link" href=makePageUrl("EditWebSite?productStoreId=${productStoreId}") text=uiLabelMap.ProductCreateNewProductStoreWebSite class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title=uiLabelMap.PageTitleEditProductStoreWebSites menuContent=menuContent>
@@ -28,22 +28,22 @@ code package.
            <@tbody>
               <#list storeWebSites as webSite>
                 <@tr valign="middle">
-                  <#-- SCIPIO: This is now accessible internally from product app: <@ofbizInterWebappUrl>/content/control/EditWebSite...&amp;externalLoginKey=${requestAttributes.externalLoginKey} -->
-                  <@td><a href="<@ofbizUrl>EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="${styles.link_nav_info_idname!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
+                  <#-- SCIPIO: This is now accessible internally from product app: <@serverUrl>/content/control/EditWebSite...&amp;externalLoginKey=${requestAttributes.externalLoginKey} -->
+                  <@td><a href="<@pageUrl>EditWebSite?webSiteId=${webSite.webSiteId}</@pageUrl>" class="${styles.link_nav_info_idname!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
                   <#-- SCIPIO: sort by HTTPS first, not HTTP -->
                   <@td>${webSite.httpsHost!webSite.httpHost!'&nbsp;'}</@td>
                   <@td>${webSite.httpsPort!webSite.httpPort!'&nbsp;'}</@td>
                   <@td>${webSite.isStoreDefault!}</@td><#-- SCIPIO -->
                   <@td align="center">
                     <a href="javascript:document.storeUpdateWebSite_${webSite_index}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
-                    <form name="storeUpdateWebSite_${webSite_index}" method="post" action="<@ofbizUrl>storeUpdateWebSite</@ofbizUrl>">
+                    <form name="storeUpdateWebSite_${webSite_index}" method="post" action="<@pageUrl>storeUpdateWebSite</@pageUrl>">
                         <input type="hidden" name="viewProductStoreId" value="${productStoreId}"/>
                         <input type="hidden" name="productStoreId" value=""/>
                         <input type="hidden" name="webSiteId" value="${webSite.webSiteId}"/>
                     </form>
                     
                     <a href="javascript:document.setProductStoreDefaultWebSite_${webSite_index}.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSetDefault}</a>
-                    <form name="setProductStoreDefaultWebSite_${webSite_index}" method="post" action="<@ofbizUrl>setProductStoreDefaultWebSite</@ofbizUrl>">
+                    <form name="setProductStoreDefaultWebSite_${webSite_index}" method="post" action="<@pageUrl>setProductStoreDefaultWebSite</@pageUrl>">
                         <input type="hidden" name="productStoreId" value="${productStoreId}"/>
                         <input type="hidden" name="webSiteId" value="${webSite.webSiteId}"/>
                     </form>                      
@@ -55,7 +55,7 @@ code package.
         </@table>
 </@section>
 <@section title=uiLabelMap.ProductSetStoreOnWebSite>
-        <form name="addWebSite" action="<@ofbizUrl>storeUpdateWebSite</@ofbizUrl>" method="post">
+        <form name="addWebSite" action="<@pageUrl>storeUpdateWebSite</@pageUrl>" method="post">
             <input type="hidden" name="viewProductStoreId" value="${productStoreId}" />
             <input type="hidden" name="productStoreId" value="${productStoreId}" />
             <select name="webSiteId">

@@ -7,7 +7,7 @@ code package.
     <@cell columns=6>
     <p>${uiLabelMap.WebtoolsLabelManagerTemporarySearchTitle}</p>
     
-  <form action="<@ofbizUrl>SearchLabels</@ofbizUrl>" method="post">
+  <form action="<@pageUrl>SearchLabels</@pageUrl>" method="post">
 
     <@field type="input" label=uiLabelMap.WebtoolsLabelManagerKey name="labelKey" size="30" maxlength="70" value=(parameters.labelKey!) />
     <@field type="input" label=(rawLabel('WebtoolsLabelManagerKey')+" (regex)")  name="labelKeyRegex" size="30" maxlength="70" value=(parameters.labelKeyRegex!) />

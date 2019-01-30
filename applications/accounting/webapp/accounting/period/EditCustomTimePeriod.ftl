@@ -6,7 +6,7 @@ code package.
 
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("AddCustomTimePeriod?customTimePeriodId=" + organizationPartyId!) text=uiLabelMap.CommonAdd class="+${styles.action_run_local!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makePageUrl("AddCustomTimePeriod?customTimePeriodId=" + organizationPartyId!) text=uiLabelMap.CommonAdd class="+${styles.action_run_local!} ${styles.action_add!}" />
     </@menu>
 </#macro>
 
@@ -14,7 +14,7 @@ code package.
     <#if security.hasPermission("PERIOD_MAINT", request)>
     <#-- 
         <@section title=uiLabelMap.AccountingShowOnlyPeriodsWithOrganization>
-            <form method="post" action="<@ofbizUrl>EditCustomTimePeriod</@ofbizUrl>" name="setOrganizationPartyIdForm">
+            <form method="post" action="<@pageUrl>EditCustomTimePeriod</@pageUrl>" name="setOrganizationPartyIdForm">
                 <input type="hidden" name="currentCustomTimePeriodId" value="${currentCustomTimePeriodId!}" />
                 <span>${uiLabelMap.AccountingShowOnlyPeriodsWithOrganization}</span>
                 <input type="text" size="20" name="findOrganizationPartyId" value="${findOrganizationPartyId!}" />
@@ -24,7 +24,7 @@ code package.
         -->
 
         <@section title=uiLabelMap.AccountingOpenTimePeriods>
-            <@form method="post" action=makeOfbizUrl("updateCustomTimePeriod") name="updateCustomTimePeriod">
+            <@form method="post" action=makePageUrl("updateCustomTimePeriod") name="updateCustomTimePeriod">
                 <#if customTimePeriods?has_content>
                     <@table type="data-list">
                         <@thead>
@@ -117,11 +117,11 @@ code package.
                 </#if>
             </@form>
             <#list customTimePeriods as customTimePeriod>
-                <form method="post" action="<@ofbizUrl>deleteCustomTimePeriod</@ofbizUrl>" name="deleteCustomTimePeriod_${customTimePeriod_index}">
+                <form method="post" action="<@pageUrl>deleteCustomTimePeriod</@pageUrl>" name="deleteCustomTimePeriod_${customTimePeriod_index}">
                     <@field type="hidden" name="customTimePeriodId" value="${customTimePeriod.customTimePeriodId!}" />
                     <@field type="hidden" name="findOrganizationPartyId" value="${findOrganizationPartyId!}"/>
                 </form>
-                <form method="post" action="<@ofbizUrl>closeFinancialTimePeriod</@ofbizUrl>" name="closeCustomTimePeriod_${customTimePeriod_index}">
+                <form method="post" action="<@pageUrl>closeFinancialTimePeriod</@pageUrl>" name="closeCustomTimePeriod_${customTimePeriod_index}">
                     <@field type="hidden" name="customTimePeriodId" value="${customTimePeriod.customTimePeriodId!}" />
                     <@field type="hidden" name="findOrganizationPartyId" value="${findOrganizationPartyId!}"/>
                 </form>

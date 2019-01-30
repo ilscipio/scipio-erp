@@ -4,14 +4,14 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<form id="glReconciledFinAccountTrans" name="glReconciledFinAccountTransForm" method="post" action="<@ofbizUrl>callReconcileFinAccountTrans?clearAll=Y</@ofbizUrl>">
+<form id="glReconciledFinAccountTrans" name="glReconciledFinAccountTransForm" method="post" action="<@pageUrl>callReconcileFinAccountTrans?clearAll=Y</@pageUrl>">
     <input name="_useRowSubmit" type="hidden" value="Y"/>
     <input name="finAccountId" type="hidden" value="${finAccountId}"/>
     <input name="glReconciliationId" type="hidden" value="${glReconciliationId}"/>
   
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("EditFinAccountReconciliations?finAccountId=${finAccountId}&glReconciliationId=${glReconciliationId}") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}"/>
+            <@menuitem type="link" href=makePageUrl("EditFinAccountReconciliations?finAccountId=${finAccountId}&glReconciliationId=${glReconciliationId}") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}"/>
             <#assign finAcctTransCondList = delegator.findByAnd("FinAccountTrans", {"glReconciliationId" : glReconciliationId, "statusId" : "FINACT_TRNS_CREATED"}, null, false)>
             <#if finAcctTransCondList?has_content>
                 <@menuitem type="link" href="javascript:document.CancelBankReconciliationForm.submit();" text=uiLabelMap.AccountingCancelBankReconciliation class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
@@ -113,13 +113,13 @@ code package.
                             ${finAccountTrans.finAccountTransId!}
                         </@td>
                         <@td>${finAccountTransType.description!}</@td>
-                        <@td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!}<a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${partyName.partyId}</@ofbizInterWebappUrl>">[${(partyName.partyId)!}]</a></#if></@td>
+                        <@td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!}<a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${partyName.partyId}</@serverUrl>">[${(partyName.partyId)!}]</a></#if></@td>
                         <@td>${finAccountTrans.transactionDate!}</@td>
                         <@td>${finAccountTrans.entryDate!}</@td>
                         <@td><@ofbizCurrency amount=finAccountTrans.amount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
                         <@td>
                             <#if finAccountTrans.paymentId?has_content>
-                                <a href="<@ofbizUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@ofbizUrl>">${finAccountTrans.paymentId}</a>
+                                <a href="<@pageUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@pageUrl>">${finAccountTrans.paymentId}</a>
                             </#if>
                         </@td>
                         <@td><#if paymentType?has_content>${paymentType.description!}</#if></@td>
@@ -151,12 +151,12 @@ code package.
     </@section>
 </form>
 
-<form name="CancelBankReconciliationForm" method="post" action="<@ofbizUrl>cancelBankReconciliation</@ofbizUrl>">
+<form name="CancelBankReconciliationForm" method="post" action="<@pageUrl>cancelBankReconciliation</@pageUrl>">
     <input name="finAccountId" type="hidden" value="${finAccountId}"/>
     <input name="glReconciliationId" type="hidden" value="${glReconciliationId}"/>
 </form>
 <#list finAccountTransList as finAccountTrans>
-    <form name="removeFinAccountTransAssociation_${finAccountTrans.finAccountTransId}" method="post" action="<@ofbizUrl>removeFinAccountTransAssociation</@ofbizUrl>">
+    <form name="removeFinAccountTransAssociation_${finAccountTrans.finAccountTransId}" method="post" action="<@pageUrl>removeFinAccountTransAssociation</@pageUrl>">
         <input name="finAccountTransId" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
         <input name="finAccountId" type="hidden" value="${finAccountTrans.finAccountId}"/>
         <input name="glReconciliationId" type="hidden" value="${glReconciliationId}"/>

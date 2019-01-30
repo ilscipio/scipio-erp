@@ -40,7 +40,7 @@ code package.
           <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddAllToCart />
           <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='false';document.addCommonToCartForm.submit()" class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.OrderAddCheckedToCart />
           <#-- SCIPIO: TODO?: At current time this is the only link to shopping list we had, makes no sense to show while user menu provides no other shopping list management options
-          <@menuitem type="link" href=makeOfbizUrl("createShoppingListFromOrder?orderId=${orderHeader.orderId}&frequency=6&intervalNumber=1&shoppingListTypeId=SLT_AUTO_REODR") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.OrderSendMeThisEveryMonth />-->
+          <@menuitem type="link" href=makePageUrl("createShoppingListFromOrder?orderId=${orderHeader.orderId}&frequency=6&intervalNumber=1&shoppingListTypeId=SLT_AUTO_REODR") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.OrderSendMeThisEveryMonth />-->
       </#if>
     </@menu>
 </#macro>
@@ -123,7 +123,7 @@ code package.
                   </#list>
                 </@field>
                 <@field type="text" name="icm_${orderItem.orderItemSeqId}" value=(parameters["icm_${orderItem.orderItemSeqId}"]!) size="30" maxlength="60" label=uiLabelMap.CommonComments/>
-                <br/><@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('cancelOrderItem')?js_string}';document.addCommonToCartForm.submit()" 
+                <br/><@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makePageUrl('cancelOrderItem')?js_string}';document.addCommonToCartForm.submit()" 
                     class="${styles.link_run_sys!} ${styles.action_terminate!}" text=cancelItemLabel />
                 <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
                 <#-- SCIPIO: Extra hidden input to help with hide/show logic -->
@@ -165,14 +165,14 @@ code package.
               <@td>
                 <#if !printable>
                     <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(orderItem.productId, delegator)!orderItem.productId><#-- SCIPIO -->
-                    <a href="<@ofbizCatalogAltUrl productId=origProductId/>" class="${styles.link_nav_info_desc!}" target="_blank"><#t/>
+                    <a href="<@catalogAltUrl productId=origProductId/>" class="${styles.link_nav_info_desc!}" target="_blank"><#t/>
                 </#if><#lt/>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
                 <#-- SCIPIO: Link to downloads to consume -->
                 <#-- TODO: delegate status tests -->
                 <#if !printable && orderHeader?has_content && !["ORDER_REJECTED", "ORDER_CANCELLED"]?seq_contains(orderHeader.statusId!)>
                   <#if (productDownloads[orderItem.productId!])?has_content><#-- implied?: (product.productType!) == "DIGITAL_GOOD" && -->
                     <#assign dlAvail = ((orderHeader.statusId!) == "ORDER_COMPLETED")>
-                    <a href="<#if dlAvail><@ofbizUrl uri="orderdownloads" /><#else>javascript:void(0);</#if>" class="${styles.link_nav_inline!} ${styles.action_export!}<#if !dlAvail> ${styles.disabled!} ${styles.tooltip!}</#if>"<#rt/>
+                    <a href="<#if dlAvail><@pageUrl uri="orderdownloads" /><#else>javascript:void(0);</#if>" class="${styles.link_nav_inline!} ${styles.action_export!}<#if !dlAvail> ${styles.disabled!} ${styles.tooltip!}</#if>"<#rt/>
                         <#if !dlAvail> title="${uiLabelMap.ShopDownloadsAvailableOnceOrderCompleted}"</#if>>[${uiLabelMap.ContentDownload}]</a><#lt/>
                   </#if>
                 </#if>

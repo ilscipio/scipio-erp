@@ -13,15 +13,15 @@ code package.
         if (typeof(jQuery) == 'undefined') {
             if (!jQueryLibLoaded) {
                 jQueryLibLoaded = true;
-                document.write("<scr" + "ipt type=\"text/javascript\" src=\"<@ofbizContentUrl>/images/jquery/jquery-1.11.0.min.js</@ofbizContentUrl>\"></scr" + "ipt>");
-                document.write("<scr" + "ipt type=\"text/javascript\" src=\"<@ofbizContentUrl>/images/jquery/jquery-migrate-1.2.1.js</@ofbizContentUrl>\"></scr" + "ipt>");
+                document.write("<scr" + "ipt type=\"text/javascript\" src=\"<@contentUrl>/images/jquery/jquery-1.11.0.min.js</@contentUrl>\"></scr" + "ipt>");
+                document.write("<scr" + "ipt type=\"text/javascript\" src=\"<@contentUrl>/images/jquery/jquery-migrate-1.2.1.js</@contentUrl>\"></scr" + "ipt>");
             }
             setTimeout("initJQuery()", 50);
         }
     }
     initJQuery();
     </@script>
-    <@script src=makeOfbizContentUrl("/images/selectall.js") />
+    <@script src=makeContentUrl("/images/selectall.js") />
     <#if layoutSettings.javaScripts?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->
         <#-- use a Set to make sure each javascript is declared only once, but iterate the list to maintain the correct order -->
@@ -29,33 +29,33 @@ code package.
         <#list layoutSettings.javaScripts as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl(javaScript) />
+                <@script src=makeContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
     <#if layoutSettings.styleSheets?has_content>
         <#list layoutSettings.styleSheets as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${styleSheet}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${styleSheet}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_STYLESHEET?has_content>
         <#list layoutSettings.VT_STYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${styleSheet}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${styleSheet}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_HELPSTYLESHEET?has_content && lookupType?has_content>
         <#list layoutSettings.VT_HELPSTYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${styleSheet}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${styleSheet}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.rtlStyleSheets?has_content && langDir == "rtl">
         <#list layoutSettings.rtlStyleSheets as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${styleSheet}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${styleSheet}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_RTL_STYLESHEET?has_content && langDir == "rtl">
         <#list layoutSettings.VT_RTL_STYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@ofbizContentUrl>${styleSheet}</@ofbizContentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${styleSheet}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
 

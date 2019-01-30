@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<form method="post" action="<@ofbizUrl>attachProductFeaturesToCategory</@ofbizUrl>" name="attachProductFeaturesToCategory">
+<form method="post" action="<@pageUrl>attachProductFeaturesToCategory</@pageUrl>" name="attachProductFeaturesToCategory">
     <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
 </form>
 
@@ -31,12 +31,12 @@ code package.
                 <#assign line = line + 1>
                 <#assign productFeatureGroup = (productFeatureCatGrpAppl.getRelatedOne("ProductFeatureGroup", false))?default(null)>
                 <@tr valign="middle">
-                    <@td><a href="<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)!}</@ofbizUrl>" class="${styles.link_nav_info_desc!}"><#if productFeatureGroup??>${(productFeatureGroup.description)!}</#if> [${(productFeatureCatGrpAppl.productFeatureGroupId)!}]</a></@td>
+                    <@td><a href="<@pageUrl>EditFeatureGroupAppls?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)!}</@pageUrl>" class="${styles.link_nav_info_desc!}"><#if productFeatureGroup??>${(productFeatureGroup.description)!}</#if> [${(productFeatureCatGrpAppl.productFeatureGroupId)!}]</a></@td>
                     <#assign hasntStarted = false>
                     <#if (productFeatureCatGrpAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productFeatureCatGrpAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                     <@td><div<#if hasntStarted> class="${styles.text_color_alert!}"</#if>>${(productFeatureCatGrpAppl.fromDate?date?string.short)!}</div></@td>
                     <@td align="center">
-                        <form method="post" action="<@ofbizUrl>updateProductFeatureCatGrpAppl</@ofbizUrl>" name="lineFormGrp${line}">
+                        <form method="post" action="<@pageUrl>updateProductFeatureCatGrpAppl</@pageUrl>" name="lineFormGrp${line}">
                             <#assign hasExpired = false>
                             <#if (productFeatureCatGrpAppl.getTimestamp("thruDate"))?? && nowTimestamp.after(productFeatureCatGrpAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
                             <input type="hidden" name="productCategoryId" value="${(productFeatureCatGrpAppl.productCategoryId)!}" />
@@ -49,7 +49,7 @@ code package.
                     </@td>
                     <@td align="center">
                         <@field type="submit" submitType="link" href="javascript:document.removeProductFeatureCatGrpApplForm_${productFeatureCatGrpAppl_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete />
-                        <form method="post" action="<@ofbizUrl>removeProductFeatureCatGrpAppl</@ofbizUrl>" name="removeProductFeatureCatGrpApplForm_${productFeatureCatGrpAppl_index}">
+                        <form method="post" action="<@pageUrl>removeProductFeatureCatGrpAppl</@pageUrl>" name="removeProductFeatureCatGrpApplForm_${productFeatureCatGrpAppl_index}">
                             <input type="hidden" name="productFeatureGroupId" value="${(productFeatureCatGrpAppl.productFeatureGroupId)!}" />
                             <input type="hidden" name="productCategoryId" value="${(productFeatureCatGrpAppl.productCategoryId)!}" />
                             <input type="hidden" name="fromDate" value="${(productFeatureCatGrpAppl.fromDate)!}" />
@@ -66,7 +66,7 @@ code package.
     
   <#if productFeatureGroups?has_content>
     <@section title=uiLabelMap.ProductApplyFeatureGroupFromCategory>
-        <form method="post" action="<@ofbizUrl>createProductFeatureCatGrpAppl</@ofbizUrl>" name="addNewGroupForm">
+        <form method="post" action="<@pageUrl>createProductFeatureCatGrpAppl</@pageUrl>" name="addNewGroupForm">
           <@fields type="default-nolabelarea">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
             <@field type="select" name="productFeatureGroupId">
@@ -99,13 +99,13 @@ code package.
                 <#assign line = line + 1>
                 <#assign productFeatureCategory = (productFeatureCategoryAppl.getRelatedOne("ProductFeatureCategory", false))?default(null)>
                 <@tr valign="middle">
-                    <@td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureCategoryAppl.productFeatureCategoryId)!}</@ofbizUrl>" class="${styles.link_nav_info_desc!}"><#if productFeatureCategory??>${(productFeatureCategory.description)!}</#if> [${(productFeatureCategoryAppl.productFeatureCategoryId)!}]</a></@td>
+                    <@td><a href="<@pageUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureCategoryAppl.productFeatureCategoryId)!}</@pageUrl>" class="${styles.link_nav_info_desc!}"><#if productFeatureCategory??>${(productFeatureCategory.description)!}</#if> [${(productFeatureCategoryAppl.productFeatureCategoryId)!}]</a></@td>
                     <#assign hasntStarted = false>
                     <#if (productFeatureCategoryAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productFeatureCategoryAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                     <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>
                     <@td class=cellClass>${(productFeatureCategoryAppl.fromDate?date?string.short)!}</@td>
                     <@td align="center">
-                        <form method="post" action="<@ofbizUrl>updateProductFeatureCategoryAppl</@ofbizUrl>" name="lineForm${line}">
+                        <form method="post" action="<@pageUrl>updateProductFeatureCategoryAppl</@pageUrl>" name="lineForm${line}">
                             <#assign hasExpired = false>
                             <#if (productFeatureCategoryAppl.getTimestamp("thruDate"))?? && nowTimestamp.after(productFeatureCategoryAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
                             <input type="hidden" name="productCategoryId" value="${(productFeatureCategoryAppl.productCategoryId)!}" />
@@ -118,7 +118,7 @@ code package.
                     </@td>
                     <@td align="center">
                         <@field type="submit" submitType="link" href="javascript:document.removeProductFeatureCategoryApplForm_${productFeatureCategoryAppl_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete />
-                        <form method="post" action="<@ofbizUrl>removeProductFeatureCategoryAppl</@ofbizUrl>" name="removeProductFeatureCategoryApplForm_${productFeatureCategoryAppl_index}">
+                        <form method="post" action="<@pageUrl>removeProductFeatureCategoryAppl</@pageUrl>" name="removeProductFeatureCategoryApplForm_${productFeatureCategoryAppl_index}">
                             <input type="hidden" name="productFeatureCategoryId" value="${(productFeatureCategoryAppl.productFeatureCategoryId)!}" />
                             <input type="hidden" name="productCategoryId" value="${(productFeatureCategoryAppl.productCategoryId)!}" />
                             <input type="hidden" name="fromDate" value="${(productFeatureCategoryAppl.fromDate)!}" />

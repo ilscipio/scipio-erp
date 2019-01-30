@@ -7,7 +7,7 @@
         <#else>
           <#assign addCatFormName = "AddCategory_" + getRequestNextElemIndex("scipioAddCatFormNameIndex")>
         </#if>
-        <form method="post" action="<@ofbizUrl>addProductCategoryToCategory</@ofbizUrl>" name="${addCatFormName}">        
+        <form method="post" action="<@pageUrl>addProductCategoryToCategory</@pageUrl>" name="${addCatFormName}">        
             <input type="hidden" name="originalProductCategoryId" value="${originalProductCategoryId!}" />
             <@row>
                 <@cell columns=12>

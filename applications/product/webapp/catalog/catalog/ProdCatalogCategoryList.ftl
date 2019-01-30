@@ -1,7 +1,7 @@
 <@section>
     <#if prodCatalogCategories?has_content>  
          <#list prodCatalogCategories as prodCatalogCategory>
-            <form name="removeProductCategoryFromProdCatalog_${prodCatalogCategory_index}" method="post" action="<@ofbizUrl>removeProductCategoryFromProdCatalog</@ofbizUrl>">
+            <form name="removeProductCategoryFromProdCatalog_${prodCatalogCategory_index}" method="post" action="<@pageUrl>removeProductCategoryFromProdCatalog</@pageUrl>">
                 <input name="prodCatalogId" type="hidden" value="${prodCatalogCategory.prodCatalogId}"/>
                 <input name="productCategoryId" type="hidden" value="${prodCatalogCategory.productCategoryId}"/>
                 <input name="fromDate" type="hidden" value="${prodCatalogCategory.fromDate}"/>
@@ -9,7 +9,7 @@
                 <input name="partyId" type="hidden" value="${userLogin.partyId}"/>
             </form>
         </#list>      
-        <form id="EditProdCatalogCategories" name="EditProdCatalogCategories" method="post" action="<@ofbizUrl>updateProductCategoryToProdCatalog</@ofbizUrl>">
+        <form id="EditProdCatalogCategories" name="EditProdCatalogCategories" method="post" action="<@pageUrl>updateProductCategoryToProdCatalog</@pageUrl>">
             <input name="prodCatalogId" type="hidden" value="${parameters.prodCatalogId}"/>
             <input name="_useRowSubmit" type="hidden" value="Y"/>
             <@table type="data-list" autoAltRows=true responsive=true scrollable=true>
@@ -50,7 +50,7 @@
                                 <@field type="input" name="sequenceNum_o_${prodCatalogCategory_index}" value=(prodCatalogCategory.sequenceNum!) size=10 maxlength=20 />
                             </@td>
                             <@td>
-                                <a href="<@ofbizUrl>EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}</@ofbizUrl>" class="${styles.link_run_session} ${styles.action_update}">${uiLabelMap.ProductMakeTop}</a>
+                                <a href="<@pageUrl>EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}</@pageUrl>" class="${styles.link_run_session} ${styles.action_update}">${uiLabelMap.ProductMakeTop}</a>
                             </@td>
                             <@td>
                                 <@field type="submit" submitType="link" href="javascript:document.forms['EditProdCatalogCategories'].elements['_rowSubmit_o_${prodCatalogCategory_index}'].value = 'Y';document.EditProdCatalogCategories.submit();" name="Update" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys} ${styles.action_update}"/>                                                                                           

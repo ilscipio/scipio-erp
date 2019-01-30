@@ -24,7 +24,7 @@ code package.
 
 <#-- order list -->
 <@section>
-      <form method="post" name="findorder" action="<@ofbizUrl>orderlist</@ofbizUrl>">
+      <form method="post" name="findorder" action="<@pageUrl>orderlist</@pageUrl>">
       <#-- SCIPIO: Use alt/simple checkboxes, currently implied by default-alt1
         FIXME: here, manually override checkboxType for now to preserve the old look (because default-alt1 is slightly non-standard) but really it should be left to styles hash! 
             Needs to be sorted out globally... -->
@@ -66,7 +66,7 @@ code package.
       <#if !orderHeaderList?has_content>
             <@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderFound}</@commonMsg>
       <#else>
-          <@paginate mode="content" url=makeOfbizUrl("orderlist") viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=orderHeaderList.getTotalOrders() altParam=true><#-- SCIPIO: Replaced: listSize=state.getSize() -->
+          <@paginate mode="content" url=makePageUrl("orderlist") viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=orderHeaderList.getTotalOrders() altParam=true><#-- SCIPIO: Replaced: listSize=state.getSize() -->
             <@table type="data-list" autoAltRows=true>
               <@thead>
               <@tr>
@@ -107,7 +107,7 @@ code package.
                 <#assign productStore = orderHeader.getRelatedOne("ProductStore", true)! />
                 <@tr>
                   <@td>
-                    <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>">${orderHeader.orderId}</a>
+                    <a href="<@pageUrl>orderview?orderId=${orderHeader.orderId}</@pageUrl>">${orderHeader.orderId}</a>
                   </@td>
                   <@td><#if orderHeader.orderDate?has_content><@formattedDateTime date=orderHeader.orderDate /></#if></@td>
                   <#--<@td>${orderHeader.orderName!}</@td>-->
@@ -121,7 +121,7 @@ code package.
                     <#assign trackingCodes = orderHeader.getRelated("TrackingCodeOrder", null, null, false)>
                     <#list trackingCodes as trackingCode>
                         <#if trackingCode?has_content>
-                            <a href="<@ofbizInterWebappUrl>/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@ofbizInterWebappUrl>">${trackingCode.trackingCodeId}</a><br />
+                            <a href="<@serverUrl>/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@serverUrl>">${trackingCode.trackingCodeId}</a><br />
                         </#if>
                     </#list>
                   </@td>

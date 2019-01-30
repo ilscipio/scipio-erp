@@ -191,8 +191,8 @@
         },
         markupSelectors: <@objectAsScript object=ectDefMarkupSelectors lang='js'/>,
         links: {
-            getProductCategoryExtendedData: '<@ofbizUrl uri="getProductCategoryExtendedData" escapeAs="js"/>',
-            getProductExtendedData: '<@ofbizUrl uri="getProductExtendedData" escapeAs="js"/>'
+            getProductCategoryExtendedData: '<@pageUrl uri="getProductCategoryExtendedData" escapeAs="js"/>',
+            getProductExtendedData: '<@pageUrl uri="getProductExtendedData" escapeAs="js"/>'
         },
         callbacks: <@objectAsScript object=(ectCallbacks!{}) lang='js'/>,
         targetNodeInfo: <@objectAsScript object=(ectTargetNodeInfo!{}) lang='js'/>,

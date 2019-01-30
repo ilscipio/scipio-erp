@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-    <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl secure=true>keywordsearch</@ofbizUrl>">
+    <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@pageUrl secure=true>keywordsearch</@pageUrl>">
         <@row collapse=true class="keywordsearch">
             <@cell small=10>
                 <@field type="input" name="SEARCH_STRING" value=(requestParameters.SEARCH_STRING!) widgetOnly=true/>
@@ -21,7 +21,7 @@ code package.
 
 <#-- SCIPIO: Replaced by tiny form
 <@section title=uiLabelMap.ProductSearchCatalog id="keywordsearchbox">
-    <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
+    <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@pageUrl>keywordsearch</@pageUrl>">
       <@fields type="default-manual">
         <@field type="input" name="SEARCH_STRING" size="14" maxlength="50" value=(requestParameters.SEARCH_STRING!) />
         
@@ -44,7 +44,7 @@ code package.
       </@fields>
     </form>
     
-    <form name="advancedsearchform" id="keywordsearchbox_advancedsearchform" method="post" action="<@ofbizUrl>advancedsearch</@ofbizUrl>">
+    <form name="advancedsearchform" id="keywordsearchbox_advancedsearchform" method="post" action="<@pageUrl>advancedsearch</@pageUrl>">
       <@fieldset title=uiLabelMap.CommonAdvancedSearch collapsed=true>
         <#if (0 < otherSearchProdCatalogCategories?size)>
             <@field type="select" label=uiLabelMap.ProductAdvancedSearchIn name="SEARCH_CATEGORY_ID" id="SEARCH_CATEGORY_ID">

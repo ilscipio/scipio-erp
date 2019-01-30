@@ -8,7 +8,7 @@ code package.
 <#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 <@section title=uiLabelMap.EcommerceYourNamePhoneAndEmail>
-<form id="editCustomerNamePhoneAndEmail" name="${parameters.formNameValue}" method="post" action="<@ofbizUrl>processCustomerSettings</@ofbizUrl>">
+<form id="editCustomerNamePhoneAndEmail" name="${parameters.formNameValue}" method="post" action="<@pageUrl>processCustomerSettings</@pageUrl>">
   <input type="hidden" name="partyId" value="${parameters.partyId!}"/>
 
     <@personalTitleField name="personalTitle" label=uiLabelMap.CommonTitle />

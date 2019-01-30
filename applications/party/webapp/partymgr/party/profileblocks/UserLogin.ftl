@@ -13,7 +13,7 @@ code package.
               <@td>${uiLabelMap.PartyUserLogin}</@td>
               <@td>
                   <#if security.hasEntityPermission("PARTYMGR", "_CREATE", request)>
-                    <a href="<@ofbizUrl>ProfileEditUserLogin?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.action_update!}">${userUserLogin.userLoginId}</a>
+                    <a href="<@pageUrl>ProfileEditUserLogin?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@pageUrl>" class="${styles.action_update!}">${userUserLogin.userLoginId}</a>
                 <#else>
                     ${userUserLogin.userLoginId}
                 </#if>
@@ -32,7 +32,7 @@ code package.
               </@td>
               <@td class="button-col">
                 <#if security.hasEntityPermission("SECURITY", "_VIEW", request)>
-                  <a href="<@ofbizUrl>ProfileEditUserLoginSecurityGroups?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.SecurityGroups}</a>
+                  <a href="<@pageUrl>ProfileEditUserLoginSecurityGroups?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@pageUrl>" class="${styles.action_view!}">${uiLabelMap.SecurityGroups}</a>
                 </#if>
               </@td>
             </@tr>

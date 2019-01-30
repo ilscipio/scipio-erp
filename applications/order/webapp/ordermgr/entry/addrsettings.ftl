@@ -7,7 +7,7 @@ code package.
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", request) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", request)>
 
   <@section title=uiLabelMap.OrderSelectAShippingAddress> <#-- class="boxoutside" -->
-    <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+    <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
       <input type="hidden" name="finalizeMode" value="ship"/>
     
       <@table type="data-complex" width="100%" class="+boxbottom">

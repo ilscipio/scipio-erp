@@ -7,7 +7,7 @@ code package.
   <#-- SCIPIO: Removed
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("findVisits?partyId=${partyId}") text=uiLabelMap.CommonListAll class="+${styles.action_run_sys!} ${styles.action_find!}" />
+      <@menuitem type="link" href=makePageUrl("findVisits?partyId=${partyId}") text=uiLabelMap.CommonListAll class="+${styles.action_run_sys!} ${styles.action_find!}" />
     </@menu>
   </#macro>-->
   <@section id="partyVisits" title=uiLabelMap.PartyVisits>
@@ -29,7 +29,7 @@ code package.
             <#if (visitObj_index > 4)><#break></#if>
               <@tr>
                 <@td class="button-col">
-                  <a href="<@ofbizUrl>visitdetail?visitId=${visitObj.visitId!}</@ofbizUrl>">${visitObj.visitId!}</a>
+                  <a href="<@pageUrl>visitdetail?visitId=${visitObj.visitId!}</@pageUrl>">${visitObj.visitId!}</a>
                 </@td>
                 <@td>${visitObj.userLoginId!}</@td>
                 <@td>${visitObj.userCreated!}</@td>

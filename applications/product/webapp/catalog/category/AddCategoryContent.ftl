@@ -2,7 +2,7 @@
     
     <#if parameters.addExistingContent?has_content>
         <@modal id="addExistingContent" label="">
-            <form id="AddCategoryContentAssoc" name="AddCategoryContentAssoc" method="post" action="<@ofbizUrl>addContentToCategory</@ofbizUrl>">
+            <form id="AddCategoryContentAssoc" name="AddCategoryContentAssoc" method="post" action="<@pageUrl>addContentToCategory</@pageUrl>">
                 <@field type="hidden" name="productCategoryId" value=(productCategoryId!) />               
                 <@field type="hidden" name="searchType" value="STARTS_WITH" />
                 <@row>
@@ -74,7 +74,7 @@
     </#if>
 
     <#if !prodCatContentTypeId?has_content>
-        <form id="PrepareAddCategoryContentAssoc" name="PrepareAddCategoryContentAssoc" method="post" action="<@ofbizUrl>EditCategoryContent</@ofbizUrl>">
+        <form id="PrepareAddCategoryContentAssoc" name="PrepareAddCategoryContentAssoc" method="post" action="<@pageUrl>EditCategoryContent</@pageUrl>">
             <@field type="hidden" name="productCategoryId" value=(productCategoryId!) />
             <@field type="select" label=uiLabelMap.ProductSelectProductCategoryContentTypeId name="prodCatContentTypeId" size="1" required=true>
                 <option value="">--</option>
@@ -118,7 +118,7 @@
             <#assign description=((content.description)!) />
         </#if>
 
-        <form id="${contentFormName}" name="${contentFormName}" method="post" <#if contentFormName == "EditCategoryContentDownload">enctype="multipart/form-data"</#if> action="<@ofbizUrl>${contentFormAction}</@ofbizUrl>">
+        <form id="${contentFormName}" name="${contentFormName}" method="post" <#if contentFormName == "EditCategoryContentDownload">enctype="multipart/form-data"</#if> action="<@pageUrl>${contentFormAction}</@pageUrl>">
             <@field type="hidden" name="productCategoryId" value=(productCategoryId!) />
             <@field type="hidden" name="prodCatContentTypeId" value=(prodCatContentTypeId!) />
             <#if content?has_content>
@@ -292,7 +292,7 @@
                         <#if contentDataResourceView?has_content>
                             <@field type="hidden" name="dataResourceTypeId" value=(contentDataResourceView.drDataResourceTypeId!) />                        
                             <@field type="hidden" name="fileDataResourceId" value=(contentDataResourceView.dataResourceId!) />
-                            <a href="<@ofbizInterWebappUrl>/content/control/ViewBinaryDataResource?dataResourceId=${contentDataResourceView.dataResourceId!}</@ofbizInterWebappUrl>">
+                            <a href="<@serverUrl>/content/control/ViewBinaryDataResource?dataResourceId=${contentDataResourceView.dataResourceId!}</@serverUrl>">
                                 <@field type="display" value=(contentDataResourceView.drDataResourceName!) />
                             </a>
                         </#if>

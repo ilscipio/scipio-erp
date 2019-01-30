@@ -8,7 +8,7 @@ code package.
 <#-- SCIPIO: DEPRECATED TEMPLATE -->
 
 <@section><#-- title=uiLabelMap.OrderShippingInformation -->
-  <form id="shipOptionsAndShippingInstructions" method="post" action="<@ofbizUrl>processShipOptions</@ofbizUrl>" name="${parameters.formNameValue}">
+  <form id="shipOptionsAndShippingInstructions" method="post" action="<@pageUrl>processShipOptions</@pageUrl>" name="${parameters.formNameValue}">
       <input type="hidden" name="finalizeMode" value="options"/>
       <@field type="generic" label=uiLabelMap.OrderSelectShippingMethod>
       <#assign chosenShippingMethod = rawString(chosenShippingMethod!"N@A")>

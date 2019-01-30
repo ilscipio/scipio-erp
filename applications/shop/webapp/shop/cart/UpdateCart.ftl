@@ -35,9 +35,9 @@ code package.
                 <#-- SCIPIO: Uncomment if you want to use the image placeholders
                   <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
                   <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
-                  <img src="<@ofbizContentUrl ctxPrefix=true>${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" />
+                  <img src="<@contentUrl ctxPrefix=true>${smallImageUrl}</@contentUrl>" alt="Product Image" />
                 -->
-                <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
+                <a href="<@catalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
                 <#-- For configurable products, the selected options are shown -->
                 <#if cartLine.getConfigWrapper()??>
                   <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
@@ -183,11 +183,11 @@ code package.
                         <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")! />
                         <#if !smallImageUrl?string?has_content><#assign smallImageUrl=""></#if>
                         <#if smallImageUrl?string?has_content>
-                          <#assign imgUrl><@ofbizContentUrl ctxPrefix=true>${smallImageUrl}</@ofbizContentUrl></#assign>
+                          <#assign imgUrl><@contentUrl ctxPrefix=true>${smallImageUrl}</@contentUrl></#assign>
                           <@img src=imgUrl width="150px;" height="75px"/>
                         </#if>
                       -->
-                    <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
+                    <a href="<@catalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
                     <#-- For configurable products, the selected options are shown -->
                     <#if cartLine.getConfigWrapper()??>
                       <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />

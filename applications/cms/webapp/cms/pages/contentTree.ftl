@@ -11,7 +11,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
 
 <#-- Javascript functions -->
 <@script>
-    var editorBaseUrl = '<@ofbizUrl escapeAs='js'>editPage</@ofbizUrl>';
+    var editorBaseUrl = '<@pageUrl escapeAs='js'>editPage</@pageUrl>';
     
     function cmsAddPartialPathSuffix(path) {
         if (path) {
@@ -230,7 +230,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             <@cell columns=3>
                 <@section title=uiLabelMap.CmsMenu id="action_offset">
                         <ul class="side-nav" id="action_menu">
-                            <@menuitem type="link" href=makeOfbizUrl('editPage') text=uiLabelMap.CommonCreate/>
+                            <@menuitem type="link" href=makePageUrl('editPage') text=uiLabelMap.CommonCreate/>
                         </ul>
                 </@section>
                 

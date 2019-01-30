@@ -67,7 +67,7 @@ code package.
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderProductStore}</@td>
       <@td colspan="3">
         <#-- SCIPIO: FIXME: no ViewProductStore available
-        <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProductStore?productStoreId=${productStore.productStoreId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalogmgr">${productStore.storeName!(productStore.productStoreId!)}</a>--> 
+        <a href="<@serverUrl>/catalog/control/ViewProductStore?productStoreId=${productStore.productStoreId}${rawString(externalKeyParam)}</@serverUrl>" target="catalogmgr">${productStore.storeName!(productStore.productStoreId!)}</a>--> 
         ${productStore.storeName!(productStore.productStoreId!)}
         <#if orderHeader.salesChannelEnumId?has_content>
           <#assign channel = orderHeader.getRelatedOne("SalesChannelEnumeration", false)>
@@ -83,7 +83,7 @@ code package.
         <@tr>
           <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderOriginFacility}</@td>
           <@td colspan="3">
-            <a href="<@ofbizInterWebappUrl>/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="facilitymgr">${orderHeader.originFacilityId}</a>
+            <a href="<@serverUrl>/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${rawString(externalKeyParam)}</@serverUrl>" target="facilitymgr">${orderHeader.originFacilityId}</a>
           </@td>
         </@tr>
     </#if>
@@ -93,7 +93,7 @@ code package.
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonCreatedBy}</@td>
       <@td colspan="3">
       <#if orderHeader.createdBy?has_content>
-        <a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="">${orderHeader.createdBy}</a>
+        <a href="<@serverUrl>/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${rawString(externalKeyParam)}</@serverUrl>" target="partymgr" class="">${orderHeader.createdBy}</a>
       <#else>
         ${uiLabelMap.CommonNotSet}
       </#if>
@@ -133,7 +133,7 @@ code package.
     <@tr>
       <@td>${uiLabelMap.OrderImage}</@td>
       <@td colspan="3">
-        <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
+        <a href="<@pageUrl>viewimage?orderId=${orderId}&amp;orderContentTypeId=IMAGE_URL</@pageUrl>" target="_orderImage" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
       </@td>
     </@tr>
   </#if>
@@ -151,7 +151,7 @@ code package.
             <#default><#assign priorityLabel = uiLabelMap.CommonNormal>
          </#switch>
          <@modal id="${orderId}_priority" label=priorityLabel>
-             <form name="setOrderReservationPriority" method="post" action="<@ofbizUrl>setOrderReservationPriority</@ofbizUrl>">
+             <form name="setOrderReservationPriority" method="post" action="<@pageUrl>setOrderReservationPriority</@pageUrl>">
              <input type="hidden" name="orderId" value="${orderId}"/>
             <@row>
                 <@cell columns=6>
@@ -180,7 +180,7 @@ code package.
             <#default><#assign invoicePerShipmentLabel = uiLabelMap.CommonYes>
          </#switch>
          <@modal id="${orderId}_invoicePerShipment" label=invoicePerShipmentLabel>
-             <form name="setInvoicePerShipment" method="post" action="<@ofbizUrl>setInvoicePerShipment</@ofbizUrl>">
+             <form name="setInvoicePerShipment" method="post" action="<@pageUrl>setInvoicePerShipment</@pageUrl>">
                 <input type="hidden" name="orderId" value="${orderId}"/>
                 <@row>
                     <@cell columns=6>

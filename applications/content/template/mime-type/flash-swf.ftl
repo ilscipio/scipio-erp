@@ -17,6 +17,6 @@
   under the License.
   -->
 <object width="550" height="400">
-    <param name="movie" value="<@ofbizInterWebappUrl>/content/control/stream?contentId=${contentId}</@ofbizInterWebappUrl>">
-      <embed src="<@ofbizInterWebappUrl>/content/control/stream?contentId=${contentId}</@ofbizInterWebappUrl>" width="550" height="400"></embed>
+    <param name="movie" value="<@serverUrl>/content/control/stream?contentId=${contentId}</@serverUrl>">
+      <embed src="<@serverUrl>/content/control/stream?contentId=${contentId}</@serverUrl>" width="550" height="400"></embed>
 </object>

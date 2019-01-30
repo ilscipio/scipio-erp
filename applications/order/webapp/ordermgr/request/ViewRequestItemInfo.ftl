@@ -24,7 +24,7 @@ code package.
                 <@tr valign="middle">
                     <@td valign="top">
                             <#if showRequestManagementLinks??>
-                                <a href="<@ofbizUrl>EditRequestItem?custRequestId=${requestItem.custRequestId}&amp;custRequestItemSeqId=${requestItem.custRequestItemSeqId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${requestItem.custRequestItemSeqId}</a>
+                                <a href="<@pageUrl>EditRequestItem?custRequestId=${requestItem.custRequestId}&amp;custRequestItemSeqId=${requestItem.custRequestItemSeqId}</@pageUrl>" class="${styles.link_nav_info_id!}">${requestItem.custRequestItemSeqId}</a>
                             <#else>
                                 ${requestItem.custRequestItemSeqId}
                             </#if>
@@ -32,9 +32,9 @@ code package.
                     <@td valign="top">
                             ${(product.internalName)!}&nbsp;
                             <#if showRequestManagementLinks??>
-                                <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${requestItem.productId!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${requestItem.productId!}</a>
+                                <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${requestItem.productId!}</@serverUrl>" class="${styles.link_nav_info_id!}">${requestItem.productId!}</a>
                             <#else>
-                                <a href="<@ofbizUrl>product?product_id=${requestItem.productId!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${requestItem.productId!}</a>
+                                <a href="<@pageUrl>product?product_id=${requestItem.productId!}</@pageUrl>" class="${styles.link_nav_info_id!}">${requestItem.productId!}</a>
                             </#if>
                         </@td>
                     <@td align="right" valign="top">${requestItem.quantity!}</@td>

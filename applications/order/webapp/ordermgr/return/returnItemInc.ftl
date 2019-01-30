@@ -6,7 +6,7 @@ code package.
 <#assign sectionTitle>
     <@row>
         <@cell small=10>
-            <@heading>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></@heading>
+            <@heading>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr} <a href="<@pageUrl>orderview?orderId=${orderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></@heading>
         </@cell>
         <@cell small=2>
             <span>${uiLabelMap.CommonSelectAll}</span>&nbsp;
@@ -171,7 +171,7 @@ code package.
   
   
 <#if returnableItems?has_content>
-  <#assign sectionTitle>${getLabel('OrderReturnAdjustments')} ${getLabel('CommonNbr')} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
+  <#assign sectionTitle>${getLabel('OrderReturnAdjustments')} ${getLabel('CommonNbr')} <a href="<@pageUrl>orderview?orderId=${orderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
   <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
     <#if orderHeaderAdjustments?has_content>
       <@table type="data-list">
@@ -225,7 +225,7 @@ code package.
         <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="RET_MAN_ADJ"/>
         <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
         
-  <#assign sectionTitle>${getLabel('OrderReturnManualAdjustment')} ${getLabel('CommonNbr')} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
+  <#assign sectionTitle>${getLabel('OrderReturnManualAdjustment')} ${getLabel('CommonNbr')} <a href="<@pageUrl>orderview?orderId=${orderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${orderId}</a></#assign>
   <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
         <@table type="data-list">
           <@thead>

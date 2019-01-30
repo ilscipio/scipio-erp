@@ -17,14 +17,14 @@
   under the License.
   -->
 <object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" codebase="http://www.apple.com/qtactivex/qtplugin.cab">
-    <param name="SRC" value="<@ofbizInterWebappUrl>/content/control/stream?contentId=${contentId}</@ofbizInterWebappUrl>" />
+    <param name="SRC" value="<@serverUrl>/content/control/stream?contentId=${contentId}</@serverUrl>" />
     <param name="WIDTH" value="320" />
     <param name="HEIGHT" value="263" />
     <param name="SCALE" value="tofit" />
     <param name="AUTOSTART" value="true" />
     <param name="AUTOPLAY" value="true" />
     <param name="KIOSKMODE" value="false" />
-    <embed src="<@ofbizUrl>stream?contentId=${contentId}</@ofbizUrl>" width="320" height="263" scale="tofit"
+    <embed src="<@pageUrl>stream?contentId=${contentId}</@pageUrl>" width="320" height="263" scale="tofit"
         autostart="true" autoplay="true" kioskmode="false" target="quicktimeplayer"
               pluginspage="http://www.apple.com/quicktime/download/">
     </embed>

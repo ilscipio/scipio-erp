@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<#assign requestName = makeOfbizUrl(requestName)/>
+<#assign requestName = makePageUrl(requestName)/>
 <@script>
 jQuery(document).ready(function() {
     <#-- SCIPIO: added depFormFieldPrefix as workaround for some form name issues -->

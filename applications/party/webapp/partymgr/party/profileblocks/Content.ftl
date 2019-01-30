@@ -9,7 +9,7 @@ code package.
       
   <#if (pcntNoAttach!false) != true>
     <@section title=(pcntAttachTitle!uiLabelMap.PartyAttachContent) id="partyAttachContent" menuContent=(pcntAttachMenuCnt!"")>
-      <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl uri=(pcntUploadUri!"uploadPartyContent") escapeAs='html'/>">
+      <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@pageUrl uri=(pcntUploadUri!"uploadPartyContent") escapeAs='html'/>">
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
         <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>

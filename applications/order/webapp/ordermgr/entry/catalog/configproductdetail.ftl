@@ -118,7 +118,7 @@ ${virtualJavaScript!}
     
     function getConfigDetails(event) {
         jQuery.ajax({
-            url: '<@ofbizUrl>getConfigDetailsEvent</@ofbizUrl>',
+            url: '<@pageUrl>getConfigDetailsEvent</@pageUrl>',
             type: 'POST',
             data: jQuery('#configFormId').serialize(),
             success: function(data) {
@@ -151,7 +151,7 @@ ${virtualJavaScript!}
   <#-- Product Configurator -->
   <#-- SCIPIO: FIXME: view switching bad -->
   <div class="product-configurator">
-  <form name="configform" id="configFormId" method="post" action="<@ofbizUrl>product<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+  <form name="configform" id="configFormId" method="post" action="<@pageUrl>product<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@pageUrl>">
     <input type="hidden" name="add_product_id" value="${product.productId}" />
     <input type="hidden" name="add_category_id" value="" />
     <input type="hidden" name="quantity" value="1" />
@@ -179,7 +179,7 @@ ${virtualJavaScript!}
                 </#if>
                 <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?has_content>
-                  <img src="<@ofbizContentUrl ctxPrefix=true>${image}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgXLarge" align="left" alt="" />
+                  <img src="<@contentUrl ctxPrefix=true>${image}</@contentUrl>" vspace="5" hspace="5" class="cssImgXLarge" align="left" alt="" />
                 </#if>
               <#else>
                 <#-- SCIPIO: FIXME?: this does nothing in ecommerce
@@ -441,7 +441,7 @@ ${virtualJavaScript!}
               <#-- SCIPIO: not yet supported
               <div>&nbsp;</div>
               <div>
-                <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" class="${styles.link_nav!} ${styles.action_send!}">${uiLabelMap.CommonTellAFriend}</a>
+                <a href="javascript:popUpSmall('<@pageUrl>tellafriend?productId=${product.productId}</@pageUrl>','tellafriend');" class="${styles.link_nav!} ${styles.action_send!}">${uiLabelMap.CommonTellAFriend}</a>
               </div>
               -->
             </div>
@@ -458,7 +458,7 @@ ${virtualJavaScript!}
             </#macro>
 
               <#-- SCIPIO: don't need ugly view-switch: <#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if> -->
-              <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="addform">
+              <form method="post" action="<@pageUrl>additem</@pageUrl>" name="addform">
                 <#assign inStock = true>
                 <#-- Variant Selection -->
                 <#if (product.isVirtual!?upper_case) == "Y">
@@ -529,7 +529,7 @@ ${virtualJavaScript!}
               <#-- SCIPIO: Shopping list not supported yet
               <div>
                   <#if userHasAccount>
-                    <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+                    <form name="addToShoppingList" method="post" action="<@pageUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@pageUrl>">
                       <input type="hidden" name="productId" value="${product.productId}" />
                       <input type="hidden" name="product_id" value="${product.productId}" />
                       <input type="hidden" name="configId" value="${configId!}" />
@@ -548,7 +548,7 @@ ${virtualJavaScript!}
                     </form>
                   <#else>
                     <#- SCIPIO: why ever show this?
-                    <@commonMsg type="info">${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav_inline!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>
+                    <@commonMsg type="info">${uiLabelMap.OrderYouMust} <a href="<@pageUrl>checkLogin/showcart</@pageUrl>" class="${styles.link_nav_inline!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>
                     ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.</@commonMsg>->
                   </#if>
               </div>
@@ -584,7 +584,7 @@ ${virtualJavaScript!}
                           <#assign imageUrl = "/images/defaultImage.jpg">
                         </#if>
                         <@td align="center" valign="bottom">
-                          <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl ctxPrefix=true>${imageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a>
+                          <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@contentUrl ctxPrefix=true>${imageUrl}</@contentUrl>" class="cssImgSmall" alt="" /></a>
                           <br />
                           <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_nav_info_name!}">${key}</a>
                         </@td>

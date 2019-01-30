@@ -11,14 +11,14 @@ code package.
     
       <#macro actionMenu>
         <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("authview/${donePage}?orderId=${orderId}") text=uiLabelMap.CommonGoBack class="+${styles.action_nav!} ${styles.action_cancel!}" />
+          <@menuitem type="link" href=makePageUrl("authview/${donePage}?orderId=${orderId}") text=uiLabelMap.CommonGoBack class="+${styles.action_nav!} ${styles.action_cancel!}" />
           <@menuitem type="link" href="javascript:document.sendConfirmationForm.submit()" text=uiLabelMap.CommonSend class="+${styles.action_run_sys!} ${styles.action_send!}" />
         </@menu>
       </#macro>
       
       <@actionMenu />
       
-      <form method="post" action="<@ofbizUrl>sendconfirmationmail/${donePage}</@ofbizUrl>" name="sendConfirmationForm">
+      <form method="post" action="<@pageUrl>sendconfirmationmail/${donePage}</@pageUrl>" name="sendConfirmationForm">
         <@fields type="default">
         <input type="hidden" name="orderId" value="${orderId!}" />
         <#if ! productStoreEmailSetting??>

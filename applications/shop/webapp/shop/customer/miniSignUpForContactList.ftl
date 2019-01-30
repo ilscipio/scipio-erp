@@ -18,13 +18,13 @@ code package.
 <@script>
     function unsubscribe() {
         var form = document.getElementById("signUpForContactListForm");
-        form.action = "<@ofbizUrl>unsubscribeContactListParty</@ofbizUrl>"
+        form.action = "<@pageUrl>unsubscribeContactListParty</@pageUrl>"
         document.getElementById("statusId").value = "CLPT_UNSUBS_PENDING";
         form.submit();
     }
     function unsubscribeByContactMech() {
         var form = document.getElementById("signUpForContactListForm");
-        form.action = "<@ofbizUrl>unsubscribeContactListPartyContachMech</@ofbizUrl>"
+        form.action = "<@pageUrl>unsubscribeContactListPartyContachMech</@pageUrl>"
         document.getElementById("statusId").value = "CLPT_UNSUBS_PENDING";
         form.submit();
     }
@@ -36,7 +36,7 @@ code package.
   <#-- The visitor potentially has an account and party id -->
     <#if userHasAccount>
     <#-- They are logged in so lets present the form to sign up with their email address -->
-      <form method="post" action="<@ofbizUrl>createContactListParty</@ofbizUrl>" name="signUpForContactListForm" id="signUpForContactListForm">
+      <form method="post" action="<@pageUrl>createContactListParty</@pageUrl>" name="signUpForContactListForm" id="signUpForContactListForm">
         <fieldset>
           <#assign contextPath = request.getContextPath()>
           <input type="hidden" name="baseLocation" value="${contextPath}"/>
@@ -63,12 +63,12 @@ code package.
     <#else>
     <#-- Not logged in so ask them to log in and then sign up or clear the user association -->
       <p>${uiLabelMap.EcommerceSignUpForContactListLogIn}</p>
-      <p><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>">${uiLabelMap.CommonLogin}</a> ${autoName}</p>
-      <p>(${uiLabelMap.CommonNotYou}? <a href="<@ofbizUrl>autoLogout</@ofbizUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
+      <p><a href="<@pageUrl>${checkLoginUrl}</@pageUrl>">${uiLabelMap.CommonLogin}</a> ${autoName}</p>
+      <p>(${uiLabelMap.CommonNotYou}? <a href="<@pageUrl>autoLogout</@pageUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
     </#if>
   <#else>
   <#-- There is no party info so just offer an anonymous (non-partyId) related newsletter sign up -->
-    <form method="post" action="<@ofbizUrl>signUpForContactList</@ofbizUrl>" name="signUpForContactListForm" id="signUpForContactListForm">
+    <form method="post" action="<@pageUrl>signUpForContactList</@pageUrl>" name="signUpForContactListForm" id="signUpForContactListForm">
       <fieldset>
         <#assign contextPath = request.getContextPath()>
         <input type="hidden" name="baseLocation" value="${contextPath}"/>

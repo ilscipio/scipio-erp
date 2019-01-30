@@ -56,7 +56,7 @@ code package.
                     <@td>
                         <div>
                         <#if showQuoteManagementLinks?? && quoteItem.isPromo?default("N") == "N" && quote.statusId=="QUO_CREATED">
-                            <a href="<@ofbizUrl>EditQuoteItem?quoteId=${quoteItem.quoteId}&amp;quoteItemSeqId=${quoteItem.quoteItemSeqId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${quoteItem.quoteItemSeqId}</a>
+                            <a href="<@pageUrl>EditQuoteItem?quoteId=${quoteItem.quoteId}&amp;quoteItemSeqId=${quoteItem.quoteItemSeqId}</@pageUrl>" class="${styles.link_nav_info_id!}">${quoteItem.quoteItemSeqId}</a>
                         <#else>
                             ${quoteItem.quoteItemSeqId}
                         </#if>
@@ -70,12 +70,12 @@ code package.
                                     
                                     ${quoteItem.productId} - ${(product.internalName)!}
                                   <#else>
-                                    <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${quoteItem.productId!}</@ofbizInterWebappUrl>" class="${styles.link_nav!} ${styles.action_add!}">
+                                    <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${quoteItem.productId!}</@serverUrl>" class="${styles.link_nav!} ${styles.action_add!}">
                                     ${uiLabelMap.ProductCreateProduct}
                                     </a>
                                   </#if>
                             <#else>
-                                <a href="<@ofbizUrl>product?product_id=${quoteItem.productId!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${quoteItem.productId!}</a>
+                                <a href="<@pageUrl>product?product_id=${quoteItem.productId!}</@pageUrl>" class="${styles.link_nav_info_id!}">${quoteItem.productId!}</a>
                             </#if>
                         </@td>
                     <@td class="amount">${quoteItem.quantity!}</@td>

@@ -11,7 +11,7 @@ code package.
 
 <@section>
   <div id="shippingFormServerError" class="errorMessage"></div>
-  <form id="editShippingContact" method="post" action="<@ofbizUrl>processShipSettings</@ofbizUrl>" name="${parameters.formNameValue}">
+  <form id="editShippingContact" method="post" action="<@pageUrl>processShipSettings</@pageUrl>" name="${parameters.formNameValue}">
 
       <input type="hidden" name="shippingContactMechId" value="${parameters.shippingContactMechId!}"/>
       <input type="hidden" name="partyId" value="${cart.getPartyId()!"_NA_"}"/>

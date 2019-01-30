@@ -8,12 +8,12 @@ code package.
 <#-- SCIPIO: 2017-05-22: added link to new feature -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("EditFeature") text=uiLabelMap.ProductNewFeature class="+${styles.action_nav!} ${styles.action_add!}"/>
+        <@menuitem type="link" href=makePageUrl("EditFeature") text=uiLabelMap.ProductNewFeature class="+${styles.action_nav!} ${styles.action_add!}"/>
     </@menu>
 </#macro>
 <@section title=uiLabelMap.PageTitleEditProductFeatures menuContent=menuContent>
   <#if productFeatureAndAppls?has_content>
-    <form method="post" action="<@ofbizUrl>UpdateFeatureToProductApplication</@ofbizUrl>" name="selectAllForm">
+    <form method="post" action="<@pageUrl>UpdateFeatureToProductApplication</@pageUrl>" name="selectAllForm">
     <@fields type="default-manual-widgetonly">
       <input type="hidden" name="_useRowSubmit" value="Y"/>
       <input type="hidden" name="_checkGlobalScope" value="Y"/>
@@ -45,12 +45,12 @@ code package.
             <input type="hidden" name="productId_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.productId)!}" />
             <input type="hidden" name="productFeatureId_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.productFeatureId)!}" />
             <input type="hidden" name="fromDate_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.fromDate)!}" />
-            <a href="<@ofbizUrl>EditFeature?productFeatureId=${(productFeatureAndAppl.productFeatureId)!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">
+            <a href="<@pageUrl>EditFeature?productFeatureId=${(productFeatureAndAppl.productFeatureId)!}</@pageUrl>" class="${styles.link_nav_info_id!}">
                 ${(productFeatureAndAppl.productFeatureId)!}</a></@td>
           <@td>${(productFeatureAndAppl.get("description",locale))!}</@td>
           <@td><#if productFeatureAndAppl.uomId??>${curProductFeatureUom.abbreviation!}</#if></@td>
           <@td>${(curProductFeatureType.get("description",locale))?default((productFeatureAndAppl.productFeatureTypeId)!)}</@td>
-          <@td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)!}&amp;productId=${(productFeatureAndAppl.productId)!}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">
+          <@td><a href="<@pageUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)!}&amp;productId=${(productFeatureAndAppl.productId)!}</@pageUrl>" class="${styles.link_nav_info_desc!}">
               ${(curProductFeatureCategory.description)!}
               [${(productFeatureAndAppl.productFeatureCategoryId)!}]</a></@td>
     <#assign hasntStarted = false>
@@ -95,7 +95,7 @@ code package.
     </@fields>
     </form>
   <#list productFeatureAndAppls as productFeatureAndAppl>
-    <form name="RemoveFeatureFromProduct_o_${productFeatureAndAppl_index}" method="post" action="<@ofbizUrl>RemoveFeatureFromProduct</@ofbizUrl>">
+    <form name="RemoveFeatureFromProduct_o_${productFeatureAndAppl_index}" method="post" action="<@pageUrl>RemoveFeatureFromProduct</@pageUrl>">
       <input type="hidden" name="productId" value="${(productFeatureAndAppl.productId)!}"/>
       <input type="hidden" name="productFeatureId" value="${(productFeatureAndAppl.productFeatureId)!}"/>
       <input type="hidden" name="fromDate" value="${(productFeatureAndAppl.fromDate)!}"/>
@@ -107,7 +107,7 @@ code package.
 </@section>
 
 <@section title=uiLabelMap.ProductAddProductFeatureFromCategory>
-    <form method="post" action="<@ofbizUrl>ApplyFeaturesFromCategory</@ofbizUrl>">
+    <form method="post" action="<@pageUrl>ApplyFeaturesFromCategory</@pageUrl>">
       <input type="hidden" name="productId" value="${productId}"/>
       
       <@field type="select" label=uiLabelMap.ProductFeatureCategory size=1 name="productFeatureCategoryId">
@@ -138,7 +138,7 @@ code package.
 </@section>
 
 <@section title=uiLabelMap.ProductAddProductFeatureTypeId>
-    <form method="post" action="<@ofbizUrl>ApplyFeatureToProductFromTypeAndCode</@ofbizUrl>" name="addFeatureByTypeIdCode">
+    <form method="post" action="<@pageUrl>ApplyFeatureToProductFromTypeAndCode</@pageUrl>" name="addFeatureByTypeIdCode">
       <input type="hidden" name="productId" value="${productId}"/>
       
       <@field type="select" label=uiLabelMap.ProductFeatureType size=1 name="productFeatureTypeId">
@@ -167,7 +167,7 @@ code package.
 </@section>
 
 <@section title=uiLabelMap.ProductAddProductFeatureID>
-    <form method="post" action="<@ofbizUrl>ApplyFeatureToProduct</@ofbizUrl>" name="addFeatureById">
+    <form method="post" action="<@pageUrl>ApplyFeatureToProduct</@pageUrl>" name="addFeatureById">
       <input type="hidden" name="productId" value="${productId}"/>
       
       <@field type="lookup" label=uiLabelMap.CommonId formName="addFeatureById" name="productFeatureId" id="productFeatureId" fieldFormName="LookupProductFeature" />

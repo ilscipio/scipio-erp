@@ -7,7 +7,7 @@ code package.
 <#macro updateOrderContactMech orderHeader contactMechTypeId contactMechList contactMechPurposeTypeId contactMechAddress>
   <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
     <@modal label="(${rawLabel('CommonEdit')})" id="modal_updateOrderContactMech_${contactMechTypeId}">
-        <form name="updateOrderContactMech" method="post" action="<@ofbizUrl>updateOrderContactMech</@ofbizUrl>">
+        <form name="updateOrderContactMech" method="post" action="<@pageUrl>updateOrderContactMech</@pageUrl>">
           <input type="hidden" name="orderId" value="${orderId!}" />
           <input type="hidden" name="contactMechPurposeTypeId" value="${contactMechPurpose.contactMechPurposeTypeId!}" />
           <input type="hidden" name="oldContactMechId" value="${contactMech.contactMechId!}" />
@@ -65,7 +65,7 @@ code package.
  <#-- The usefulness of this information is limited. Uncomment and add as menuContent to section in order to add these functions back in
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("orderentry?partyId=${partyId}&orderTypeId=${orderHeader.orderTypeId}") text=uiLabelMap.OrderNewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
+        <@menuitem type="link" href=makePageUrl("orderentry?partyId=${partyId}&orderTypeId=${orderHeader.orderTypeId}") text=uiLabelMap.OrderNewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
         <@menuitem type="link" href="javascript:document.searchOtherOrders.submit()" text=uiLabelMap.OrderOtherOrders class="+${styles.action_nav!} ${styles.action_find!}" />
     </@menu>
   </#macro>
@@ -84,7 +84,7 @@ code package.
                 </#if>
                 <#--
                 <#if (orderHeader.salesChannelEnumId)?? && orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL">
-                  <form name="searchOtherOrders" method="post" action="<@ofbizUrl>searchorders</@ofbizUrl>">
+                  <form name="searchOtherOrders" method="post" action="<@pageUrl>searchorders</@pageUrl>">
                     <input type="hidden" name="lookupFlag" value="Y"/>
                     <input type="hidden" name="hideFields" value="Y"/>
                     <input type="hidden" name="partyId" value="${partyId}" />
@@ -105,8 +105,8 @@ code package.
                     <#list shipGroupShipments as shipment>
                           <@row>
                             <@cell columns=6>
-                          ${uiLabelMap.CommonNbr} <a href="<@ofbizInterWebappUrl>/facility/control/EditShipment?shipmentId=${shipment.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
-                                                          (<a target="_BLANK" href="<@ofbizInterWebappUrl>/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>)
+                          ${uiLabelMap.CommonNbr} <a href="<@serverUrl>/facility/control/EditShipment?shipmentId=${shipment.shipmentId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
+                                                          (<a target="_BLANK" href="<@serverUrl>/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>)
                           </@cell>
                         </@row>
                         <#if "SALES_ORDER" == orderHeader.orderTypeId && "ORDER_COMPLETED" == orderHeader.statusId>
@@ -119,7 +119,7 @@ code package.
                               <#if "UPS" == ((shipmentRouteSegment.carrierPartyId)!)>
                                 <a href="javascript:document.upsEmailReturnLabel${shipment_index}.submit();" class="${styles.link_nav_info_id!} ${styles.action_send!}">${uiLabelMap.ProductEmailReturnShippingLabelUPS}</a>
                               </#if>
-                              <form name="upsEmailReturnLabel${shipment_index}" method="post" action="<@ofbizUrl>upsEmailReturnLabelOrder</@ofbizUrl>">
+                              <form name="upsEmailReturnLabel${shipment_index}" method="post" action="<@pageUrl>upsEmailReturnLabelOrder</@pageUrl>">
                                 <input type="hidden" name="orderId" value="${orderId}"/>
                                 <input type="hidden" name="shipmentId" value="${shipment.shipmentId}"/>
                                 <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}" />
@@ -164,7 +164,7 @@ code package.
                   
                   <#-- ToDo: Validate usefulness
                       <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", request)>
-                         <a href="<@ofbizUrl>confirmationmailedit?orderId=${orderId}&amp;partyId=${partyId}&amp;sendTo=${contactMech.infoString}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_update!}" >${uiLabelMap.OrderSendConfirmationEmail}</a>
+                         <a href="<@pageUrl>confirmationmailedit?orderId=${orderId}&amp;partyId=${partyId}&amp;sendTo=${contactMech.infoString}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_update!}" >${uiLabelMap.OrderSendConfirmationEmail}</a>
                       <#else>
                          <a href="mailto:${contactMech.infoString}" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">(${uiLabelMap.OrderSendEmail})</a>
                       </#if>

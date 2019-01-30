@@ -12,12 +12,12 @@ code package.
   <#else>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("orderentry") text=uiLabelMap.OrderOrderItems class="+${styles.action_nav!}" />
+        <@menuitem type="link" href=makePageUrl("orderentry") text=uiLabelMap.OrderOrderItems class="+${styles.action_nav!}" />
        
         <#if (showProductLinks!false) && product?has_content>
           <#-- SCIPIO: Copied (moved) product edit link from editProduct.ftl -->
           <#if security.hasEntityPermission("CATALOG", "_UPDATE", request)><#-- SCIPIO: changed to _UPDATE from _CREATE -->
-            <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${rawString(product.productId)}${rawString(externalKeyParam!)}")
+            <@menuitem type="link" href=makeServerUrl("/catalog/control/ViewProduct?productId=${rawString(product.productId)}${rawString(externalKeyParam!)}")
               target="catalog" text=uiLabelMap.ProductEditProduct class="+${styles.action_nav!} ${styles.action_update!}" />
           </#if>
           <@cataloglib.productShopPageUrlMenuItem productId=product.productId/><#-- SCIPIO: Live product link -->
@@ -25,7 +25,7 @@ code package.
 
         <#if (showCategoryLinks!false) && productCategory?has_content><#-- SCIPIO: category links -->
           <#if security.hasEntityPermission("CATALOG", "_UPDATE", request)><#-- SCIPIO: changed to _UPDATE from _CREATE -->
-            <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/EditCategory?productCategoryId=${rawString(productCategory.productCategoryId)}${rawString(externalKeyParam!)}")
+            <@menuitem type="link" href=makeServerUrl("/catalog/control/EditCategory?productCategoryId=${rawString(productCategory.productCategoryId)}${rawString(externalKeyParam!)}")
               target="catalog" text=uiLabelMap.ProductEditCategory class="+${styles.action_nav!} ${styles.action_update!}" />
           </#if>
           <@cataloglib.categoryShopPageUrlMenuItem categoryId=productCategory.productCategoryId/><#-- SCIPIO: Live product link -->

@@ -8,7 +8,7 @@ code package.
     <#-- Receiving Results -->
     <#if receivedItems?has_content>
         <@section>
-            <p>${uiLabelMap.ProductReceiptForReturn} ${uiLabelMap.CommonNbr}<a href="<@ofbizInterWebappUrl>/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${returnHeader.returnId}</a></p>
+            <p>${uiLabelMap.ProductReceiptForReturn} ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}</@serverUrl>" class="${styles.link_nav_info_id!}">${returnHeader.returnId}</a></p>
             <#if "RETURN_RECEIVED" == returnHeader.getString("statusId")>
                 <@commonMsg type="result">${uiLabelMap.ProductReturnCompletelyReceived}</@commonMsg>
             </#if>
@@ -43,7 +43,7 @@ code package.
     <#-- Multi-Item Return Receiving -->
     <#if returnHeader?has_content>
         <@section>
-            <form method="post" action="<@ofbizUrl>receiveReturnedProduct</@ofbizUrl>" name="selectAllForm">
+            <form method="post" action="<@pageUrl>receiveReturnedProduct</@pageUrl>" name="selectAllForm">
                 <@fields type="default-manual-widgetonly">
                     <#-- general request fields -->
                     <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
@@ -58,8 +58,8 @@ code package.
                             <@tr>
                                 <@td>
                                     <@heading>
-                                        ${uiLabelMap.ProductReceiveReturn} <a href="<@ofbizInterWebappUrl>/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">#${returnHeader.returnId}</a>
-                                        <#if parameters.shipmentId?has_content>${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>EditShipment?shipmentId=${parameters.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${parameters.shipmentId}</a></#if>
+                                        ${uiLabelMap.ProductReceiveReturn} <a href="<@serverUrl>/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}</@serverUrl>" class="${styles.link_nav_info_id!}">#${returnHeader.returnId}</a>
+                                        <#if parameters.shipmentId?has_content>${uiLabelMap.ProductShipmentId} <a href="<@pageUrl>EditShipment?shipmentId=${parameters.shipmentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${parameters.shipmentId}</a></#if>
                                     </@heading>
                                 </@td>
                                 <@td align="right">
@@ -95,14 +95,14 @@ code package.
                                                         <#assign serializedInv = product.getRelated("InventoryItem", {"inventoryItemTypeId":"SERIALIZED_INV_ITEM"}, null, false)>
                                                         <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}" />
                                                         <@td width="45%">
-                                                            ${returnItem.returnItemSeqId}:&nbsp;<a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav_info_idname!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
+                                                            ${returnItem.returnItemSeqId}:&nbsp;<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@serverUrl>" target="catalog" class="${styles.link_nav_info_idname!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
                                                             <#if serializedInv?has_content><font color="red">**${uiLabelMap.ProductSerializedInventoryFound}**</font></#if>
                                                         </@td>
                                                     <#elseif orderItem?has_content>
                                                         <@td width="45%">
                                                             ${returnItem.returnItemSeqId}:&nbsp;<b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription!}&nbsp;&nbsp;
                                                             <input type="text" size="12" name="productId_o_${rowCount}" />
-                                                            <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
+                                                            <a href="<@serverUrl>/catalog/control/ViewProduct?${rawString(externalKeyParam)}</@serverUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
                                                         </@td>
                                                     <#else>
                                                         <@td width="45%">
@@ -199,7 +199,7 @@ code package.
                                 </@tr>
                                 <@tr>
                                     <@td colspan="2" align="right">
-                                        <a href="<@ofbizUrl>ReceiveInventory?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.ProductReturnToReceiving}</a>
+                                        <a href="<@pageUrl>ReceiveInventory?facilityId=${requestParameters.facilityId!}</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.ProductReturnToReceiving}</a>
                                     </@td>
                                 </@tr>
                             <#else>

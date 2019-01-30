@@ -19,35 +19,35 @@ they may need to be duplicated to:
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
-        form.action="<@ofbizUrl>checkoutoptions</@ofbizUrl>";
+        form.action="<@pageUrl>checkoutoptions</@pageUrl>";
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
-        form.action="<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/showcart</@pageUrl>";
         form.submit();
     } else if (mode == "NC") {
         // new credit card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment</@pageUrl>";
         form.submit();
     } else if (mode == "EC") {
         // edit credit card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "GC") {
         // edit gift card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editgiftcard?paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "NE") {
         // new eft account
-        form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment</@pageUrl>";
         form.submit();
     } else if (mode == "EE") {
         // edit eft account
-        form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "EG") {
         // edit gift card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     }
 }
@@ -203,9 +203,9 @@ var issuerId = "";
             </#if>
 
             <@menu type="button">
-                <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=CC&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseCreditCard /></#if>
-                <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??><@menuitem type="link"  href=makeOfbizUrl("setBilling?paymentMethodType=GC&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseGiftCard /></#if>
-                <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??><@menuitem type="link" href=makeOfbizUrl("setBilling?paymentMethodType=EFT&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseEFTAccount /></#if>
+                <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??><@menuitem type="link" href=makePageUrl("setBilling?paymentMethodType=CC&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseCreditCard /></#if>
+                <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??><@menuitem type="link"  href=makePageUrl("setBilling?paymentMethodType=GC&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseGiftCard /></#if>
+                <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??><@menuitem type="link" href=makePageUrl("setBilling?paymentMethodType=EFT&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseEFTAccount /></#if>
             </@menu>
 
             <#-- End Payment Method Selection -->

@@ -1,5 +1,5 @@
 <@section>
-    <form name="FindSegmentGroup" action="<@ofbizUrl>FindSegmentGroup</@ofbizUrl>" method="POST">
+    <form name="FindSegmentGroup" action="<@pageUrl>FindSegmentGroup</@pageUrl>" method="POST">
        <#assign segmentGroupTypes = delegator.findByAnd("SegmentGroupType", null, null, false) />
        <@field type="input" name="segmentGroupId" label=uiLabelMap.MarketingSegmentGroupSegmentGroupId value=(parameters.segmentGroupId!) />
        <@field type="select" name="segmentGroupTypeId" label=uiLabelMap.MarketingSegmentGroupSegmentGroupTypeId value=(parameters.segmentGroupTypeId!)>

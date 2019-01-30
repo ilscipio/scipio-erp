@@ -36,7 +36,7 @@ function clickAll(e) {
     <@alert type="warning">${uiLabelMap.ProductWarningProductNotVirtual}</@alert>
 </#if>
 <#if featureTypes?has_content && (featureTypes.size() > 0)>
-        <form method="post" action="<@ofbizUrl>QuickAddChosenVariants</@ofbizUrl>" name="selectAllForm">
+        <form method="post" action="<@pageUrl>QuickAddChosenVariants</@pageUrl>" name="selectAllForm">
             <input type="hidden" name="productId" value="${productId}" />
             <input type="hidden" name="_useRowSubmit" value="Y" />
             <input type="hidden" name="_checkGlobalScope" value="Y" />
@@ -76,7 +76,7 @@ function clickAll(e) {
                 </@td>
                 <@td>
                     <#list existingVariantProductIds as existingVariantProductId>
-                        <a href="<@ofbizUrl>ViewProduct?productId=${existingVariantProductId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${existingVariantProductId}</a>
+                        <a href="<@pageUrl>ViewProduct?productId=${existingVariantProductId}</@pageUrl>" class="${styles.link_nav_info_id!}">${existingVariantProductId}</a>
                     </#list>
                 </@td>
                 <@td align="right">
@@ -102,7 +102,7 @@ function clickAll(e) {
     <@commonMsg type="result-norecord">${uiLabelMap.ProductNoSelectableFeaturesFound}</@commonMsg>
 </#if>
 <@section title=uiLabelMap.ProductVariantAdd>
-    <form action="<@ofbizUrl>addVariantsToVirtual</@ofbizUrl>" method="post" name="addVariantsToVirtual">
+    <form action="<@pageUrl>addVariantsToVirtual</@pageUrl>" method="post" name="addVariantsToVirtual">
         <input type="hidden" name="productId" value="${productId}"/>
         <@field type="textarea" label=uiLabelMap.ProductVariantProductIds name="variantProductIdsBag" rows="6" cols="20"></@field>
         <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.ProductVariantAdd/>

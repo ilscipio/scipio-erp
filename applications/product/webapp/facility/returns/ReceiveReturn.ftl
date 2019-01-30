@@ -5,7 +5,7 @@ code package.
 -->
    
 <@section title=uiLabelMap.ProductReceiveReturn>
-    <form name="receiveInventoryReturn" method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>">
+    <form name="receiveInventoryReturn" method="post" action="<@pageUrl>ReceiveInventory</@pageUrl>">
         <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
         <input type="hidden" name="initialSelected" value="Y" />
         <@field type="input" label=uiLabelMap.ProductReturnNumber name="returnId" size="20" maxlength="20" value=(requestParameters.returnId!) />

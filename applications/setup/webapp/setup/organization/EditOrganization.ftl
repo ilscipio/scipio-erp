@@ -15,7 +15,7 @@
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-    <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=submitFormId action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["orgPartyId", "partyId"]/><#-- these will conflict with SetupWorker -->
         <@field type="hidden" name="isCreateOrganization" value=(organizationInfo??)?string("N","Y")/>
         

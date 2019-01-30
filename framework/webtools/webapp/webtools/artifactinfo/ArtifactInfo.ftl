@@ -6,8 +6,8 @@ code package.
 <#-- ToDo: Refactor - these artifacts seem like a copy and paste job to me. The only thing changing is really just the title... -->
 
 <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl("ArtifactInfo") text=uiLabelMap.CommonFind class="+${styles.action_nav!} ${styles.action_find!}"/>
-    <@menuitem type="link" href=makeOfbizUrl("ArtifactInfo?reloadArtifacts=Y") text=uiLabelMap.CommonReload class="+${styles.action_run_session!} ${styles.action_reload!}"/>
+    <@menuitem type="link" href=makePageUrl("ArtifactInfo") text=uiLabelMap.CommonFind class="+${styles.action_nav!} ${styles.action_find!}"/>
+    <@menuitem type="link" href=makePageUrl("ArtifactInfo?reloadArtifacts=Y") text=uiLabelMap.CommonReload class="+${styles.action_run_session!} ${styles.action_reload!}"/>
     <@menuitem type="generic">
       <@modal id="artifacts_recent" label="Recently Viewed" linkClass="+${styles.menu_button_item_link!} ${styles.action_run_local!} ${styles.action_show!}">
         <#-- SCIPIO: simplified list and moved under modal -->
@@ -28,7 +28,7 @@ code package.
 
     <#-- add form here to specify artifact info name. -->
     <@section title="Search Names/Locations">
-      <form name="ArtifactInfoByName" method="post" action="<@ofbizUrl>ArtifactInfo</@ofbizUrl>">
+      <form name="ArtifactInfoByName" method="post" action="<@pageUrl>ArtifactInfo</@pageUrl>">
         <@field type="text" name="name" value=(parameters.name!) size="40" label="Names/Locations"/>
         <@field type="select" name="type" label="Type">
           <@field type="option" value=""/>
@@ -41,7 +41,7 @@ code package.
       </form>
     </@section>
     <@section title="Search By Name and Type">
-      <form name="ArtifactInfoByNameAndType" method="post" action="<@ofbizUrl>ArtifactInfo</@ofbizUrl>">
+      <form name="ArtifactInfoByNameAndType" method="post" action="<@pageUrl>ArtifactInfo</@pageUrl>">
           <@field type="text" name="name" value=(parameters.name!) size="40" label="Name"/>
           <@field type="text" name="location" value=(parameters.location!) size="60" label="Location"/>
           <@field type="select" name="type" label="Type">
@@ -69,7 +69,7 @@ code package.
 
     <#-- SCIPIO -->
     <#macro artifactInfoFileLink id type location text class="">
-        <form name="${id}_form" id="${id}_form" method="post" action="<@ofbizUrl>ArtifactInfo</@ofbizUrl>" style="display:inline;">
+        <form name="${id}_form" id="${id}_form" method="post" action="<@pageUrl>ArtifactInfo</@pageUrl>" style="display:inline;">
             <input type="hidden" name="name" value="${location}"/>
             <input type="hidden" name="type" value="${type}"/>
             <input type="hidden" name="findType" value="search"/>
@@ -90,7 +90,7 @@ code package.
     <#if artifactInfo.getType() == "entity">
         <#if artifactInfo.modelEntity.getFieldsUnmodifiable()?has_content>
             <@section title="Entity Fields">
-                <a href="<@ofbizUrl>FindGeneric?entityName=${artifactInfo.modelEntity.getEntityName()}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@ofbizUrl>">All Entity Data</a>
+                <a href="<@pageUrl>FindGeneric?entityName=${artifactInfo.modelEntity.getEntityName()}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@pageUrl>">All Entity Data</a>
                 <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}">
                 <#list artifactInfo.modelEntity.getFieldsUnmodifiable() as modelField>
                     <@tr><@td>${modelField.getName()}<#if modelField.getIsPk()>*</#if></@td><@td>${modelField.getType()}</@td><@td>${modelField.getDescription()!}</@td></@tr>
@@ -451,7 +451,7 @@ code package.
         <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}">
         <#list serviceEcaArtifactInfo.serviceEcaRule.getEcaActionList() as ecaAction>
             <@tr>
-                <@td><a href="<@ofbizUrl>ArtifactInfo?type=${artifactInfo.getType()}&amp;uniqueId=${ecaAction.getServiceName()}</@ofbizUrl>">${ecaAction.getServiceName()}</a></@td>
+                <@td><a href="<@pageUrl>ArtifactInfo?type=${artifactInfo.getType()}&amp;uniqueId=${ecaAction.getServiceName()}</@pageUrl>">${ecaAction.getServiceName()}</a></@td>
                 <@td>${ecaAction.getServiceMode()}<#if ecaAction.isPersist()>-persisted</#if></@td>
             </@tr>
         </#list>
@@ -497,6 +497,6 @@ code package.
 
 <#macro displayArtifactInfoLink type uniqueId displayName>
 <#-- SCIPIO: This hardcoded encoding was probably due to stock hadn't configured the default yet...
-<a href="<@ofbizUrl>ArtifactInfo?type=${type}&amp;uniqueId=${uniqueId?url('ISO-8859-1')}</@ofbizUrl>">${displayName}</a>-->
-<a href="<@ofbizUrl>ArtifactInfo?type=${type}&amp;uniqueId=${rawString(uniqueId)?url}</@ofbizUrl>">${displayName}</a>
+<a href="<@pageUrl>ArtifactInfo?type=${type}&amp;uniqueId=${uniqueId?url('ISO-8859-1')}</@pageUrl>">${displayName}</a>-->
+<a href="<@pageUrl>ArtifactInfo?type=${type}&amp;uniqueId=${rawString(uniqueId)?url}</@pageUrl>">${displayName}</a>
 </#macro>

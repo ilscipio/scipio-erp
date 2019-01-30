@@ -11,7 +11,7 @@ code package.
             <li>
                 <@heading level=3>${productPromo.promoName!}</@heading>
                 ${escapeVal(productPromo.promoText!, 'htmlmarkup', {"allow":"internal"})}
-                <br/><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
+                <br/><a href="<@pageUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@pageUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
             </li>
         </#list>
     </ol>

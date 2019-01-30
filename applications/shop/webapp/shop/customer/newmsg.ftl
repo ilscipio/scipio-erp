@@ -9,19 +9,19 @@ code package.
         this code was BEFORE or LEFT of title, not after
         <div class="boxlink">
             <#if showMessageLinks?default("false")?upper_case == "TRUE">
-                <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
+                <a href="<@pageUrl>messagelist</@pageUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
             </#if>
         </div>
 -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <#if ((showMessageLinks!"FALSE")?upper_case) == "TRUE">
-          <@menuitem type="link" href=makeOfbizUrl("messagelist") text=uiLabelMap.EcommerceViewList />
+          <@menuitem type="link" href=makePageUrl("messagelist") text=uiLabelMap.EcommerceViewList />
         </#if>
     </@menu>
 </#macro>
 <@section title=(pageHeader!) menuContent=menuContent menuLayoutTitle="inline-title">
-      <form name="contactus" method="post" action="<@ofbizUrl>${submitRequest}</@ofbizUrl>">
+      <form name="contactus" method="post" action="<@pageUrl>${submitRequest}</@pageUrl>">
         <input type="hidden" name="partyIdFrom" value="${userLogin.partyId}"/>
         <input type="hidden" name="contactMechTypeId" value="WEB_ADDRESS"/>
         <input type="hidden" name="communicationEventTypeId" value="WEB_SITE_COMMUNICATI"/>
@@ -44,7 +44,7 @@ code package.
           </@tr>
           <@tr>
             <@td>${uiLabelMap.CommonFrom}</@td>
-            <@td>&nbsp;${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonClickHere}</a>)</@td>
+            <@td>&nbsp;${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@pageUrl>autoLogout</@pageUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonClickHere}</a>)</@td>
           </@tr>
           <#if partyIdTo?has_content>
             <#assign partyToName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo, true)>

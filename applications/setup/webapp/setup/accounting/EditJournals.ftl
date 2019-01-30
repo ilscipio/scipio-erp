@@ -24,14 +24,14 @@
             "type": "form",
             "mode": "show",
             "id": "eaj-newgljournal",
-            "formAction": makeOfbizUrl('setupCreateGlJournal'),
+            "formAction": makePageUrl('setupCreateGlJournal'),
             "defaultParams": wrapRawScript("function() { return; }")
         }
     }
 }>
 
 <#macro setupGlJournalForm id formActionType target params>
-    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=id name=id action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=[]/>
         <@field type="hidden" name="isAddGlJournal" value=(formActionType == "add")?string("Y", "N")/>
         <@field type="hidden" name="isCreateGlJournal" value=(formActionType == "new")?string("Y", "N")/>

@@ -6,7 +6,7 @@ code package.
 
 <@script>
   function quicklookup(element) {
-    window.location='<@ofbizUrl>LookupBulkAddSupplierProductsInApprovedOrder</@ofbizUrl>?orderId='+element.value;
+    window.location='<@pageUrl>LookupBulkAddSupplierProductsInApprovedOrder</@pageUrl>?orderId='+element.value;
   }
 </@script>
 
@@ -14,7 +14,7 @@ code package.
   <@section title=uiLabelMap.OrderAddToOrder>
     <@row>
       <@cell columns=6>
-        <form method="post" action="<@ofbizUrl>appendItemToOrder</@ofbizUrl>" name="appendItemForm">
+        <form method="post" action="<@pageUrl>appendItemToOrder</@pageUrl>" name="appendItemForm">
           <input type="hidden" size="25" name="orderId" value="${orderId!}"/>
           <#if !catalogCol?has_content>
               <input type="hidden" name="prodCatalogId" value=""/>

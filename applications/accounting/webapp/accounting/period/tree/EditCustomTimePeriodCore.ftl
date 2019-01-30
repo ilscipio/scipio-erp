@@ -69,7 +69,7 @@
 	    },
 	    markupSelectors: <@objectAsScript object=efpDefMarkupSelectors lang='js'/>,
 	    links: {           
-	    	getTimePeriodExtendedData: '<@ofbizUrl uri="getTimePeriodExtendedData" escapeAs="js"/>',
+	    	getTimePeriodExtendedData: '<@pageUrl uri="getTimePeriodExtendedData" escapeAs="js"/>',
 	    },
 	    callbacks: <@objectAsScript object=(efpCallbacks!{}) lang='js'/>,
 	    targetNodeInfo: <@objectAsScript object=(efpTargetNodeInfo!{}) lang='js'/>,

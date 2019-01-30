@@ -17,11 +17,11 @@ code package.
         <#if (shoppingCartSize > 0)>
           <#macro cartLinks>
             <@menu type="button">
-              <@menuitem type="link" href=makeOfbizUrl("view/showcart") text=uiLabelMap.OrderViewCart class="+${styles.action_nav!} ${styles.action_view!}" />
-              <@menuitem type="link" href=makeOfbizUrl("checkoutoptions") text=uiLabelMap.OrderCheckout class="+${styles.action_nav!} ${styles.action_begin!}"/>
-              <@menuitem type="link" href=makeOfbizUrl("quickcheckout") text=uiLabelMap.OrderCheckoutQuick class="+${styles.action_nav!} ${styles.action_begin!}"/>
-              <@menuitem type="link" href=makeOfbizUrl("onePageCheckout") text=uiLabelMap.EcommerceOnePageCheckout class="+${styles.action_nav!} ${styles.action_begin!}"/>
-              <@menuitem type="link" href=makeOfbizUrl("googleCheckout") text=uiLabelMap.EcommerceCartToGoogleCheckout class="+${styles.action_nav!} ${styles.action_begin!}"/>
+              <@menuitem type="link" href=makePageUrl("view/showcart") text=uiLabelMap.OrderViewCart class="+${styles.action_nav!} ${styles.action_view!}" />
+              <@menuitem type="link" href=makePageUrl("checkoutoptions") text=uiLabelMap.OrderCheckout class="+${styles.action_nav!} ${styles.action_begin!}"/>
+              <@menuitem type="link" href=makePageUrl("quickcheckout") text=uiLabelMap.OrderCheckoutQuick class="+${styles.action_nav!} ${styles.action_begin!}"/>
+              <@menuitem type="link" href=makePageUrl("onePageCheckout") text=uiLabelMap.EcommerceOnePageCheckout class="+${styles.action_nav!} ${styles.action_begin!}"/>
+              <@menuitem type="link" href=makePageUrl("googleCheckout") text=uiLabelMap.EcommerceCartToGoogleCheckout class="+${styles.action_nav!} ${styles.action_begin!}"/>
             </@menu>
           </#macro>
         
@@ -51,9 +51,9 @@ code package.
                 <@td>
                   <#if cartLine.getProductId()??>
                       <#if cartLine.getParentProductId()??>
-                          <a href="<@ofbizUrl uri="product?product_id="+escapeVal(cartLine.getParentProductId(), 'url')/>" class="${styles.link_nav_info_name!}">${cartLine.getName()}</a>
+                          <a href="<@pageUrl uri="product?product_id="+escapeVal(cartLine.getParentProductId(), 'url')/>" class="${styles.link_nav_info_name!}">${cartLine.getName()}</a>
                       <#else>
-                          <a href="<@ofbizUrl uri="product?product_id="+escapeVal(cartLine.getProductId(), 'url')/>" class="${styles.link_nav_info_name!}">${cartLine.getName()}</a>
+                          <a href="<@pageUrl uri="product?product_id="+escapeVal(cartLine.getProductId(), 'url')/>" class="${styles.link_nav_info_name!}">${cartLine.getName()}</a>
                       </#if>
                   <#else>
                     <strong>${cartLine.getItemTypeDescription()!}</strong>

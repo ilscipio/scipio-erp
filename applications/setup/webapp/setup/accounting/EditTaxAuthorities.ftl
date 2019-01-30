@@ -21,14 +21,14 @@
             "type": "form",
             "mode": "show",
             "id": "eta-newtaxauth",
-            "formAction": makeOfbizUrl('setupCreateTaxAuth'),
+            "formAction": makePageUrl('setupCreateTaxAuth'),
             "defaultParams": wrapRawScript("function() { return; }")
         }
     }
 }>
 
 <#macro setupTaxAuthForm id formActionType target params>
-    <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
+    <@form id=id name=id action=makePageUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=[]/>
         <@field type="hidden" name="isAddTaxAuthority" value=(formActionType == "add")?string("Y", "N")/>
         <@field type="hidden" name="isCreateTaxAuthority" value=(formActionType == "new")?string("Y", "N")/>

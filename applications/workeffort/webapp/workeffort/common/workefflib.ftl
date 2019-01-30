@@ -40,7 +40,7 @@
         }
     </@script>
     <div style="width:8em;"><#-- parent should decide this: class="${styles.float_right!}" -->
-      <form mode="get" action="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}</@ofbizUrl>" id="${formId}">
+      <form mode="get" action="<@pageUrl>${parameters._LAST_VIEW_NAME_}</@pageUrl>" id="${formId}">
         <input type="hidden" name="period" value="${period}" />
         <#-- Instead of startTime, we'll pass a startDate
         <input type="hidden" name="startTime" value="" />-->

@@ -40,7 +40,7 @@ public abstract class ContentRequestWorker {
      * it should be done before storing in the database - if/when needed.
      * having default as true would be dangerous!
      * <p>
-     * SCIPIO: 2017-07-04: imgSize has several enhanced behaviors; see <code>@ofbizContentUrl</code> docs.
+     * SCIPIO: 2017-07-04: imgSize has several enhanced behaviors; see <code>@contentUrl</code> docs.
      * <p>
      * SCIPIO: 2017-08-08: added autoVariant, imgWidth, imgHeight and imgVariantCfg parameters, enabled when
      * autoVariantMode is not null.
@@ -141,7 +141,7 @@ public abstract class ContentRequestWorker {
             // unhardcoded, because the uri may have been passed encoded in html or some other language.
             // It generally only works if the value is hardcoded straight into FTL, e.g.,
             // <#assign someUrl = "/images/defaultImage.jpg">
-            // <@ofbizContentUrl>${someUrl}</@ofbizContentUrl>
+            // <@contentUrl>${someUrl}</@contentUrl>
             // In Scipio we should probably just avoid having such exceptions, but leaving this
             // here for now for legacy compatibility with old templates.
             if(!"/images/defaultImage.jpg".equals(requestUrl)){

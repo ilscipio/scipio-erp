@@ -5,7 +5,7 @@ code package.
 -->
 
 <@section title="${rawLabel('SfaMergingFollowing')} ${rawLabel('SfaMergeLeads')}">
-  <form method="post" action="<@ofbizUrl>mergeContacts</@ofbizUrl>" class="basic-form">
+  <form method="post" action="<@pageUrl>mergeContacts</@pageUrl>" class="basic-form">
   <@fields type="default-manual">
     <#if contactInfoList?has_content >
       <#assign contactInfo1 = contactInfoList[0]/>

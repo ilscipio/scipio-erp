@@ -109,7 +109,7 @@
         "manage": {
             "type": "link",
             "target": "_blank",
-            "url": makeOfbizInterWebappUrl({"uri":'/catalog/control/EditProdCatalog', "extLoginKey":true}),
+            "url": makeServerUrl({"uri":'/catalog/control/EditProdCatalog', "extLoginKey":true}),
             "paramNames": {"prodCatalogId": true },
             "paramNamesMode": "explicit"
         }
@@ -176,7 +176,7 @@
         "manage": {
             "type": "link",
             "target": "_blank",
-            "url": makeOfbizInterWebappUrl({"uri":'/catalog/control/EditCategory', "extLoginKey":true}),
+            "url": makeServerUrl({"uri":'/catalog/control/EditCategory', "extLoginKey":true}),
             "paramNames": {"productCategoryId": true },
             "paramNamesMode": "explicit"
         }
@@ -219,7 +219,7 @@
         "manage": {
             "type": "link",
             "target": "_blank",
-            "url": makeOfbizInterWebappUrl({"uri":'/catalog/control/ViewProduct', "extLoginKey":true}),
+            "url": makeServerUrl({"uri":'/catalog/control/ViewProduct', "extLoginKey":true}),
             "paramNames": {"productId": true },
             "paramNamesMode": "explicit"
         }
@@ -234,7 +234,7 @@
 <#-- RENDERS DISPLAY OPTIONS -->
 <#macro ectExtrasArea extraArgs...>
   <@section><#-- title=uiLabelMap.CommonDisplayOptions -->
-    <@form action=makeOfbizUrl("setupCatalog") method="get">
+    <@form action=makePageUrl("setupCatalog") method="get">
       <@defaultWizardFormFields/>   
     <@fieldset title=uiLabelMap.CommonDisplayOptions collapsed=true> 
       <@field type="input" name="setupEctMaxProductsPerCat" label=uiLabelMap.ProductMaxProductsPerCategory 

@@ -300,7 +300,7 @@ public class CatalogUrlServlet extends HttpServlet {
 
     /**
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
-     * request encoding and supports everything that <code>@ofbizCatalogUrl</code> FTL macro supports.
+     * request encoding and supports everything that <code>@catalogUrl</code> FTL macro supports.
      * <p>
      * This version supports a webSiteId and contextPath that, if specified, will turn the link-building into an
      * inter-webapp mode that avoids use of session information.
@@ -327,7 +327,7 @@ public class CatalogUrlServlet extends HttpServlet {
 
     /**
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
-     * request encoding and supports everything that <code>@ofbizCatalogUrl</code> FTL macro supports.
+     * request encoding and supports everything that <code>@catalogUrl</code> FTL macro supports.
      * <p>
      * This version assumes the current webapp is the target webapp and may use session information.
      */
@@ -338,7 +338,7 @@ public class CatalogUrlServlet extends HttpServlet {
 
     /**
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
-     * request encoding and supports everything that <code>@ofbizCatalogUrl</code> FTL macro supports.
+     * request encoding and supports everything that <code>@catalogUrl</code> FTL macro supports.
      * <p>
      * This builds the link in a completely static, inter-webapp way, using no request information.
      */
@@ -350,7 +350,7 @@ public class CatalogUrlServlet extends HttpServlet {
 
     /**
      * SCIPIO: NEW, FULLY-FEATURED java-frontend catalog link building method, that passes everything through
-     * request encoding and supports everything that <code>@ofbizCatalogUrl</code> FTL macro supports.
+     * request encoding and supports everything that <code>@catalogUrl</code> FTL macro supports.
      * <p>
      * This builds the link in a completely static, inter-webapp way, using no request information, but may also optionally encode
      * the resulting link.

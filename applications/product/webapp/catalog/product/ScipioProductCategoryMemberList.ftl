@@ -1,13 +1,13 @@
 <@section>
     <#if productCategoryMemberList?has_content>  
          <#list productCategoryMemberList as productCategoryMember>
-            <form name="removeProductFromCategory_${productCategoryMember_index}" method="post" action="<@ofbizUrl>removeProductFromCategory</@ofbizUrl>">
+            <form name="removeProductFromCategory_${productCategoryMember_index}" method="post" action="<@pageUrl>removeProductFromCategory</@pageUrl>">
                   <input name="productId" type="hidden" value="${productCategoryMember.productId}"/>
                   <input name="productCategoryId" type="hidden" value="${productCategoryMember.productCategoryId}"/>
                   <input name="fromDate" type="hidden" value="${productCategoryMember.fromDate}"/>
             </form>
         </#list>
-        <form id="UpdateProductCategoryMember" name="UpdateProductCategoryMember" method="post" action="<@ofbizUrl>updateProductToCategory</@ofbizUrl>">            
+        <form id="UpdateProductCategoryMember" name="UpdateProductCategoryMember" method="post" action="<@pageUrl>updateProductToCategory</@pageUrl>">            
             <input name="_useRowSubmit" type="hidden" value="Y"/>
             <input name="productId" type="hidden" value="${parameters.productId}"/>
             <@table type="data-list" autoAltRows=true responsive=true scrollable=true>
@@ -34,7 +34,7 @@
                                  ${productCategoryMember.productId}
                             </@td>
                             <@td>
-                                  <a href="<@ofbizUrl>EditCategory?productCategoryId=${productCategoryMember.productCategoryId}</@ofbizUrl>" class="${styles.link_nav_info_name_long}">
+                                  <a href="<@pageUrl>EditCategory?productCategoryId=${productCategoryMember.productCategoryId}</@pageUrl>" class="${styles.link_nav_info_name_long}">
                                       ${productCategoryMember.productCategoryId} 
                                   </a>
                             </@td>

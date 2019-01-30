@@ -16,11 +16,11 @@ code package.
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
         <#if (maySelectItems!"N") == "Y" && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED">
-          <@menuitem type="link" href=makeOfbizUrl("makeReturn?orderId=${orderHeader.orderId}") class="+${styles.action_nav!}" text=uiLabelMap.OrderRequestReturn />
+          <@menuitem type="link" href=makePageUrl("makeReturn?orderId=${orderHeader.orderId}") class="+${styles.action_nav!}" text=uiLabelMap.OrderRequestReturn />
         </#if>
       </@menu>
     </#macro>
-    <#assign sectionTitle>${getLabel('OrderOrder')} <#if orderHeader?has_content>${getLabel('CommonNbr')}<a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a> </#if>${getLabel('CommonInformation')}</#assign>
+    <#assign sectionTitle>${getLabel('OrderOrder')} <#if orderHeader?has_content>${getLabel('CommonNbr')}<a href="<@pageUrl>orderstatus?orderId=${orderHeader.orderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a> </#if>${getLabel('CommonInformation')}</#assign>
     <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent>
         <@table type="fields">
             <#-- placing customer information -->

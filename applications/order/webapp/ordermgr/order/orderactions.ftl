@@ -11,7 +11,7 @@
               <#-- FIXME
               <#if !allShipments?has_content>
                   <@menuitem type="generic">
-                     <form action="<@ofbizInterWebappUrl>/facility/control/quickShipPurchaseOrder?externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" method="post">
+                     <form action="<@serverUrl>/facility/control/quickShipPurchaseOrder?externalLoginKey=${externalLoginKey}</@serverUrl>" method="post">
                        <input type="hidden" name="initialSelected" value="Y"/>
                        <input type="hidden" name="orderId" value="${orderId}"/>
                        <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
@@ -24,7 +24,7 @@
                      </form>
                   </@menuitem>
                   <@menuitem type="generic">
-                    <form name="receivePurchaseOrderForm" action="<@ofbizInterWebappUrl>/facility/control/quickShipPurchaseOrder?externalLoginKey=${externalLoginKey}</@ofbizInterWebappUrl>" method="post">
+                    <form name="receivePurchaseOrderForm" action="<@serverUrl>/facility/control/quickShipPurchaseOrder?externalLoginKey=${externalLoginKey}</@serverUrl>" method="post">
                       <input type="hidden" name="initialSelected" value="Y"/>
                       <input type="hidden" name="orderId" value="${orderId}"/>
                       <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
@@ -39,7 +39,7 @@
                   </@menuitem>
               <#else>
                   <@menuitem type="generic">
-                    <form name="receiveInventoryForm" action="<@ofbizInterWebappUrl>/facility/control/ReceiveInventory</@ofbizInterWebappUrl>" method="post">
+                    <form name="receiveInventoryForm" action="<@serverUrl>/facility/control/ReceiveInventory</@serverUrl>" method="post">
                       <input type="hidden" name="initialSelected" value="Y"/>
                       <input type="hidden" name="purchaseOrderId" value="${orderId!}"/>
                       <select name="facilityId">
@@ -51,7 +51,7 @@
                     <a href="javascript:document.receiveInventoryForm.submit()" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.OrderQuickReceivePurchaseOrder}</a>
                   </@menuitem>
                   <@menuitem type="generic">
-                    <form name="partialReceiveInventoryForm" action="<@ofbizInterWebappUrl>/facility/control/ReceiveInventory</@ofbizInterWebappUrl>" method="post">
+                    <form name="partialReceiveInventoryForm" action="<@serverUrl>/facility/control/ReceiveInventory</@serverUrl>" method="post">
                       <input type="hidden" name="initialSelected" value="Y"/>
                       <input type="hidden" name="purchaseOrderId" value="${orderId!}"/>
                       <input type="hidden" name="partialReceive" value="Y"/>
@@ -67,7 +67,7 @@
               
               <#if orderHeader.statusId != "ORDER_COMPLETED">
                   <@menuitem type="generic">
-                    <form action="<@ofbizUrl>completePurchaseOrder?externalLoginKey=${externalLoginKey}</@ofbizUrl>" method="post">
+                    <form action="<@pageUrl>completePurchaseOrder?externalLoginKey=${externalLoginKey}</@pageUrl>" method="post">
                      <input type="hidden" name="orderId" value="${orderId}"/>
                     <select name="facilityId">
                       <#list ownedFacilities as facility>
@@ -86,7 +86,7 @@
       
       <@menu type="button">
         <#if currentStatus.statusId == "ORDER_CREATED" || currentStatus.statusId == "ORDER_PROCESSING">
-          <@menuitem type="link" href="javascript:document.OrderApproveOrder.submit()" text=uiLabelMap.OrderApproveOrder class="+${styles.action_run_sys!} ${styles.action_updatestatus!}"><form name="OrderApproveOrder" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
+          <@menuitem type="link" href="javascript:document.OrderApproveOrder.submit()" text=uiLabelMap.OrderApproveOrder class="+${styles.action_run_sys!} ${styles.action_updatestatus!}"><form name="OrderApproveOrder" method="post" action="<@pageUrl>changeOrderStatus/orderview</@pageUrl>">
             <input type="hidden" name="statusId" value="ORDER_APPROVED"/>
             <input type="hidden" name="newStatusId" value="ORDER_APPROVED"/>
             <input type="hidden" name="setItemStatus" value="Y"/>
@@ -97,7 +97,7 @@
             <input type="hidden" name="fromDate" value="${fromDate!}"/>
           </form></@menuitem>
         <#elseif currentStatus.statusId == "ORDER_APPROVED">
-          <@menuitem type="link" href="javascript:document.OrderHold.submit()" text=uiLabelMap.OrderHold class="+${styles.action_run_sys!} ${styles.action_updatestatus!}"><form name="OrderHold" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
+          <@menuitem type="link" href="javascript:document.OrderHold.submit()" text=uiLabelMap.OrderHold class="+${styles.action_run_sys!} ${styles.action_updatestatus!}"><form name="OrderHold" method="post" action="<@pageUrl>changeOrderStatus/orderview</@pageUrl>">
             <input type="hidden" name="statusId" value="ORDER_HOLD"/>
             <input type="hidden" name="workEffortId" value="${workEffortId!}"/>
             <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -106,7 +106,7 @@
             <input type="hidden" name="fromDate" value="${fromDate!}"/>
           </form></@menuitem>
         <#elseif currentStatus.statusId == "ORDER_HOLD">
-          <@menuitem type="link" href="javascript:document.OrderApproveOrder.submit()" text=uiLabelMap.OrderApproveOrder class="+${styles.action_run_sys!} ${styles.action_updatestatus!}"><form name="OrderApproveOrder" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
+          <@menuitem type="link" href="javascript:document.OrderApproveOrder.submit()" text=uiLabelMap.OrderApproveOrder class="+${styles.action_run_sys!} ${styles.action_updatestatus!}"><form name="OrderApproveOrder" method="post" action="<@pageUrl>changeOrderStatus/orderview</@pageUrl>">
             <input type="hidden" name="statusId" value="ORDER_APPROVED"/>
             <input type="hidden" name="setItemStatus" value="Y"/>
             <input type="hidden" name="workEffortId" value="${workEffortId!}"/>
@@ -117,7 +117,7 @@
           </form></@menuitem>
         </#if>
         <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
-          <@menuitem type="link" href="javascript:document.OrderCancel.submit()" text=uiLabelMap.OrderCancelOrder class="+${styles.action_run_sys!} ${styles.action_terminate!}"><form name="OrderCancel" method="post" action="<@ofbizUrl>changeOrderStatus/orderview</@ofbizUrl>">
+          <@menuitem type="link" href="javascript:document.OrderCancel.submit()" text=uiLabelMap.OrderCancelOrder class="+${styles.action_run_sys!} ${styles.action_terminate!}"><form name="OrderCancel" method="post" action="<@pageUrl>changeOrderStatus/orderview</@pageUrl>">
             <input type="hidden" name="statusId" value="ORDER_CANCELLED"/>
             <input type="hidden" name="setItemStatus" value="Y"/>
             <input type="hidden" name="workEffortId" value="${workEffortId!}"/>
@@ -128,14 +128,14 @@
           </form></@menuitem>
         </#if>
         <#if setOrderCompleteOption>
-          <@menuitem type="link" href="javascript:document.OrderCompleteOrder.submit()" text=uiLabelMap.OrderCompleteOrder class="+${styles.action_run_sys!} ${styles.action_complete!} ${styles.action_importance_high!}"><form name="OrderCompleteOrder" method="post" action="<@ofbizUrl>changeOrderStatus</@ofbizUrl>">
+          <@menuitem type="link" href="javascript:document.OrderCompleteOrder.submit()" text=uiLabelMap.OrderCompleteOrder class="+${styles.action_run_sys!} ${styles.action_complete!} ${styles.action_importance_high!}"><form name="OrderCompleteOrder" method="post" action="<@pageUrl>changeOrderStatus</@pageUrl>">
             <input type="hidden" name="statusId" value="ORDER_COMPLETED"/>
             <input type="hidden" name="orderId" value="${orderId!}"/>
           </form></@menuitem>
         </#if>
         <#-- Migrated to OrderShippingSubTabBar
         <#if currentStatus.statusId == "ORDER_APPROVED" && orderHeader.orderTypeId == "SALES_ORDER">
-          <@menuitem type="link" href="javascript:document.PrintOrderPickSheet.submit()" text=uiLabelMap.FormFieldTitle_printPickSheet class="+${styles.action_run_sys!} ${styles.action_export!}"><form name="PrintOrderPickSheet" method="post" action="<@ofbizUrl>orderPickSheet.pdf</@ofbizUrl>" target="_BLANK">
+          <@menuitem type="link" href="javascript:document.PrintOrderPickSheet.submit()" text=uiLabelMap.FormFieldTitle_printPickSheet class="+${styles.action_run_sys!} ${styles.action_export!}"><form name="PrintOrderPickSheet" method="post" action="<@pageUrl>orderPickSheet.pdf</@pageUrl>" target="_BLANK">
             <input type="hidden" name="facilityId" value="${storeFacilityId!}"/>
             <input type="hidden" name="orderId" value="${orderHeader.orderId!}"/>
             <input type="hidden" name="maxNumberOfOrdersToPrint" value="1"/>
@@ -147,21 +147,21 @@
         <#-- Order Modification -->
         <#-- Disabled for now, until usefulness is evaluated
         <#if currentStatus.statusId != "ORDER_CANCELLED">
-          <@menuitem type="link" href=makeOfbizUrl("loadCartFromOrder?orderId=${orderId}&finalizeMode=init") text=uiLabelMap.OrderCreateAsNewOrder class="+${styles.action_run_session!} ${styles.action_add!}"/>
+          <@menuitem type="link" href=makePageUrl("loadCartFromOrder?orderId=${orderId}&finalizeMode=init") text=uiLabelMap.OrderCreateAsNewOrder class="+${styles.action_run_session!} ${styles.action_add!}"/>
         </#if>
         --> 
         <#if currentStatus.statusId == "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
-          <@menuitem type="link" href=makeOfbizUrl("loadCartFromOrder?orderId=${orderId}&finalizeMode=init") text=uiLabelMap.OrderCreateReplacementOrder class="+${styles.action_run_sys!} ${styles.action_add!}"/>
+          <@menuitem type="link" href=makePageUrl("loadCartFromOrder?orderId=${orderId}&finalizeMode=init") text=uiLabelMap.OrderCreateReplacementOrder class="+${styles.action_run_sys!} ${styles.action_add!}"/>
         </#if>
         <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
-          <@menuitem type="link" href=makeOfbizUrl("editOrderItems?orderId=${orderId}") text=uiLabelMap.OrderEditItems class="+${styles.action_nav!}"/>
+          <@menuitem type="link" href=makePageUrl("editOrderItems?orderId=${orderId}") text=uiLabelMap.OrderEditItems class="+${styles.action_nav!}"/>
         </#if>
 
         <#-- Shipping -->
         <#-- Migreated to Shipment Information-->
             <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
               <@menuitem type="generic">
-                 <form action="<@ofbizUrl>createOrderItemShipGroup</@ofbizUrl>" method="post">
+                 <form action="<@pageUrl>createOrderItemShipGroup</@pageUrl>" method="post">
                     <input type="hidden" name="orderId" value="${orderId}"/>
                     <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderCreateShipGroup}"/>
                  </form>
@@ -171,7 +171,7 @@
                 <#if orderHeader.orderTypeId == "SALES_ORDER">
                     <#if orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_SENT">
                          <@menuitem type="generic">
-                             <form action="<@ofbizUrl>quickShipOrder</@ofbizUrl>" method="post">
+                             <form action="<@pageUrl>quickShipOrder</@pageUrl>" method="post">
                                <input type="hidden" name="orderId" value="${orderId}"/>
                               <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderQuickShipEntireOrder}"/>
                              </form>
@@ -185,7 +185,7 @@
             <#if returnableItems?has_content>
                 <#if currentStatus.statusId == "ORDER_COMPLETED">
                     <@menuitem type="generic">
-                        <form action="<@ofbizUrl>quickreturn</@ofbizUrl>" method="post">
+                        <form action="<@pageUrl>quickreturn</@pageUrl>" method="post">
                             <input type="hidden" name="orderId" value="${orderId!}"/>
                             <input type="hidden" name="partyId" value="${partyId!}"/>
                             <input type="hidden" name="returnHeaderTypeId" value="${returnHeaderTypeId!}"/>
@@ -197,7 +197,7 @@
             </#if>-->
             <#if currentStatus.statusId == "ORDER_COMPLETED">
               <@menuitem type="generic">
-                        <form action="<@ofbizUrl>quickreturn</@ofbizUrl>" method="post">
+                        <form action="<@pageUrl>quickreturn</@pageUrl>" method="post">
                             <input type="hidden" name="orderId" value="${orderId!}"/>
                             <input type="hidden" name="partyId" value="${partyId!}"/>
                             <input type="hidden" name="returnHeaderTypeId" value="${returnHeaderTypeId!}"/>
@@ -208,7 +208,7 @@
             </#if>
         </#if>
         <#-- Export -->
-            <@menuitem type="link" href=makeOfbizUrl("order.pdf?orderId=${orderId}") text="PDF" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
+            <@menuitem type="link" href=makePageUrl("order.pdf?orderId=${orderId}") text="PDF" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
       </@menu>
        
   </@section>

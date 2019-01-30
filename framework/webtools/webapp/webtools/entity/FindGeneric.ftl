@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <@section>
-        <form method="post" action="<@ofbizUrl>FindGeneric?entityName=${entityName}</@ofbizUrl>">
+        <form method="post" action="<@pageUrl>FindGeneric?entityName=${entityName}</@pageUrl>">
           <input type="hidden" name="find" value="true"/>
           <input type="hidden" name="searchOptions_collapsed" value="true"/>
           <@table type="data-list">

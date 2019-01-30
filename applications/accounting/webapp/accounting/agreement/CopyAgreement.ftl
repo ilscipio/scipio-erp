@@ -5,7 +5,7 @@ code package.
 -->
 <#if agreement??>
 <@section title=uiLabelMap.PageTitleCopyAgreement>
-    <form action="<@ofbizUrl>copyAgreement</@ofbizUrl>" method="post">
+    <form action="<@pageUrl>copyAgreement</@pageUrl>" method="post">
         <input type="hidden" name="agreementId" value="${agreementId}"/>    
         <@field type="checkbox" label=uiLabelMap.AccountingAgreementTerms name="copyAgreementTerms" value="Y" checked=true />
         <@field type="checkbox" label=uiLabelMap.ProductProducts name="copyAgreementProducts" value="Y" checked=true />

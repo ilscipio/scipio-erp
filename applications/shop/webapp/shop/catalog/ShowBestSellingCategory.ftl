@@ -34,14 +34,14 @@ code package.
                         <@td>
                             <div class="productsummary">
                                 <div class="smallimage">
-                                    <#-- SCIPIO: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
-                                    <a href="<@ofbizCatalogUrl productCategoryId=productCategoryId/>">
+                                    <#-- SCIPIO: NOTE: category link changed from @catalogAltUrl to @catalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
+                                    <a href="<@catalogUrl productCategoryId=productCategoryId/>">
                                         <span class="popup_link"><img alt="Small Image" src="${categoryImageUrl}"/></span>
                                     </a>
                                 </div>
                                 <div class="productbuy">
-                                    <#-- SCIPIO: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
-                                    <a class="${styles.link_nav_info_name!}"  style="font-size:12px" href="<@ofbizCatalogUrl productCategoryId=productCategoryId/>">${productCategory.categoryName!productCategoryId}</a>
+                                    <#-- SCIPIO: NOTE: category link changed from @catalogAltUrl to @catalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
+                                    <a class="${styles.link_nav_info_name!}"  style="font-size:12px" href="<@catalogUrl productCategoryId=productCategoryId/>">${productCategory.categoryName!productCategoryId}</a>
                                 </div>
                                 <div class="productinfo">
                                     <ul>
@@ -50,8 +50,8 @@ code package.
                                         <#list productCategoryMembers as productCategoryMember>
                                             <#if (i > 2)>
                                                 <#if productCategoryMembers[i]?has_content>
-                                                    <#-- SCIPIO: NOTE: category link changed from @ofbizCatalogAltUrl to @ofbizCatalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
-                                                    <a class="${styles.link_nav!} ${styles.action_view!}" href="<@ofbizCatalogUrl productCategoryId=productCategoryId/>">
+                                                    <#-- SCIPIO: NOTE: category link changed from @catalogAltUrl to @catalogUrl due to possible loss of browsing information by CatalogUrlFilter and consistency -->
+                                                    <a class="${styles.link_nav!} ${styles.action_view!}" href="<@catalogUrl productCategoryId=productCategoryId/>">
                                                         <span>More...</span>
                                                     </a>
                                                 </#if>
@@ -60,7 +60,7 @@ code package.
                                             <#if productCategoryMember?has_content>
                                                 <#assign product = delegator.findOne("Product", {"productId":productCategoryMember.productId}, false)>
                                                 <li class="browsecategorytext">
-                                                    <a class="${styles.link_nav_info_name!}" href="<@ofbizCatalogAltUrl productCategoryId="PROMOTIONS" productId="${product.productId}"/>">
+                                                    <a class="${styles.link_nav_info_name!}" href="<@catalogAltUrl productCategoryId="PROMOTIONS" productId="${product.productId}"/>">
                                                         ${product.productName!product.productId}
                                                     </a>
                                                 </li>

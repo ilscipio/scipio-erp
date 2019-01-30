@@ -6,12 +6,12 @@ code package.
 
 <@section title=uiLabelMap.PageTitleReturnHeader>
         <#if returnHeader??>
-            <form name="returnhead" method="post" action="<@ofbizUrl>updateReturn</@ofbizUrl>">
+            <form name="returnhead" method="post" action="<@pageUrl>updateReturn</@pageUrl>">
             <input type="hidden" name="returnId" value="${returnHeader.returnId}" />
             <input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
             <input type="hidden" name="currentStatusId" value="${returnHeader.statusId!}" />
         <#else>
-            <form name="returnhead" method="post" action="<@ofbizUrl>createReturn</@ofbizUrl>">
+            <form name="returnhead" method="post" action="<@pageUrl>createReturn</@pageUrl>">
             <input type="hidden" name="returnHeaderTypeId" value="CUSTOMER_RETURN"/>
         </#if>
 
@@ -91,7 +91,7 @@ code package.
                 <@field type="input" size="20" name="paymentMethodId" value=((returnHeader.paymentMethodId)!)/>
               </#if>
               <#if (returnHeader.fromPartyId)?has_content>
-                <a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
+                <a href="<@serverUrl>/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${rawString(externalKeyParam)}</@serverUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
           </@field>
           <@field type="select" label=uiLabelMap.OrderReturnNeedsAutoReceive name="needsInventoryReceive">

@@ -23,7 +23,7 @@ code package.
 <#if (orderHeader.orderId)??>
   <@heading>
     <#-- SCIPIO: This page doesn't actually show a full invoice - only the PDF is a full invoice (with tax information) - so "PDF" beside title is misleading -->
-    ${getLabel("OrderOrderId")}: ${orderHeader.orderId}<#--<#if !maySelect && !printable> (<a href="<@ofbizUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@ofbizUrl>" target="_BLANK" class="${styles.action_export!}">${uiLabelMap.CommonPdf} ${uiLabelMap.CommonInvoice}</a>)</#if>-->
+    ${getLabel("OrderOrderId")}: ${orderHeader.orderId}<#--<#if !maySelect && !printable> (<a href="<@pageUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@pageUrl>" target="_BLANK" class="${styles.action_export!}">${uiLabelMap.CommonPdf} ${uiLabelMap.CommonInvoice}</a>)</#if>-->
   </@heading>
 </#if>
 
@@ -33,21 +33,21 @@ code package.
     <@menu args=menuArgs>
       <#-- SCIPIO: No reason to hide it: 
       <#if maySelect>-->
-      <@menuitem type="link" href=makeOfbizUrl({"uri":"orderprint?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
+      <@menuitem type="link" href=makePageUrl({"uri":"orderprint?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
       <#--</#if>-->
       <#-- above will be better
       <#if maySelect>
-        <@menuitem type="link" href=makeOfbizUrl({"uri":"orderviewonly?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
+        <@menuitem type="link" href=makePageUrl({"uri":"orderviewonly?orderId=" + (orderHeader.orderId)!, "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text=uiLabelMap.CommonPrintable />
       </#if>
       -->
       <#-- SCIPIO: Always show it here: <#if maySelect>-->
       <#-- NOTE: The order may actually have more than one invoice available. On this page, show only this one for now, because the
           others don't become available until after order is completed and stuff. -->
-      <@menuitem type="link" href=makeOfbizUrl({"uri":"order.pdf?orderId=" + escapeVal((orderHeader.orderId)!, 'js'), "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text="${rawLabel('EcommerceOrderConfirmation')} (${rawLabel('CommonPdf')})" />
+      <@menuitem type="link" href=makePageUrl({"uri":"order.pdf?orderId=" + escapeVal((orderHeader.orderId)!, 'js'), "fullPath":true}) target="_BLANK" class="+${styles.action_export!}" text="${rawLabel('EcommerceOrderConfirmation')} (${rawLabel('CommonPdf')})" />
       <#--</#if>-->
       <#-- SCIPIO: TODO: Uncomment once converted/tested
       <#if maySelect && (returnLink!"N") == "Y" && ((orderHeader.statusId)!) == "ORDER_COMPLETED" && (roleTypeId!) == "PLACING_CUSTOMER">
-        <@menuitem type="link" href=makeOfbizUrl("makeReturn?orderId=${orderHeader.orderId}") text=uiLabelMap.OrderRequestReturn />
+        <@menuitem type="link" href=makePageUrl("makeReturn?orderId=${orderHeader.orderId}") text=uiLabelMap.OrderRequestReturn />
       </#if>-->
     </@menu>
   </#if>

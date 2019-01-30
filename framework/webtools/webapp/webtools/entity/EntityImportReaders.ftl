@@ -7,7 +7,7 @@ code package.
   <#assign availReadersStr = allReaderNames?sort?join(", ")>
   <p>${uiLabelMap.WebtoolsXMLImportReadersInfo} ${uiLabelMap.WebtoolsAvailableReaders}: <em>${availReadersStr}</em></p>
 
-  <form method="post" action="<@ofbizUrl>entityImportReaders</@ofbizUrl>">
+  <form method="post" action="<@pageUrl>entityImportReaders</@pageUrl>">
     <@field type="text" name="readers" value=(readers!"seed") label=uiLabelMap.WebtoolsReadersImportLabel size="60" 
         tooltip=(rawLabel('WebtoolsReaderImportNotice')+" - "+rawLabel('WebtoolsAvailableReaders')+": "+availReadersStr)/>
 

@@ -57,7 +57,7 @@ function getPaymentRunningTotal() {
 
 </@script>
 <@section>
-    <form id="depositWithdrawPaymentsForm" name="depositWithdrawPaymentsForm" method="post" action="<@ofbizUrl>depositWithdrawPayments</@ofbizUrl>">
+    <form id="depositWithdrawPaymentsForm" name="depositWithdrawPaymentsForm" method="post" action="<@pageUrl>depositWithdrawPayments</@pageUrl>">
         <#if paymentList?has_content>
             <input type="hidden" name="organizationPartyId" value="${organizationPartyId!}" />
             <input type="hidden" name="finAccountId" value="${finAccountId!}" />
@@ -92,7 +92,7 @@ function getPaymentRunningTotal() {
                 </@thead>
                 <#list paymentList as payment>
                     <@tr>
-                        <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${payment.paymentId}</a></@td>
+                        <@td><a href="<@pageUrl>paymentOverview?paymentId=${payment.paymentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${payment.paymentId}</a></@td>
                         <@td>${payment.paymentTypeDesc!}</@td>
                         <@td>${(payment.partyFromFirstName)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}</@td>
                         <@td>${(payment.partyToFirstName)!} ${(payment.partyToLastName)!} ${(payment.partyToGroupName)!}</@td>

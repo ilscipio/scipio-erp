@@ -9,7 +9,7 @@ code package.
 <p>Your Customer Request ${custRequest.custRequestName!} [${custRequest.custRequestId}] has been completed.
 <br /><br />
 The status and used hours can always be checked at the url: <br />
-<a href="<@ofbizInterWebappUrl>/myportal/control/showPortletMainDecorator?portalPortletId=ViewCustRequest&amp;id=${custRequest.custRequestId}</@ofbizInterWebappUrl>"><@ofbizInterWebappUrl>/myportal/control/ViewRequest?custRequestId=${custRequest.custRequestId}</@ofbizInterWebappUrl></a>
+<a href="<@serverUrl>/myportal/control/showPortletMainDecorator?portalPortletId=ViewCustRequest&amp;id=${custRequest.custRequestId}</@serverUrl>"><@serverUrl>/myportal/control/ViewRequest?custRequestId=${custRequest.custRequestId}</@serverUrl></a>
 <br /><br />
 Regards.<br /><br />
 Thank you for your business.

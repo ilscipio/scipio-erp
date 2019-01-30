@@ -18,7 +18,7 @@ code package.
 <#assign calEventVerbose = calEventVerbose!true>
     
 <#if workEffort.workEffortTypeId == "PROD_ORDER_HEADER">
-  <a href="<@ofbizInterWebappUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!} event">
+  <a href="<@serverUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}</@serverUrl>" class="${styles.link_nav_info_id!} event">
     ${workEffortLinkLabel}
     <#--${workEffort.workEffortId}-->
   </a>
@@ -27,7 +27,7 @@ code package.
   <#if workEffortStatusLabel?has_content> <span class="cal-entry-status">[${workEffortStatusLabel}]</span></#if>
   <#if workOrderItemFulfillments?has_content>
     <#list workOrderItemFulfillments as workOrderItemFulfillment>
-      <br/>${uiLabelMap.OrderOrderId}: <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${workOrderItemFulfillment.orderId}</@ofbizInterWebappUrl>" class="event">${workOrderItemFulfillment.orderId} / ${workOrderItemFulfillment.orderItemSeqId}</a>
+      <br/>${uiLabelMap.OrderOrderId}: <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${workOrderItemFulfillment.orderId}</@serverUrl>" class="event">${workOrderItemFulfillment.orderId} / ${workOrderItemFulfillment.orderItemSeqId}</a>
       <#assign orderItemAndShipGroupAssocs = delegator.findByAnd("OrderHeaderItemAndShipGroup", {"orderId", workOrderItemFulfillment.orderId, "orderItemSeqId", workOrderItemFulfillment.orderItemSeqId}, null, false)!/>
       <#list orderItemAndShipGroupAssocs as orderItemAndShipGroupAssoc>
         <#if orderItemAndShipGroupAssoc.shipByDate?has_content>
@@ -38,7 +38,7 @@ code package.
   </#if>
 </#if>
 <#elseif workEffort.workEffortTypeId == "PROD_ORDER_TASK">
-  <a href="<@ofbizInterWebappUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortParentId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_desc!} event">
+  <a href="<@serverUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortParentId}</@serverUrl>" class="${styles.link_nav_info_desc!} event">
     ${workEffortLinkLabel}
     <#--${workEffort.workEffortParentId} / ${workEffort.workEffortId}-->
   </a>
@@ -48,7 +48,7 @@ code package.
   <#if workEffort.reservPersons??>&nbsp;Persons: ${workEffort.reservPersons}</#if>
   <#if parentWorkOrderItemFulfillments?has_content>
     <#list parentWorkOrderItemFulfillments as parentWorkOrderItemFulfillment>
-      <br/>${uiLabelMap.OrderOrderId}: <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${parentWorkOrderItemFulfillment.orderId}</@ofbizInterWebappUrl>" class="event">${parentWorkOrderItemFulfillment.orderId} / ${parentWorkOrderItemFulfillment.orderItemSeqId}</a>
+      <br/>${uiLabelMap.OrderOrderId}: <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${parentWorkOrderItemFulfillment.orderId}</@serverUrl>" class="event">${parentWorkOrderItemFulfillment.orderId} / ${parentWorkOrderItemFulfillment.orderItemSeqId}</a>
       <#assign orderItemAndShipGroupAssocs = delegator.findByAnd("OrderHeaderItemAndShipGroup", {"orderId", parentWorkOrderItemFulfillment.orderId, "orderItemSeqId", parentWorkOrderItemFulfillment.orderItemSeqId}, null, false)!/>
       <#list orderItemAndShipGroupAssocs as orderItemAndShipGroupAssoc>
         <#if orderItemAndShipGroupAssoc.shipByDate?has_content>
@@ -63,7 +63,7 @@ code package.
   <#if !editCalEventUrl??>
     <#assign editCalEventUrl = parameters._LAST_VIEW_NAME_>
   </#if>
-  <a href="<@ofbizUrl>${editCalEventUrl}?form=edit&amp;parentTypeId=${parentTypeId!}&amp;period=${periodType!}&amp;start=${parameters.start!}&amp;workEffortId=${workEffort.workEffortId}${addlParam!}${urlParam!}</@ofbizUrl>" class="event">
+  <a href="<@pageUrl>${editCalEventUrl}?form=edit&amp;parentTypeId=${parentTypeId!}&amp;period=${periodType!}&amp;start=${parameters.start!}&amp;workEffortId=${workEffort.workEffortId}${addlParam!}${urlParam!}</@pageUrl>" class="event">
     ${workEffortLinkLabel}
     <#--${workEffort.workEffortId}-->
   </a>

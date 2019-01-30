@@ -21,7 +21,7 @@ code package.
         <@tr>
           <@td>${rowNumber}</@td>
           <@td>${reference}</@td>
-          <@td align="center"><#if (refNum > 0)><a href="<@ofbizUrl>ViewReferences?sourceKey=${reference}</@ofbizUrl>">${refNum}</a><#else>${refNum}</#if></@td>
+          <@td align="center"><#if (refNum > 0)><a href="<@pageUrl>ViewReferences?sourceKey=${reference}</@pageUrl>">${refNum}</a><#else>${refNum}</#if></@td>
         </@tr>
         <#assign rowNumber = rowNumber + 1>
       </#if>

@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<form method="post" action="<@ofbizUrl>SearchInventoryItemsByLabels</@ofbizUrl>">
+<form method="post" action="<@pageUrl>SearchInventoryItemsByLabels</@pageUrl>">
   <input type="hidden" name="facilityId" value="${facility.facilityId}"/>
   <@table type="data-list">
   <#assign index = 0>

@@ -10,7 +10,7 @@ code package.
             <@tr>
               <@td class="${styles.grid_large!}2">${uiLabelMap.ProductPrimaryCategory}
               </@td>
-              <@td colspan="3"><a href="<@ofbizUrl>EditCategory?productCategoryId=${product.primaryProductCategoryId}</@ofbizUrl>">${(productCategory.categoryName?default(product.primaryProductCategoryId))!}</a></@td>
+              <@td colspan="3"><a href="<@pageUrl>EditCategory?productCategoryId=${product.primaryProductCategoryId}</@pageUrl>">${(productCategory.categoryName?default(product.primaryProductCategoryId))!}</a></@td>
             </@tr>
         </#if>
     </@table>

@@ -7,7 +7,7 @@
       <#if showMain>
         <#-- Link to dashboard -->
         <li<@compiledClassAttribStr class=styles.nav_breadcrumb!/>>
-          <#if showLinks><a href="<@ofbizUrl>main</@ofbizUrl>"<@compiledClassAttribStr class=styles.nav_breadcrumb_link!/>></#if>${uiLabelMap.CommonMain}<#if showLinks></a></#if>
+          <#if showLinks><a href="<@pageUrl>main</@pageUrl>"<@compiledClassAttribStr class=styles.nav_breadcrumb_link!/>></#if>${uiLabelMap.CommonMain}<#if showLinks></a></#if>
         </li>
       </#if>
         
@@ -37,7 +37,7 @@
                   <#local elemClass = addClassArg(elemClass, styles.nav_breadcrumb_active!)>
                 </#if>
                 <li<@compiledClassAttribStr class=elemClass/>><#rt/>
-                   <#if showLinks><a href="<@ofbizCatalogUrl currentCategoryId=rawCrumb previousCategoryId=(previousCategoryId!"")/>"<@compiledClassAttribStr class=(styles.nav_breadcrumb_link!)/>></#if><#t>
+                   <#if showLinks><a href="<@catalogUrl currentCategoryId=rawCrumb previousCategoryId=(previousCategoryId!"")/>"<@compiledClassAttribStr class=(styles.nav_breadcrumb_link!)/>></#if><#t>
                      <#local crumbText = (catContentWrapper.get("CATEGORY_NAME"))!>
                      <#if !crumbText?has_content>
                        <#local crumbText = (catContentWrapper.get("DESCRIPTION"))!>

@@ -2,7 +2,7 @@
 
 <@modal id="copyCategoryProductMembers">
     <@section title=uiLabelMap.ProductCopyProductCategoryMembersToAnotherCategory>
-        <form method="post" action="<@ofbizUrl>copyCategoryProductMembers</@ofbizUrl>" name="copyCategoryProductMembersForm">
+        <form method="post" action="<@pageUrl>copyCategoryProductMembers</@pageUrl>" name="copyCategoryProductMembersForm">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
             <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
             <@row>

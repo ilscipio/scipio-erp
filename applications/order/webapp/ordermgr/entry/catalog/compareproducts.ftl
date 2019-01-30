@@ -13,13 +13,13 @@ code package.
     <#assign productContentWrapper = productData.productContentWrapper/>
     <#assign price = productData.priceMap/>
     <#-- SCIPIO: NOTE: productUrl manually (js-)html-escaped below -->
-    <#assign productUrl><@ofbizUrl uri="product?product_id="+escapeVal(product.productId, 'url')/></#assign>
+    <#assign productUrl><@pageUrl uri="product?product_id="+escapeVal(product.productId, 'url')/></#assign>
     <#assign smallImageUrl = productContentWrapper.get("SMALL_IMAGE_URL", "url")!/>
     <#if !smallImageUrl?has_content>
         <#assign smallImageUrl = "/images/defaultImage.jpg"/>
     </#if>
         <@td style="width:${tdWidth?c}%;">
-            <img src="<@ofbizContentUrl ctxPrefix=true>${smallImageUrl}</@ofbizContentUrl>" alt="Small Image"/><br />
+            <img src="<@contentUrl ctxPrefix=true>${smallImageUrl}</@contentUrl>" alt="Small Image"/><br />
             ${productContentWrapper.get("PRODUCT_NAME")!}<br />
     <#if totalPrice??>
             <div>${uiLabelMap.ProductAggregatedPrice}: <span class="basePrice"><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
@@ -56,7 +56,7 @@ code package.
     <#elseif product.requireAmount?? && product.requireAmount == "Y"/>
                 <a href="javascript:doGetViaParent('${escapeVal(productUrl, 'js-html')}}');" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseAmount}...</a>
     <#else>
-                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="compareFormAdd${product_index}">
+                <form method="post" action="<@pageUrl>additem</@pageUrl>" name="compareFormAdd${product_index}">
                     <input type="hidden" name="add_product_id" value="${product.productId}"/>
                     <input type="text" size="5" name="quantity" value="1"/>
                     <input type="hidden" name="clearSearch" value="N"/>
@@ -64,7 +64,7 @@ code package.
                 <a href="javascript:doPostViaParent('compareFormAdd${product_index}');" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
 
         <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
-                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="compareFormAddDefault${product_index}">
+                <form method="post" action="<@pageUrl>additem</@pageUrl>" name="compareFormAddDefault${product_index}">
                     <input type="hidden" name="add_product_id" value="${prodCatMem.productId!}"/>
                     <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>
                     <input type="hidden" name="clearSearch" value="N"/>
@@ -160,7 +160,7 @@ code package.
     <#elseif product.requireAmount?? && product.requireAmount == "Y"/>
                 <a href="javascript:doGetViaParent('${escapeVal(productUrl, 'js-html')}}');" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseAmount}...</a>
     <#else>
-                <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="compare2FormAdd${product_index}">
+                <form method="post" action="<@pageUrl>additem</@pageUrl>" name="compare2FormAdd${product_index}">
                     <input type="hidden" name="add_product_id" value="${product.productId}"/>
                     <input type="text" size="5" name="quantity" value="1"/>
                     <input type="hidden" name="clearSearch" value="N"/>

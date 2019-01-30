@@ -13,7 +13,7 @@ code package.
   </@row>
   <@row>
     <@cell class="+name">
-      <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${productContentWrapper.get("PRODUCT_NAME")!}</a>
+      <a href="<@pageUrl>product?product_id=${product.productId}</@pageUrl>" class="${styles.link_nav_info_name!}">${productContentWrapper.get("PRODUCT_NAME")!}</a>
     </@cell>
   </@row>
   <@row>
@@ -46,7 +46,7 @@ code package.
       <span class="${styles.text_color_alert!}">${uiLabelMap.ProductNoLongerAvailable}</a>
     <#-- check to see if the product is a virtual product -->
     <#elseif product.isVirtual?default("N") == "Y">
-      <a href="<@ofbizUrl>product?<#if categoryId??>category_id=${categoryId}&amp;</#if>product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseVariations}...</a>
+      <a href="<@pageUrl>product?<#if categoryId??>category_id=${categoryId}&amp;</#if>product_id=${product.productId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseVariations}...</a>
     <#else>
       <@field type="input" size="5" name="quantity_${product.productId}" value="" />
     </#if>

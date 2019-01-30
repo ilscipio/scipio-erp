@@ -16,18 +16,18 @@
   specific language governing permissions and limitations
   under the License.
   -->
-<form name="editContentTree" action="<#if parameters.rename?has_content><@ofbizUrl>updateDocumentTree</@ofbizUrl><#else><@ofbizUrl>addDocumentToTree</@ofbizUrl></#if>" method="post">
+<form name="editContentTree" action="<#if parameters.rename?has_content><@pageUrl>updateDocumentTree</@pageUrl><#else><@pageUrl>addDocumentToTree</@pageUrl></#if>" method="post">
     <#assign content  = delegator.findOne("Content",{"contentId":parameters.contentId}, false)/>
     <#if parameters.rename?has_content>
         <@heading relLevel=+1>${uiLabelMap.ContentRenameFolder}</@heading>
         ${uiLabelMap.ContentRenameFolder} : ${content.contentName}<br />
         <input type="text" name="contentName" value="${content.contentName}" />
-        <br /><a class="${styles.link_run_sys!} ${styles.action_update!}" href="javascript:document.editContentTree.submit();">${uiLabelMap.ContentRenameFolder}</a><a class="${styles.link_nav_cancel!}" href="<@ofbizUrl>navigateContent</@ofbizUrl>">${uiLabelMap.CommonCancel}</a>
+        <br /><a class="${styles.link_run_sys!} ${styles.action_update!}" href="javascript:document.editContentTree.submit();">${uiLabelMap.ContentRenameFolder}</a><a class="${styles.link_nav_cancel!}" href="<@pageUrl>navigateContent</@pageUrl>">${uiLabelMap.CommonCancel}</a>
     <#else>
         <@heading relLevel=+1>${uiLabelMap.ContentNewFolder}</@heading>
         ${uiLabelMap.ContentRoot} : ${content.contentName}
         <input type="text" name="contentName" />
-        <br /><a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document.editContentTree.submit();">${uiLabelMap.CommonCreate}</a><a class="${styles.link_nav_cancel!}" href="<@ofbizUrl>navigateContent</@ofbizUrl>">${uiLabelMap.CommonCancel}</a>
+        <br /><a class="${styles.link_run_sys!} ${styles.action_add!}" href="javascript:document.editContentTree.submit();">${uiLabelMap.CommonCreate}</a><a class="${styles.link_nav_cancel!}" href="<@pageUrl>navigateContent</@pageUrl>">${uiLabelMap.CommonCancel}</a>
     </#if>
     <input type="hidden" name="contentId" value="${parameters.contentId}"/>
     <input type="hidden" name="contentAssocTypeId" value="TREE_CHILD"/>

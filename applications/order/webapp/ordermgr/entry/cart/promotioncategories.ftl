@@ -10,7 +10,7 @@ code package.
           <#list productPromoCategoryIncludeList as productPromoCategory>
             <#assign productCategory = productPromoCategory.getRelatedOne("ProductCategory", true)>
             <div>
-                -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${(productCategory.description)!productPromoCategory.productCategoryId}</a>
+                -&nbsp;<a href="<@pageUrl>category/~category_id=${productPromoCategory.productCategoryId}</@pageUrl>" class="${styles.link_nav_info_desc!}">${(productCategory.description)!productPromoCategory.productCategoryId}</a>
                 <#if (productPromoCategory.includeSubCategories!) == "Y">(${uiLabelMap.OrderIncludeSubCategories})</#if>
             </div>
           </#list>
@@ -20,7 +20,7 @@ code package.
           <#list productPromoCategoryExcludeList as productPromoCategory>
             <#assign productCategory = productPromoCategory.getRelatedOne("ProductCategory", true)>
             <div>
-                -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${(productCategory.description)!productPromoCategory.productCategoryId}</a>
+                -&nbsp;<a href="<@pageUrl>category/~category_id=${productPromoCategory.productCategoryId}</@pageUrl>" class="${styles.link_nav_info_desc!}">${(productCategory.description)!productPromoCategory.productCategoryId}</a>
                 <#if (productPromoCategory.includeSubCategories!) == "Y">(${uiLabelMap.OrderIncludeSubCategories})</#if>
             </div>
           </#list>
@@ -30,7 +30,7 @@ code package.
           <#list productPromoCategoryAlwaysList as productPromoCategory>
             <#assign productCategory = productPromoCategory.getRelatedOne("ProductCategory", true)>
             <div>
-                -&nbsp;<a href="<@ofbizUrl>category/~category_id=${productPromoCategory.productCategoryId}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${(productCategory.description)!productPromoCategory.productCategoryId}</a>
+                -&nbsp;<a href="<@pageUrl>category/~category_id=${productPromoCategory.productCategoryId}</@pageUrl>" class="${styles.link_nav_info_desc!}">${(productCategory.description)!productPromoCategory.productCategoryId}</a>
                 <#if (productPromoCategory.includeSubCategories!) == "Y">(${uiLabelMap.OrderIncludeSubCategories})</#if>
             </div>
           </#list>

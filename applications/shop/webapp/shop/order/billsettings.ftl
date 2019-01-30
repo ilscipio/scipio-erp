@@ -35,28 +35,28 @@ function shipBillAddr() {
       <#-- after initial screen; show detailed screens for selected type -->
       <#if paymentMethodType == "CC">
         <#if creditCard?has_content && postalAddress?has_content>
-          <form method="post" action="<@ofbizUrl>changeCreditCardAndBillingAddress</@ofbizUrl>" name="billsetupform">
+          <form method="post" action="<@pageUrl>changeCreditCardAndBillingAddress</@pageUrl>" name="billsetupform">
             <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId!}" />
             <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId!}" />
         <#elseif requestParameters.useShipAddr??>
-          <form method="post" action="<@ofbizUrl>enterCreditCard</@ofbizUrl>" name="billsetupform">
+          <form method="post" action="<@pageUrl>enterCreditCard</@pageUrl>" name="billsetupform">
         <#else>
-          <form method="post" action="<@ofbizUrl>enterCreditCardAndBillingAddress</@ofbizUrl>" name="billsetupform">
+          <form method="post" action="<@pageUrl>enterCreditCardAndBillingAddress</@pageUrl>" name="billsetupform">
         </#if>
       </#if>
       <#if paymentMethodType == "EFT">
         <#if eftAccount?has_content && postalAddress?has_content>
-          <form method="post" action="<@ofbizUrl>changeEftAccountAndBillingAddress</@ofbizUrl>" name="billsetupform">
+          <form method="post" action="<@pageUrl>changeEftAccountAndBillingAddress</@pageUrl>" name="billsetupform">
             <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId!}" />
             <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId!}" />
         <#elseif requestParameters.useShipAddr??>
-          <form method="post" action="<@ofbizUrl>enterEftAccount</@ofbizUrl>" name="billsetupform">
+          <form method="post" action="<@pageUrl>enterEftAccount</@pageUrl>" name="billsetupform">
         <#else>
-          <form method="post" action="<@ofbizUrl>enterEftAccountAndBillingAddress</@ofbizUrl>" name="billsetupform">
+          <form method="post" action="<@pageUrl>enterEftAccountAndBillingAddress</@pageUrl>" name="billsetupform">
         </#if>
       </#if>
       <#if paymentMethodType == "GC">
-        <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="billsetupform">
+        <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="billsetupform">
       </#if>
 
       <#if requestParameters.singleUsePayment?default("N") == "Y">
@@ -143,7 +143,7 @@ function shipBillAddr() {
         -->
     <#else>
       <#-- initial screen show a list of options -->
-      <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="billsetupform">
+      <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="billsetupform">
         <input type="hidden" name="finalizeMode" value="payment" />
         <input type="hidden" name="createNew" value="Y" />
         <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>

@@ -10,7 +10,7 @@ code package.
 
     <#macro menuContent menuArgs={}>
       <@menu type="button" class="+button-style-1" args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("paysetup") text="Payment Setup" selected=true class="+${styles.action_nav!} ${styles.action_configure!}" />
+        <@menuitem type="link" href=makePageUrl("paysetup") text="Payment Setup" selected=true class="+${styles.action_nav!} ${styles.action_configure!}" />
       </@menu>
     </#macro>
     <@section title="Payment Processor Setup" menuContent=menuContent>
@@ -45,10 +45,10 @@ code package.
                     <@td>${paymentSetting.paymentConfiguration!}</@td>
                     <@td nowrap="nowrap">&nbsp;
                       <#if security.hasEntityPermission("PAYPROC", "_UPDATE", request)>
-                        <a href="<@ofbizUrl>paysetup?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>&nbsp;
+                        <a href="<@pageUrl>paysetup?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>&nbsp;
                       </#if>
                       <#if security.hasEntityPermission("PAYPROC", "_DELETE", request)>
-                        <a href="<@ofbizUrl>removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>&nbsp;
+                        <a href="<@pageUrl>removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>&nbsp;
                       </#if>
                       </@td>
                   </@tr>
@@ -64,7 +64,7 @@ code package.
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
       <#if webSitePayment?has_content>
-        <@menuitem type="link" href=makeOfbizUrl("paysetup") text="Add New" class="+${styles.action_nav!} ${styles.action_add!}" />
+        <@menuitem type="link" href=makePageUrl("paysetup") text="Add New" class="+${styles.action_nav!} ${styles.action_add!}" />
       </#if>
       </@menu>
     </#macro>
@@ -74,7 +74,7 @@ code package.
       <#assign sectionTitle = "Add New Setting">
     </#if>
     <@section title=sectionTitle menuContent=menuContent>
-        <#assign formAction><#if webSitePayment?has_content><@ofbizUrl escapeAs='html'>updateWebSitePaymentSetting</@ofbizUrl><#else><@ofbizUrl escapeAs='html'>createWebSitePaymentSetting</@ofbizUrl></#if></#assign>
+        <#assign formAction><#if webSitePayment?has_content><@pageUrl escapeAs='html'>updateWebSitePaymentSetting</@pageUrl><#else><@pageUrl escapeAs='html'>createWebSitePaymentSetting</@pageUrl></#if></#assign>
         <form method="post" action="${formAction}">
 
         <#if webSitePayment?has_content>

@@ -5,7 +5,7 @@ code package.
 -->
 
 
-<form method="post" name="agreementForm" action="<@ofbizUrl>setOrderCurrencyAgreementShipDates</@ofbizUrl>">
+<form method="post" name="agreementForm" action="<@pageUrl>setOrderCurrencyAgreementShipDates</@pageUrl>">
 
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>

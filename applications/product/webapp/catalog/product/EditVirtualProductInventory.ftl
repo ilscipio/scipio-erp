@@ -19,7 +19,7 @@ code package.
           <@tbody>
             <#list variantInventorySummaries as variantSummary>
               <@tr valign="middle">
-                <@td><a href="<@ofbizUrl>EditProductInventoryItems?productId=${variantSummary.productId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${variantSummary.productId}</a></@td>
+                <@td><a href="<@pageUrl>EditProductInventoryItems?productId=${variantSummary.productId}</@pageUrl>" class="${styles.link_nav_info_id!}">${variantSummary.productId}</a></@td>
                     <#list featureTypeIds as featureTypeId>
                         <@td>${(variantSummary[featureTypeId].description)?default(featureTypeId)}</@td>
                     </#list>

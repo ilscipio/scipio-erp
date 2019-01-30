@@ -5,7 +5,7 @@ code package.
 -->
 
 <@section title=uiLabelMap.FacilitySelectOptionsToGroupBy>
-  <form method="post" name="selectFactors" action="<@ofbizUrl>PicklistOptions</@ofbizUrl>">
+  <form method="post" name="selectFactors" action="<@pageUrl>PicklistOptions</@pageUrl>">
     <input type="hidden" name="facilityId" value="${facilityId}"/>
   <@row>
     <@cell columns=4>
@@ -27,7 +27,7 @@ code package.
   
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}") text=uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked class="+${styles.action_nav!} ${styles.action_view!}" />
+    <@menuitem type="link" href=makePageUrl("ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}") text=uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked class="+${styles.action_nav!} ${styles.action_view!}" />
   </@menu>
 </#macro>
 <@section title=uiLabelMap.ProductFindOrdersToPick menuContent=menuContent>
@@ -62,7 +62,7 @@ code package.
           <@td>${orderNeedsStockMoveInfoListSize}</@td>
           <@td>
             <#if orderReadyToPickInfoList?has_content>
-              <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
+              <form method="post" action="<@pageUrl>createPicklistFromOrders</@pageUrl>">
                 <input type="hidden" name="facilityId" value="${facilityId}"/>
                 <input type="hidden" name="isRushOrder" value="Y"/>
                 ${uiLabelMap.ProductPickFirst}:
@@ -93,7 +93,7 @@ code package.
           <@tr valign="middle" alt=alt_row>
                 
               <#assign viewGroupDetailForm>
-                    <form name="viewGroupDetail_${pickMoveInfo_index}" action="<@ofbizUrl>PicklistOptions</@ofbizUrl>" method="post">
+                    <form name="viewGroupDetail_${pickMoveInfo_index}" action="<@pageUrl>PicklistOptions</@pageUrl>" method="post">
                       <input type="hidden" name="viewDetail" value="${groupName!}"/>
                       <input type="hidden" name="groupByShippingMethod" value="${requestParameters.groupByShippingMethod!}"/>
                       <input type="hidden" name="groupByWarehouseArea" value="${requestParameters.groupByWarehouseArea!}"/>
@@ -140,7 +140,7 @@ code package.
             </@td>
             <@td>
               <#if orderReadyToPickInfoList?has_content>
-                <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
+                <form method="post" action="<@pageUrl>createPicklistFromOrders</@pageUrl>">
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <input type="hidden" name="groupByShippingMethod" value="${requestParameters.groupByShippingMethod!}"/>
                   <input type="hidden" name="groupByWarehouseArea" value="${requestParameters.groupByWarehouseArea!}"/>
@@ -162,7 +162,7 @@ code package.
             </@td>
             <@td>
               <#if orderReadyToPickInfoList?has_content>
-                <form method="post" action="<@ofbizUrl>printPickSheets</@ofbizUrl>" target="_blank">
+                <form method="post" action="<@pageUrl>printPickSheets</@pageUrl>" target="_blank">
                   <input type="hidden" name="printGroupName" value="${groupName!}"/>
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <input type="hidden" name="groupByShippingMethod" value="${requestParameters.groupByShippingMethod!}"/>
@@ -194,7 +194,7 @@ code package.
             <@th>${orderNeedsStockMoveInfoListSizeTotal}</@th>
             <@td>
               <#if (orderReadyToPickInfoListSizeTotal > 0)>
-                <form method="post" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
+                <form method="post" action="<@pageUrl>createPicklistFromOrders</@pageUrl>">
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <span>${uiLabelMap.ProductPickFirst}</span>
                   <input type="text" size="4" name="maxNumberOfOrders" value="20"/>
@@ -206,7 +206,7 @@ code package.
             </@td>
             <@td>
               <#if (orderReadyToPickInfoListSizeTotal > 0)>
-                <form method="post" action="<@ofbizUrl>printPickSheets</@ofbizUrl>" target="_blank">
+                <form method="post" action="<@pageUrl>printPickSheets</@pageUrl>" target="_blank">
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <span>${uiLabelMap.FormFieldTitle_printPickSheetFirst}</span>
                   <input type="text" size="4" name="maxNumberOfOrdersToPrint" value="20"/>
@@ -257,14 +257,14 @@ code package.
             <#assign orderProduct = oiasga.getRelatedOne("OrderItem", false).getRelatedOne("Product", false)!>
             <#assign product = oiasga.getRelatedOne("InventoryItem", false).getRelatedOne("Product", false)!>
             <@tr valign="middle">
-              <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${oiasga.orderId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" target="_blank">${oiasga.orderId}</a></@td>
+              <@td><a href="<@serverUrl>/ordermgr/control/orderview?orderId=${oiasga.orderId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}" target="_blank">${oiasga.orderId}</a></@td>
               <@td>${header.orderDate?string}</@td>
               <@td>${(channel.description)!}</@td>
               <@td>${oiasga.orderItemSeqId}</@td>
               <@td>
-                <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${orderProduct.productId!}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
+                <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${orderProduct.productId!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
                 <#if orderProduct.productId != product.productId>
-                  &nbsp;[<a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId!}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
+                  &nbsp;[<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
                 </#if>
               </@td>
               <@td>${oiasga.shipGroupSeqId}</@td>

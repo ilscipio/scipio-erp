@@ -1,5 +1,5 @@
 <@section>
-    <form name="TrackingCodeReportOptions" action="<@ofbizUrl>AnalyticsTracking</@ofbizUrl>" method="post">
+    <form name="TrackingCodeReportOptions" action="<@pageUrl>AnalyticsTracking</@pageUrl>" method="post">
         <#--<@field type="select" label=uiLabelMap.ProductProductStore name="productStoreId">
             <@field type="option" value="" 
               selected=(!productStoreId?has_content)>${uiLabelMap.CommonAny}</@field>
@@ -32,7 +32,7 @@
                 $(document).ready(function() {
                     $("#marketingCampaignId").change(function() {
                         $.ajax({
-                            url: '<@ofbizUrl>AnalyticsFindTrackingCodes</@ofbizUrl>',
+                            url: '<@pageUrl>AnalyticsFindTrackingCodes</@pageUrl>',
                             type: 'POST',
                             data: {
                                 "marketingCampaignId" : $(this).val()                         

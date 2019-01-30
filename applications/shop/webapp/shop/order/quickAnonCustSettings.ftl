@@ -37,7 +37,7 @@ code package.
 </#macro>
 
 <@section title=uiLabelMap.PartyBasicInformation>
-  <form name="${parameters.formNameValue}" id="quickAnonProcessCustomer" method="post" action="<@ofbizUrl>quickAnonProcessCustomerSettings</@ofbizUrl>">
+  <form name="${parameters.formNameValue}" id="quickAnonProcessCustomer" method="post" action="<@pageUrl>quickAnonProcessCustomerSettings</@pageUrl>">
     <input type="hidden" name="partyId" value="${parameters.partyId!}"/>
     <input type="hidden" name="shippingContactMechId" value="${parameters.shippingContactMechId!}"/>
     <input type="hidden" name="billingContactMechId" value="${parameters.billingContactMechId!}"/>

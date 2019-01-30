@@ -38,7 +38,7 @@ code package.
     </#if>
 </#if>
 
-<form name="ReceiveInventoryAgainstPurchaseOrder" action="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder</@ofbizUrl>">
+<form name="ReceiveInventoryAgainstPurchaseOrder" action="<@pageUrl>ReceiveInventoryAgainstPurchaseOrder</@pageUrl>">
     <input type="hidden" name="clearAll" value="Y"/>
     <div>
         <@field type="input" size="20" name="shipmentId" value=(shipmentId!) label=uiLabelMap.ProductShipmentId />
@@ -56,7 +56,7 @@ code package.
             <br />
             <#assign rowCount = 0>
             <#assign totalReadyToReceive = 0/>
-            <form action="<@ofbizUrl>issueOrderItemToShipmentAndReceiveAgainstPO?clearAll=Y</@ofbizUrl>" method="post" name="selectAllForm">
+            <form action="<@pageUrl>issueOrderItemToShipmentAndReceiveAgainstPO?clearAll=Y</@pageUrl>" method="post" name="selectAllForm">
               <@fields type="default-manual-widgetonly">
                 <input type="hidden" name="facilityId" value="${facilityId}"/>
                 <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
@@ -150,7 +150,7 @@ code package.
                                     </@field>
                                 </@td>
                                 <@td align="right">
-                                    <@field type="submit" submitType="link" href=makeOfbizUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&purchaseOrderId=${orderId}&productId=${product.productId}") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClear />
+                                    <@field type="submit" submitType="link" href=makePageUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&purchaseOrderId=${orderId}&productId=${product.productId}") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClear />
                                 </@td>
                                 <@td align="right">
                                   <@field type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onClick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
@@ -163,7 +163,7 @@ code package.
                       <@tfoot>
                         <@tr>
                             <@td colspan="11" align="right">
-                                <@field type="submit" submitType="link" href=makeOfbizUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&purchaseOrderId=${orderId}&clearAll=Y") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClearAll />
+                                <@field type="submit" submitType="link" href=makePageUrl("ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&purchaseOrderId=${orderId}&clearAll=Y") class="${styles.link_run_local!} ${styles.action_clear!}" text=uiLabelMap.CommonClearAll />
                             </@td>
                             <@td align="right">
                                 <@field type="submit" submitType="link" class="${styles.link_run_sys!} ${styles.action_receive!}" href="javascript:populateQuantities(${rowCount - 1});document.selectAllForm.submit();" text=uiLabelMap.ProductReceiveItem />
@@ -171,7 +171,7 @@ code package.
                         </@tr>
                         <@tr>
                             <@td colspan="12" align="right">
-                                <@field type="submit" submitType="link" class="${styles.link_run_sys!} ${styles.action_update!}" href=makeOfbizUrl("completePurchaseOrder?orderId=${orderId}&facilityId=${facilityId}&shipmentId=${shipmentId}") text=uiLabelMap.OrderForceCompletePurchaseOrder />
+                                <@field type="submit" submitType="link" class="${styles.link_run_sys!} ${styles.action_update!}" href=makePageUrl("completePurchaseOrder?orderId=${orderId}&facilityId=${facilityId}&shipmentId=${shipmentId}") text=uiLabelMap.OrderForceCompletePurchaseOrder />
                             </@td>
                         </@tr>
                       </@tfoot>
@@ -184,7 +184,7 @@ code package.
         </#if>
         <#if itemsAvailableToReceive && (totalReadyToReceive < totalAvailableToReceive)>
             <@section title=uiLabelMap.ProductReceiveInventoryAddProductToReceive>
-            <form name="addProductToReceive" method="post" action="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder</@ofbizUrl>">
+            <form name="addProductToReceive" method="post" action="<@pageUrl>ReceiveInventoryAgainstPurchaseOrder</@pageUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                 <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
                 <@field type="generic" label="${rawLabel('ProductProductId')}/${rawLabel('ProductGoodIdentification')}">

@@ -48,7 +48,7 @@ To use these screens add these entries to the controller.xml file:
 ==================
 Also add this back to appheader.ftl:
 
-<li<#if selected = "tasklist"> class="selected"</#if>><a href="<@ofbizUrl>tasklist</@ofbizUrl>">${uiLabelMap.OrderOrderTasks}</a></li>
+<li<#if selected = "tasklist"> class="selected"</#if>><a href="<@pageUrl>tasklist</@pageUrl>">${uiLabelMap.OrderOrderTasks}</a></li>
 
 -->
 

@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <@section title=uiLabelMap.ProductAlternateKeyWordThesaurus>
-        <form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
+        <form method="post" action="<@pageUrl>createKeywordThesaurus</@pageUrl>">
             <div>
                 <span>${uiLabelMap.ProductKeyword}</span><input type="text" name="enteredKeyword" size="10"/>
                 <span>${uiLabelMap.ProductAlternate}</span><input type="text" name="alternateKeyword" size="10"/>
@@ -19,7 +19,7 @@ code package.
         <div>
             <#list letterList as letter>
               <#if letter == firstLetter><#assign highlight=true><#else><#assign highlight=false></#if>
-              <a href="<@ofbizUrl>editKeywordThesaurus?firstLetter=${letter}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}"><#if highlight>[</#if>${letter}<#if highlight>]</#if></a>
+              <a href="<@pageUrl>editKeywordThesaurus?firstLetter=${letter}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}"><#if highlight>[</#if>${letter}<#if highlight>]</#if></a>
             </#list>
         </div>
         
@@ -39,14 +39,14 @@ code package.
                   <@td open=true close=false />
                       <div>
                         ${keyword.enteredKeyword}
-                        <form method="post" action="<@ofbizUrl>deleteKeywordThesaurus</@ofbizUrl>" name="deleteKeywordThesaurus">
+                        <form method="post" action="<@pageUrl>deleteKeywordThesaurus</@pageUrl>" name="deleteKeywordThesaurus">
                           <input type="hidden" name="enteredKeyword" value="${keyword.enteredKeyword}" />
                           <input type="hidden" name="alternateKeyword" value="${keyword.alternateKeyword}" />
                           <input type="submit" value="${uiLabelMap.CommonDeleteAll}" class="${styles.link_run_sys!} ${styles.action_remove!}" />
                         </form>
                       </div>
                       <div>
-                      <form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
+                      <form method="post" action="<@pageUrl>createKeywordThesaurus</@pageUrl>">
                         <input type="hidden" name="enteredKeyword" value="${keyword.enteredKeyword}" />
                         <span>${uiLabelMap.ProductAlternate}</span><input type="text" name="alternateKeyword" size="10" />
                         <span>${uiLabelMap.ProductRelationship}</span><select name="relationshipEnumId"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.get("description",locale)}</option></#list></select>
@@ -57,7 +57,7 @@ code package.
                   <@td open=true close=false />
               </#if>
               <div>
-                <form method="post" action="<@ofbizUrl>deleteKeywordThesaurus</@ofbizUrl>" name="deleteKeywordThesaurus">
+                <form method="post" action="<@pageUrl>deleteKeywordThesaurus</@pageUrl>" name="deleteKeywordThesaurus">
                   <input type="hidden" name="enteredKeyword" value="${keyword.enteredKeyword}" />
                   <input type="hidden" name="alternateKeyword" value="${keyword.alternateKeyword}" />
                   <input type="submit" value="X" class="${styles.link_run_sys!} ${styles.action_remove!}" />

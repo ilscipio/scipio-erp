@@ -10,7 +10,7 @@ code package.
 <#elseif layoutSettings.VT_HDR_IMAGE_URL??>
     <#assign headerImageUrl = layoutSettings.VT_HDR_IMAGE_URL.get(0)>
 </#if>
-<#assign logo><img src="<@ofbizContentUrl escapeAs='html'><#if headerImageUrl?has_content>${rawString(headerImageUrl)}<#else>/images/scipio/scipio-logo-small.png</#if></@ofbizContentUrl>" style="height:32px;"/></#assign>
+<#assign logo><img src="<@contentUrl escapeAs='html'><#if headerImageUrl?has_content>${rawString(headerImageUrl)}<#else>/images/scipio/scipio-logo-small.png</#if></@contentUrl>" style="height:32px;"/></#assign>
 <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
 <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
 <#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>
@@ -23,11 +23,11 @@ code package.
         </div>
         <@section id="login-box-content">
             <div class="${styles.login_body!}">
-                <form method="post" action="<@ofbizUrl>forgotPassword${previousParams!}</@ofbizUrl>" name="forgotpassword">
+                <form method="post" action="<@pageUrl>forgotPassword${previousParams!}</@pageUrl>" name="forgotpassword">
                     <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=wrapAsRaw({'htmlmarkup':labelUsername, 'raw':rawLabel('CommonUsername')})/>
                     <@row>
                         <@cell columns=12 >
-                            <a href="<@ofbizUrl>authview</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
+                            <a href="<@pageUrl>authview</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
                             <@field type="submit" name="GET_PASSWORD_HINT" class="${styles.link_run_sys!} ${styles.action_view!}" text=uiLabelMap.CommonGetPasswordHint widgetOnly=true/>
                             <@field type="submit" name="EMAIL_PASSWORD" class="${styles.link_run_sys!} ${styles.action_send!}" text=uiLabelMap.CommonEmailPassword widgetOnly=true/>
                             <input type="hidden" name="JavaScriptEnabled" value="N"/>

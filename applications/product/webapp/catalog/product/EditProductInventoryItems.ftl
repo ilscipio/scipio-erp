@@ -8,11 +8,11 @@ code package.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if productId?has_content>
-    <@menuitem type="link" href=makeOfbizInterWebappUrl("/facility/control/EditInventoryItem?productId=${productId}${rawString(externalKeyParam)}") text=uiLabelMap.ProductCreateNewInventoryItemProduct class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makeServerUrl("/facility/control/EditInventoryItem?productId=${productId}${rawString(externalKeyParam)}") text=uiLabelMap.ProductCreateNewInventoryItemProduct class="+${styles.action_nav!} ${styles.action_add!}" />
     <#if showEmpty>
-      <@menuitem type="link" href=makeOfbizUrl("EditProductInventoryItems?productId=${productId}") text=uiLabelMap.ProductHideEmptyItems class="+${styles.action_run_sys!} ${styles.action_hide!}" />
+      <@menuitem type="link" href=makePageUrl("EditProductInventoryItems?productId=${productId}") text=uiLabelMap.ProductHideEmptyItems class="+${styles.action_run_sys!} ${styles.action_hide!}" />
     <#else>
-      <@menuitem type="link" href=makeOfbizUrl("EditProductInventoryItems?productId=${productId}&showEmpty=true") text=uiLabelMap.ProductShowEmptyItems class="+${styles.action_run_sys!} ${styles.action_show!}" />
+      <@menuitem type="link" href=makePageUrl("EditProductInventoryItems?productId=${productId}&showEmpty=true") text=uiLabelMap.ProductShowEmptyItems class="+${styles.action_run_sys!} ${styles.action_show!}" />
     </#if>
   </#if>
   </@menu>
@@ -49,7 +49,7 @@ code package.
                     <#assign inventoryItemDetailFirst = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(inventoryItem.getRelated("InventoryItemDetail", null, Static["org.ofbiz.base.util.UtilMisc"].toList("effectiveDate"), false))!>
                     <#if curInventoryItemType??>
                         <@tr valign="middle">
-                            <@td><a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)!}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${(inventoryItem.inventoryItemId)!}</a></@td>
+                            <@td><a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${(inventoryItem.inventoryItemId)!}</a></@td>
                             <@td>&nbsp;${(curInventoryItemType.get("description",locale))!}</@td>
                             <@td>
                                     <#if curStatusItem?has_content>
@@ -66,13 +66,13 @@ code package.
                                 <@td class="+${styles.text_color_alert!}">${uiLabelMap.ProductErrorFacility} (${inventoryItem.facilityId})
                                     ${uiLabelMap.ProductAndContainer} (${inventoryItem.containerId}) ${uiLabelMap.CommonSpecified}</@td>
                             <#elseif inventoryItem.facilityId??>
-                                <@td>${uiLabelMap.ProductFacilityLetter}:&nbsp;<a href="<@ofbizInterWebappUrl>/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${inventoryItem.facilityId}</a></@td>
+                                <@td>${uiLabelMap.ProductFacilityLetter}:&nbsp;<a href="<@serverUrl>/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${inventoryItem.facilityId}</a></@td>
                             <#elseif (inventoryItem.containerId)??>
-                                <@td>${uiLabelMap.ProductContainerLetter}:&nbsp;<a href="<@ofbizUrl>EditContainer?containerId=${inventoryItem.containerId }</@ofbizUrl>" class="${styles.link_nav_info_id!}">${inventoryItem.containerId}</a></@td>
+                                <@td>${uiLabelMap.ProductContainerLetter}:&nbsp;<a href="<@pageUrl>EditContainer?containerId=${inventoryItem.containerId }</@pageUrl>" class="${styles.link_nav_info_id!}">${inventoryItem.containerId}</a></@td>
                             <#else>
                                 <@td>&nbsp;</@td>
                             </#if>
-                            <@td><a href="<@ofbizInterWebappUrl>/facility/control/EditFacilityLocation?facilityId=${(inventoryItem.facilityId)!}&amp;locationSeqId=${(inventoryItem.locationSeqId)!}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>"><#if facilityLocation??>${facilityLocation.areaId!}:${facilityLocation.aisleId!}:${facilityLocation.sectionId!}:${facilityLocation.levelId!}:${facilityLocation.positionId!}</#if><#if facilityLocationTypeEnum?has_content> (${facilityLocationTypeEnum.get("description",locale)})</#if> [${(inventoryItem.locationSeqId)!}]</a></@td>
+                            <@td><a href="<@serverUrl>/facility/control/EditFacilityLocation?facilityId=${(inventoryItem.facilityId)!}&amp;locationSeqId=${(inventoryItem.locationSeqId)!}${rawString(externalKeyParam)}</@serverUrl>"><#if facilityLocation??>${facilityLocation.areaId!}:${facilityLocation.aisleId!}:${facilityLocation.sectionId!}:${facilityLocation.levelId!}:${facilityLocation.positionId!}</#if><#if facilityLocationTypeEnum?has_content> (${facilityLocationTypeEnum.get("description",locale)})</#if> [${(inventoryItem.locationSeqId)!}]</a></@td>
                             <@td>&nbsp;${(inventoryItem.lotId)!}</@td>
                             <@td>&nbsp;${(inventoryItem.binNumber)!}</@td>
                             <@td align="right"><@ofbizCurrency amount=inventoryItem.unitCost isoCode=inventoryItem.currencyUomId/></@td>

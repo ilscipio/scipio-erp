@@ -9,8 +9,8 @@ code package.
 <#assign eiUnsafeFieldOpt = false>
 <#assign eiInfoMsg>
   ${uiLabelMap.WebtoolsXMLImportInfo}
-  ${uiLabelMap.CommonNote}: ${uiLabelMap.CmsDataImportAdminLinkDesc} (<a href="<@ofbizInterWebappUrl escapeAs='html' uri='/admin/control/EntityImport' extLoginKey=true/>">${uiLabelMap.PageTitleEntityImport}</a>, 
-    <a href="<@ofbizInterWebappUrl uri='/admin/control/EntityImportDir' extLoginKey=true escapeAs='html'/>">${uiLabelMap.PageTitleEntityImportDir}</a>)
+  ${uiLabelMap.CommonNote}: ${uiLabelMap.CmsDataImportAdminLinkDesc} (<a href="<@serverUrl escapeAs='html' uri='/admin/control/EntityImport' extLoginKey=true/>">${uiLabelMap.PageTitleEntityImport}</a>, 
+    <a href="<@serverUrl uri='/admin/control/EntityImportDir' extLoginKey=true escapeAs='html'/>">${uiLabelMap.PageTitleEntityImportDir}</a>)
 </#assign>
 <#assign eiShowMsgs = false>
 <#include "component://webtools/webapp/webtools/entity/EntityImport.ftl">

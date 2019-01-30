@@ -12,7 +12,7 @@ code package.
 </#if>
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign useMultitenant = getPropertyValue("general.properties", "multitenant")!"">
-<#assign logo><img src="<@ofbizContentUrl escapeAs='html'><#if headerImageUrl?has_content>${rawString(headerImageUrl)}<#else>/images/scipio/scipio-logo-small.png</#if></@ofbizContentUrl>" style="height:32px;"/></#assign>
+<#assign logo><img src="<@contentUrl escapeAs='html'><#if headerImageUrl?has_content>${rawString(headerImageUrl)}<#else>/images/scipio/scipio-logo-small.png</#if></@contentUrl>" style="height:32px;"/></#assign>
 <#assign username = requestParameters.USERNAME!(autoUserLogin.userLoginId)!""><#-- SCIPIO: Don't use sessionAttributes here -->
 <#if username != "">
   <#assign focusName = false>
@@ -36,7 +36,7 @@ code package.
     </#if>
 
     <div class="${styles.login_body!}">
-      <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
+      <form method="post" action="<@pageUrl>login</@pageUrl>" name="loginform">
        <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
        <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
        <#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>
@@ -53,7 +53,7 @@ code package.
          
          <@row>
              <@cell class="+${styles.text_left!}" columns=7>
-                <small><a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}</a></small>
+                <small><a href="<@pageUrl>forgotPassword</@pageUrl>">${uiLabelMap.CommonForgotYourPassword}</a></small>
              </@cell>
             <@cell class="+${styles.text_right!}" columns=5>
                 <input type="hidden" name="JavaScriptEnabled" value="N"/>

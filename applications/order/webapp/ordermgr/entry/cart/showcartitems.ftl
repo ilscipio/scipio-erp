@@ -9,14 +9,14 @@ code package.
   <#assign productAssocType = (delegator.findOne("ProductAssocType", {"productAssocTypeId" : productAssoc.productAssocTypeId}, false))/>
   <#assign assocProduct = (delegator.findOne("Product", {"productId" : productAssoc.productIdTo}, false))/>
   <#if assocProduct?has_content>
-    <@td><a href="<@ofbizUrl>product?product_id=${productAssoc.productIdTo}</@ofbizUrl>"class="${styles.link_nav_info_id!}">${productAssoc.productIdTo}</a></@td>
+    <@td><a href="<@pageUrl>product?product_id=${productAssoc.productIdTo}</@pageUrl>"class="${styles.link_nav_info_id!}">${productAssoc.productIdTo}</a></@td>
     <@td>- ${(assocProduct.productName)!} <i>(${(productAssocType.description)!"Unknown"})</i></@td>
   </#if>
 </#macro>
 
 <@section title=uiLabelMap.OrderOrderItems>
   <#if (shoppingCartSize > 0)>
-    <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform">
+    <form method="post" action="<@pageUrl>modifycart</@pageUrl>" name="cartform">
       <input type="hidden" name="removeSelected" value="false"/>
       <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
         <input type="hidden" name="finalizeReqShipInfo" value="false"/>
@@ -64,7 +64,7 @@ code package.
           <@tr><@td colspan="2">
                   <#if cartLine.getProductId()??>
                     <#-- product item -->
-                    <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${cartLine.getProductId()}</a> -
+                    <a href="<@pageUrl>product?product_id=${cartLine.getProductId()}</@pageUrl>" class="${styles.link_nav_info_id!}">${cartLine.getProductId()}</a> -
                     <@field size="30" type="input" inline=true name="description_${cartLineIndex}" value=(cartLine.getName()!"")/><br />
                     <i>${cartLine.getDescription()!}</i>
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
@@ -94,7 +94,7 @@ code package.
                     <#if cartLine.getAttribute("surveyResponses")?has_content>
                         <br />Surveys:
                        <#list cartLine.getAttribute("surveyResponses") as surveyResponseId>
-                        <a href="<@ofbizInterWebappUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>
+                        <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>
                        </#list>
                     </#if>
             </@td></@tr>
@@ -130,7 +130,7 @@ code package.
               <#assign product = cartLine.getProduct()>
               <@tr>
                 <@td colspan="2">
-                    <a href="<@ofbizInterWebappUrl>/catalog/control/EditProductInventoryItems?productId=${productId}</@ofbizInterWebappUrl>" class="${styles.link_nav!} ${styles.action_update!}"><b>${uiLabelMap.ProductInventory}</b></a> : 
+                    <a href="<@serverUrl>/catalog/control/EditProductInventoryItems?productId=${productId}</@serverUrl>" class="${styles.link_nav!} ${styles.action_update!}"><b>${uiLabelMap.ProductInventory}</b></a> : 
                     ${uiLabelMap.ProductAtp} = ${availableToPromiseMap.get(productId)}, ${uiLabelMap.ProductQoh} = ${quantityOnHandMap.get(productId)}
                     <#if Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG")>
                     ${uiLabelMap.ProductMarketingPackageATP} = ${mktgPkgATPMap.get(productId)}, ${uiLabelMap.ProductMarketingPackageQOH} = ${mktgPkgQOHMap.get(productId)}
@@ -188,7 +188,7 @@ code package.
               <#--<@tr type="util"><@td colspan="8"><hr /></@td></@tr>-->
               <@tr>
                 <@td>${uiLabelMap.OrderAssociatedProducts}</@td>
-                <@td><a href="<@ofbizUrl>LookupAssociatedProducts?productId=${cartLine.getProductId()!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.OrderQuickLookup}</a></@td>
+                <@td><a href="<@pageUrl>LookupAssociatedProducts?productId=${cartLine.getProductId()!}</@pageUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.OrderQuickLookup}</a></@td>
               </@tr>
               <#assign relatedProdCount = 0/>
               <#list itemProductAssocList! as itemProductAssoc>
@@ -210,7 +210,7 @@ code package.
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                     <#assign alternativeOptionProduct = delegator.findOne("Product", {"productId":alternativeOptionProductId}, true)>
                     <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale, dispatcher, "raw")!>
-                    <div><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="${styles.link_run_session_long!} ${styles.action_update!}">Select: ${alternativeOptionName!(alternativeOptionProductId)}</a></div>
+                    <div><a href="<@pageUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@pageUrl>" class="${styles.link_run_session_long!} ${styles.action_update!}">Select: ${alternativeOptionName!(alternativeOptionProductId)}</a></div>
                   </#list>
                 </#if>
             </@td>
@@ -278,7 +278,7 @@ code package.
                 <@tr>
                   <@td colspan="6" nowrap="nowrap" align="right">
                       <i>${uiLabelMap.OrderAdjustment}</i> - ${adjustmentType.get("description",locale)!}
-                    <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a></#if>:
+                    <#if cartAdjustment.productPromoId?has_content><a href="<@pageUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a></#if>:
                   </@td>
                   <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=currencyUomId/></@td>
                   <@td>&nbsp;</@td>

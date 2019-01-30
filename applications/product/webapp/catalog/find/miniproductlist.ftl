@@ -9,7 +9,7 @@ code package.
       <#list productCategoryMembers as productCategoryMember>
         <#assign product = productCategoryMember.getRelatedOne("Product", true)>
           <div>
-            <a href="<@ofbizUrl>ViewProductproductId=${product.productId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">
+            <a href="<@pageUrl>ViewProductproductId=${product.productId}</@pageUrl>" class="${styles.link_nav_info_name!}">
               <#if product.internalName?has_content>
                 ${product.internalName}
               <#else>

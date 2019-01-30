@@ -13,7 +13,7 @@ code package.
   <#local idNum = getRequestVar("scpCatDetailId")!0>
   <#local idNum = idNum + 1>
   <#local dummy = setRequestVar("scpCatDetailId", idNum)>
-  <form method="post" action="<@ofbizCatalogUrl currentCategoryId=productCategoryId/>" style="display:none;" id="pcdsort-form-${idNum}">
+  <form method="post" action="<@catalogUrl currentCategoryId=productCategoryId/>" style="display:none;" id="pcdsort-form-${idNum}">
       <@field type="hidden" name="sortOrder" value=sortOrderEff/>
       <@field type="hidden" name="sortAscending" value=sortAscendingEff/>
       <@field type="hidden" name="sortChg" value="Y"/><#-- Indicates that user intentionally changed the sort order -->

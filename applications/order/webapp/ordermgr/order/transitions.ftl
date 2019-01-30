@@ -8,7 +8,7 @@ code package.
   <@section title=uiLabelMap.OrderProcessingStatus>
           <#-- Suspended Processes -->
           <#if workEffortStatus == "WF_SUSPENDED">
-            <form action="<@ofbizUrl>releasehold</@ofbizUrl>" method="post" name="activityForm">
+            <form action="<@pageUrl>releasehold</@pageUrl>" method="post" name="activityForm">
             <@fields type="default-manual">
               <input type="hidden" name="workEffortId" value="${workEffortId}" />
             <@row>
@@ -26,7 +26,7 @@ code package.
           </#if>
           <#-- Active Processes -->
           <#if workEffortStatus == "WF_RUNNING">
-            <form action="<@ofbizUrl>holdorder</@ofbizUrl>" method="post" name="activityForm">
+            <form action="<@pageUrl>holdorder</@pageUrl>" method="post" name="activityForm">
             <@fields type="default-manual">
               <input type="hidden" name="workEffortId" value="${workEffortId}" />
             <@row>
@@ -47,7 +47,7 @@ code package.
 
 <#if wfTransitions?? && wfTransitions?has_content>
   <@section title=uiLabelMap.OrderProcessingTransitions>
-          <form action="<@ofbizUrl>completeassignment</@ofbizUrl>" method="post" name="transitionForm">
+          <form action="<@pageUrl>completeassignment</@pageUrl>" method="post" name="transitionForm">
           <@fields type="default-manual">
             <input type="hidden" name="workEffortId" value="${workEffortId}" />
             <input type="hidden" name="partyId" value="${assignPartyId}" />

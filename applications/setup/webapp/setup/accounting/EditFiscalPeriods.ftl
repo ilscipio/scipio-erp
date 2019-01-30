@@ -38,7 +38,7 @@
 	    "manage": {
             "type": "link",
             "target": "_blank",
-            "url": makeOfbizInterWebappUrl({"uri":'/accounting/control/EditCustomTimePeriod', "extLoginKey":true}),
+            "url": makeServerUrl({"uri":'/accounting/control/EditCustomTimePeriod', "extLoginKey":true}),
             "paramNames": {"customTimePeriodId": true }            
         }
     }
@@ -52,7 +52,7 @@
 <#-- RENDERS DISPLAY OPTIONS -->
 <#macro efpExtrasArea extraArgs...>
   <@section><#-- title=uiLabelMap.CommonDisplayOptions -->
-    <@form action=makeOfbizUrl("setupAccounting") method="get">
+    <@form action=makePageUrl("setupAccounting") method="get">
       <@defaultWizardFormFields/>
     </@form>
   </@section>

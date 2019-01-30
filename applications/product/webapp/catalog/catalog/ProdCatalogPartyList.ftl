@@ -1,14 +1,14 @@
 <@section>
     <#if prodCatalogRoleList?has_content>  
          <#list prodCatalogRoleList as prodCatalogRole>
-            <form name="removeProdCatalogFromParty_${prodCatalogRole_index}" method="post" action="<@ofbizUrl>removeProdCatalogFromParty</@ofbizUrl>">
+            <form name="removeProdCatalogFromParty_${prodCatalogRole_index}" method="post" action="<@pageUrl>removeProdCatalogFromParty</@pageUrl>">
                 <input name="prodCatalogId" type="hidden" value="${prodCatalogRole.prodCatalogId}"/>
                 <input name="partyId" type="hidden" value="${prodCatalogRole.partyId}"/>
                 <input name="fromDate" type="hidden" value="${prodCatalogRole.fromDate}"/>
                 <input name="roleTypeId" type="hidden" value="${prodCatalogRole.roleTypeId}"/>
             </form>
         </#list>      
-        <form id="UpdateProdCatalogToParty" name="UpdateProdCatalogToParty" method="post" action="<@ofbizUrl>updateProdCatalogToParty</@ofbizUrl>">
+        <form id="UpdateProdCatalogToParty" name="UpdateProdCatalogToParty" method="post" action="<@pageUrl>updateProdCatalogToParty</@pageUrl>">
             <input name="prodCatalogId" type="hidden" value="${parameters.prodCatalogId}"/>
             <input name="_useRowSubmit" type="hidden" value="Y"/>
             <@table type="data-list" autoAltRows=true responsive=true scrollable=true>
@@ -36,7 +36,7 @@
                                   <input name="roleTypeId_o_${prodCatalogRole_index}" type="hidden" value="${prodCatalogRole.roleTypeId}"/>
                                   <input name="fromDate_o_${prodCatalogRole_index}" type="hidden" value="${prodCatalogRole.fromDate}"/>
                                   <input id="_rowSubmit_o_${prodCatalogRole_index}" name="_rowSubmit_o_${prodCatalogRole_index}" type="hidden" value="N"/>
-                                  <a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?party_id=${prodCatalogRole.partyId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name_long}">
+                                  <a href="<@serverUrl>/partymgr/control/viewprofile?party_id=${prodCatalogRole.partyId}</@serverUrl>" class="${styles.link_nav_info_name_long}">
                                     ${partyName.groupName!} ${partyName.personalTitle!} ${partyName.firstName!} ${partyName.middleName!} ${partyName.lastName!}
                                   </a>            
                             </@td>

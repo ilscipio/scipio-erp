@@ -22,13 +22,13 @@ code package.
                 <@td>${communicationEvent.subject!""}</@td>
                 <@td>${communicationEvent.entryDate}</@td>
                 <@td align="right">
-                  <form method="post" action="<@ofbizUrl>readmessage</@ofbizUrl>" name="ecomm_read_mess${index}">
+                  <form method="post" action="<@pageUrl>readmessage</@pageUrl>" name="ecomm_read_mess${index}">
                     <input name="communicationEventId" value="${communicationEvent.communicationEventId}" type="hidden"/>
                   </form>
                   <a href="javascript:document.ecomm_read_mess${index}.submit()">${uiLabelMap.EcommerceRead}</a>
                   
                   <#if isSentMessage>
-                  <form method="post" action="<@ofbizUrl>newmessage</@ofbizUrl>" name="ecomm_sent_mess${index}">
+                  <form method="post" action="<@pageUrl>newmessage</@pageUrl>" name="ecomm_sent_mess${index}">
                     <input name="communicationEventId" value="${communicationEvent.communicationEventId}" type="hidden"/>
                   </form>
                   <a href="javascript:document.ecomm_sent_mess${index}.submit()">${uiLabelMap.PartyReply}</a>
@@ -41,18 +41,18 @@ code package.
         this code was BEFORE or LEFT of title, not after
         <div class="boxlink">
             <#if (parameters.showSent!) == "true">
-              <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewReceivedOnly}</a>
+              <a href="<@pageUrl>messagelist</@pageUrl>" class="submenutextright">${uiLabelMap.EcommerceViewReceivedOnly}</a>
             <#else>
-              <a href="<@ofbizUrl>messagelist?showSent=true</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewSent}</a>
+              <a href="<@pageUrl>messagelist?showSent=true</@pageUrl>" class="submenutextright">${uiLabelMap.EcommerceViewSent}</a>
             </#if>
         </div>
 -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <#if (parameters.showSent!) == "true">
-          <@menuitem type="link" href=makeOfbizUrl("messagelist") text=uiLabelMap.EcommerceViewReceivedOnly />
+          <@menuitem type="link" href=makePageUrl("messagelist") text=uiLabelMap.EcommerceViewReceivedOnly />
         <#else>
-          <@menuitem type="link" href=makeOfbizUrl("messagelist?showSent=true") text=uiLabelMap.EcommerceViewSent />
+          <@menuitem type="link" href=makePageUrl("messagelist?showSent=true") text=uiLabelMap.EcommerceViewSent />
         </#if>
     </@menu>
 </#macro>

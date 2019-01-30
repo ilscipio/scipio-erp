@@ -5,12 +5,12 @@ code package.
 -->
 <@script>
     function updateAndSaveLabel() {
-        document.UpdateLabelForm.action="<@ofbizUrl>SaveLabelsToXmlFile</@ofbizUrl>";
+        document.UpdateLabelForm.action="<@pageUrl>SaveLabelsToXmlFile</@pageUrl>";
         document.UpdateLabelForm.submit();
     }
 </@script>
 <@section>
-    <form method="post" action="<@ofbizUrl>SaveLabelsToXmlFile</@ofbizUrl>" name="UpdateLabelForm">
+    <form method="post" action="<@pageUrl>SaveLabelsToXmlFile</@pageUrl>" name="UpdateLabelForm">
         <@table type="fields" class="+${styles.table_spacing_small_hint!}">
             <@tr>
                 <@td colspan="2">&nbsp;</@td>

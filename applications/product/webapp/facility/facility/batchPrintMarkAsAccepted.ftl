@@ -23,7 +23,7 @@ code package.
 
 <@script>
   function markAsAccepted() {
-    document.Labels.action = "<@ofbizUrl>BatchUpdateShipmentRouteSegments?facilityId=${parameters.facilityId}</@ofbizUrl>";
+    document.Labels.action = "<@pageUrl>BatchUpdateShipmentRouteSegments?facilityId=${parameters.facilityId}</@pageUrl>";
     document.Labels.submit();
   }
 </@script>

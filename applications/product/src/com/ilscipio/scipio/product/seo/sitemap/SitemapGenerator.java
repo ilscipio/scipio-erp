@@ -714,7 +714,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
      * Applies URL rewrite rules and appends baseUrl, as applicable.
      */
     protected String postprocessLink(String webappPathPrefix, String url) {
-        // 2018-07-27: we should apply the rules on the whole URL to properly emulate the @ofbizUrl, even if it's slower
+        // 2018-07-27: we should apply the rules on the whole URL to properly emulate the @pageUrl, even if it's slower
         //return SitemapConfig.concatPaths(getBaseUrl(), webappPathPrefix, applyUrlRewriteRules(url));
         return applyUrlRewriteRules(SitemapConfig.concatPaths(getBaseUrl(), webappPathPrefix, url));
     }

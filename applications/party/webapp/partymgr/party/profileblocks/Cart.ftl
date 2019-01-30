@@ -13,7 +13,7 @@ code package.
         <#else>
           <#assign listParam = "">
         </#if>
-        <@menuitem type="link" href=makeOfbizUrl("editShoppingList?partyId=${partyId}${listParam}") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}" />
+        <@menuitem type="link" href=makePageUrl("editShoppingList?partyId=${partyId}${listParam}") text=uiLabelMap.CommonEdit class="+${styles.action_nav!} ${styles.action_update!}" />
       </#if>
       </@menu>
     </#macro>
@@ -32,7 +32,7 @@ code package.
             <#list savedCartItems as savedCartItem>
               <@tr>
                 <@td>${savedCartItem.shoppingListItemSeqId!}</@td>
-                <@td class="button-col"><a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${savedCartItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${savedCartItem.productId!}</a></@td>
+                <@td class="button-col"><a href="<@serverUrl>/catalog/control/ViewProduct?productId=${savedCartItem.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}</@serverUrl>" class="${styles.link_nav_info_id!}">${savedCartItem.productId!}</a></@td>
                 <@td>${savedCartItem.quantity!}</@td>
                 <@td>${savedCartItem.quantityPurchased!}</@td>
               </@tr>

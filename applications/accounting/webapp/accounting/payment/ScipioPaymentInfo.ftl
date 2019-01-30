@@ -48,14 +48,14 @@
     <#if payment.partyIdFrom?has_content>
         <@tr>
             <@td class="${styles.grid_large!}2">${uiLabelMap.CommonFrom}</@td>
-            <@td colspan="3"><a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${payment.partyIdFrom!}</@ofbizInterWebappUrl>">${partyNameResultFrom.fullName}</a></@td>
+            <@td colspan="3"><a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${payment.partyIdFrom!}</@serverUrl>">${partyNameResultFrom.fullName}</a></@td>
         </@tr>
     </#if>
 
     <#if payment.partyIdTo?has_content>
         <@tr>
             <@td class="${styles.grid_large!}2">${uiLabelMap.CommonTo}</@td>
-            <@td colspan="3"><a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${payment.partyIdTo!}</@ofbizInterWebappUrl>">${partyNameResultTo.fullName}</a></@td>
+            <@td colspan="3"><a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${payment.partyIdTo!}</@serverUrl>">${partyNameResultTo.fullName}</a></@td>
         </@tr>
     </#if>
 
@@ -76,7 +76,7 @@
     <#if payment.paymentGatewayResponseId?has_content>
         <@tr>
             <@td class="${styles.grid_large!}2">${uiLabelMap.AccountingGatewayResponse}</@td>
-            <@td colspan="3"><a href="<@ofbizUrl>ViewGatewayResponse?paymentGatewayResponseId=${payment.paymentGatewayResponseId!}</@ofbizUrl>">${payment.paymentGatewayResponseId!}</a></@td>
+            <@td colspan="3"><a href="<@pageUrl>ViewGatewayResponse?paymentGatewayResponseId=${payment.paymentGatewayResponseId!}</@pageUrl>">${payment.paymentGatewayResponseId!}</a></@td>
         </@tr>
     </#if>
 

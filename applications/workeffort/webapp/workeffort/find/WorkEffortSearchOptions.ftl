@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <@section title=uiLabelMap.CommonAdvancedSearch>
-    <form name="advToKeyWordSearchForm" method="post" action="<@ofbizUrl>WorkEffortSearchResults</@ofbizUrl>">
+    <form name="advToKeyWordSearchForm" method="post" action="<@pageUrl>WorkEffortSearchResults</@pageUrl>">
         <#-- SCIPIO: don't hardcode
         <input type="hidden" name="VIEW_SIZE" value="25"/>-->
         <@field type="generic" label=uiLabelMap.WorkEffortKeywords>
@@ -60,7 +60,7 @@ code package.
         </#if>
         <@field type="submitarea">
             <@field type="submit" submitType="link" href="javascript:document.advToKeyWordSearchForm.submit()" class="+${styles.link_run_sys!} ${styles.action_find!}" text=uiLabelMap.CommonFind />
-            <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.advToKeyWordSearchForm.submit();"/>
+            <@field type="submit" submitType="image" src=makeContentUrl("/images/spacer.gif") onClick="javascript:document.advToKeyWordSearchForm.submit();"/>
         </@field>
     </form>
 </@section>

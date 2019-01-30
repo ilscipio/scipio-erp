@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<form id="addGiftCertificate" action="<@ofbizUrl>addGiftCertificateSurvey</@ofbizUrl>" method="post">
+<form id="addGiftCertificate" action="<@pageUrl>addGiftCertificateSurvey</@pageUrl>" method="post">
     <#if surveyId?has_content>
       <input type="hidden" name="quantity" value="1" />
       <input type="hidden" name="surveyId" value="${surveyId!}" />

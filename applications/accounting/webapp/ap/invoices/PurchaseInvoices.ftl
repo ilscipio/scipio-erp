@@ -117,8 +117,8 @@ function runAction() {
       <!-- May add some more options in future like cancel selected invoices-->
       <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
         <option value="">${uiLabelMap.AccountingSelectAction}</option>
-        <option value="<@ofbizUrl>processMassCheckRun</@ofbizUrl>" id="processMassCheckRun">${uiLabelMap.AccountingIssueCheck}</option>
-        <option value="<@ofbizUrl>PrintInvoices</@ofbizUrl>">${uiLabelMap.AccountingPrintInvoices}</option>
+        <option value="<@pageUrl>processMassCheckRun</@pageUrl>" id="processMassCheckRun">${uiLabelMap.AccountingIssueCheck}</option>
+        <option value="<@pageUrl>PrintInvoices</@pageUrl>">${uiLabelMap.AccountingPrintInvoices}</option>
         <option value="massInvoicesToApprove">${uiLabelMap.AccountingInvoiceStatusToApproved}</option>
         <option value="massInvoicesToReceive">${uiLabelMap.AccountingInvoiceStatusToReceived}</option>
         <option value="massInvoicesToReady">${uiLabelMap.AccountingInvoiceStatusToReady}</option>
@@ -128,7 +128,7 @@ function runAction() {
       </select>
       <input id="submitButton" type="button" onclick="javascript:runAction();" value="${uiLabelMap.CommonRun}" disabled="disabled" />
     </div>
-    <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@ofbizUrl>massChangeInvoiceStatus</@ofbizUrl>"/>
+    <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@pageUrl>massChangeInvoiceStatus</@pageUrl>"/>
     <input type="hidden" name="organizationPartyId" value="${defaultOrganizationPartyId!}"/>
     <input type="hidden" name="partyIdFrom" value="${parameters.partyIdFrom!}"/>
     <input type="hidden" name="statusId" id="statusId" value="${parameters.statusId!}"/>
@@ -178,14 +178,14 @@ function runAction() {
         <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)!>
           <#assign statusItem = invoice.getRelatedOne("StatusItem", true)>
           <@tr valign="middle">
-            <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>
+            <@td><a class="${styles.link_nav_info_id!}" href="<@pageUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@pageUrl>">${invoice.get("invoiceId")}</a></@td>
             <@td><#if invoice.get("invoiceDate")?has_content>${invoice.get("invoiceDate")?date?string.short}</#if></@td>
             <@td><#if invoice.get("dueDate")?has_content>${invoice.get("dueDate")?date?string.short}</#if></@td>
             <@td>${statusItem.description!invoice.statusId}</@td>
             <@td>${invoice.get("referenceNumber")!}</@td>
             <@td>${(invoice.description)!}</@td>
-            <@td><a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}</@ofbizInterWebappUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}] </a></@td>
-            <@td><a href="<@ofbizInterWebappUrl>/partymgr/control/viewprofile?partyId=${invoice.partyId}</@ofbizInterWebappUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)!} [${(invoice.partyId)!}]</a></@td>
+            <@td><a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}</@serverUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!} [${(invoice.partyIdFrom)!}] </a></@td>
+            <@td><a href="<@serverUrl>/partymgr/control/viewprofile?partyId=${invoice.partyId}</@serverUrl>">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyId, false)!} [${(invoice.partyId)!}]</a></@td>
             <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.amount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
             <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.paidAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>
             <@td class="amount"><@ofbizCurrency amount=invoicePaymentInfo.outstandingAmount isoCode=defaultOrganizationPartyCurrencyUomId/></@td>

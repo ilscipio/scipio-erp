@@ -16,6 +16,6 @@ The <a href="https://www.ilscipio.com">Ilscipio GmbH</a> licenses this file to y
     </ul>
     </p>
     
-    <p>Images such as product, category or banner images in our <a href="<@ofbizUrl>shop</@ofbizUrl>">shop</a> are licensed under the Stokpic Photograph License:</br>You may obtain the full license at <a href="http://stokpic.com/wp-content/uploads/2015/05/Stokpic-Full-License.pdf">stokpic.com/license</a></p>
+    <p>Images such as product, category or banner images in our <a href="<@pageUrl>shop</@pageUrl>">shop</a> are licensed under the Stokpic Photograph License:</br>You may obtain the full license at <a href="http://stokpic.com/wp-content/uploads/2015/05/Stokpic-Full-License.pdf">stokpic.com/license</a></p>
     </@panel>
 </@section>

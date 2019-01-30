@@ -72,13 +72,13 @@ code package.
         <@cell>
           <#-- SCIPIO: NOTE (2016-02-03): default-alt1 automatically expresses alternate checkbox style. see styles hash. -->
           <@fields type="default-alt1">
-            <form name="qohAtpForm" method="post" action="<@ofbizUrl>${target}</@ofbizUrl>">
+            <form name="qohAtpForm" method="post" action="<@pageUrl>${target}</@pageUrl>">
                 <input type="hidden" name="facilityId" value="${facilityId!}"/>
                 <input type="hidden" name="productId"/>
                 <input type="hidden" id="ownerPartyId" name="ownerPartyId" value="${shoppingCart.getBillToCustomerPartyId()!}" />
             </form>
               
-            <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform">
+            <form method="post" action="<@pageUrl>additem</@pageUrl>" name="quickaddform">
                 <#if orderType=="PURCHASE_ORDER">
                   <#if supplierPartyId?has_content><#-- SCIPIO: use supplier not partyId: partId?has_content -->                                               
                     <#assign fieldFormName="LookupSupplierProduct?partyId=${supplierPartyId}">
@@ -114,7 +114,7 @@ code package.
             </form>
 
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-            <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="bulkworkaddform">
+            <form method="post" action="<@pageUrl>additem</@pageUrl>" name="bulkworkaddform">
                 <@field type="select" label=uiLabelMap.OrderOrderItemType name="add_item_type">
                   <option value="BULK_ORDER_ITEM">${uiLabelMap.ProductBulkItem}</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option>
                 </@field>

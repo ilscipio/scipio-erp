@@ -25,7 +25,7 @@
         bufferLength: '100',
         loop: false,
         initialScale: 'fit',
-        videoFile: '<@ofbizUrl>stream?contentId=${contentId}</@ofbizUrl>',
+        videoFile: '<@pageUrl>stream?contentId=${contentId}</@pageUrl>',
         showPlayListButtons: true
         }" />
 </object>

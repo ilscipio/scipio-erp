@@ -111,7 +111,7 @@ code package.
             <input type="submit" value="${uiLabelMap.CommonSearch}" class="${styles.link_run_sys!} ${styles.action_find!}"/>
         </form>
         <br/><br/>
-        <form id="updateMapForm" method="post" action="<@ofbizUrl>editGeoLocation</@ofbizUrl>">
+        <form id="updateMapForm" method="post" action="<@pageUrl>editGeoLocation</@pageUrl>">
             <input type="hidden" name="partyId" value="${partyId!}"/>
             <input type="hidden" name="geoPointId" value="${geoPointId!}"/>
             <input type="hidden" name="lat" id="lat"/>

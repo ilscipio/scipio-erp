@@ -11,7 +11,7 @@ code package.
   
   <#--</#if>-->
     <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
-    <form name="addCommonToCartForm" action="<@ofbizUrl>addordertocart/orderstatus</@ofbizUrl>" method="post">
+    <form name="addCommonToCartForm" action="<@pageUrl>addordertocart/orderstatus</@pageUrl>" method="post">
         <input type="hidden" name="add_all" value="false" />
         <input type="hidden" name="orderId" value="${orderHeader.orderId}" />
         <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />

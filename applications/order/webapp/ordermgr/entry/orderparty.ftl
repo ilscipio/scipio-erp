@@ -14,10 +14,10 @@ code package.
             <#elseif partyGroup?has_content>
               <div class="tabletext"><a href="${customerDetailLink}${partyId}${rawString(externalKeyParam!)}" class="${styles.link_nav_info_name!}">${partyGroup.groupName!}</a></div>
             </#if>
-            <form method="post" action="<@ofbizUrl>orderentry</@ofbizUrl>" name="setpartyform">
+            <form method="post" action="<@pageUrl>orderentry</@pageUrl>" name="setpartyform">
               <div><input type="text" name="partyId" size="10" value="${partyId!}" /></div>
               <div>
-                <a href="javascript:document.setpartyform.submit();" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonSet}</a>&nbsp;|&nbsp;<a href="<@ofbizInterWebappUrl>/partymgr/control/findparty</@ofbizInterWebappUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a><#if partyId?default("_NA_") != "_NA_" && (partyId!"_NA_") != "">&nbsp;|&nbsp;<a href="${customerDetailLink}${partyId}${rawString(externalKeyParam!)}" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></#if>
+                <a href="javascript:document.setpartyform.submit();" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonSet}</a>&nbsp;|&nbsp;<a href="<@serverUrl>/partymgr/control/findparty</@serverUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a><#if partyId?default("_NA_") != "_NA_" && (partyId!"_NA_") != "">&nbsp;|&nbsp;<a href="${customerDetailLink}${partyId}${rawString(externalKeyParam!)}" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></#if>
               </div>
             </form>
           </@td>

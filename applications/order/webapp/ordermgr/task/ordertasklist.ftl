@@ -8,15 +8,15 @@ code package.
     function viewOrder(form) {
         if (form.taskStatus.value == "WF_NOT_STARTED") {
             if (form.delegate.checked) {
-                form.action = "<@ofbizUrl>acceptassignment</@ofbizUrl>";
+                form.action = "<@pageUrl>acceptassignment</@pageUrl>";
             } else {
-                form.action = "<@ofbizUrl>orderview</@ofbizUrl>";
+                form.action = "<@pageUrl>orderview</@pageUrl>";
             }
         } else {
             if (form.delegate.checked) {
-                form.action = "<@ofbizUrl>delegateassignment</@ofbizUrl>";
+                form.action = "<@pageUrl>delegateassignment</@pageUrl>";
             } else {
-                form.action = "<@ofbizUrl>orderview</@ofbizUrl>";
+                form.action = "<@pageUrl>orderview</@pageUrl>";
             }
         }
         form.submit();
@@ -48,7 +48,7 @@ code package.
             <#assign statusItem = orderHeaderAndRole.getRelatedOne("StatusItem", true)>
             <#assign placingParty = orh.getPlacingParty()!>
             <@tr valign="middle">
-              <@td><a href="<@ofbizUrl>orderview?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeaderAndRole.orderId}</a></@td>
+              <@td><a href="<@pageUrl>orderview?orderId=${orderHeaderAndRole.orderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${orderHeaderAndRole.orderId}</a></@td>
               <@td>
                   <#assign partyId = "_NA_">
                   <#if placingParty?has_content>
@@ -76,7 +76,7 @@ code package.
               <@td align="right"><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=(orderHeaderAndRole.currencyUom!)/></@td>
               <@td width="1">&nbsp;&nbsp;</@td>
               <@td align='right'>
-                <a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">Schedule&nbsp;Delivery</a>
+                <a href="<@pageUrl>OrderDeliveryScheduleInfo?orderId=${orderHeaderAndRole.orderId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">Schedule&nbsp;Delivery</a>
               </@td>
             </@tr>
           </#list>
@@ -90,21 +90,21 @@ code package.
         <@table type="data-list" autoAltRows=true>
          <@thead>
           <@tr class="header-row">
-            <@th><a href="<@ofbizUrl>tasklist?sort=orderId</@ofbizUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=name</@ofbizUrl>">${uiLabelMap.CommonName}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=orderDate</@ofbizUrl>">${uiLabelMap.OrderOrderDate}</a></@th>
-            <@th width="1" align="right"><a href="<@ofbizUrl>tasklist?sort=grandTotal</@ofbizUrl>">Total</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=orderId</@pageUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=name</@pageUrl>">${uiLabelMap.CommonName}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=orderDate</@pageUrl>">${uiLabelMap.OrderOrderDate}</a></@th>
+            <@th width="1" align="right"><a href="<@pageUrl>tasklist?sort=grandTotal</@pageUrl>">Total</a></@th>
             <@th width="1">&nbsp;&nbsp;</@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=actualStartDate</@ofbizUrl>">${uiLabelMap.OrderStartDateTime}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=priority</@ofbizUrl>">${uiLabelMap.CommonPriority}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=currentStatusId</@ofbizUrl>">${uiLabelMap.CommonMyStatus}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=actualStartDate</@pageUrl>">${uiLabelMap.OrderStartDateTime}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=priority</@pageUrl>">${uiLabelMap.CommonPriority}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=currentStatusId</@pageUrl>">${uiLabelMap.CommonMyStatus}</a></@th>
           </@tr>
           </@thead>
           <#list partyTasks as task>
             <@tr valign="middle">
               <@td>
                 <#assign orderStr = "orderId=" + task.orderId + "&amp;partyId=" + userLogin.partyId + "&amp;roleTypeId=" + task.roleTypeId + "&amp;workEffortId=" + task.workEffortId + "&amp;fromDate=" + task.get("fromDate").toString()>
-                <a href="<@ofbizUrl>orderview?${orderStr}</@ofbizUrl>" class="${styles.link_nav_info_id!}">
+                <a href="<@pageUrl>orderview?${orderStr}</@pageUrl>" class="${styles.link_nav_info_id!}">
                   ${task.orderId}
                 </a>
               </@td>
@@ -130,7 +130,7 @@ code package.
               </@td>
               <@td>${task.priority!"0"}</@td>
               <@td>
-                <a href="<@ofbizInterWebappUrl>/workeffort/control/activity?workEffortId=${task.workEffortId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="workeffort" class="${styles.link_nav_info_name!}">
+                <a href="<@serverUrl>/workeffort/control/activity?workEffortId=${task.workEffortId}${rawString(externalKeyParam)}</@serverUrl>" target="workeffort" class="${styles.link_nav_info_name!}">
                   ${Static["org.ofbiz.order.task.TaskWorker"].getPrettyStatus(task)}
                 </a>
               </@td>
@@ -147,16 +147,16 @@ code package.
         <@table type="data-list" autoAltRows=true>
          <@thead>
           <@tr class="header-row">
-            <@th><a href="<@ofbizUrl>tasklist?sort=orderId</@ofbizUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=name</@ofbizUrl>">${uiLabelMap.CommonName}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=orderDate</@ofbizUrl>">${uiLabelMap.OrderOrderDate}</a></@th>
-            <@th width="1" align="right"><a href="<@ofbizUrl>tasklist?sort=grandTotal</@ofbizUrl>">${uiLabelMap.CommonTotal}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=orderId</@pageUrl>">${uiLabelMap.OrderOrderNumber}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=name</@pageUrl>">${uiLabelMap.CommonName}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=orderDate</@pageUrl>">${uiLabelMap.OrderOrderDate}</a></@th>
+            <@th width="1" align="right"><a href="<@pageUrl>tasklist?sort=grandTotal</@pageUrl>">${uiLabelMap.CommonTotal}</a></@th>
             <@th width="1">&nbsp;&nbsp;</@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=actualStartDate</@ofbizUrl>">${uiLabelMap.CommonStartDateTime}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=wepaPartyId</@ofbizUrl>">${uiLabelMap.PartyParty}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=roleTypeId</@ofbizUrl>">${uiLabelMap.PartyRole}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=priority</@ofbizUrl>">${uiLabelMap.CommonPriority}</a></@th>
-            <@th><a href="<@ofbizUrl>tasklist?sort=currentStatusId</@ofbizUrl>">${uiLabelMap.CommonStatus}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=actualStartDate</@pageUrl>">${uiLabelMap.CommonStartDateTime}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=wepaPartyId</@pageUrl>">${uiLabelMap.PartyParty}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=roleTypeId</@pageUrl>">${uiLabelMap.PartyRole}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=priority</@pageUrl>">${uiLabelMap.CommonPriority}</a></@th>
+            <@th><a href="<@pageUrl>tasklist?sort=currentStatusId</@pageUrl>">${uiLabelMap.CommonStatus}</a></@th>
             <@th>&nbsp;</@th>
           </@tr>
           </@thead>
@@ -193,7 +193,7 @@ code package.
                 <@td>${Static["org.ofbiz.order.task.TaskWorker"].getRoleDescription(task)}</@td>
                 <@td>${task.priority!"0"}</@td>
                 <@td>
-                  <a href="<@ofbizInterWebappUrl>/workeffort/control/activity?workEffortId=${task.workEffortId}</@ofbizInterWebappUrl>" target="workeffort" class="${styles.link_nav_info_name!}">
+                  <a href="<@serverUrl>/workeffort/control/activity?workEffortId=${task.workEffortId}</@serverUrl>" target="workeffort" class="${styles.link_nav_info_name!}">
                     ${Static["org.ofbiz.order.task.TaskWorker"].getPrettyStatus(task)}
                   </a>
                 </@td>

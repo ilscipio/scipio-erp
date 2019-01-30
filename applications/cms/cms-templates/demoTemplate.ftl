@@ -46,7 +46,7 @@
 
 <#macro demoTemplateContent>
   <p>This demo template tests page content, CMS macros and functions, in the spirit of 
-    <a href="<@ofbizInterWebappUrl uri="/admin/control/WebtoolsLayoutDemo" escapeAs='html'></@>">Layout Demo</a>.</p>
+    <a href="<@serverUrl uri="/admin/control/WebtoolsLayoutDemo" escapeAs='html'></@>">Layout Demo</a>.</p>
 
   <@section title="Demo Menu Asset">
     <@asset name="DemoMenu" webSite="cmsSite" def="global"/>

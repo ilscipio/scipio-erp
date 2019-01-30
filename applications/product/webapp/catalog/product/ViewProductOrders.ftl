@@ -14,7 +14,7 @@ code package.
 
 <@section title=uiLabelMap.OrderOrderFound>
     <#-- SCIPIO: using @paginate, but loop still relevant
-    <form name="paginationForm" method="post" action="<@ofbizUrl>viewProductOrder</@ofbizUrl>">
+    <form name="paginationForm" method="post" action="<@pageUrl>viewProductOrder</@pageUrl>">
       <input type="hidden" name="viewSize"/>
       <input type="hidden" name="viewIndex"/>-->
       <#if paramIdList?? && paramIdList?has_content>
@@ -29,7 +29,7 @@ code package.
     <#--</form>-->
   <#if orderList?has_content && productId??>
   <#-- forcePost required because search done from service event with https="true" -->
-  <@paginate mode="content" url=makeOfbizUrl("viewProductOrder") paramStr=paramList viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=orderListSize!0 altParam=true viewIndexFirst=1 forcePost=true>
+  <@paginate mode="content" url=makePageUrl("viewProductOrder") paramStr=paramList viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=orderListSize!0 altParam=true viewIndexFirst=1 forcePost=true>
     <@table type="data-list">
      <@thead>
       <@tr class="header-row">
@@ -46,7 +46,7 @@ code package.
           <#assign orderItems = delegator.findByAnd("OrderItem", {"orderId" : order.orderId, "productId" : productId}, null, false)/>
           <#list orderItems as orderItem>
             <@tr>
-              <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderItem.orderId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderItem.orderId}</a></@td>
+              <@td><a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderItem.orderId}</@serverUrl>" class="${styles.link_nav_info_id!}">${orderItem.orderId}</a></@td>
               <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)/>
               <@td>${currentItemStatus.get("description",locale)?default(currentItemStatus.statusId)}</@td>
               <@td>${orderItem.orderItemSeqId}</@td>

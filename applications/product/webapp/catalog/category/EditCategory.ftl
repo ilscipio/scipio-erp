@@ -8,12 +8,12 @@ code package.
 
 <#if !productCategory?has_content>
     <#if productCategoryId?has_content>        
-        <#assign formAction><@ofbizUrl>createProductCategory</@ofbizUrl></#assign>
+        <#assign formAction><@pageUrl>createProductCategory</@pageUrl></#assign>
     <#else>
-        <#assign formAction><@ofbizUrl>createProductCategory</@ofbizUrl></#assign>
+        <#assign formAction><@pageUrl>createProductCategory</@pageUrl></#assign>
     </#if>
 <#else>
-    <#assign formAction><@ofbizUrl>updateProductCategory</@ofbizUrl></#assign>
+    <#assign formAction><@pageUrl>updateProductCategory</@pageUrl></#assign>
 </#if>
 
 <@section id="EditProductCategory">
@@ -98,7 +98,7 @@ code package.
                 <@cell columns=2>
                 </@cell>
                 <@cell columns=10>
-                    <@img src=makeOfbizContentUrl((productCategory.categoryImageUrl)!) target="_blank" width="400px"/>
+                    <@img src=makeContentUrl((productCategory.categoryImageUrl)!) target="_blank" width="400px"/>
                 </@cell>
             </@row>
         </#if>
@@ -118,7 +118,7 @@ code package.
                     <@cell columns=2>
                     </@cell>
                     <@cell columns=10>
-                        <@img src=makeOfbizContentUrl((productCategory.linkOneImageUrl)!) target="_blank" width="400px"/>
+                        <@img src=makeContentUrl((productCategory.linkOneImageUrl)!) target="_blank" width="400px"/>
                     </@cell>
                 </@row>
             </#if>
@@ -138,7 +138,7 @@ code package.
                     <@cell columns=2>
                     </@cell>
                     <@cell columns=10>
-                        <@img src=makeOfbizContentUrl((productCategory.linkTwoImageUrl)!) target="_blank" width="400px"/>
+                        <@img src=makeContentUrl((productCategory.linkTwoImageUrl)!) target="_blank" width="400px"/>
                     </@cell>
                 </@row>
             </#if>

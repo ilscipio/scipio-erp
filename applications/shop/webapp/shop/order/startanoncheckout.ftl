@@ -20,11 +20,11 @@ code package.
     <@cell>
       <@section title=sectionTitle>
           <@menu type="button">
-            <@menuitem type="link" href=makeOfbizUrl("anoncheckoutoptions") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout />
+            <@menuitem type="link" href=makePageUrl("anoncheckoutoptions") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout />
             <#-- SCIPIO: TODO: Hopefully can remove link to the old one when this is over... -->
-            <@menuitem type="link" href=makeOfbizUrl("setCustomer") class="+${styles.action_run_session!} ${styles.action_continue!}" text="${rawLabel('OrderCheckout')} (Old - Deprecated)" />
-            <#--<@menuitem type="link" href=makeOfbizUrl("quickAnonCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}"  text=uiLabelMap.OrderCheckoutQuick />-->
-            <@menuitem type="link" href=makeOfbizUrl("anonOnePageCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}"  text=uiLabelMap.EcommerceOnePageCheckout />
+            <@menuitem type="link" href=makePageUrl("setCustomer") class="+${styles.action_run_session!} ${styles.action_continue!}" text="${rawLabel('OrderCheckout')} (Old - Deprecated)" />
+            <#--<@menuitem type="link" href=makePageUrl("quickAnonCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}"  text=uiLabelMap.OrderCheckoutQuick />-->
+            <@menuitem type="link" href=makePageUrl("anonOnePageCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}"  text=uiLabelMap.EcommerceOnePageCheckout />
           </@menu>
       </@section> 
     </@cell>

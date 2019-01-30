@@ -7,7 +7,7 @@ code package.
 <@section title=uiLabelMap.ProductPicklistManage>
   
   <#if picklistInfoList?has_content>
-    <@paginate mode="content" url=makeOfbizUrl("PicklistManage") paramStr="facilityId=${facilityId!}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=picklistCount!0 altParam=true forcePost=true>
+    <@paginate mode="content" url=makePageUrl("PicklistManage") paramStr="facilityId=${facilityId!}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=picklistCount!0 altParam=true forcePost=true>
 
       <#list picklistInfoList as picklistInfo>
         <#assign picklist = picklistInfo.picklist>
@@ -16,7 +16,7 @@ code package.
         <div>
           <span>${uiLabelMap.ProductPickList}</span> ${picklist.picklistId}
           <span>${uiLabelMap.CommonDate}</span> ${picklist.picklistDate}
-          <form method="post" action="<@ofbizUrl>updatePicklist</@ofbizUrl>" style="display: inline;">
+          <form method="post" action="<@pageUrl>updatePicklist</@pageUrl>" style="display: inline;">
             <input type="hidden" name="facilityId" value="${facilityId}"/>
             <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
             <select name="statusId">
@@ -29,7 +29,7 @@ code package.
             <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
           </form>
           <span>${uiLabelMap.ProductCreatedModifiedBy}</span> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
-          <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}</a>
+          <a href="<@pageUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@pageUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}</a>
           <hr />
         </div>
         <#if picklistInfo.shipmentMethodType?has_content>
@@ -49,7 +49,7 @@ code package.
         </#list>
         <div style="margin-left: 15px;">
           <span>${uiLabelMap.ProductAssignPicker}</span>
-          <form method="post" action="<@ofbizUrl>createPicklistRole</@ofbizUrl>" style="display: inline;">
+          <form method="post" action="<@pageUrl>createPicklistRole</@pageUrl>" style="display: inline;">
             <input type="hidden" name="facilityId" value="${facilityId}"/>
             <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
             <input type="hidden" name="roleTypeId" value="PICKER"/>
@@ -81,14 +81,14 @@ code package.
               <#if picklistBinInfo.primaryOrderHeader??><span>${uiLabelMap.ProductPrimaryOrderId}</span> ${picklistBinInfo.primaryOrderHeader.orderId}</#if>
               <#if picklistBinInfo.primaryOrderItemShipGroup??><span>${uiLabelMap.ProductPrimaryShipGroupSeqId}</span> ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</#if>
               <#if !picklistBinInfo.picklistItemInfoList?has_content><a href="javascript:document.DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></#if>
-              <form name="DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}" method="post" action="<@ofbizUrl>deletePicklistBin</@ofbizUrl>">
+              <form name="DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}" method="post" action="<@pageUrl>deletePicklistBin</@pageUrl>">
                 <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
                 <input type="hidden" name="facilityId" value="${facilityId!}"/>
               </form>
             </div>
             <div style="margin-left: 30px;">
               <span>${uiLabelMap.CommonUpdate} ${uiLabelMap.ProductBinNum}</span>
-              <form method="post" action="<@ofbizUrl>updatePicklistBin</@ofbizUrl>" style="display: inline;">
+              <form method="post" action="<@pageUrl>updatePicklistBin</@pageUrl>" style="display: inline;">
                 <input type="hidden" name="facilityId" value="${facilityId}"/>
                 <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
                 <span>${uiLabelMap.ProductLocation} ${uiLabelMap.CommonNbr}</span>
@@ -132,7 +132,7 @@ code package.
                       <@td>${picklistItem.quantity}</@td>
                       <#if !picklistItemInfo.itemIssuanceList?has_content>
                         <@td>
-                          <form name="deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}" method="post" action="<@ofbizUrl>deletePicklistItem</@ofbizUrl>">
+                          <form name="deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}" method="post" action="<@pageUrl>deletePicklistItem</@pageUrl>">
                             <input type="hidden" name="picklistBinId" value="${picklistItemInfo.picklistItem.picklistBinId}"/>
                             <input type="hidden" name="orderId" value="${picklistItemInfo.picklistItem.orderId}"/>
                             <input type="hidden" name="orderItemSeqId" value="${picklistItemInfo.picklistItem.orderItemSeqId}"/>
@@ -175,7 +175,7 @@ code package.
                         <#assign picklistItem = picklistItemInfo.picklistItem>
                         <#assign inventoryItemAndLocation = picklistItemInfo.inventoryItemAndLocation>
                         <#if !picklistItemInfo.product.lotIdFilledIn?has_content || picklistItemInfo.product.lotIdFilledIn != "Forbidden">
-                          <form name="editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}" method="post" action="<@ofbizUrl>editPicklistItem</@ofbizUrl>">
+                          <form name="editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}" method="post" action="<@pageUrl>editPicklistItem</@pageUrl>">
                             <@tr valign="middle">
                               <@td>${picklistItem.orderId}</@td>
                               <@td>${picklistItem.shipGroupSeqId}</@td>

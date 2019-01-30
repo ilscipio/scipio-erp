@@ -4,4 +4,4 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <#assign imageUrl = wrapper.get(orderContentTypeId, "url")>
-<image src="<@ofbizContentUrl>${imageUrl}</@ofbizContentUrl>"/>
+<image src="<@contentUrl>${imageUrl}</@contentUrl>"/>

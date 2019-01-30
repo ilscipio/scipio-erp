@@ -40,12 +40,12 @@ function ShowTab(lname) {
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <#if modelEntity??>
-          <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&find=true&VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
+          <@menuitem type="link" href=makePageUrl("FindGeneric?entityName=${entityName}&find=true&VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&VIEW_INDEX=0") text=uiLabelMap.WebtoolsBackToFindScreen class="+${styles.action_nav!} ${styles.action_cancel!}" />
         <#else>
-          <@menuitem type="link" href=makeOfbizUrl("entitymaint") text=uiLabelMap.WebtoolsBackToEntityList class="+${styles.action_nav!} ${styles.action_cancel!}" />
+          <@menuitem type="link" href=makePageUrl("entitymaint") text=uiLabelMap.WebtoolsBackToEntityList class="+${styles.action_nav!} ${styles.action_cancel!}" />
         </#if>
         <#if hasCreatePermission && modelEntity??>          
-          <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?entityName=${entityName}&enableEdit=true") text=uiLabelMap.CommonCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makePageUrl("ViewGeneric?entityName=${entityName}&enableEdit=true") text=uiLabelMap.CommonCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
           <#if !enableEdit>
             <#--WARN: TODO: REVIEW for security issues-->
             <#local editLabel = uiLabelMap.CommonEdit>
@@ -54,12 +54,12 @@ function ShowTab(lname) {
               <#local editLabel = uiLabelMap.CommonRecreate>
               <#local editClass = styles.action_add!>
             </#if>
-            <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?${rawString(curFindString)}&enableEdit=true") text=editLabel class=("+${styles.action_nav!} " + editClass) />
+            <@menuitem type="link" href=makePageUrl("ViewGeneric?${rawString(curFindString)}&enableEdit=true") text=editLabel class=("+${styles.action_nav!} " + editClass) />
           </#if>
         </#if>
         <#if value?has_content && (deleteSuccess!false) != true>
           <#if hasDeletePermission>
-            <@menuitem type="link" href=makeOfbizUrl("UpdateGeneric?UPDATE_MODE=DELETE&${rawString(curFindString)}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
+            <@menuitem type="link" href=makePageUrl("UpdateGeneric?UPDATE_MODE=DELETE&${rawString(curFindString)}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
           </#if>
         </#if>
     </@menu>
@@ -125,7 +125,7 @@ function ShowTab(lname) {
           <#if pkNotFound>
             <p>${uiLabelMap.WebtoolsEntityName} ${entityName} ${uiLabelMap.WebtoolsWithPk} ${findByPk} ${uiLabelMap.WebtoolsSpecifiedEntity2}.</p>
           </#if>
-          <form action="<@ofbizUrl>UpdateGeneric?entityName=${entityName}&amp;enableEdit=true</@ofbizUrl>" method="post" name="updateForm">
+          <form action="<@pageUrl>UpdateGeneric?entityName=${entityName}&amp;enableEdit=true</@pageUrl>" method="post" name="updateForm">
             <@fields type="default-manual">
             <#assign showFields = true>
             <#-- FIXME: inputs within table elems -->
@@ -233,7 +233,7 @@ function ShowTab(lname) {
                             <#assign button = uiLabelMap.CommonCreate>
                           </#if>
                           <@field type="submit" name="Update" text="${button}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
-                          <@field type="submit" submitType="link" href=makeOfbizUrl("ViewGeneric?${rawString(curFindString)}") class="+${styles.link_nav_cancel!}" text=uiLabelMap.CommonCancel/>
+                          <@field type="submit" submitType="link" href=makePageUrl("ViewGeneric?${rawString(curFindString)}") class="+${styles.link_nav_cancel!}" text=uiLabelMap.CommonCancel/>
                       </@field>
                     </@td>
                   </@tr>
@@ -285,10 +285,10 @@ function ShowTab(lname) {
                         <@pul title="${relation.title}${relation.relatedTable}">
                             <@pli type="description">${relation.type}</@pli>
                 <#if relation.valueRelated?has_content>
-                            <@pli><a href="<@ofbizUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}</@ofbizUrl>">${uiLabelMap.CommonView}</a></@pli>
+                            <@pli><a href="<@pageUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}</@pageUrl>">${uiLabelMap.CommonView}</a></@pli>
                 </#if>
                 <#if hasAllCreate || relCreate>
-                            <@pli><a href="<@ofbizUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}&amp;enableEdit=true</@ofbizUrl>">${uiLabelMap.CommonCreate}</a></@pli>
+                            <@pli><a href="<@pageUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}&amp;enableEdit=true</@pageUrl>">${uiLabelMap.CommonCreate}</a></@pli>
                 </#if>
 
             <#if relation.valueRelated?has_content>
@@ -324,7 +324,7 @@ function ShowTab(lname) {
                            -->
                           <#else>
                             <@pli>
-                              <a href="<@ofbizUrl>FindGeneric?${relation.encodeRelatedEntityFindString}&amp;find=true</@ofbizUrl>">${uiLabelMap.CommonFind}</a>
+                              <a href="<@pageUrl>FindGeneric?${relation.encodeRelatedEntityFindString}&amp;find=true</@pageUrl>">${uiLabelMap.CommonFind}</a>
                             </@pli>                       
                           </#if>
             </#if>

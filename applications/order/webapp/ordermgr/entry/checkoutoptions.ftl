@@ -16,51 +16,51 @@ function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
         <#-- SCIPIO: NOTE: ?checkoutType=quick is what makes the review page show the "quick" top menu instead of the full one -->
-        form.action="<@ofbizUrl>checkout?checkoutType=quick</@ofbizUrl>";
+        form.action="<@pageUrl>checkout?checkoutType=quick</@pageUrl>";
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
-        form.action="<@ofbizUrl>updateCheckoutOptions/showcart</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/showcart</@pageUrl>";
         form.submit();
     } else if (mode == "NA") {
         // new address
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}&preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}&preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@pageUrl>";
         form.submit();
     } else if (mode == "EA") {
         // edit address
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}&contactMechId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcontactmech?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}&contactMechId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "NC") {
         // new credit card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}</@pageUrl>";
         form.submit();
     } else if (mode == "EC") {
         // edit credit card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editcreditcard?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}&paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "GC") {
         // edit gift card
-        form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}&paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "NE") {
         // new eft account
-        form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}</@pageUrl>";
         form.submit();
     } else if (mode == "EE") {
         // edit eft account
-        form.action="<@ofbizUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}&paymentMethodId="+value+"</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/editeftaccount?DONE_PAGE=quickcheckout&partyId=${shoppingCart.getPartyId()}&paymentMethodId="+value+"</@pageUrl>";
         form.submit();
     } else if (mode == "SP") {
         // split payment
-        form.action="<@ofbizUrl>updateCheckoutOptions/checkoutpayment?partyId=${shoppingCart.getPartyId()}</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/checkoutpayment?partyId=${shoppingCart.getPartyId()}</@pageUrl>";
         form.submit();
     } else if (mode == "SA") {
         // selected shipping address
-        form.action="<@ofbizUrl>updateCheckoutOptions/quickcheckout</@ofbizUrl>";
+        form.action="<@pageUrl>updateCheckoutOptions/quickcheckout</@pageUrl>";
         form.submit();
     } else if (mode == "SC") {
         // selected ship to party
-        form.action="<@ofbizUrl>cartUpdateShipToCustomerParty</@ofbizUrl>";
+        form.action="<@pageUrl>cartUpdateShipToCustomerParty</@pageUrl>";
         form.submit();
     }
 }
@@ -96,7 +96,7 @@ function submitForm(form, mode, value) {
                     <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
                     <@tr>
                       <@td colspan="2" align="center">
-                        <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderSplitIntoMultipleShipments}</a>
+                        <a href="<@pageUrl>splitship</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderSplitIntoMultipleShipments}</a>
                         <#if (shoppingCart.getShipGroupSize() > 1)>
                           <div class="${styles.text_color_alert!}">${uiLabelMap.OrderNOTEMultipleShipmentsExist}.</div>
                         </#if>
@@ -245,7 +245,7 @@ function submitForm(form, mode, value) {
                       </b>
                       </div>
                       <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<#if customerDetailLink??>${customerDetailLink}${shoppingCart.getPartyId()}${rawString(externalKeyParam!)}" target="partymgr"
-                        <#else><@ofbizUrl>viewprofile?DONE_PAGE=quickcheckout</@ofbizUrl>"</#if> class="${styles.link_nav!}">${uiLabelMap.PartyProfile}</a>.</div>
+                        <#else><@pageUrl>viewprofile?DONE_PAGE=quickcheckout</@pageUrl>"</#if> class="${styles.link_nav!}">${uiLabelMap.PartyProfile}</a>.</div>
                       <br />
                       <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
                       <@field type="input" size="30" name="order_additional_emails" value=(shoppingCart.getOrderAdditionalEmails()!)/>

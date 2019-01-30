@@ -9,7 +9,7 @@ code package.
 <#if canNotView>
   <@commonMsg type="error-perm">${uiLabelMap.PartyContactInfoNotBelongToYou}.</@commonMsg>
   <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
   </@menu>
 <#else>
   <#if !contactMech??>
@@ -17,7 +17,7 @@ code package.
     <#if !requestParameters.preContactMechTypeId?? && !preContactMechTypeId??>
       <#assign requireCreate = true>
       <@section title=uiLabelMap.PartyCreateNewContactInfo>
-        <form method="post" action="<@ofbizUrl>editcontactmechnosave?DONE_PAGE=${donePage}</@ofbizUrl>" name="createcontactmechform">
+        <form method="post" action="<@pageUrl>editcontactmechnosave?DONE_PAGE=${donePage}</@pageUrl>" name="createcontactmechform">
             <@field type="select" label=uiLabelMap.PartySelectContactType name="preContactMechTypeId">
               <#list contactMechTypes as contactMechType>
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
@@ -53,7 +53,7 @@ code package.
   
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+    <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
     <@menuitem type="link" href="javascript:document.editcontactmechform.submit()" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
   </@menu>
 </#macro>
@@ -84,7 +84,7 @@ code package.
                   <@td>
                       <#-- SCIPIO: 2017-10-10: formerly this was: name="deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}"
                           but some states may cause duplicate purpose records, and then can't delete them, so must use index instead -->
-                      <form name="deletePartyContactMechPurpose_${partyContactMechPurpose_index}" method="post" action="<@ofbizUrl>deletePartyContactMechPurpose?DONE_PAGE=${donePage}</@ofbizUrl>">
+                      <form name="deletePartyContactMechPurpose_${partyContactMechPurpose_index}" method="post" action="<@pageUrl>deletePartyContactMechPurpose?DONE_PAGE=${donePage}</@pageUrl>">
                           <input type="hidden" name="contactMechId" value="${contactMechId}"/>
                           <input type="hidden" name="contactMechPurposeTypeId" value="${partyContactMechPurpose.contactMechPurposeTypeId}"/>
                           <input type="hidden" name="fromDate" value="${partyContactMechPurpose.fromDate}"/>
@@ -98,7 +98,7 @@ code package.
                 <@tr>
                   <@td>
                     <#-- for this, always forward back to current page -->
-                    <form method="post" action="<@ofbizUrl>createPartyContactMechPurpose?DONE_PAGE=${donePage}&amp;TARGET_PAGE=editcontactmech&amp;targetPageResponse=forward-target</@ofbizUrl>" name="newpurposeform">
+                    <form method="post" action="<@pageUrl>createPartyContactMechPurpose?DONE_PAGE=${donePage}&amp;TARGET_PAGE=editcontactmech&amp;targetPageResponse=forward-target</@pageUrl>" name="newpurposeform">
                       <input type="hidden" name="contactMechId" value="${contactMechId}"/>
                       <input type="hidden" name="useValues" value="true"/>
                         <@field type="select" name="contactMechPurposeTypeId">
@@ -123,7 +123,7 @@ code package.
   <#else>
     <#assign targetParamStr>&amp;TARGET_PAGE=editcontactmech&amp;targetPageResponse=forward-target</#assign>
   </#if>
-  <form method="post" action="<@ofbizUrl>${reqName}?DONE_PAGE=${donePage}${targetParamStr}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
+  <form method="post" action="<@pageUrl>${reqName}?DONE_PAGE=${donePage}${targetParamStr}</@pageUrl>" name="editcontactmechform" id="editcontactmechform">
     
     <#if !contactMech??>
       <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
@@ -170,7 +170,7 @@ code package.
 
   <#else>    
     <@menu type="button">
-      <@menuitem type="link" href=makeOfbizUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
+      <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />
     <#if requireCreate>
       <@menuitem type="link" href="javascript:document.createcontactmechform.submit()" class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonCreate />
     </#if>

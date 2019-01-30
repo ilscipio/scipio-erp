@@ -15,7 +15,7 @@ code package.
       <#assign listSize = state.getSize()>
       <#-- FIXME: Do we need this? -->
       <#--if (listSize > 10)>
-        <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderlist?viewIndex=${state.getViewIndex() + 1}&amp;viewSize=${state.getViewSize()}&amp;filterDate=${filterDate!}</@ofbizInterWebappUrl>">${uiLabelMap.CommonMore}</a>
+        <a href="<@serverUrl>/ordermgr/control/orderlist?viewIndex=${state.getViewIndex() + 1}&amp;viewSize=${state.getViewSize()}&amp;filterDate=${filterDate!}</@serverUrl>">${uiLabelMap.CommonMore}</a>
       </#if-->
 
     <#if orderHeaderList?has_content>
@@ -40,7 +40,7 @@ code package.
           </#if>
           <#assign productStore = orderHeader.getRelatedOne("ProductStore", true)! />
           <@tr>
-            <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderHeader.orderId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a></@td>
+            <@td><a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderHeader.orderId}</@serverUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a></@td>
             <@td>${billTo!}</@td>
             <@td><#if productStore?has_content>${productStore.storeName!productStore.productStoreId}</#if></@td>
             <@td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></@td>
@@ -48,7 +48,7 @@ code package.
               <#assign trackingCodes = orderHeader.getRelated("TrackingCodeOrder", null, null, false)>
               <#list trackingCodes as trackingCode>
                 <#if trackingCode?has_content>
-                  <a href="<@ofbizInterWebappUrl>/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@ofbizInterWebappUrl>">${trackingCode.trackingCodeId}</a><br />
+                  <a href="<@serverUrl>/marketing/control/FindTrackingCodeOrders?trackingCodeId=${trackingCode.trackingCodeId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@serverUrl>">${trackingCode.trackingCodeId}</a><br />
                 </#if>
               </#list>
             </@td>

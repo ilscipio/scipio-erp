@@ -111,7 +111,7 @@ NOTES: 2016-12:
 
 <#-- EDIT TEMPLATE -->
 <#if scriptTemplateModel?has_content>
-    <#assign editScriptUrl = makeOfbizUrl("editScript?scriptTemplateId=${scriptTemplateModel.id!}")>
+    <#assign editScriptUrl = makePageUrl("editScript?scriptTemplateId=${scriptTemplateModel.id!}")>
 
     <#-- Javascript functions -->
     <@script>
@@ -141,7 +141,7 @@ NOTES: 2016-12:
         
         function updateScriptInfo() {
             cmsCheckSubmitFieldOnlyIfChanged('settingsForm', 'description');
-            updateCmsElement("<@ofbizUrl escapeAs='js'>updateScriptInfo</@ofbizUrl>", 'settingsForm', 
+            updateCmsElement("<@pageUrl escapeAs='js'>updateScriptInfo</@pageUrl>", 'settingsForm', 
                 function(eventMsgs) {
                     doCmsSuccessRedirect("${escapeFullUrl(editScriptUrl, 'js')}", eventMsgs);
                 }
@@ -149,10 +149,10 @@ NOTES: 2016-12:
         }
         
         function deleteScript() {
-            deleteCmsElement("<@ofbizUrl escapeAs='js'>deleteScript</@ofbizUrl>", 
+            deleteCmsElement("<@pageUrl escapeAs='js'>deleteScript</@pageUrl>", 
                 { scriptTemplateId : "${(scriptTemplateModel.id)!}" }, 
                 function(eventMsgs) {
-                    doCmsSuccessRedirect("<@ofbizUrl escapeAs='js'>scripts</@ofbizUrl>", eventMsgs);
+                    doCmsSuccessRedirect("<@pageUrl escapeAs='js'>scripts</@pageUrl>", eventMsgs);
                 }
             );
         }
@@ -168,7 +168,7 @@ NOTES: 2016-12:
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editScript") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewScript/>
+            <@menuitem type="link" href=makePageUrl("editScript") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewScript/>
             <@cmsCopyMenuItem target="copyScript" title=uiLabelMap.CmsCopyScript>
                 <@field type="hidden" name="scriptTemplateId" value=(scriptTemplateModel.id!)/><#-- for browsing, on error -->
                 <@field type="hidden" name="srcScriptTemplateId" value=(scriptTemplateModel.id!)/>
@@ -189,7 +189,7 @@ NOTES: 2016-12:
             </@row>
             <@row>
                 <@cell columns=9>
-                  <@form method="post" id="editorForm" action=makeOfbizUrl("createUpdateScript")>
+                  <@form method="post" id="editorForm" action=makePageUrl("createUpdateScript")>
                     <@field type="hidden" name="scriptTemplateId" id="scriptTemplateId" value=(scriptTemplateModel.id!"")/>
                 
                     <#-- General Content -->
@@ -233,7 +233,7 @@ NOTES: 2016-12:
                 </@cell>
               
                 <@cell columns=3>
-                  <@form method="post" id="settingsForm" action=makeOfbizUrl('updateScriptInfo')>
+                  <@form method="post" id="settingsForm" action=makePageUrl('updateScriptInfo')>
                     <@field type="hidden" name="scriptTemplateId" value=scriptTemplateModel.id!""/>
                     
                     <#-- Template Information -->
@@ -270,7 +270,7 @@ NOTES: 2016-12:
         <#-- NEW Script -->
         <@row>
             <@cell columns=6 last=true>
-                <@form method="post" id="editorForm" action=makeOfbizUrl("createUpdateScript")>
+                <@form method="post" id="editorForm" action=makePageUrl("createUpdateScript")>
                     <@section title=uiLabelMap.CmsNewScript>
                       <input type="hidden" name="isCreate" value="Y"/>
                       <@fields type="default-compact">

@@ -1,13 +1,13 @@
 <@section>
     <#if productStoreCatalogList?has_content>  
          <#list productStoreCatalogList as prodCatalogStore>
-            <form name="removeProdCatalogFromStore_${prodCatalogStore_index}" method="post" action="<@ofbizUrl>deleteProdCatalogStore</@ofbizUrl>">
+            <form name="removeProdCatalogFromStore_${prodCatalogStore_index}" method="post" action="<@pageUrl>deleteProdCatalogStore</@pageUrl>">
                 <input name="prodCatalogId" type="hidden" value="${prodCatalogStore.prodCatalogId}"/>
                 <input name="productStoreId" type="hidden" value="${prodCatalogStore.productStoreId}"/>
                 <input name="fromDate" type="hidden" value="${prodCatalogStore.fromDate}"/>                
             </form>
         </#list>      
-        <form id="UpdateProdCatalogToStore" name="UpdateProdCatalogToStore" method="post" action="<@ofbizUrl>updateProdCatalogStore</@ofbizUrl>">
+        <form id="UpdateProdCatalogToStore" name="UpdateProdCatalogToStore" method="post" action="<@pageUrl>updateProdCatalogStore</@pageUrl>">
             <input name="prodCatalogId" type="hidden" value="${parameters.prodCatalogId}"/>
             <input name="_useRowSubmit" type="hidden" value="Y"/>
             <@table type="data-list" autoAltRows=true responsive=true scrollable=true>
@@ -33,7 +33,7 @@
                                   <input name="productStoreId_o_${prodCatalogStore_index}" type="hidden" value="${prodCatalogStore.productStoreId}"/>
                                   <input name="fromDate_o_${prodCatalogStore_index}" type="hidden" value="${prodCatalogStore.fromDate}"/>
                                   <input id="_rowSubmit_o_${prodCatalogStore_index}" name="_rowSubmit_o_${prodCatalogStore_index}" type="hidden" value="N"/>
-                                  <a href="<@ofbizUrl>EditProductStore?productStoreId=${prodCatalogStore.productStoreId}</@ofbizUrl>" class="${styles.link_nav_info_idname}">                                  
+                                  <a href="<@pageUrl>EditProductStore?productStoreId=${prodCatalogStore.productStoreId}</@pageUrl>" class="${styles.link_nav_info_idname}">                                  
                                       <#if productStore.storeName?has_content>${productStore.storeName} - </#if>${productStore.productStoreId}
                                   </a>                      
                             </@td>

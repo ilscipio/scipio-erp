@@ -24,12 +24,12 @@ code package.
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
         <#-- SCIPIO: 2018-11: now redundant, just click magnifying glass on fields
-        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />-->
+        <@menuitem type="link" href=makeServerUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />-->
         <@menuitem type="link" href="javascript:document.salesentryform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
       </@menu>
     </#macro>
     <@section class="${styles.grid_large!}9" title=sectionTitle menuContent=menuContent>
-      <form method="post" name="salesentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
+      <form method="post" name="salesentryform" action="<@pageUrl>initorderentry</@pageUrl>">
       <input type="hidden" name="originOrderId" value="${parameters.originOrderId!}"/>
       <input type="hidden" name="finalizeMode" value="type"/>
       <input type="hidden" name="orderMode" value="SALES_ORDER"/>
@@ -74,12 +74,12 @@ code package.
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
         <#-- SCIPIO: 2018-11: now redundant, just click magnifying glass on fields
-        <@menuitem type="link" href=makeOfbizInterWebappUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />-->
+        <@menuitem type="link" href=makeServerUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />-->
         <@menuitem type="link" href="javascript:document.poentryform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}" />
       </@menu>
     </#macro>
     <@section title=sectionTitle class="${styles.grid_large!}9" menuContent=menuContent>
-      <form method="post" name="poentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
+      <form method="post" name="poentryform" action="<@pageUrl>initorderentry</@pageUrl>">
       <input type="hidden" name="finalizeMode" value="type"/>
       <input type="hidden" name="orderMode" value="PURCHASE_ORDER"/>
         <#if partyId??>

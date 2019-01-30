@@ -7,7 +7,7 @@ code package.
 <#if resultPartialList?has_content>
   <#--WARN: TODO: REVIEW for security issues-->
   <#assign paramStr = "${rawString(curFindString)}&amp;searchOptions_collapsed=${(parameters.searchOptions_collapsed)!(\"false\")}"/>
-  <@paginate mode="content" url=makeOfbizUrl("FindGeneric") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=arraySize!0>
+  <@paginate mode="content" url=makePageUrl("FindGeneric") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=arraySize!0>
     <@table type="data-list" autoAltRows=true scrollable=true fixedColumnsLeft=1 fixedColumnsRight=1>
       <@thead>
         <@tr class="header-row-2">
@@ -22,7 +22,7 @@ code package.
             <#list records as record>
                 <@tr>
                     <@td>
-                        <a href="<@ofbizUrl>ViewGeneric?${record.findString}</@ofbizUrl>">${uiLabelMap.CommonView}</a>
+                        <a href="<@pageUrl>ViewGeneric?${record.findString}</@pageUrl>">${uiLabelMap.CommonView}</a>
                     </@td>
                     <#list fieldList as field>
                         <@td>
@@ -40,7 +40,7 @@ code package.
                     </#list>
                     <@td>
                     <#if hasDeletePermission == 'Y'>
-                       <a href="<@ofbizUrl>UpdateGeneric?${record.findString}&amp;UPDATE_MODE=DELETE</@ofbizUrl>">${uiLabelMap.CommonDelete}</a>
+                       <a href="<@pageUrl>UpdateGeneric?${record.findString}&amp;UPDATE_MODE=DELETE</@pageUrl>">${uiLabelMap.CommonDelete}</a>
                     </#if>
                     </@td>
                 </@tr>

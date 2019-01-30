@@ -6,7 +6,7 @@ code package.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("returnMain") text=uiLabelMap.OrderCreateReturn class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makePageUrl("returnMain") text=uiLabelMap.OrderCreateReturn class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title=uiLabelMap.OrderReturnsCurrent menuContent=menuContent>
@@ -28,7 +28,7 @@ code package.
         <#assign facility = returnHeader.getRelatedOne("Facility", false)>
       </#if>
       <@tr>
-        <@td><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${returnHeader.returnId}</a></@td>
+        <@td><a href="<@pageUrl>returnMain?returnId=${returnHeader.returnId}</@pageUrl>" class="${styles.link_nav_info_id!}">${returnHeader.returnId}</a></@td>
         <@td>${returnHeader.entryDate.toString()}</@td>
         <@td>
           <#if returnHeader.fromPartyId??>

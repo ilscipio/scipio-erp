@@ -58,7 +58,7 @@ code package.
           <#if userLogin?has_content>
               <#--<@heading>${uiLabelMap.ProductReviewThisProduct}<@heading> -->
               
-              <@form id="reviewProduct" method="post" action=makeOfbizUrl("createProductReview")>
+              <@form id="reviewProduct" method="post" action=makePageUrl("createProductReview")>
                 <@fieldset class="inline">
                   <input type="hidden" name="productStoreId" value="${productStore.productStoreId}" />
                   <input type="hidden" name="productId" value="${productId!requestParameters.product_id!""}" />
@@ -76,7 +76,7 @@ code package.
                   <@field type="textarea" name="productReview" label=uiLabelMap.CommonReview cols="40"/>
             
                     <a href="javascript:document.getElementById('reviewProduct').submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
-                    <#if requestParameters.product_id?has_content><a href="<@ofbizUrl>product?product_id=${requestParameters.product_id}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a></#if>
+                    <#if requestParameters.product_id?has_content><a href="<@pageUrl>product?product_id=${requestParameters.product_id}</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a></#if>
                     
                 </@fieldset>
               </@form>

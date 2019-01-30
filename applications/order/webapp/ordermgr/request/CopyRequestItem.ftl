@@ -5,7 +5,7 @@ code package.
 -->
 
 <#if custRequestItem??>
-<form action="<@ofbizUrl>copyCustRequestItem</@ofbizUrl>" method="post">
+<form action="<@pageUrl>copyCustRequestItem</@pageUrl>" method="post">
     <input type="hidden" name="custRequestId" value="${custRequestItem.custRequestId}"/>
     <input type="hidden" name="custRequestItemSeqId" value="${custRequestItem.custRequestItemSeqId}"/>
     <div>

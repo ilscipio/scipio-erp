@@ -8,7 +8,7 @@ code package.
 
 <#if (shoppingLists??) && (shoppingCartSize > 0)>
     <@section title=uiLabelMap.OrderAddOrderToShoppingList>
-        <form method="post" name="addBulkToShoppingList" action="<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>">
+        <form method="post" name="addBulkToShoppingList" action="<@pageUrl>addBulkToShoppingList</@pageUrl>">
           <#assign index = 0/>
           <#list shoppingCart.items() as cartLine>
             <#if (cartLine.getProductId()??) && !cartLine.getIsPromo()>

@@ -53,7 +53,7 @@ function onClickShippingMethod(e) {
 </@script>
 
 <@section id="optInfoSection">
-  <form id="quickAnonOptSetupForm" method="post" action="<@ofbizUrl>quickAnonProcessShipOptions</@ofbizUrl>" name="quickAnonOptSetupForm">
+  <form id="quickAnonOptSetupForm" method="post" action="<@pageUrl>quickAnonProcessShipOptions</@pageUrl>" name="quickAnonOptSetupForm">
 
   <@row>
     <@cell columns=6>

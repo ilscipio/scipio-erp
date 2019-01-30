@@ -7,7 +7,7 @@ code package.
 <@script>
 function addToList() {
     var cform = document.cartform;
-    cform.action = "<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>";
+    cform.action = "<@pageUrl>addBulkToShoppingList</@pageUrl>";
     cform.submit();
 }
 function gwAll(e) {
@@ -59,9 +59,9 @@ function setAlternateGwp(field) {
 <#assign cartEmpty = (!cartHasItems)>
 <#assign lastViewedProducts = lastViewedProducts!sessionAttributes.lastViewedProducts!><#-- SCIPIO: Access session only once -->
 <#if ((lastViewedProducts)?has_content && (lastViewedProducts?size > 0))>
-  <#assign continueLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=(lastViewedProducts.get(0)) rawParams=true/></#assign>
+  <#assign continueLink><@catalogAltUrl productCategoryId=requestParameters.category_id!"" productId=(lastViewedProducts.get(0)) rawParams=true/></#assign>
 <#else>
-  <#assign continueLink = makeOfbizUrl("main")>
+  <#assign continueLink = makePageUrl("main")>
 </#if>
 
 
@@ -69,7 +69,7 @@ function setAlternateGwp(field) {
     <@menu args=menuArgs>
         <#if shoppingCart.items()?has_content>
             <@menuitem type="link" href="javascript:document.cartform.submit();" class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.EcommerceRecalculateCart disabled=cartEmpty />
-            <@menuitem type="link" href=makeOfbizUrl("emptycart") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.EcommerceEmptyCart disabled=cartEmpty />
+            <@menuitem type="link" href=makePageUrl("emptycart") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.EcommerceEmptyCart disabled=cartEmpty />
             <@menuitem type="link" href="javascript:removeSelected('cartform');" class="+${styles.action_run_session!} ${styles.action_remove!}" text=uiLabelMap.EcommerceRemoveSelected disabled=cartEmpty />
         </#if>
     </@menu>
@@ -80,7 +80,7 @@ function setAlternateGwp(field) {
   <#if (shoppingCartSize > 0)>
     <#assign itemsFromList = false />
     <#assign promoItems = false />
-    <form method="post" action="<@ofbizUrl>modifycart</@ofbizUrl>" name="cartform">
+    <form method="post" action="<@pageUrl>modifycart</@pageUrl>" name="cartform">
     <@fields fieldArgs={"checkboxType":"simple-standard"}><#-- TODO: type="..." -->
       <input type="hidden" name="removeSelected" value="false" />
         <@table type="data-complex" role="grid">
@@ -117,7 +117,7 @@ function setAlternateGwp(field) {
                             <#else>
                                 <#assign parentProductId = cartLine.getProductId() />
                             </#if>
-                            <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()} - ${cartLine.getName()!}</a>
+                            <a href="<@catalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()} - ${cartLine.getName()!}</a>
                             <#-- For configurable products, the selected options are shown -->
                             <#if cartLine.getConfigWrapper()??>
                               <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
@@ -162,7 +162,7 @@ function setAlternateGwp(field) {
                               <option value="">- ${uiLabelMap.OrderChooseAnotherGift} -</option>
                               <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                                 <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductWorker"].getGwpAlternativeOptionName(dispatcher, delegator, alternativeOptionProductId, requestAttributes.locale) />
-                                <option value="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>">${alternativeOptionName!alternativeOptionProductId}</option>
+                                <option value="<@pageUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@pageUrl>">${alternativeOptionName!alternativeOptionProductId}</option>
                               </#list>
                               </select>
                             </#if>
@@ -173,7 +173,7 @@ function setAlternateGwp(field) {
                         <@td>
                              <#if cartLine.getShoppingListId()??>
                               <#assign itemsFromList = true />
-                              <a href="<@ofbizUrl>editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">L</a>
+                              <a href="<@pageUrl>editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">L</a>
                             </#if>
                             <#if cartLine.getIsPromo()>
                               <#assign promoItems = true />
@@ -360,9 +360,9 @@ function setAlternateGwp(field) {
         </@cell>
         <@cell columns=9 class="${styles.text_right!}">
             <@menu type="button">
-                <@menuitem type="link" href=makeOfbizUrl("checkoutoptionslogin") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout disabled=cartEmpty/>
-                <#--<@menuitem type="link" href=makeOfbizUrl("quickcheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckoutQuick disabled=cartEmpty/>-->
-                <@menuitem type="link" href=makeOfbizUrl("onePageCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.EcommerceOnePageCheckout disabled=cartEmpty/>
+                <@menuitem type="link" href=makePageUrl("checkoutoptionslogin") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout disabled=cartEmpty/>
+                <#--<@menuitem type="link" href=makePageUrl("quickcheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckoutQuick disabled=cartEmpty/>-->
+                <@menuitem type="link" href=makePageUrl("onePageCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.EcommerceOnePageCheckout disabled=cartEmpty/>
             </@menu>
         </@cell>
     </@row>    
@@ -383,7 +383,7 @@ function setAlternateGwp(field) {
     <@row>
         <@cell columns=6>
             <@section title=uiLabelMap.ProductPromoCodes>
-                <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform">
+                <form method="post" action="<@pageUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@pageUrl>" name="addpromocodeform">
                     <input type="text" size="15" name="productPromoCodeId" value="" />
                     <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddCode}" />
                     <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())! />
@@ -406,11 +406,11 @@ function setAlternateGwp(field) {
                       <#list productPromos as productPromo>
                         <li>${productPromo.promoName!}
                            <#--${productPromo.promoText!}<br/>--><#-- Enable for further promotion information -->
-                           <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
+                           <a href="<@pageUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@pageUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
                         </li>
                       </#list>
                     </ol>
-                    <a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.OrderViewAllPromotions}</a>
+                    <a href="<@pageUrl>showAllPromotions</@pageUrl>" class="${styles.link_nav!}">${uiLabelMap.OrderViewAllPromotions}</a>
                   </@section>
                 </@panel>
             </#if>
@@ -437,7 +437,7 @@ function setAlternateGwp(field) {
 <#-- SCIPIO: Uncomment for a quick-add form; allows users to add products to the cart on the fly -->
 <#--
 <@section title=uiLabelMap.CommonQuickAdd>
-    <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform">
+    <form method="post" action="<@pageUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@pageUrl>" name="quickaddform">
         <fieldset>
         ${uiLabelMap.EcommerceProductNumber}<input type="text" name="add_product_id" value="${requestParameters.add_product_id!}" />
          // check if rental data present  insert extra fields in Quick Add

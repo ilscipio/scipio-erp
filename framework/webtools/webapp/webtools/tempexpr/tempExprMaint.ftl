@@ -8,7 +8,7 @@ code package.
 <#if temporalExpression?has_content>
   <#-- Edit existing expression -->
   <#if !"INTERSECTION.UNION.DIFFERENCE.SUBSTITUTION"?contains(temporalExpression.tempExprTypeId)>
-    <form name="updateExpression" method="post" action="<@ofbizUrl>updateTemporalExpression</@ofbizUrl>">
+    <form name="updateExpression" method="post" action="<@pageUrl>updateTemporalExpression</@pageUrl>">
       <input type="hidden" name="tempExprId" value="${temporalExpression.tempExprId}"/>
       <input type="hidden" name="tempExprTypeId" value="${temporalExpression.tempExprTypeId}"/>
   </#if>
@@ -132,7 +132,7 @@ code package.
 </#if>
 
 <#macro CreateForm expressionTypeId="" formContents=NullMacro>
-  <form name="${expressionTypeId}" method="post" action="<@ofbizUrl>createTemporalExpression</@ofbizUrl>">
+  <form name="${expressionTypeId}" method="post" action="<@pageUrl>createTemporalExpression</@pageUrl>">
     <input type="hidden" name="tempExprTypeId" value="${expressionTypeId}"/>
     <@table type="fields">
       <#assign mapExpression = "TemporalExpression_" + expressionTypeId/>
@@ -164,7 +164,7 @@ code package.
 </#macro>
 
 <#macro CreateExprAssocForm formName="" exprAssocType="">
-  <form name="${formName}" method="post" action="<@ofbizUrl>createTemporalExpressionAssoc</@ofbizUrl>">
+  <form name="${formName}" method="post" action="<@pageUrl>createTemporalExpressionAssoc</@pageUrl>">
     <input type="hidden" name="tempExprId" value="${temporalExpression.tempExprId}"/>
     <input type="hidden" name="fromTempExprId" value="${temporalExpression.tempExprId}"/>
     <input type="hidden" name="exprAssocType" value="${exprAssocType}"/>

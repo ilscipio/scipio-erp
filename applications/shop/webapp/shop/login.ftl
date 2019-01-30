@@ -18,7 +18,7 @@ code package.
                     if (typeof window.janrain !== 'object') window.janrain = {};
                     window.janrain.settings = {};
                     
-                    janrain.settings.tokenUrl = '<@ofbizUrl fullPath="true" secure="true">janrainCheckLogin</@ofbizUrl>';
+                    janrain.settings.tokenUrl = '<@pageUrl fullPath="true" secure="true">janrainCheckLogin</@pageUrl>';
                 
                     function isReady() { janrain.ready = true; };
                     if (document.addEventListener) {
@@ -42,11 +42,11 @@ code package.
                 })();
                 </@script>
         
-                      <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform" class="horizontal">              
+                      <form method="post" action="<@pageUrl>login</@pageUrl>" name="loginform" class="horizontal">              
                             <label for="userName">${uiLabelMap.CommonUsername}</label>
                             <input type="text" id="userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>                          
                               <#if autoUserLogin?has_content>
-                                <p>(${uiLabelMap.CommonNot} ${autoUserLogin.userLoginId}? <a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
+                                <p>(${uiLabelMap.CommonNot} ${autoUserLogin.userLoginId}? <a href="<@pageUrl>${autoLogoutUrl}</@pageUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
                               </#if>
                             <label for="password">${uiLabelMap.CommonPassword}:</label>
                             <input type="password" id="password" name="PASSWORD" value=""/>
@@ -55,7 +55,7 @@ code package.
                      <div id="janrainEngageEmbed"></div>
         
             <#else><#-- Default login -->
-                    <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
+                    <form method="post" action="<@pageUrl>login</@pageUrl>" name="loginform">
                        <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
                        <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
                        <#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>
@@ -80,11 +80,11 @@ code package.
                                             <@cell class="large-centered ">
                                                 <@section title=uiLabelMap.CommonPassword>
                                                     <#-- SCIPIO: WARN: Proper HTML-escaping of params high importance here -->
-                                                    <form method="post" action="${escapeFullUrl(makeOfbizUrl("forgotPassword" + rawString(previousParams!"")), 'html')}" name="forgotpassword">
+                                                    <form method="post" action="${escapeFullUrl(makePageUrl("forgotPassword" + rawString(previousParams!"")), 'html')}" name="forgotpassword">
                                                         <@field type="input" name="USERNAME" value=username size="20" collapse=true placeholder=uiLabelMap.CommonUsername tooltip=uiLabelMap.CommonUsername label=wrapAsRaw(labelUsername!)/>
                                                         <@row>
                                                             <@cell columns=12>
-                                                                <a href="<@ofbizUrl>login</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
+                                                                <a href="<@pageUrl>login</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
                                                             </@cell>
                                                         </@row>
                                                         <@row>
@@ -143,7 +143,7 @@ code package.
             </@row>
             <@row>
                           <@cell class="+${styles.text_right!}">
-                <a href="<@ofbizUrl>newcustomer</@ofbizUrl>" class="${styles.link_run_local!} ${styles.action_add!}">${uiLabelMap.EcommerceRegister}</a>
+                <a href="<@pageUrl>newcustomer</@pageUrl>" class="${styles.link_run_local!} ${styles.action_add!}">${uiLabelMap.EcommerceRegister}</a>
             </@cell>
             </@row>
              </@panel>
@@ -183,7 +183,7 @@ code package.
 </#if>
 <#--  
 <@section title=uiLabelMap.CommonForgotYourPassword>
-  <form method="post" action="<@ofbizUrl>forgotpassword</@ofbizUrl>" class="horizontal">
+  <form method="post" action="<@pageUrl>forgotpassword</@pageUrl>" class="horizontal">
     
       <label for="forgotpassword_userName">${uiLabelMap.CommonUsername}</label>
       <input type="text" id="forgotpassword_userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>

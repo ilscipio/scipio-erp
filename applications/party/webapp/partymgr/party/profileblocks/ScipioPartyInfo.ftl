@@ -6,7 +6,7 @@
                 <@tr>
                   <@td class="${styles.grid_large!}2">${uiLabelMap.FormFieldTitle_personalImage}
                   </@td>
-                  <@td colspan="3"><@img src=makeOfbizInterWebappUrl('/content/control/stream?contentId=${pc.contentId!}') height="150px" width="100px" type="contain"/></@td>
+                  <@td colspan="3"><@img src=makeServerUrl('/content/control/stream?contentId=${pc.contentId!}') height="150px" width="100px" type="contain"/></@td>
                 </@tr>
                 <#break>
             </#list> 
@@ -117,7 +117,7 @@
                   <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", request)>
                       <@modal id="modal_avsstring_${parameters.partyId}" label=((avsOverride.avsDeclineString)!uiLabelMap.CommonGlobal)>
                          <@heading>${uiLabelMap.PartyAvsOver}</@heading>
-                         <form name="updateAvsOverride" method="post" action="<@ofbizUrl>updateAvsOverride</@ofbizUrl>">
+                         <form name="updateAvsOverride" method="post" action="<@pageUrl>updateAvsOverride</@pageUrl>">
                          <input type="hidden" name="partyId" value="${parameters.partyId}"/>
                         <@row>
                             <@cell columns=6>
@@ -132,7 +132,7 @@
                   
                   
                     <#if avsOverride??>
-                      <a href="<@ofbizUrl>resetAvsOverride?partyId=${lookupParty.partyId}</@ofbizUrl>" class="${styles.action_reset!}">${uiLabelMap.CommonReset}</a>
+                      <a href="<@pageUrl>resetAvsOverride?partyId=${lookupParty.partyId}</@pageUrl>" class="${styles.action_reset!}">${uiLabelMap.CommonReset}</a>
                     </#if>
                 <#else>
                     ${(avsOverride.avsDeclineString)!uiLabelMap.CommonGlobal}

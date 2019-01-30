@@ -56,15 +56,15 @@ code package.
         <#assign currencyUom = shipmentRouteSegmentData.currencyUom!>
         <#assign billingWeightUom = shipmentRouteSegmentData.billingWeightUom!>
         <#assign carrierServiceStatusValidChangeToDetails = shipmentRouteSegmentData.carrierServiceStatusValidChangeToDetails!>
-        <form name="duplicateShipmentRouteSegment_${shipmentRouteSegmentData_index}" method="post" action="<@ofbizUrl>duplicateShipmentRouteSegment</@ofbizUrl>">
+        <form name="duplicateShipmentRouteSegment_${shipmentRouteSegmentData_index}" method="post" action="<@pageUrl>duplicateShipmentRouteSegment</@pageUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentRouteSegment.shipmentId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
         </form>
-        <form name="deleteShipmentRouteSegment_${shipmentRouteSegmentData_index}" method="post" action="<@ofbizUrl>deleteShipmentRouteSegment</@ofbizUrl>">
+        <form name="deleteShipmentRouteSegment_${shipmentRouteSegmentData_index}" method="post" action="<@pageUrl>deleteShipmentRouteSegment</@pageUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentRouteSegment.shipmentId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
         </form>
-        <form action="<@ofbizUrl>updateShipmentRouteSegment</@ofbizUrl>" method="post" name="updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}">
+        <form action="<@pageUrl>updateShipmentRouteSegment</@pageUrl>" method="post" name="updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}">
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
         <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
         <@tr valign="middle" alt=alt_row>
@@ -255,34 +255,34 @@ code package.
             </@td>
         </@tr>
         </form>
-        <form name="upsShipmentConfirm_${shipmentRouteSegmentData_index}" method="post" action="<@ofbizUrl>upsShipmentConfirm</@ofbizUrl>">
+        <form name="upsShipmentConfirm_${shipmentRouteSegmentData_index}" method="post" action="<@pageUrl>upsShipmentConfirm</@pageUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentRouteSegment.shipmentId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
         </form>
-        <form name="upsShipmentAccept_${shipmentRouteSegmentData_index}" method="post" action="<@ofbizUrl>upsShipmentAccept</@ofbizUrl>">
+        <form name="upsShipmentAccept_${shipmentRouteSegmentData_index}" method="post" action="<@pageUrl>upsShipmentAccept</@pageUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentRouteSegment.shipmentId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
         </form>
-        <form name="upsVoidShipment_${shipmentRouteSegmentData_index}" method="post" action="<@ofbizUrl>upsVoidShipment</@ofbizUrl>">
+        <form name="upsVoidShipment_${shipmentRouteSegmentData_index}" method="post" action="<@pageUrl>upsVoidShipment</@pageUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentRouteSegment.shipmentId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
         </form>
-        <form name="upsTrackShipment_${shipmentRouteSegmentData_index}" method="post" action="<@ofbizUrl>upsTrackShipment</@ofbizUrl>">
-            <input type="hidden" name="shipmentId" value="${shipmentRouteSegment.shipmentId}"/>
-            <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
-        </form>
-        
-        <form name="dhlShipmentConfirm_${shipmentRouteSegmentData_index}" method="post" action="<@ofbizUrl>dhlShipmentConfirm</@ofbizUrl>">
+        <form name="upsTrackShipment_${shipmentRouteSegmentData_index}" method="post" action="<@pageUrl>upsTrackShipment</@pageUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentRouteSegment.shipmentId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
         </form>
         
-        <form name="fedexShipmentConfirm_${shipmentRouteSegmentData_index}" method="post" action="<@ofbizUrl>fedexShipmentConfirm</@ofbizUrl>">
+        <form name="dhlShipmentConfirm_${shipmentRouteSegmentData_index}" method="post" action="<@pageUrl>dhlShipmentConfirm</@pageUrl>">
+            <input type="hidden" name="shipmentId" value="${shipmentRouteSegment.shipmentId}"/>
+            <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
+        </form>
+        
+        <form name="fedexShipmentConfirm_${shipmentRouteSegmentData_index}" method="post" action="<@pageUrl>fedexShipmentConfirm</@pageUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentRouteSegment.shipmentId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
         </form>
     <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
-        <form action="<@ofbizUrl>updateRouteSegmentShipmentPackage</@ofbizUrl>" method="post" name="updateShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}${shipmentPackageRouteSeg_index}">
+        <form action="<@pageUrl>updateRouteSegmentShipmentPackage</@pageUrl>" method="post" name="updateShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}${shipmentPackageRouteSeg_index}">
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
         <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentPackageRouteSeg.shipmentRouteSegmentId}"/>
         <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageRouteSeg.shipmentPackageSeqId}"/>
@@ -305,12 +305,12 @@ code package.
             </@td>
         </@tr>
         </form>
-        <form name="viewShipmentPackageRouteSegLabelImage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}" method="post" action="<@ofbizUrl>viewShipmentPackageRouteSegLabelImage</@ofbizUrl>">
+        <form name="viewShipmentPackageRouteSegLabelImage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}" method="post" action="<@pageUrl>viewShipmentPackageRouteSegLabelImage</@pageUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentPackageRouteSeg.shipmentId}"/>
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageRouteSeg.shipmentPackageSeqId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentPackageRouteSeg.shipmentRouteSegmentId}"/>
         </form>
-        <form name="deleteRouteSegmentShipmentPackage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}" method="post" action="<@ofbizUrl>deleteRouteSegmentShipmentPackage</@ofbizUrl>">
+        <form name="deleteRouteSegmentShipmentPackage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}" method="post" action="<@pageUrl>deleteRouteSegmentShipmentPackage</@pageUrl>">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageRouteSeg.shipmentPackageSeqId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentPackageRouteSeg.shipmentRouteSegmentId}"/>
@@ -318,7 +318,7 @@ code package.
     </#list>
         <#--
         <@tr>
-            <form action="<@ofbizUrl>createRouteSegmentShipmentPackage</@ofbizUrl>" name="createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}">
+            <form action="<@pageUrl>createRouteSegmentShipmentPackage</@pageUrl>" name="createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
             <@td>&nbsp;</@td>
@@ -344,7 +344,7 @@ code package.
   </@section>
 
   <@section title=uiLabelMap.PageTitleAddShipmentRouteSegment>
-    <form action="<@ofbizUrl>createShipmentRouteSegment</@ofbizUrl>" method="post" name="createShipmentRouteSegmentForm">
+    <form action="<@pageUrl>createShipmentRouteSegment</@pageUrl>" method="post" name="createShipmentRouteSegmentForm">
       <@fields type="default-manual-widgetonly">
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
         <@table type="fields">

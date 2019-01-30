@@ -35,7 +35,7 @@ code package.
                         <div><span style="white-space: nowrap;">${quote.validThruDate!}</span></div>
                     </@td>
                     <@td align="right">
-                        <a href="<@ofbizUrl>ViewQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
+                        <a href="<@pageUrl>ViewQuote?quoteId=${quote.quoteId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
                     </@td>
                 </@tr>
             </#list>

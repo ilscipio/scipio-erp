@@ -13,18 +13,18 @@ code package.
             <select name="pageSelect" onchange="window.location=this[this.selectedIndex].value;">
                 <option value="#">${uiLabelMap.CommonPage} ${viewIndex?int + 1} ${uiLabelMap.CommonOf} ${viewIndexMax + 1}</option>
                 <#list 0..viewIndexMax as curViewNum>
-                     <option value="<@ofbizUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}/~clearSearch=N</@ofbizUrl>">${uiLabelMap.CommonGotoPage} ${curViewNum + 1}</option>
+                     <option value="<@pageUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}/~clearSearch=N</@pageUrl>">${uiLabelMap.CommonGotoPage} ${curViewNum + 1}</option>
                 </#list>
             </select>
             <#-- End Page Select Drop-Down -->
             <#if (0 < viewIndex?int)>
-                <a href="<@ofbizUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a> |
+                <a href="<@pageUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@pageUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a> |
             </#if>
             <#if ((listSize?int - viewSize?int) > 0)>
                 <span>${lowIndex + 1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
             </#if>
             <#if highIndex?int < listSize?int>
-             | <a href="<@ofbizUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}/~clearSearch=N</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
+             | <a href="<@pageUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int + 1}/~clearSearch=N</@pageUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
             </#if>
         </div>
     </#if>
@@ -46,7 +46,7 @@ code package.
       <div>
         <#if categoryImageUrl?string?has_content>
           <#assign height=100/>
-          <img src="<@ofbizContentUrl ctxPrefix=true>${categoryImageUrl}</@ofbizContentUrl>" vspace="5" hspace="5" border="1" height="${height}" align="left" alt="" />
+          <img src="<@contentUrl ctxPrefix=true>${categoryImageUrl}</@contentUrl>" vspace="5" hspace="5" border="1" height="${height}" align="left" alt="" />
         </#if>
         <#if longDescription?has_content>
           ${longDescription}

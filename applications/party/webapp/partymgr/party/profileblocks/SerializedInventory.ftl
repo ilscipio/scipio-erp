@@ -21,7 +21,7 @@ code package.
                 <#list inventoryItemList as inventoryItem>
                     <#assign product = inventoryItem.getRelatedOne('Product', false)!>
                     <@tr>
-                        <@td><a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${inventoryItem.inventoryItemId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${inventoryItem.inventoryItemId}</a></@td>
+                        <@td><a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${inventoryItem.inventoryItemId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@serverUrl>" class="${styles.link_nav_info_id!}">${inventoryItem.inventoryItemId}</a></@td>
                         <@td>
                             <#if product?has_content>
                                 <#if product.isVariant?default('N') == 'Y'>
@@ -29,7 +29,7 @@ code package.
                                 </#if>
                                 <#if product?has_content>
                                     <#assign productName = Static['org.ofbiz.product.product.ProductContentWrapper'].getProductContentAsText(product, 'PRODUCT_NAME', request, "raw")!>
-                                    <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@ofbizInterWebappUrl>">${productName!product.productId}</a>
+                                    <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}</@serverUrl>">${productName!product.productId}</a>
                                 </#if>
                             </#if>
                         </@td>

@@ -106,9 +106,9 @@ code package.
         <#if showLabel == true>
           <@tr>
             <#--<@td>${rowNumber}</@td>-->
-            <@td><a href="<@ofbizUrl>UpdateLabel?sourceKey=${labelKey}&amp;sourceFileName=${label.fileName}&amp;sourceKeyComment=${label.labelKeyComment!}</@ofbizUrl>" <#if previousKey == labelKey>class="submenutext"</#if>>${label.labelKey}</a></@td>
+            <@td><a href="<@pageUrl>UpdateLabel?sourceKey=${labelKey}&amp;sourceFileName=${label.fileName}&amp;sourceKeyComment=${label.labelKeyComment!}</@pageUrl>" <#if previousKey == labelKey>class="submenutext"</#if>>${label.labelKey}</a></@td>
             <@td>${label.fileName}</@td>
-            <@td><a href="<@ofbizUrl>ViewReferences?sourceKey=${labelKey}&amp;labelFileName=${label.fileName}</@ofbizUrl>">${uiLabelMap.WebtoolsLabelManagerReferences}</a></@td>
+            <@td><a href="<@pageUrl>ViewReferences?sourceKey=${labelKey}&amp;labelFileName=${label.fileName}</@pageUrl>">${uiLabelMap.WebtoolsLabelManagerReferences}</a></@td>
             <#list localesFound as localeFound>
               <#assign labelVal = label.getLabelValue(localeFound)!>
               <#assign showLocale = true>

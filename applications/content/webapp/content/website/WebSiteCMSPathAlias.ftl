@@ -64,7 +64,7 @@
 
 
 
-    <form name="cmspathform" method="post" action="<@ofbizUrl>createWebSitePathAliasJson</@ofbizUrl>">
+    <form name="cmspathform" method="post" action="<@pageUrl>createWebSitePathAliasJson</@pageUrl>">
             <input type="hidden" name="webSiteId" value="${webSiteId}"/>
             <@field type="display" label="Web Site">
                 ${webSite.siteName!webSite.webSiteId}

@@ -7,9 +7,9 @@ code package.
 <@script>
 function shipBillAddr() {
     if (document.checkoutsetupform.useShipAddr.checked) {
-        window.location = "<@ofbizUrl>setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType!}&useShipAddr=Y</@ofbizUrl>";
+        window.location = "<@pageUrl>setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType!}&useShipAddr=Y</@pageUrl>";
     } else {
-        window.location = "<@ofbizUrl>setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType!}</@ofbizUrl>";
+        window.location = "<@pageUrl>setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType!}</@pageUrl>";
     }
 }
 
@@ -24,11 +24,11 @@ function makeExpDate() {
         <@cell columns=6>
         <#if request.getAttribute("paymentMethodId")?? || ( (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew??)>
          <@menu type="button">
-           <@menuitem type="link" href=makeOfbizUrl("setBilling?createNew=Y") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
+           <@menuitem type="link" href=makePageUrl("setBilling?createNew=Y") text=uiLabelMap.CommonNew class="+${styles.action_nav!} ${styles.action_add!}"/>
          </@menu>
         
           <#-- initial screen when we have a associated party -->
-          <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
+          <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="payment"/>
              
               <#if billingAccountList?has_content>
@@ -78,7 +78,7 @@ function makeExpDate() {
                         </label><br/>
                         <@field type="input" size="5" maxlength="10" name="securityCode_${paymentMethod.paymentMethodId}" value="" label="CSC" collapse=true tooltip=uiLabelMap.OrderCardSecurityCode/>
                     </#assign>
-                    <#assign postfixContent><a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></#assign>
+                    <#assign postfixContent><a href="<@serverUrl>/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></#assign>
                     <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                         <input type="radio" id="checkOutPaymentId_CREDIT_CARD_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
                     </@>
@@ -88,7 +88,7 @@ function makeExpDate() {
                           EFT:&nbsp;${eftAccount.bankName!}: ${eftAccount.accountNumber!}
                           <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                         </label></#assign>
-                    <#assign postfixContent><a href="<@ofbizInterWebappUrl>/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizInterWebappUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></#assign>
+                    <#assign postfixContent><a href="<@serverUrl>/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@serverUrl>" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></#assign>
                     <@orderlib.checkoutInvField type="generic" labelContent=labelContent postfixContent=postfixContent>
                         <input type="radio" id="checkOutPaymentId_EFT_ACCOUNT_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
                     </@>
@@ -102,24 +102,24 @@ function makeExpDate() {
           <#-- after initial screen; show detailed screens for selected type -->
           <#if paymentMethodType == "CC">
             <#if postalAddress?has_content>
-              <form method="post" action="<@ofbizUrl>updateCreditCardAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@pageUrl>updateCreditCardAndPostalAddress</@pageUrl>" name="checkoutsetupform">
                 <input type="hidden" name="paymentMethodId" value="${creditCard.paymentMethodId!}"/>
                 <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId!}"/>
             <#elseif requestParameters.useShipAddr??>
-              <form method="post" action="<@ofbizUrl>createCreditCardOrderEntry</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@pageUrl>createCreditCardOrderEntry</@pageUrl>" name="checkoutsetupform">
             <#else>
-              <form method="post" action="<@ofbizUrl>createCreditCardAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@pageUrl>createCreditCardAndPostalAddress</@pageUrl>" name="checkoutsetupform">
             </#if>
           </#if>
           <#if paymentMethodType == "EFT">
             <#if postalAddress?has_content>
-              <form method="post" action="<@ofbizUrl>updateEftAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@pageUrl>updateEftAndPostalAddress</@pageUrl>" name="checkoutsetupform">
                 <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId!}"/>
                 <input type="hidden" name="contactMechId" value="${postalAddress.contactMechId!}"/>
             <#elseif requestParameters.useShipAddr??>
-              <form method="post" action="<@ofbizUrl>createEftAccount</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@pageUrl>createEftAccount</@pageUrl>" name="checkoutsetupform">
             <#else>
-              <form method="post" action="<@ofbizUrl>createEftAndPostalAddress</@ofbizUrl>" name="checkoutsetupform">
+              <form method="post" action="<@pageUrl>createEftAndPostalAddress</@pageUrl>" name="checkoutsetupform">
             </#if>
           </#if>
 
@@ -275,14 +275,14 @@ function makeExpDate() {
               function setCheckoutPaymentId( selectedValue ) {
                   checkoutForm = document.getElementById('checkoutsetupform');
                   if( selectedValue.match('^EXT_.*') ) {
-                      checkoutForm.action = '<@ofbizUrl>finalizeOrder</@ofbizUrl>?checkOutPaymentId=' + selectedValue ;
+                      checkoutForm.action = '<@pageUrl>finalizeOrder</@pageUrl>?checkOutPaymentId=' + selectedValue ;
                   } else {
-                      checkoutForm.action = '<@ofbizUrl>setBilling</@ofbizUrl>?paymentMethodType=' + selectedValue ;
+                      checkoutForm.action = '<@pageUrl>setBilling</@pageUrl>?paymentMethodType=' + selectedValue ;
                   }
               }
           </@script>
 
-          <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform" id="checkoutsetupform">
+          <form method="post" action="<@pageUrl>finalizeOrder</@pageUrl>" name="checkoutsetupform" id="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="payment"/>
             <input type="hidden" name="createNew" value="${(requestParameters.createNew)!}"/>
             

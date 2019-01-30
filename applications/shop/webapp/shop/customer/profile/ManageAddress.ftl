@@ -6,7 +6,7 @@ code package.
 
 <#assign productStoreId = Static["org.ofbiz.product.store.ProductStoreWorker"].getProductStoreId(request) />
 <@section title=uiLabelMap.EcommerceAddressBook>
-  <form id="refreshRequestForm" method="post" action="<@ofbizUrl>manageAddress</@ofbizUrl>">
+  <form id="refreshRequestForm" method="post" action="<@pageUrl>manageAddress</@pageUrl>">
   </form>
     <#-- Add address -->
     <a class="${styles.link_run_sys!} ${styles.action_add!}" id="addAddress" href="javascript:void(0)">${uiLabelMap.EcommerceAddNewAddress}</a>
@@ -233,7 +233,7 @@ code package.
               <div>
                 <span>
                   <a id="update_${contactMech.contactMechId}" href="javascript:void(0)" class="${styles.link_nav!} ${styles.action_update!} popup_link" onclick="showState('${contactMech.contactMechId}')">${uiLabelMap.CommonEdit}</a></span>
-                  <form id="deletePostalAddress_${contactMech.contactMechId}" method="post" action="<@ofbizUrl>deletePostalAddress</@ofbizUrl>">
+                  <form id="deletePostalAddress_${contactMech.contactMechId}" method="post" action="<@pageUrl>deletePostalAddress</@pageUrl>">
                     <fieldset>
                       <input type="hidden" name="contactMechId" value="${contactMech.contactMechId}" />
                     </fieldset>

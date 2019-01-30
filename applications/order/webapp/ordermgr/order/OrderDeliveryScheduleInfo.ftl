@@ -8,7 +8,7 @@ code package.
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
     <#if orderId??>
-      <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}") text=uiLabelMap.OrderViewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
+      <@menuitem type="link" href=makePageUrl("orderview?orderId=${orderId}") text=uiLabelMap.OrderViewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
     </#if>
     </@menu>
   </#macro>

@@ -7,7 +7,7 @@ code package.
 <#if layoutSettings.styleSheets?has_content>
   <#--layoutSettings.styleSheets is a list of style sheets -->
   <#list layoutSettings.styleSheets as styleSheet>
-    <?xml-stylesheet type="text/xsl" href="<@ofbizContentUrl>${styleSheet}</@ofbizContentUrl>"?>
+    <?xml-stylesheet type="text/xsl" href="<@contentUrl>${styleSheet}</@contentUrl>"?>
   </#list>
 </#if>
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"

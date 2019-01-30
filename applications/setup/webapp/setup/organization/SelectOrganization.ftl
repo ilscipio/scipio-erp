@@ -38,7 +38,7 @@
     });
 </@script>
 
-  <@form method="get" action=makeOfbizUrl("setupOrganization") id="setupOrg-selectOrg-form">
+  <@form method="get" action=makePageUrl("setupOrganization") id="setupOrg-selectOrg-form">
     <#-- TODO: REVIEW: may make a difference later
     <@defaultWizardFormFields exclude=[]/> -->
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
@@ -63,7 +63,7 @@
     </@field>
   </@form>
   
-  <@form method="get" action=makeOfbizUrl("setupWizard") id="setupOrg-selectContinueOrg-form">
+  <@form method="get" action=makePageUrl("setupWizard") id="setupOrg-selectContinueOrg-form">
     <#-- TODO: REVIEW: may make a difference later
     <@defaultWizardFormFields exclude=[]/> -->
     <#--<@field type="hidden" name="setupContinue" value="Y"/> not needed yet-->
@@ -71,7 +71,7 @@
     <@field type="hidden" name="partyId" value=""/>
   </@form>
   
-  <@form method="get" action=makeOfbizUrl("setupOrganization") id="setupOrg-newOrg-form">
+  <@form method="get" action=makePageUrl("setupOrganization") id="setupOrg-newOrg-form">
     <#-- TODO: REVIEW: may make a difference later
     <@defaultWizardFormFields exclude=[]/> -->
     

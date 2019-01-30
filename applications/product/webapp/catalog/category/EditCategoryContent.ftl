@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <@section title=uiLabelMap.ProductOverrideSimpleFields>
-        <form action="<@ofbizUrl>updateCategoryContent</@ofbizUrl>" method="post" name="categoryForm">
+        <form action="<@pageUrl>updateCategoryContent</@pageUrl>" method="post" name="categoryForm">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
                 <@field type="select" label=uiLabelMap.ProductProductCategoryType name="productCategoryTypeId" size="1">
                     <option value="">&nbsp;</option>

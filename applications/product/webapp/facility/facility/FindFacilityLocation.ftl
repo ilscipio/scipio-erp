@@ -6,11 +6,11 @@ code package.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("EditFacilityLocation?facilityId=${facilityId!}") text=uiLabelMap.ProductNewFacilityLocation class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makePageUrl("EditFacilityLocation?facilityId=${facilityId!}") text=uiLabelMap.ProductNewFacilityLocation class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section menuContent=menuContent>
-    <form action="<@ofbizUrl>FindFacilityLocation</@ofbizUrl>" method="get" name="findFacilityLocation" class="basic-form">
+    <form action="<@pageUrl>FindFacilityLocation</@pageUrl>" method="get" name="findFacilityLocation" class="basic-form">
         <#if (facilityId??)>
             <input type="hidden" name="facilityId" value="${facilityId}" />
         </#if>        
@@ -51,8 +51,8 @@ code package.
         <#list foundLocations as location>
         <#assign locationTypeEnum = location.getRelatedOne("TypeEnumeration", true)!>
         <@tr valign="middle">
-            <@td><a href="<@ofbizUrl>EditFacility?facilityId=${(location.facilityId)!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${(location.facilityId)!}</a></@td>
-            <@td><a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${(location.locationSeqId)!}</a></@td>
+            <@td><a href="<@pageUrl>EditFacility?facilityId=${(location.facilityId)!}</@pageUrl>" class="${styles.link_nav_info_id!}">${(location.facilityId)!}</a></@td>
+            <@td><a href="<@pageUrl>EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)!}</@pageUrl>" class="${styles.link_nav_info_id!}">${(location.locationSeqId)!}</a></@td>
             <@td>${(locationTypeEnum.get("description",locale))?default(location.locationTypeEnumId!)}</@td>
             <@td>${(location.areaId)!}</@td>
             <@td>${(location.aisleId)!}</@td>
@@ -60,11 +60,11 @@ code package.
             <@td>${(location.levelId)!}</@td>
             <@td>${(location.positionId)!}</@td>
             <@td class="button-col">
-              <a href="<@ofbizUrl>EditInventoryItem?facilityId=${(location.facilityId)!}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductNewInventoryItem}</a>
+              <a href="<@pageUrl>EditInventoryItem?facilityId=${(location.facilityId)!}&locationSeqId=${(location.locationSeqId)!}</@pageUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductNewInventoryItem}</a>
               <#if itemId??>
-                <a href="<@ofbizUrl>UpdateInventoryItem?inventoryItemId=${itemId}&facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductSetItem} ${itemId}</a>
+                <a href="<@pageUrl>UpdateInventoryItem?inventoryItemId=${itemId}&facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)!}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductSetItem} ${itemId}</a>
               </#if>
-              <a href="<@ofbizUrl>EditFacilityLocation?facilityId=${(location.facilityId)!}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
+              <a href="<@pageUrl>EditFacilityLocation?facilityId=${(location.facilityId)!}&locationSeqId=${(location.locationSeqId)!}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
             </@td>
         </@tr>
         </#list>

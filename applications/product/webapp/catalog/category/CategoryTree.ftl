@@ -22,7 +22,7 @@ var rawdata = [
             <#if (rootCat?has_content)>
                 <#list rootCat as root>
                     {
-                    "data": {"title" : unescapeHtmlText("<#if root.categoryName??>${root.categoryName?js_string} [${root.productCategoryId?js_string}]<#else>${root.productCategoryId?js_string}</#if>"), "attr": {"href" : "<@ofbizUrl>EditProdCatalog?prodCatalogId=${root.productCategoryId}</@ofbizUrl>","onClick" : "callDocument('${root.productCategoryId?js_string}', 'catalog');"}},
+                    "data": {"title" : unescapeHtmlText("<#if root.categoryName??>${root.categoryName?js_string} [${root.productCategoryId?js_string}]<#else>${root.productCategoryId?js_string}</#if>"), "attr": {"href" : "<@pageUrl>EditProdCatalog?prodCatalogId=${root.productCategoryId}</@pageUrl>","onClick" : "callDocument('${root.productCategoryId?js_string}', 'catalog');"}},
                     "attr": {"id" : "${root.productCategoryId}", "rel" : "root", "isCatalog" : "${root.isCatalog?string}" ,"isCategoryType" : "${root.isCategoryType?string}"}
                     <#if root.child??>
                     ,"state" : "closed"
@@ -52,7 +52,7 @@ var rawdata = [
             "plugins" : [ "themes", "json_data","ui" ,"cookies", "types"],
             "json_data" : {
                 "data" : rawdata,
-                "ajax" : { "url" : "<@ofbizUrl>getChild</@ofbizUrl>",
+                "ajax" : { "url" : "<@pageUrl>getChild</@pageUrl>",
                            "type" : "POST",
                            "data" : function (n) {
                                         return {

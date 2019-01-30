@@ -23,7 +23,7 @@ function aroundSubmitOrder(invocation) {
     var formToSubmit = document.setPaymentInformation;
     var paymentMethodTypeOption = document.setPaymentInformation.paymentMethodTypeOptionList.options[document.setPaymentInformation.paymentMethodTypeOptionList.selectedIndex].value;
     if(paymentMethodTypeOption == "none"){
-        document.setPaymentInformation.action = "<@ofbizUrl>quickAnonAddGiftCardToCart</@ofbizUrl>";
+        document.setPaymentInformation.action = "<@pageUrl>quickAnonAddGiftCardToCart</@pageUrl>";
     }
 
     jQuery.ajax({
@@ -47,7 +47,7 @@ function aroundSubmitOrder(invocation) {
 function getGCInfo() {
     if (document.setPaymentInformation.addGiftCard.checked) {
       jQuery.ajax({
-          url: "<@ofbizUrl>quickAnonGcInfo</@ofbizUrl>",
+          url: "<@pageUrl>quickAnonGcInfo</@pageUrl>",
           type: "POST",
           success: function(data) {
               document.getElementById("giftCardSection").innerHTML = data;
@@ -66,7 +66,7 @@ function getPaymentInformation() {
       if(paymentMethodTypeOption == "CREDIT_CARD"){
 
         jQuery.ajax({
-            url: "<@ofbizUrl>quickAnonCcInfo</@ofbizUrl>",
+            url: "<@pageUrl>quickAnonCcInfo</@pageUrl>",
             type: "POST",
             success: function(data) {
                 document.getElementById("paymentInfoSection").innerHTML = data;
@@ -74,11 +74,11 @@ function getPaymentInformation() {
         });
 
         document.setPaymentInformation.paymentMethodTypeId.value = "CREDIT_CARD";
-        document.setPaymentInformation.action = "<@ofbizUrl>quickAnonEnterCreditCard</@ofbizUrl>";
+        document.setPaymentInformation.action = "<@pageUrl>quickAnonEnterCreditCard</@pageUrl>";
       } else if (paymentMethodTypeOption == "EFT_ACCOUNT"){
 
        jQuery.ajax({
-            url: "<@ofbizUrl>quickAnonEftInfo</@ofbizUrl>",
+            url: "<@pageUrl>quickAnonEftInfo</@pageUrl>",
             type: "POST",
             success: function(data) {
                 document.getElementById("paymentInfoSection").innerHTML = data;
@@ -86,11 +86,11 @@ function getPaymentInformation() {
         });
 
         document.setPaymentInformation.paymentMethodTypeId.value = "EFT_ACCOUNT";
-        document.setPaymentInformation.action = "<@ofbizUrl>quickAnonEnterEftAccount</@ofbizUrl>";
+        document.setPaymentInformation.action = "<@pageUrl>quickAnonEnterEftAccount</@pageUrl>";
       } else if (paymentMethodTypeOption == "EXT_OFFLINE"){
         document.setPaymentInformation.paymentMethodTypeId.value = "EXT_OFFLINE";
         document.getElementById("paymentInfoSection").innerHTML = "";
-        document.setPaymentInformation.action = "<@ofbizUrl>quickAnonEnterExtOffline</@ofbizUrl>";
+        document.setPaymentInformation.action = "<@pageUrl>quickAnonEnterExtOffline</@pageUrl>";
       } else {
         document.setPaymentInformation.paymentMethodTypeId.value = "none";
         document.getElementById("paymentInfoSection").innerHTML = "";
@@ -99,7 +99,7 @@ function getPaymentInformation() {
 }
 </@script>
 <@section title=uiLabelMap.AccountingPaymentInformation>
-    <form id="setPaymentInformation" method="post" action="<@ofbizUrl>quickAnonAddGiftCardToCart</@ofbizUrl>" name="setPaymentInformation">
+    <form id="setPaymentInformation" method="post" action="<@pageUrl>quickAnonAddGiftCardToCart</@pageUrl>" name="setPaymentInformation">
 
       <#if (requestParameters.singleUsePayment!"N") == "Y">
         <input type="hidden" name="singleUsePayment" value="Y"/>

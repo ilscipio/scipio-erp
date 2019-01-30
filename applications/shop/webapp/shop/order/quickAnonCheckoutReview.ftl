@@ -12,7 +12,7 @@ code package.
     function processOrder() {
         if (clicked == 0) {
             clicked++;
-            //window.location.replace("<@ofbizUrl>processorder</@ofbizUrl>");
+            //window.location.replace("<@pageUrl>processorder</@pageUrl>");
             document["${escapeVal(parameters.formNameValue, 'js')}"].processButton.value="${escapeVal(uiLabelMap.OrderSubmittingOrder, 'js')}";
             document["${escapeVal(parameters.formNameValue, 'js')}"].processButton.disabled=true;
             document["${escapeVal(parameters.formNameValue, 'js')}"].submit();
@@ -22,7 +22,7 @@ code package.
     }
 
     function shippingMethodChanged(shippingMethod) {
-        var submitToUri = "<@ofbizUrl>quickAnonProcessShipOptionsUpdateOrderItems</@ofbizUrl>?shipping_method=" + shippingMethod;
+        var submitToUri = "<@pageUrl>quickAnonProcessShipOptionsUpdateOrderItems</@pageUrl>?shipping_method=" + shippingMethod;
         jQuery.ajax({
             url: submitToUri,
             type: "POST",
@@ -39,7 +39,7 @@ code package.
   <@render resource="component://shop/widget/OrderScreens.xml#quickAnonOrderHeader" />
   <br />
   <div id="orderItemsSection"><@render resource="component://shop/widget/OrderScreens.xml#orderitems" /></div>
-  <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
+  <form type="post" action="<@pageUrl>processorder</@pageUrl>" name="${parameters.formNameValue}">
     <@row>
       <@cell class="+${styles.text_right!}">
         <#if (parameters.checkoutpage)?has_content><#-- SCIPIO: use parameters map for checkout page, so request attributes are considered: requestParameters.checkoutpage -->

@@ -31,7 +31,7 @@ code package.
                   </#if>
               </@td>
               <@td class="+${styles.text_right!}">
-                <a href="<@ofbizUrl>removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
+                <a href="<@pageUrl>removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
               </@td>
             </@tr>
           </#list>

@@ -8,7 +8,7 @@
 
 <#-- EDIT TEMPLATE -->
 <#if assetTemplateModel?has_content>
-    <#assign editAssetUrl = makeOfbizUrl("editAsset?assetTemplateId=${assetTemplateModel.id!}")>
+    <#assign editAssetUrl = makePageUrl("editAsset?assetTemplateId=${assetTemplateModel.id!}")>
 
     <#-- Javascript functions -->
     <@script>
@@ -46,7 +46,7 @@
         
         function updateAssetInfo() {
             cmsCheckSubmitFieldOnlyIfChanged('settingsForm', 'description');
-            updateCmsElement("<@ofbizUrl escapeAs='js'>updateAssetInfo</@ofbizUrl>", 'settingsForm', 
+            updateCmsElement("<@pageUrl escapeAs='js'>updateAssetInfo</@pageUrl>", 'settingsForm', 
                 function(eventMsgs) {
                     doCmsSuccessRedirect("${escapeFullUrl(editAssetUrl, 'js')}", eventMsgs);
                 }
@@ -54,10 +54,10 @@
         }
         
         function deleteAsset() {
-            deleteCmsElement("<@ofbizUrl escapeAs='js'>deleteAsset</@ofbizUrl>", 
+            deleteCmsElement("<@pageUrl escapeAs='js'>deleteAsset</@pageUrl>", 
                 { assetTemplateId : "${(assetTemplateModel.id)!}" }, 
                 function(eventMsgs) {
-                    doCmsSuccessRedirect("<@ofbizUrl escapeAs='js'>assets</@ofbizUrl>", eventMsgs);
+                    doCmsSuccessRedirect("<@pageUrl escapeAs='js'>assets</@pageUrl>", eventMsgs);
                 }
             );
         }
@@ -73,7 +73,7 @@
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editAsset") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewAsset/>
+            <@menuitem type="link" href=makePageUrl("editAsset") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewAsset/>
             <@cmsCopyMenuItem target="copyAsset" title=uiLabelMap.CmsCopyAsset>
                 <@field type="hidden" name="assetTemplateId" value=(assetTemplateModel.id!)/><#-- for browsing, on error -->
                 <@field type="hidden" name="srcAssetTemplateId" value=(assetTemplateModel.id!)/>
@@ -83,7 +83,7 @@
             <@menuitem type="generic">
                 <@modal id="modal_new_attr" label=uiLabelMap.CmsAddAttribute linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddAttribute}</@heading>
-                    <form method="post" action="<@ofbizUrl>addAttributeToAsset</@ofbizUrl>" id="new-attribute-form">
+                    <form method="post" action="<@pageUrl>addAttributeToAsset</@pageUrl>" id="new-attribute-form">
                     <@fields type="default-compact">
                       <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}"/>
                       <@attributeFields/>
@@ -97,7 +97,7 @@
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
                     <@fields type="default-compact">
-                        <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToAsset") webSiteId=((assetTemplateModel.webSiteId)!)>
+                        <@cmsScriptTemplateSelectForm formAction=makePageUrl("addScriptToAsset") webSiteId=((assetTemplateModel.webSiteId)!)>
                             <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}"/>
                         </@cmsScriptTemplateSelectForm>
                     </@fields>
@@ -119,7 +119,7 @@
             </@row>
             <@row>
                 <@cell columns=9>
-                  <@form method="post" id="editorForm" action=makeOfbizUrl("createUpdateAsset")>
+                  <@form method="post" id="editorForm" action=makePageUrl("createUpdateAsset")>
                     <@field type="hidden" name="assetTemplateId" id="assetTemplateId" value=assetTemplateModel.id!""/>
                 
                     <#-- General Content -->
@@ -196,7 +196,7 @@
                         <#list assetAttr as attrTmpl>
                           <@modal id="edit_attr_${attrTmpl_index}">
                             <@heading>${uiLabelMap.CmsEditAttribute}</@heading>
-                            <form method="post" action="<@ofbizUrl>updateAssetAttribute</@ofbizUrl>" id="edit-attribute-form-${attrTmpl_index}">
+                            <form method="post" action="<@pageUrl>updateAssetAttribute</@pageUrl>" id="edit-attribute-form-${attrTmpl_index}">
                             <@fields type="default-compact">
                               <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}" />
                               <@attributeFields attrTmpl=attrTmpl/>
@@ -215,7 +215,7 @@
                 </@cell>
               
                 <@cell columns=3>
-                  <@form method="post" id="settingsForm" action=makeOfbizUrl('updateAssetInfo')>
+                  <@form method="post" id="settingsForm" action=makePageUrl('updateAssetInfo')>
                     <@field type="hidden" name="assetTemplateId" value=assetTemplateModel.id!""/>
                     
                     <#-- Template Information -->
@@ -245,7 +245,7 @@
         <#-- Workaround for OFBIZ-2330 -->
         <#if assetAttr?has_content>
             <#list assetAttr as attrTmpl>
-                <form id="remove_attr_${escapeVal(attrTmpl.id!, 'html')}" method="post" action="<@ofbizUrl>deleteAttributeFromAsset</@ofbizUrl>">
+                <form id="remove_attr_${escapeVal(attrTmpl.id!, 'html')}" method="post" action="<@pageUrl>deleteAttributeFromAsset</@pageUrl>">
                     <input type="hidden" name="attributeTemplateId" value="${attrTmpl.id!}"/>
                     <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}"/>
                 </form>
@@ -257,7 +257,7 @@
         <#-- NEW Asset -->
         <@row>
             <@cell columns=6 last=true>
-                <@form method="post" id="editorForm" action=makeOfbizUrl("createUpdateAsset")>
+                <@form method="post" id="editorForm" action=makePageUrl("createUpdateAsset")>
                     <@section title=uiLabelMap.CmsNewAsset>
                       <@fields type="default-compact">
                         <input type="hidden" name="isCreate" value="Y"/>

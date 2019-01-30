@@ -21,7 +21,7 @@
     	"add": {
             "type": "link",
             "target": "_top",
-            "url": makeOfbizInterWebappUrl({"uri":'/accounting/control/EditGlobalGlAccount', "extLoginKey":true})            
+            "url": makeServerUrl({"uri":'/accounting/control/EditGlobalGlAccount', "extLoginKey":true})            
         },
         "select": {
             "type": "link",
@@ -30,7 +30,7 @@
         "edit": {
             "type": "link",
             "target": "_top",
-            "url": makeOfbizInterWebappUrl({"uri":'/accounting/control/EditGlobalGlAccount', "extLoginKey":true}),
+            "url": makeServerUrl({"uri":'/accounting/control/EditGlobalGlAccount', "extLoginKey":true}),
             "paramNames": {"glAccountId": true }       
         },       
         "remove": {

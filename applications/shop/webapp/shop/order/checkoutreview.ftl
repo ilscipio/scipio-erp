@@ -10,7 +10,7 @@ code package.
     function processOrder() {
         if (clicked == 0) {
             clicked++;
-            //window.location.replace("<@ofbizUrl>processorder</@ofbizUrl>");
+            //window.location.replace("<@pageUrl>processorder</@pageUrl>");
             document["${escapeVal(parameters.formNameValue, 'js')}"].processButton.value="${escapeVal(uiLabelMap.OrderSubmittingOrder, 'js')}";
             document["${escapeVal(parameters.formNameValue, 'js')}"].processButton.disabled=true;
             document["${escapeVal(parameters.formNameValue, 'js')}"].submit();
@@ -30,7 +30,7 @@ code package.
   <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
   <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
   <@checkoutActionsMenu directLinks=true>
-    <form type="post" action="<@ofbizUrl>processorder</@ofbizUrl>" name="${parameters.formNameValue}">
+    <form type="post" action="<@pageUrl>processorder</@pageUrl>" name="${parameters.formNameValue}">
       <#if (parameters.checkoutpage)?has_content><#-- SCIPIO: use parameters map for checkout page, so request attributes are considered: requestParameters.checkoutpage -->
         <input type="hidden" name="checkoutpage" value="${parameters.checkoutpage}" /><#-- ${requestParameters.checkoutpage} -->
       </#if>

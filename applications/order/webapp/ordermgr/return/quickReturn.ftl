@@ -7,7 +7,7 @@ code package.
 <@section> <#--  title=uiLabelMap.OrderReturnItems -->
         <#-- DO NOT CHANGE THE NAME OF THIS FORM, it will break the some of the multi-service pattern features -->
         <#assign selectAllFormName = "selectAllForm"/>
-        <form name="selectAllForm" method="post" action="<@ofbizUrl>makeQuickReturn</@ofbizUrl>">
+        <form name="selectAllForm" method="post" action="<@pageUrl>makeQuickReturn</@pageUrl>">
           <input type="hidden" name="_checkGlobalScope" value="Y"/>
           <input type="hidden" name="_useRowSubmit" value="Y"/>
           <input type="hidden" name="fromPartyId" value="${partyId!}"/>
@@ -46,7 +46,7 @@ code package.
                 <@field type="input" size="20" name="paymentMethodId" />
               </#if>
               <#if (party.partyId)?has_content>
-                <a href="<@ofbizInterWebappUrl>/partymgr/control/editcreditcard?partyId=${party.partyId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
+                <a href="<@serverUrl>/partymgr/control/editcreditcard?partyId=${party.partyId}${rawString(externalKeyParam)}</@serverUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
           </@field>
         </#if>
@@ -74,7 +74,7 @@ code package.
                       <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                       <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                       <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                      <#--<a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>-->
+                      <#--<a href="<@pageUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>-->
                     </@td>
                 </@tr>
               </#list>

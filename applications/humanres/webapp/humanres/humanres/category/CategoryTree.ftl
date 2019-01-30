@@ -22,7 +22,7 @@ var rawdata = [
             <#if (rootCat?has_content)>
                 <#list rootCat as root>
                     {
-                    "data": {"title" : unescapeHtmlText("<#if root.groupName??>${root.groupName?js_string} [${root.partyId?js_string}]<#else>${root.partyId?js_string}</#if>"), "attr": {"href" : "<@ofbizUrl>viewprofile?partyId=${root.partyId}</@ofbizUrl>","onClick" : "callDocument('${root.partyId?js_string}');"}},
+                    "data": {"title" : unescapeHtmlText("<#if root.groupName??>${root.groupName?js_string} [${root.partyId?js_string}]<#else>${root.partyId?js_string}</#if>"), "attr": {"href" : "<@pageUrl>viewprofile?partyId=${root.partyId}</@pageUrl>","onClick" : "callDocument('${root.partyId?js_string}');"}},
                     "attr": {"id" : "${root.partyId}", "rel" : "Y"}
                     <#if root.child??>
                     ,"state" : "closed"
@@ -48,7 +48,7 @@ var rawdata = [
         "plugins" : [ "themes", "json_data","ui" ,"cookies", "types", "crrm", "contextmenu"],
             "json_data" : {
                 "data" : rawdata,
-                          "ajax" : { "url" : "<@ofbizUrl>getHRChild</@ofbizUrl>", "type" : "POST",
+                          "ajax" : { "url" : "<@pageUrl>getHRChild</@pageUrl>", "type" : "POST",
                           "data" : function (n) {
                             return { 
                                 "partyId" : n.attr ? n.attr("id").replace("node_","") : 1 ,

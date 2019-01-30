@@ -24,7 +24,7 @@
         </#if>
 
 
-      <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
+      <form method="post" action="<@pageUrl>login</@pageUrl>" name="loginform">
        <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
        <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
        <#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>
@@ -45,7 +45,7 @@
       </form>
     </div>
     <div class="panel-footer card-footer">
-                <small><a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}</a></small>
+                <small><a href="<@pageUrl>forgotPassword</@pageUrl>">${uiLabelMap.CommonForgotYourPassword}</a></small>
     </div>
 </div>
 </@cell>

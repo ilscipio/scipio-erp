@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <#if quote??>
-<form action="<@ofbizUrl>copyQuote</@ofbizUrl>" method="post">
+<form action="<@pageUrl>copyQuote</@pageUrl>" method="post">
     <input type="hidden" name="quoteId" value="${quoteId}"/>
     <div>
         <span>${uiLabelMap.OrderCopyQuote}</span>

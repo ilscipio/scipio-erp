@@ -115,7 +115,7 @@
         <filter-class>com.ilscipio.scipio.product.seo.SeoCatalogUrlFilter</filter-class>
         <init-param>
             <description>If true, enables advanced SEO URL handling+generation following SEO configuration in SeoConfig.xml* (/applications/product/config/SeoConfig.xml),
-                intercepting both old-style (@ofbizCatalogUrl) and alternative URLs (@ofbizCatalogAltUrl) and generating a single format; 
+                intercepting both old-style (@catalogUrl) and alternative URLs (@catalogAltUrl) and generating a single format; 
                 if false, delegates to the regular CatalogUrlFilter implementation. 
                 NOTE: 2017-11-26: Now enabled by default in Scipio (master). 
                 NOTE(*): The default Scipio SeoConfig.xml allows handling incoming stock CatalogUrlFilter-generated ALT URLs (*-c, *-p);
@@ -126,7 +126,7 @@
         </init-param>
         <init-param>
             <description>If true, attempts to rewrite outbound /control/product and /control/category requests to SEO URLs.
-                In other words, [@ofbizUrl]product?productId=FA-001[/@ofbizUrl] appears as if had written [@ofbizCatalogAltUrl productId="FA-001"/].
+                In other words, [@pageUrl]product?productId=FA-001[/@pageUrl] appears as if had written [@catalogAltUrl productId="FA-001"/].
                 Notably, this applies to controller redirects that follow a compatible URL generation pattern (only some special cases may not cover).
                 WARN: 2017-11-21: This is currently best-effort; reliability is about on par as the outbound-rules in urlrewrite.xml.</description>
             <param-name>rewriteOutboundUrls</param-name>

@@ -40,7 +40,7 @@ function removeSelected() {
 }
 function addToList() {
     var cform = document.cartform;
-    cform.action = "<@ofbizUrl>addBulkToShoppingList</@ofbizUrl>";
+    cform.action = "<@pageUrl>addBulkToShoppingList</@pageUrl>";
     cform.submit();
 }
 function gwAll(e) {
@@ -85,9 +85,9 @@ function gwAll(e) {
 }
 function quicklookup(element) {
     <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-    window.location='<@ofbizUrl>LookupBulkAddSupplierProducts</@ofbizUrl>?productId='+element.value;
+    window.location='<@pageUrl>LookupBulkAddSupplierProducts</@pageUrl>?productId='+element.value;
     <#else>
-    window.location='<@ofbizUrl>LookupBulkAddProducts</@ofbizUrl>?productId='+element.value;
+    window.location='<@pageUrl>LookupBulkAddProducts</@pageUrl>?productId='+element.value;
     </#if>
 }-->
 </@script>

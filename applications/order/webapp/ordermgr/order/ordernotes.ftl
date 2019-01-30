@@ -9,7 +9,7 @@ code package.
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
     <#if security.hasEntityPermission("ORDERMGR", "_NOTE", request)>
-      <@menuitem type="link" href=makeOfbizUrl("createnewnote?${rawString(paramString)}") text=uiLabelMap.OrderNotesCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
+      <@menuitem type="link" href=makePageUrl("createnewnote?${rawString(paramString)}") text=uiLabelMap.OrderNotesCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
     </#if>
     </@menu>
   </#macro>
@@ -31,7 +31,7 @@ code package.
           <@td align="right" valign="top" width="15%">
             <#if (note.internalNote!) == "N">
                 ${uiLabelMap.OrderPrintableNote}
-                <form name="privateNotesForm_${note_index}" method="post" action="<@ofbizUrl>updateOrderNote</@ofbizUrl>">
+                <form name="privateNotesForm_${note_index}" method="post" action="<@pageUrl>updateOrderNote</@pageUrl>">
                   <input type="hidden" name="orderId" value="${orderId}"/>
                   <input type="hidden" name="noteId" value="${note.noteId}"/>
                   <input type="hidden" name="internalNote" value="Y"/>
@@ -40,7 +40,7 @@ code package.
             </#if>
             <#if (note.internalNote!) == "Y">
                 ${uiLabelMap.OrderNotPrintableNote}
-                <form name="publicNotesForm_${note_index}" method="post" action="<@ofbizUrl>updateOrderNote</@ofbizUrl>">
+                <form name="publicNotesForm_${note_index}" method="post" action="<@pageUrl>updateOrderNote</@pageUrl>">
                   <input type="hidden" name="orderId" value="${orderId}"/>
                   <input type="hidden" name="noteId" value="${note.noteId}"/>
                   <input type="hidden" name="internalNote" value="N"/>

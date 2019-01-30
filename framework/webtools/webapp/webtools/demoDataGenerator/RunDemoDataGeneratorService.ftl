@@ -52,7 +52,7 @@
 
 <#assign sectionTitle = rawLabel('WebtoolsServiceName') + " - " + rawString(parameters.SERVICE_NAME!)>
 <@section title=sectionTitle>
-	<form name="demoDataGeneratorForm" method="post" action="<@ofbizUrl>DemoDataGeneratorResult?_RUN_SYNC_=Y</@ofbizUrl>">
+	<form name="demoDataGeneratorForm" method="post" action="<@pageUrl>DemoDataGeneratorResult?_RUN_SYNC_=Y</@pageUrl>">
 		
 	      <#-- SCIPIO: leave room for the label area because service parameter names can be long -->
 	      <@fields fieldArgs={"labelColumns":4}>

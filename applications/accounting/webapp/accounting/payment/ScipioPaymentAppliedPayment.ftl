@@ -13,11 +13,11 @@
         <#list paymentList as iApp>
             <#assign amountApplied = Static["org.ofbiz.accounting.payment.PaymentWorker"].getPaymentAppliedAmount(delegator, iApp.paymentApplicationId!0)/>
             <@tr>
-                <@td><a href="<@ofbizUrl>invoiceOverview?invoiceId=${iApp.invoiceId!}</@ofbizUrl>">${iApp.invoiceId!}</a></@td>
+                <@td><a href="<@pageUrl>invoiceOverview?invoiceId=${iApp.invoiceId!}</@pageUrl>">${iApp.invoiceId!}</a></@td>
                 <#--<@td>${iApp.invoiceItemSeqId!}</@td>-->
                 <#if iApp.billingAccountId?has_content>
                     <#assign billingAcct = iApp.getRelatedOne("BillingAccount", false)/>
-                        <@td><a href="<@ofbizUrl>EditBillingAccount?billingAccountId=${invoice.billingAccountId!}</@ofbizUrl>">${billingAcct.get('description',locale)}</a></@td>
+                        <@td><a href="<@pageUrl>EditBillingAccount?billingAccountId=${invoice.billingAccountId!}</@pageUrl>">${billingAcct.get('description',locale)}</a></@td>
                     <#else>
                         <@td></@td>
                 </#if>

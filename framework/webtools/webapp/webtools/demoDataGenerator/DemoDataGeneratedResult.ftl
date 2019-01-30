@@ -61,7 +61,7 @@
                                                                     <#assign primaryKey = primaryKey + "&">
                                                                 </#if>
                                                             </#list>
-                                                            <a href="<@ofbizUrl>ViewGeneric?entityName=${statKeys[i]}${primaryKey!}</@ofbizUrl>">${generatedValue.getPkShortValueString()}</a>    
+                                                            <a href="<@pageUrl>ViewGeneric?entityName=${statKeys[i]}${primaryKey!}</@pageUrl>">${generatedValue.getPkShortValueString()}</a>    
                                                         </#if>    
                                                     </@td>
                                                 </@tr>

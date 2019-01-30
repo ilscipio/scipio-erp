@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <@section>
-<form method="post" action="<@ofbizUrl>mergeContacts</@ofbizUrl>" class="basic-form">
+<form method="post" action="<@pageUrl>mergeContacts</@pageUrl>" class="basic-form">
         <#if contactInfoList?has_content>
           <#assign contactInfo1 = contactInfoList[0]/>
           <#assign contactInfo2 = contactInfoList[1]/>

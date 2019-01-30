@@ -29,8 +29,8 @@ code package.
         <#if invoiceIds?has_content>
             <@row>
                 <@cell>
-                    ${uiLabelMap.CommonView} <a href="<@ofbizUrl>PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
-                    ${uiLabelMap.CommonView} <a href="<@ofbizUrl>ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>EditShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${shipmentId}</a>
+                    ${uiLabelMap.CommonView} <a href="<@pageUrl>PackingSlip.pdf?shipmentId=${shipmentId}</@pageUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
+                    ${uiLabelMap.CommonView} <a href="<@pageUrl>ShipmentBarCode.pdf?shipmentId=${shipmentId}</@pageUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@pageUrl>EditShipment?shipmentId=${shipmentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${shipmentId}</a>
                 </@cell>
             </@row>
             <#if invoiceIds?exists && invoiceIds?has_content>
@@ -40,8 +40,8 @@ code package.
                         <@menu type="button">
                             <#list invoiceIds as invoiceId>
                                 <@menuitem type="generic">
-                                    ${uiLabelMap.CommonNbr}<a href="<@ofbizInterWebappUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
-                                    (<a href="<@ofbizInterWebappUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
+                                    ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
+                                    (<a href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
                                 </@menuitem>
                             </#list>
                         </@menu>
@@ -53,7 +53,7 @@ code package.
         <#-- select order form -->
         <#-- select picklist bin form -->
         <@section>
-            <form name="selectOrderForm" method="post" action="<@ofbizUrl>PackOrder</@ofbizUrl>">
+            <form name="selectOrderForm" method="post" action="<@pageUrl>PackOrder</@pageUrl>">
                 <input type="hidden" name="facilityId" value="${facilityId!}" />
                 <@field type="generic" label=uiLabelMap.ProductOrderId>                    
                     <@field type="lookup" formName="selectOrderForm" name="orderId" id="orderId" size="20" maxlength="20" fieldFormName="LookupOrderHeader"/>
@@ -65,22 +65,22 @@ code package.
                 </@field>               
                 <@field type="submitarea">                    
                     <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackOrder />
-                    <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.action='${makeOfbizUrl('WeightPackageOnly')}';document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_verify!}" text=uiLabelMap.ProductWeighPackageOnly />
+                    <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.action='${makePageUrl('WeightPackageOnly')}';document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_verify!}" text=uiLabelMap.ProductWeighPackageOnly />
                 </@field>
             </form>
         </@section>
 
-        <form name="clearPackForm" method="post" action="<@ofbizUrl>ClearPackAll</@ofbizUrl>">
+        <form name="clearPackForm" method="post" action="<@pageUrl>ClearPackAll</@pageUrl>">
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
           <input type="hidden" name="facilityId" value="${facilityId!}"/>
         </form>
-        <form name="incPkgSeq" method="post" action="<@ofbizUrl>SetNextPackageSeq</@ofbizUrl>">
+        <form name="incPkgSeq" method="post" action="<@pageUrl>SetNextPackageSeq</@pageUrl>">
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
           <input type="hidden" name="facilityId" value="${facilityId!}"/>
         </form>
-        <form name="clearPackLineForm" method="post" action="<@ofbizUrl>ClearPackLine</@ofbizUrl>">
+        <form name="clearPackLineForm" method="post" action="<@pageUrl>ClearPackLine</@pageUrl>">
             <input type="hidden" name="facilityId"/>
             <input type="hidden" name="orderId"/>
             <input type="hidden" name="orderItemSeqId"/>
@@ -92,7 +92,7 @@ code package.
     </@section>
 
     <#if showInput != "N" && ((orderHeader?exists && orderHeader?has_content))>
-        <#assign sectionTitle>${getLabel('ProductOrderId')} <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderId}</@ofbizInterWebappUrl>">${orderId}</a> / ${getLabel('ProductOrderShipGroupId')} #${shipGroupSeqId}</#assign>
+        <#assign sectionTitle>${getLabel('ProductOrderId')} <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderId}</@serverUrl>">${orderId}</a> / ${getLabel('ProductOrderShipGroupId')} #${shipGroupSeqId}</#assign>
         <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
             <#if orderItemShipGroup?has_content>
                 <#if (orderItemShipGroup.contactMechId)?has_content>
@@ -147,7 +147,7 @@ code package.
             <#if showInput != "N" && itemInfos?has_content>
                 <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPack')}"/>
                 <@section title=sectionTitle>
-                    <form name="singlePackForm" method="post" action="<@ofbizUrl>ProcessPackOrder</@ofbizUrl>">                    
+                    <form name="singlePackForm" method="post" action="<@pageUrl>ProcessPackOrder</@pageUrl>">                    
                         <input type="hidden" name="packageSeq" value="${packingSession.getCurrentPackageSeq()}"/>
                         <input type="hidden" name="orderId" value="${orderId}"/>
                         <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId}"/>
@@ -168,7 +168,7 @@ code package.
                 <#assign itemInfos = packingSession.getItemInfos()!>
                 <#assign sectionTitle="${rawLabel('ProductProducts')} ${rawLabel('ProductToPack')}"/>
                 <@section title=sectionTitle>
-                    <form name="multiPackForm" method="post" action="<@ofbizUrl>ProcessBulkPackOrder</@ofbizUrl>">
+                    <form name="multiPackForm" method="post" action="<@pageUrl>ProcessBulkPackOrder</@pageUrl>">
                         <@fields type="default-manual">
                             <input type="hidden" name="facilityId" value="${facilityId!}" />
                             <input type="hidden" name="orderId" value="${orderId!}" />
@@ -209,9 +209,9 @@ code package.
                                                 </#if>
                                             </@td>
                                             <@td>
-                                                <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${orderProduct.productId!}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
+                                                <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${orderProduct.productId!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
                                                 <#if orderProduct.productId != product.productId>
-                                                    &nbsp;[<a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${product.productId!}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
+                                                    &nbsp;[<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
                                                 </#if>
                                             </@td>
                                             <@td>${orderItemQuantity}</@td>
@@ -272,7 +272,7 @@ code package.
             <#assign packageSeqIds = packingSession.getPackageSeqIds()/>
             <#if showInput != "N" && packageSeqIds?has_content>
                 <@section>
-                    <form name="completePackForm" method="post" action="<@ofbizUrl>CompletePack</@ofbizUrl>">
+                    <form name="completePackForm" method="post" action="<@pageUrl>CompletePack</@pageUrl>">
                         <@fields type="default-manual">
                             <input type="hidden" name="orderId" value="${orderId!}"/>
                             <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
@@ -319,7 +319,7 @@ code package.
                                         <@td>
                                             <@field type="input" name="additionalShippingCharge" value=(packingSession.getAdditionalShippingCharge()!) size="20"/>
                                             <#if packageSeqIds?has_content>
-                                                <a href="javascript:document.completePackForm.action='<@ofbizUrl>calcPackSessionAdditionalShippingCharge</@ofbizUrl>';document.completePackForm.submit();" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.ProductEstimateShipCost}</a>                                               
+                                                <a href="javascript:document.completePackForm.action='<@pageUrl>calcPackSessionAdditionalShippingCharge</@pageUrl>';document.completePackForm.submit();" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.ProductEstimateShipCost}</a>                                               
                                             </#if>
                                         </@td>
                                         <@td>
@@ -369,7 +369,7 @@ code package.
                                     <@td>${line.getOrderItemSeqId()}</@td>
                                     <@td>${line.getProductId()!(uiLabelMap.CommonNA)}</@td>
                                     <@td>
-                                        <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${line.getProductId()!}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_name!}" target="_blank">${product.internalName!("[${uiLabelMap.CommonNA}]")}</a>
+                                        <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${line.getProductId()!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${product.internalName!("[${uiLabelMap.CommonNA}]")}</a>
                                     </@td>
                                     <@td>${line.getInventoryItemId()}</@td>
                                     <@td>${line.getQuantity()}</@td>

@@ -11,9 +11,9 @@ code package.
   <#if (lastViewedProducts?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(lastViewedProducts?size-1)/></#if>
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("clearLastViewed") text="[${rawLabel('CommonClear')}]" />
+        <@menuitem type="link" href=makePageUrl("clearLastViewed") text="[${rawLabel('CommonClear')}]" />
         <#if (lastViewedProducts?size > maxToShow)>
-          <@menuitem type="link" href=makeOfbizUrl("lastviewedproducts") text="[${rawLabel('CommonMore')}]" />
+          <@menuitem type="link" href=makePageUrl("lastviewedproducts") text="[${rawLabel('CommonMore')}]" />
         </#if>
     </@menu>
   </#macro>

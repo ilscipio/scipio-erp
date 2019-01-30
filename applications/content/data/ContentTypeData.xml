@@ -229,7 +229,7 @@ code package.
 <div id="divTwo" class="wrapOuter">
     <div>
     ${mapKey?if_exists}
-    <a class="${styles.link_nav!} ${styles.action_find!}" href="javascript:lookupSubContent('<@ofbizUrl>/LookupSubContent</@ofbizUrl>', '${contentIdTo?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}')">[Find]</a>
+    <a class="${styles.link_nav!} ${styles.action_find!}" href="javascript:lookupSubContent('<@pageUrl>/LookupSubContent</@pageUrl>', '${contentIdTo?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}')">[Find]</a>
     <#assign ofbizRequest=""/>
     <#assign httpParams="contentIdTo=" + contentIdTo?if_exists + "&mapKey=" + mapKey?if_exists />
     <#if subDataResourceTypeId == "IMAGE_OBJECT">
@@ -241,9 +241,9 @@ code package.
             <#assign ofbizRequest="EditLayoutSubContent"/>
         </#if>
     </#if>
-    <a class="${styles.link_nav!} ${styles.action_add!}" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>">[New]</a>
+    <a class="${styles.link_nav!} ${styles.action_add!}" href="<@pageUrl>/${ofbizRequest}?${httpParams}&mode=add</@pageUrl>">[New]</a>
     <#if subContentId?exists && (0 < subContentId?length)>
-        <a class="${styles.link_nav!} ${styles.action_update!}" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&contentId=${subContentId}&drDataResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[Edit]</a>
+        <a class="${styles.link_nav!} ${styles.action_update!}" href="<@pageUrl>/${ofbizRequest}?${httpParams}&contentId=${subContentId}&drDataResourceId=${subDataResourceId?if_exists}</@pageUrl>">[Edit]</a>
     </#if>
     </div>
 <div id="divOne" class="wrapInner">

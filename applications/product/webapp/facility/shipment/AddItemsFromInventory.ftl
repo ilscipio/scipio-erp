@@ -21,22 +21,22 @@ code package.
       </@thead>
       <#list items as item>
         <@tr>
-          <@td><a href="<@ofbizInterWebappUrl>/ordermgr/control/returnMain?returnId=${item.returnId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${item.returnId}</a> [${item.returnItemSeqId}]</@td>
-          <@td><a href="<@ofbizInterWebappUrl>/catalog/control/EditProductInventoryItems?productId=${item.productId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${item.productId}</a> ${item.internalName!}</@td>
+          <@td><a href="<@serverUrl>/ordermgr/control/returnMain?returnId=${item.returnId}</@serverUrl>" class="${styles.link_nav_info_id!}">${item.returnId}</a> [${item.returnItemSeqId}]</@td>
+          <@td><a href="<@serverUrl>/catalog/control/EditProductInventoryItems?productId=${item.productId}</@serverUrl>" class="${styles.link_nav_info_id!}">${item.productId}</a> ${item.internalName!}</@td>
           <@td>${item.returnQuantity}</@td>
           <@td>${item.shipmentItemQty}</@td>
           <@td>${item.totalQtyIssued}</@td>
           <@td>
             <#if item.issuedItems?has_content>
               <#list item.issuedItems as issuedItem>
-                <div><a href="<@ofbizInterWebappUrl>/facility/control/EditInventoryItem?inventoryItemId=${issuedItem.inventoryItemId}</@ofbizInterWebappUrl>" class="${styles.link_nav_info_id!}">${issuedItem.inventoryItemId}</a> ${issuedItem.quantity}</div>
+                <div><a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${issuedItem.inventoryItemId}</@serverUrl>" class="${styles.link_nav_info_id!}">${issuedItem.inventoryItemId}</a> ${issuedItem.quantity}</div>
               </#list>
             </#if>
           </@td>
           <@td>${item.qtyStillNeedToBeIssued}</@td>
           <#if (item.shipmentItemQty > item.totalQtyIssued)>
             <@td>
-                <form name="issueInventoryItemToShipment_${item_index}" action="<@ofbizUrl>issueInventoryItemToShipment</@ofbizUrl>" method="post">
+                <form name="issueInventoryItemToShipment_${item_index}" action="<@pageUrl>issueInventoryItemToShipment</@pageUrl>" method="post">
                   <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                   <input type="hidden" name="shipmentItemSeqId" value="${item.shipmentItemSeqId}"/>
                   <input type="hidden" name="totalIssuedQty" value="${item.totalQtyIssued}"/>

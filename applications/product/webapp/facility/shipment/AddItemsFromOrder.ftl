@@ -6,7 +6,7 @@ code package.
 <#if shipment??>
 <#--
 <@section>
-    <form name="additemsfromorder" action="<@ofbizUrl>AddItemsFromOrder</@ofbizUrl>">
+    <form name="additemsfromorder" action="<@pageUrl>AddItemsFromOrder</@pageUrl>">
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
         <@field type="lookup" value=(orderId!) label=uiLabelMap.ProductOrderId formName="additemsfromorder" name="orderId" id="orderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
         <@field type="text" label=uiLabelMap.ProductOrderShipGroupId size="20" name="shipGroupSeqId" value=(shipGroupSeqId!)/>
@@ -44,9 +44,9 @@ code package.
     <#if orderItemDatas??>
         <#assign rowCount = 0>
         <#if isSalesOrder>
-            <form action="<@ofbizUrl>issueOrderItemShipGrpInvResToShipment</@ofbizUrl>" method="post" name="selectAllForm">
+            <form action="<@pageUrl>issueOrderItemShipGrpInvResToShipment</@pageUrl>" method="post" name="selectAllForm">
         <#else>
-            <form action="<@ofbizUrl>issueOrderItemToShipment</@ofbizUrl>" method="post" name="selectAllForm">
+            <form action="<@pageUrl>issueOrderItemToShipment</@pageUrl>" method="post" name="selectAllForm">
         </#if>
         <input type="hidden" name="shipmentId" value="${shipmentId}" />
         <input type="hidden" name="_useRowSubmit" value="Y" />

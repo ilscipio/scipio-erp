@@ -8,14 +8,14 @@ code package.
 
 <@script>
     function reloadCaptcha(fieldName) {
-        var captchaUri = "<@ofbizUrl>captcha.jpg?captchaCodeId=" + fieldName + "&amp;unique=_PLACEHOLDER_</@ofbizUrl>";
+        var captchaUri = "<@pageUrl>captcha.jpg?captchaCodeId=" + fieldName + "&amp;unique=_PLACEHOLDER_</@pageUrl>";
         var unique = Date.now();
         captchaUri = captchaUri.replace("_PLACEHOLDER_", unique);
         document.getElementById(fieldName).src = captchaUri;
     }
 </@script>
 <@section title=uiLabelMap.CommonContactUs>
-    <form id="contactForm" method="post" action="<@ofbizUrl>submitAnonContact</@ofbizUrl>">
+    <form id="contactForm" method="post" action="<@pageUrl>submitAnonContact</@pageUrl>">
         <input type="hidden" name="partyIdFrom" value="${(userLogin.partyId)!}" />
         <input type="hidden" name="partyIdTo" value="${productStore.payToPartyId!}"/>
         <input type="hidden" name="contactMechTypeId" value="WEB_ADDRESS" />
@@ -46,7 +46,7 @@ code package.
                 </@tr>
                 <@tr>
                    <@td>${uiLabelMap.CommonCaptchaCode}</@td>
-                   <@td><div><img id="captchaImage" src="<@ofbizUrl>captcha.jpg?captchaCodeId=captchaImage&amp;unique=${nowTimestamp.getTime()}</@ofbizUrl>" alt="" /></div><a href="javascript:reloadCaptcha('captchaImage');">${uiLabelMap.CommonReloadCaptchaCode}</a></@td>
+                   <@td><div><img id="captchaImage" src="<@pageUrl>captcha.jpg?captchaCodeId=captchaImage&amp;unique=${nowTimestamp.getTime()}</@pageUrl>" alt="" /></div><a href="javascript:reloadCaptcha('captchaImage');">${uiLabelMap.CommonReloadCaptchaCode}</a></@td>
                 </@tr>
                 <@tr>
                    <@td>${uiLabelMap.CommonVerifyCaptchaCode}</@td>

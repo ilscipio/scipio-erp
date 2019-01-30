@@ -15,7 +15,7 @@ SCIPIO: Local order template common defs
       <@cell columns=6>
         <@menu type="button">
         <#if directLinks>
-          <@menuitem type="link" href=makeOfbizUrl("showcart") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
+          <@menuitem type="link" href=makePageUrl("showcart") class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
         <#else>
           <@menuitem type="link" href="javascript:submitForm(document['${escapeVal(formName, 'js')}'], 'CS', '');" class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
         </#if>

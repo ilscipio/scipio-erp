@@ -6,7 +6,7 @@ code package.
 
 <#if allProductPromos?has_content>
     <@section title=uiLabelMap.OrderManualPromotions>
-        <form method="post" action="<@ofbizUrl>doManualPromotions</@ofbizUrl>" name="domanualpromotions">
+        <form method="post" action="<@pageUrl>doManualPromotions</@pageUrl>" name="domanualpromotions">
           <!-- to enter more than two manual promotions, just add a new select box with name="productPromoId_n" -->
           <select name="productPromoId_1">
             <option value=""></option>

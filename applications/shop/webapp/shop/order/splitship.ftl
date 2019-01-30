@@ -11,23 +11,23 @@ code package.
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; payment info
-        form.action="<@ofbizUrl>updateShippingOptions/checkoutpayment</@ofbizUrl>";
+        form.action="<@pageUrl>updateShippingOptions/checkoutpayment</@pageUrl>";
         form.submit();
     } else if (mode == "CS") {
         // continue shopping
-        form.action="<@ofbizUrl>updateShippingOptions/showcart</@ofbizUrl>";
+        form.action="<@pageUrl>updateShippingOptions/showcart</@pageUrl>";
         form.submit();
     } else if (mode == "NA") {
         // new address
-        form.action="<@ofbizUrl>updateShippingOptions/editcontactmech?DONE_PAGE=splitship&preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
+        form.action="<@pageUrl>updateShippingOptions/editcontactmech?DONE_PAGE=splitship&preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@pageUrl>";
         form.submit();
     } else if (mode == "SV") {
         // save option; return to current screen
-        form.action="<@ofbizUrl>updateShippingOptions/splitship</@ofbizUrl>";
+        form.action="<@pageUrl>updateShippingOptions/splitship</@pageUrl>";
         form.submit();
     } else if (mode == "SA") {
         // selected shipping address
-        form.action="<@ofbizUrl>updateShippingAddress/splitship</@ofbizUrl>";
+        form.action="<@pageUrl>updateShippingAddress/splitship</@pageUrl>";
         form.submit();
     }
 }
@@ -151,7 +151,7 @@ function submitForm(form, mode, value) {
       <#list cart.items() as cartLine>
         <#assign cartLineIndex = cart.getItemIndex(cartLine)>
         <@tr>
-          <form method="post" action="<@ofbizUrl>updatesplit</@ofbizUrl>" name="editgroupform">
+          <form method="post" action="<@pageUrl>updatesplit</@pageUrl>" name="editgroupform">
             <input type="hidden" name="itemIndex" value="${cartLineIndex}"/>
             <@td>
               <div>
@@ -162,13 +162,13 @@ function submitForm(form, mode, value) {
                   <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale, dispatcher, "url")!>
                   <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
                   <#if smallImageUrl?string?has_content>
-                    <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>">
-                      <img src="<@ofbizContentUrl ctxPrefix=true>${smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" />
+                    <a href="<@pageUrl>product?product_id=${cartLine.getProductId()}</@pageUrl>">
+                      <img src="<@contentUrl ctxPrefix=true>${smallImageUrl}</@contentUrl>" class="cssImgSmall" alt="" />
                     </a>
                   </#if>
                   -->
                   <#-- end code to display a small image of the product -->
-                  <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${cartLine.getProductId()} -
+                  <a href="<@pageUrl>product?product_id=${cartLine.getProductId()}</@pageUrl>" class="${styles.link_nav_info_desc!}">${cartLine.getProductId()} -
                   ${cartLine.getName()!}</a> : ${cartLine.getDescription()!}
 
                   <#-- display the registered ship groups and quantity -->
@@ -229,5 +229,5 @@ function submitForm(form, mode, value) {
 </@section>
 
 <@checkoutActionsMenu directLinks=true >
-  <@menuitem type="link" href=makeOfbizUrl("checkoutpayment") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonContinue />
+  <@menuitem type="link" href=makePageUrl("checkoutpayment") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.CommonContinue />
 </@checkoutActionsMenu>

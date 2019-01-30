@@ -43,7 +43,7 @@
         });
     });
 </@script>
-  <@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-selectGL-form">
+  <@form method="get" action=makePageUrl("setupAccounting") id="setupAccounting-selectGL-form">
     <#-- TODO: REVIEW: may make a difference later -->
     <@defaultWizardFormFields exclude=["topGlAccountId"]/>
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
@@ -67,7 +67,7 @@
     </#if>     
   </@form>
   
-  <@form method="get" action=makeOfbizUrl("setupWizard") id="setupAccounting-selectContinueGL-form">
+  <@form method="get" action=makePageUrl("setupWizard") id="setupAccounting-selectContinueGL-form">
     <#-- TODO: REVIEW: may make a difference later -->
     <@defaultWizardFormFields exclude=["topGlAccountId"]/>
     <#--<@field type="hidden" name="setupContinue" value="Y"/> not needed yet-->
@@ -85,7 +85,7 @@
   		</ul>
   	</@alert>
   	<@section title=uiLabelMap.SetupAccountingImportDefaultGLStandard>
-	  	<@form method="post" action=makeOfbizUrl("importDefaultGL") id="setupAccounting-importDefaultGL-form">
+	  	<@form method="post" action=makePageUrl("importDefaultGL") id="setupAccounting-importDefaultGL-form">
 	  		<@defaultWizardFormFields exclude=["topGlAccountId"]/>
 		  	<@field type="select" name="importPredefinedGL" id="setupAccounting-importDefaultGL-select" class="+setupAccounting-importDefaultGL-select" inline=true>
 		  		<#list scipioAcctgStandardDefaults as predefinedGL>
@@ -101,7 +101,7 @@
   </#if>
   
   <#-- 
-  <@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-newGL-form">   
+  <@form method="get" action=makePageUrl("setupAccounting") id="setupAccounting-newGL-form">   
     <@defaultWizardFormFields exclude=["topGlAccountId"]/>    
     <@field type="hidden" name="newGlAccount" value="Y"/>
   </@form>

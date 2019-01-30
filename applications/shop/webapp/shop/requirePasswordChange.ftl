@@ -14,14 +14,14 @@ code package.
 <@heading level=1>${uiLabelMap.CommonLogin}</@heading>
 
 <@section title=uiLabelMap.CommonPasswordChange style="float: center; width: 49%; margin-right: 5px; text-align: center;">
-  <form method="post" action="<@ofbizUrl>login${previousParams}</@ofbizUrl>" name="loginform">
+  <form method="post" action="<@pageUrl>login${previousParams}</@pageUrl>" name="loginform">
       <input type="hidden" name="requirePasswordChange" value="Y"/>
       <input type="hidden" name="USERNAME" value="${username}"/>
       <@field type="display" label=uiLabelMap.CommonUsername value=username />
 
       <#if autoUserLogin?has_content>
           <div>
-              (${uiLabelMap.CommonNot}&nbsp;${autoUserLogin.userLoginId}?&nbsp;<a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonClickHere}</a>)
+              (${uiLabelMap.CommonNot}&nbsp;${autoUserLogin.userLoginId}?&nbsp;<a href="<@pageUrl>${autoLogoutUrl}</@pageUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonClickHere}</a>)
           </div>
       </#if>
 

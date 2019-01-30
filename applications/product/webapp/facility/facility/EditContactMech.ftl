@@ -6,9 +6,9 @@ code package.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("authview/${donePage}?facilityId=${facilityId}") text=uiLabelMap.CommonGoBack class="+${styles.action_nav!} ${styles.action_cancel!}" />
+    <@menuitem type="link" href=makePageUrl("authview/${donePage}?facilityId=${facilityId}") text=uiLabelMap.CommonGoBack class="+${styles.action_nav!} ${styles.action_cancel!}" />
   <#if (mechMap.contactMechTypeId)?has_content && (mechMap.contactMech)?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("EditContactMech?facilityId=${facilityId}") text=uiLabelMap.ProductNewContactMech class="+${styles.action_nav!} ${styles.action_add!}" />
+    <@menuitem type="link" href=makePageUrl("EditContactMech?facilityId=${facilityId}") text=uiLabelMap.ProductNewContactMech class="+${styles.action_nav!} ${styles.action_add!}" />
   </#if>
   </@menu>
 </#macro>
@@ -21,7 +21,7 @@ code package.
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !preContactMechTypeId?has_content>
 
-    <form method="post" action="<@ofbizUrl>EditContactMech</@ofbizUrl>" name="createcontactmechform">
+    <form method="post" action="<@pageUrl>EditContactMech</@pageUrl>" name="createcontactmechform">
       <input type="hidden" name="facilityId" value="${facilityId}" />
       <input type="hidden" name="DONE_PAGE" value="${donePage!}" />
     <@row>
@@ -48,7 +48,7 @@ code package.
     </#if>
       
     <#if !mechMap.contactMech?has_content>
-        <form method="post" action="<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
+        <form method="post" action="<@pageUrl>${mechMap.requestName}</@pageUrl>" name="editcontactmechform" id="editcontactmechform">
         <input type="hidden" name="DONE_PAGE" value="${donePage}" />
         <input type="hidden" name="contactMechTypeId" value="${mechMap.contactMechTypeId}" />
         <input type="hidden" name="facilityId" value="${facilityId}" />
@@ -82,7 +82,7 @@ code package.
                       <#if facilityContactMechPurpose.thruDate?has_content>(${uiLabelMap.CommonExpires}: ${facilityContactMechPurpose.thruDate.toString()}</#if>
                       <a href="javascript:document.getElementById('deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}').submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                   
-                    <form id="deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}" method="post" action="<@ofbizUrl>deleteFacilityContactMechPurpose</@ofbizUrl>">
+                    <form id="deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}" method="post" action="<@pageUrl>deleteFacilityContactMechPurpose</@pageUrl>">
                       <input type="hidden" name="facilityId" value="${facilityId!}" />
                       <input type="hidden" name="contactMechId" value="${contactMechId!}" />
                       <input type="hidden" name="contactMechPurposeTypeId" value="${(facilityContactMechPurpose.contactMechPurposeTypeId)!}" />
@@ -97,7 +97,7 @@ code package.
             <@tfoot>
               <@tr>
                 <@td>
-                  <form method="post" action="<@ofbizUrl>createFacilityContactMechPurpose?DONE_PAGE=${donePage}&amp;useValues=true</@ofbizUrl>" name="newpurposeform">
+                  <form method="post" action="<@pageUrl>createFacilityContactMechPurpose?DONE_PAGE=${donePage}&amp;useValues=true</@pageUrl>" name="newpurposeform">
                   <input type="hidden" name="facilityId" value="${facilityId}" />
                   <input type="hidden" name="contactMechId" value="${contactMechId!}" />
                     <@field type="select" name="contactMechPurposeTypeId">
@@ -115,7 +115,7 @@ code package.
           </@fields>
         </@field>
         </#if>
-        <form method="post" action="<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
+        <form method="post" action="<@pageUrl>${mechMap.requestName}</@pageUrl>" name="editcontactmechform" id="editcontactmechform">
         <input type="hidden" name="contactMechId" value="${contactMechId}" />
         <input type="hidden" name="contactMechTypeId" value="${mechMap.contactMechTypeId}" />
         <input type="hidden" name="facilityId" value="${facilityId}" />

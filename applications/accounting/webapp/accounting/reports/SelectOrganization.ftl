@@ -10,7 +10,7 @@
   }
 </style>
 
-<@form method="get" action=makeOfbizUrl("TransactionReports") id="acctg-selectOrg-form" name="acctg-selectOrg-form">    
+<@form method="get" action=makePageUrl("TransactionReports") id="acctg-selectOrg-form" name="acctg-selectOrg-form">    
   
     <@field type="generic">
         <#-- FIXME: submit doesn't align -->

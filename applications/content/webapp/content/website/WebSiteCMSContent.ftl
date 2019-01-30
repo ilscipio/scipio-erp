@@ -27,7 +27,7 @@
     });
 
     function cmsSave() {
-        var simpleFormAction = '<@ofbizUrl>updateContentCms</@ofbizUrl>';
+        var simpleFormAction = '<@pageUrl>updateContentCms</@pageUrl>';
         var editor = jQuery("#cmseditor");
         if (editor.length) {
             var cmsdata = jQuery("#cmsdata");
@@ -161,7 +161,7 @@
 
 <#-- main content form -->
 <#if (dataResourceTypeId?has_content)>
-    <form name="cmsform" enctype="multipart/form-data" method="post" action="<@ofbizUrl>${formAction}</@ofbizUrl>">
+    <form name="cmsform" enctype="multipart/form-data" method="post" action="<@pageUrl>${formAction}</@pageUrl>">
         <#if (content?has_content)>
             <input type="hidden" name="dataResourceId" value="${(dataResource.dataResourceId)!}"/>
             <input type="hidden" name="contentId" value="${content.contentId}"/>

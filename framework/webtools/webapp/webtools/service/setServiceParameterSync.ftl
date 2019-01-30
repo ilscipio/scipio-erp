@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <#include "component://webtools/webapp/webtools/service/servicecommon.ftl">
-<form name="scheduleForm" method="post" action="<@ofbizUrl>scheduleServiceSync</@ofbizUrl>">
+<form name="scheduleForm" method="post" action="<@pageUrl>scheduleServiceSync</@pageUrl>">
 
     <#list scheduleOptions as scheduleOption>
       <input type="hidden" name="${scheduleOption.name}" value="${scheduleOption.value}"/>

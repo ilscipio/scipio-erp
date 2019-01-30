@@ -23,10 +23,10 @@
         }); 
             
         function deleteMediaAsset() {
-            deleteCmsElement("<@ofbizUrl escapeAs='js'>deleteMedia</@ofbizUrl>", 
+            deleteCmsElement("<@pageUrl escapeAs='js'>deleteMedia</@pageUrl>", 
                 { contentId : "${escapeVal(media.contentId!, 'js')}" }, 
                 function(eventMsgs) {
-                    doCmsSuccessRedirect("<@ofbizUrl escapeAs='js'>media</@ofbizUrl>", eventMsgs);
+                    doCmsSuccessRedirect("<@pageUrl escapeAs='js'>media</@pageUrl>", eventMsgs);
                 }
             );
         }
@@ -45,7 +45,7 @@
 <#macro menuContent menuArgs={}>
     <#if media?has_content>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makeOfbizUrl("editMedia") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewMedia/>
+            <@menuitem type="link" href=makePageUrl("editMedia") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewMedia/>
             <@menuitem type="link" href="javascript:deleteMediaAsset(); void(0);" class="+${styles.action_run_sys!} ${styles.action_remove!} action_delete" text=uiLabelMap.CommonDelete/>
 
             <#-- DEV NOTE: these functions _could_ need extra parameters (a modal) in the future, but just need them to work for now -->
@@ -69,7 +69,7 @@
             </#if>
             <@cell id="mediaUpload" columns=mediaUploadColumns>
                 <@section title=sectionTitle>
-                    <form method="post"<#if !media?has_content> enctype="multipart/form-data"</#if> action="<@ofbizUrl>${formAction}</@ofbizUrl>" name="mediaForm" id="mediaForm">                                                       
+                    <form method="post"<#if !media?has_content> enctype="multipart/form-data"</#if> action="<@pageUrl>${formAction}</@pageUrl>" name="mediaForm" id="mediaForm">                                                       
                         <#if parameters.contentName?has_content>
                             <#assign contentName = parameters.contentName>    
                         <#elseif media?has_content>
@@ -78,7 +78,7 @@
                             <#assign contentName = "">
                         </#if>
                         <#if media?has_content>
-                            <@field type="display" name="contentId" label=uiLabelMap.CommonId><a href="<@ofbizUrl>editMedia?contentId=${media.contentId}</@ofbizUrl>">${media.contentId}</a></@field>
+                            <@field type="display" name="contentId" label=uiLabelMap.CommonId><a href="<@pageUrl>editMedia?contentId=${media.contentId}</@pageUrl>">${media.contentId}</a></@field>
                         </#if>
                         <@field type="text" name="contentName" label=uiLabelMap.CommonName value=contentName required=true />
                         <#if media?has_content>
@@ -88,7 +88,7 @@
                             <#if media.dataResourceTypeId == "DOCUMENT_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.CommonDocument></#if>
                             <@field type="hidden" name="contentId" value=media.contentId />
                             <@field type="hidden" name="dataResourceTypeId" value=media.dataResourceTypeId />
-                            <#assign mediaUrl=makeOfbizWebappUrl({"uri": "/media?contentId=" + rawString(media.contentId!"")}) />
+                            <#assign mediaUrl=makeAppUrl({"uri": "/media?contentId=" + rawString(media.contentId!"")}) />
 
                             <@field type="display" label=uiLabelMap.CommonPath><a href="${escapeFullUrl(mediaUrl, 'html')}">${escapeFullUrl(mediaUrl, 'htmlmarkup')}</a></@field>
                             <#-- DEV NOTE: you must submit altValue otherwise the service didn't recognize properly -->
@@ -112,16 +112,16 @@
                                 <@field type="generic" label=uiLabelMap.CmsMediaResizedVariants>
                                   <#if hasVariantContent>
                                     <#list variantList as variant>
-                                        <#assign variantMediaUrl=makeOfbizWebappUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&variant=" + rawString(variant)}) />
+                                        <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&variant=" + rawString(variant)}) />
                                         <a href="${escapeFullUrl(variantMediaUrl, 'html')}">${variant}</a> <#t/>
                                     </#list>
                                     <br/><span class="media-resized-urls-label">URLs</span>:
                                     <@fields type="default" ignoreParentField=true>
-                                      <#assign variantMediaUrl=makeOfbizWebappUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&variant=" + rawString(variantList[0])}) />
+                                      <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&variant=" + rawString(variantList[0])}) />
                                       <@field type="display" label="variant"><a href="${escapeFullUrl(variantMediaUrl, 'html')}">${escapeFullUrl(variantMediaUrl, 'htmlmarkup')}</a></@field>
-                                      <#assign variantMediaUrl=makeOfbizWebappUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&autoVariant=min&width=600&height=400"}) />
+                                      <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&autoVariant=min&width=600&height=400"}) />
                                       <@field type="display" label="autoVariant min (css contain)"><a href="${escapeFullUrl(variantMediaUrl, 'html')}">${escapeFullUrl(variantMediaUrl, 'htmlmarkup')}</a></@field>
-                                      <#assign variantMediaUrl=makeOfbizWebappUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&autoVariant=max&width=600&height=400"}) />
+                                      <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&autoVariant=max&width=600&height=400"}) />
                                       <@field type="display" label="autoVariant max"><a href="${escapeFullUrl(variantMediaUrl, 'html')}">${escapeFullUrl(variantMediaUrl, 'htmlmarkup')}</a></@field>
                                     </@fields>
                                   <#else>
@@ -223,10 +223,10 @@
                                     var isChecked = jQuery(this).is(':checked');
                                     if (isChecked === true) {
                                         jQuery('.cmsmedia-customvariantsize-area').show();
-                                        jQuery('#mediaForm').attr('action', '<@ofbizUrl>createMediaImageCustomSizes</@ofbizUrl>');
+                                        jQuery('#mediaForm').attr('action', '<@pageUrl>createMediaImageCustomSizes</@pageUrl>');
                                     } else {
                                         jQuery('.cmsmedia-customvariantsize-area').hide();
-                                        jQuery('#mediaForm').attr('action', '<@ofbizUrl>${formAction}</@ofbizUrl>');
+                                        jQuery('#mediaForm').attr('action', '<@pageUrl>${formAction}</@pageUrl>');
                                     }
                                 });
 
@@ -256,11 +256,11 @@
                         </#if>
                     </form>
                     <#if ((media.dataResourceTypeId)!) == "IMAGE_OBJECT">
-                        <form method="post" action="<@ofbizUrl>rebuildMediaVariants?contentId=${media.contentId}</@ofbizUrl>" id="mediaresizeform">
+                        <form method="post" action="<@pageUrl>rebuildMediaVariants?contentId=${media.contentId}</@pageUrl>" id="mediaresizeform">
                             <input type="hidden" name="contentIdList" value="[${media.contentId}]" />
                             <input type="hidden" name="force" value="true" />
                         </form>
-                        <form method="post" action="<@ofbizUrl>removeMediaVariants?contentId=${media.contentId}</@ofbizUrl>" id="mediaresizeremoveform">
+                        <form method="post" action="<@pageUrl>removeMediaVariants?contentId=${media.contentId}</@pageUrl>" id="mediaresizeremoveform">
                             <input type="hidden" name="contentIdList" value="[${media.contentId}]" />
                         </form>
                     </#if>
@@ -269,7 +269,7 @@
             <#if media?has_content>
                 <@cell id="mediaPreview" columns=4>
                     <@section title=uiLabelMap.CmsMediaPreview>
-                        <#assign dataFile = makeOfbizWebappUrl({"uri": "/media?contentId=" + rawString(media.contentId)})!>
+                        <#assign dataFile = makeAppUrl({"uri": "/media?contentId=" + rawString(media.contentId)})!>
                         <#if media.dataResourceTypeId == "IMAGE_OBJECT">
                             <#if responsiveImage?has_content>
                                 <#if responsiveImageViewPortList?has_content>

@@ -32,8 +32,8 @@ is ${ofbiz.home}/framework/webapp/lib/ -->
        <#assign segments = Static["org.ofbiz.base.util.UtilHttp"].parseMultiFormData(parameters)>
        <#list segments as segment>
          <fo:block break-before="page"> <#-- this tells fop to put a page break before this content TODO: content-type must be dynamic -->
-           <fo:external-graphic content-type="content-type:image/gif" width="669px" height="724px" src="<@ofbizUrl>viewShipmentLabel?shipmentId=${segment.shipmentId}&amp;shipmentRouteSegmentId=${segment.shipmentRouteSegmentId}&amp;shipmentPackageSeqId=${segment.shipmentPackageSeqId}<#t/>
-             <#lt/>&amp;accessToken=${viewShipAccessToken!}</@ofbizUrl>"></fo:external-graphic><#-- SCIPIO: 2018-10-17: access token -->
+           <fo:external-graphic content-type="content-type:image/gif" width="669px" height="724px" src="<@pageUrl>viewShipmentLabel?shipmentId=${segment.shipmentId}&amp;shipmentRouteSegmentId=${segment.shipmentRouteSegmentId}&amp;shipmentPackageSeqId=${segment.shipmentPackageSeqId}<#t/>
+             <#lt/>&amp;accessToken=${viewShipAccessToken!}</@pageUrl>"></fo:external-graphic><#-- SCIPIO: 2018-10-17: access token -->
          </fo:block>
       </#list>
       <#if segments.size() == 0>

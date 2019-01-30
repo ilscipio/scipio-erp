@@ -18,7 +18,7 @@ code package.
       <#if productContentEntry.approved?has_content>
         <#list productContentEntry.approved as show>
           <#assign thumbSrc = (productContentEntry.sampleImageList[show_index].productImageThumb)!"">
-          <#assign targetLink><@ofbizUrl>ListImageRecentlyApproved?productId=${rawString(show.productId)}&date1=${rawString(productContentEntry.timeStampDate1)}&date2=${rawString(productContentEntry.timeStampDate2)}&showDate=${rawString(productContentEntry.date)}</@ofbizUrl></#assign>
+          <#assign targetLink><@pageUrl>ListImageRecentlyApproved?productId=${rawString(show.productId)}&date1=${rawString(productContentEntry.timeStampDate1)}&date2=${rawString(productContentEntry.timeStampDate2)}&showDate=${rawString(productContentEntry.date)}</@pageUrl></#assign>
           <#-- SCIPIO: NOTE: the productContentEntry.date used to be in a wrapper around the entries (outside
                <#list productContentEntry.approved as show>). but we'll just integrate it into the tiles as title. -->
           <@tile size="normal" image=thumbSrc title="${productContentEntry.date} - ${rawString(show.productId)}" link=targetLink>

@@ -54,7 +54,7 @@ code package.
   </@tr>
   <@tr>
     <@td colspan="2" align="center">
-      <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${orderId}</@ofbizInterWebappUrl>">View Order #${orderId}</a>
+      <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderId}</@serverUrl>">View Order #${orderId}</a>
     </@td>
   </@tr>
 </@table>

@@ -5138,9 +5138,9 @@ NOTE: "default" is a special map key; should be avoided.
 Runs a service synchronously, after automatically making the context valid.
 
 NOTE: It is generally discouraged to use heavy service calls in FreeMarker templates, but this
-utility can be used to make such code safer.
+  utility can be used to make such code safer.
 
-As with other advanced functions, this function can take either 2 positional parameters (name, context)
+As with other advanced functions, this function can take either 1-3 positional parameters (name, context)
 OR a single args map.
 
   * Usage Examples *   

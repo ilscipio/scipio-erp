@@ -86,6 +86,8 @@ public final class Debug {
 
     private static final Logger root = LogManager.getRootLogger();
 
+    private static final Debug INSTANCE = new Debug(); // SCIPIO: This is for FreeMarkerWorker (only!)
+    
     static {
         levelStringMap.put("verbose", Debug.VERBOSE);
         levelStringMap.put("timing", Debug.TIMING);
@@ -1045,5 +1047,14 @@ public final class Debug {
      */
     public static Locale getLogLocale() {
         return LOG_LOCALE;
+    }
+
+    /**
+     * SCIPIO: DO NOT USE: Returns a "dummy" static instance, for use by <code>FreeMarkerWorker</code>.
+     * Subject to change without notice.
+     * Added 2019-01-31.
+     */
+    public static Debug getStaticInstance() {
+        return INSTANCE;
     }
 }

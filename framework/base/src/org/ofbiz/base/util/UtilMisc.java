@@ -57,6 +57,8 @@ public final class UtilMisc {
 
     public static final BigDecimal ZERO_BD = BigDecimal.ZERO; // SCIPIO: 2018-08-30: keeping public for backward-compat
 
+    private static final UtilMisc INSTANCE = new UtilMisc(); // SCIPIO: This is for FreeMarkerWorker (only!)
+    
     private UtilMisc () {}
 
     public static final <T extends Throwable> T initCause(T throwable, Throwable cause) {
@@ -1743,4 +1745,12 @@ public final class UtilMisc {
         return false;
     }
 
+    /**
+     * SCIPIO: DO NOT USE: Returns a "dummy" static instance, for use by <code>FreeMarkerWorker</code>.
+     * Subject to change without notice.
+     * Added 2019-01-31.
+     */
+    public static UtilMisc getStaticInstance() {
+        return INSTANCE;
+    }
 }

@@ -100,6 +100,8 @@ public final class UtilHttp {
 
     private static final String SESSION_KEY_TIMEZONE = "timeZone";
 
+    private static final UtilHttp INSTANCE = new UtilHttp(); // SCIPIO: This is for FreeMarkerWorker (only!)
+
     private UtilHttp () {}
 
     /**
@@ -1812,5 +1814,14 @@ public final class UtilHttp {
         @Override
         public void contextDestroyed(ServletContextEvent sce) {
         }
+    }
+    
+    /**
+     * SCIPIO: DO NOT USE: Returns a "dummy" static instance, for use by <code>FreeMarkerWorker</code>.
+     * Subject to change without notice.
+     * Added 2019-01-31.
+     */
+    public static UtilHttp getStaticInstance() {
+        return INSTANCE;
     }
 }

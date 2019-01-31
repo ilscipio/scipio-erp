@@ -186,20 +186,22 @@
       <ul>
         <#list sectionMap?keys as sectionName> 
           <#assign section = sectionMap[sectionName]>
-          <#if section.entryMap?has_content>
+          <#- -<#if section.entryMap?has_content>- ->
             <li><a href="#section-${sectionName}"><#rt>
                 <#if section.title?has_content><@labelText text=section.title /><#t>
                 <#elseif sectionName == "default"><@labelText text="MAIN" /><#t>
                 <#else><@labelText text=sectionName /></#if><#t>
                 </a>
+              <#if section.entryMap?has_content>
                 <#-<strong>Definitions:</strong><br/>->
                 <p>
                 <#list section.entryMap?keys?sort as entryName>
                   <a href="#entry-${entryName}">${entryName}</a><#if entryName_has_next>, </#if>
                 </#list>
                 </p>
+              </#if
             </li><#lt>
-          </#if>
+          <#- -</#if>- ->
         </#list>
       </ul>
     </div>

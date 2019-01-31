@@ -1804,7 +1804,7 @@ Splits a style classes string into a Set of unique elements, not preserving orde
     a java Set of style names (can be seen as sequence)
 -->
 <#function splitStyleNamesToSet styleString>
-  <#return Static['org.ofbiz.base.util.UtilMisc'].collectionToSet(getPlainClassArgNames(styleString)?split(r'\s+', 'r'))>
+  <#return UtilMisc.collectionToSet(getPlainClassArgNames(styleString)?split(r'\s+', 'r'))>
 </#function> 
 
 <#-- 
@@ -1928,7 +1928,7 @@ NOTE: now recognizes special syntax scipio class args.
   <#if namesToRemove?is_string> <#-- NOTE: this is only ok as long as we don't accept hashes here, else use isObjectType -->
     <#local namesToRemove = splitStyleNamesToSet(namesToRemove)>
   <#else>
-    <#local namesToRemove = Static["org.ofbiz.base.util.UtilMisc"].collectionToSet(namesToRemove)>
+    <#local namesToRemove = UtilMisc.collectionToSet(namesToRemove)>
   </#if>
   <#local res = "">
   <#-- don't need regexp, multiple spaces don't affect result -->
@@ -5184,6 +5184,35 @@ OR a single args map.
 
 <#-- 
 *************************************
+* UTILITY CLASSES *
+*************************************
+* Any class may be accessed using {{{Static["my.package.com.ClassName"].myMethod(...)}}},
+* but a few very common ones may be accessed (through FreeMarker beans) and their methods invoked using its class name only:
+*
+* * Debug (org.ofbiz.base.util.Debug)
+* * UtilDateTime (org.ofbiz.base.util.UtilDateTime)
+* * UtilFormatOut (org.ofbiz.base.util.UtilFormatOut)
+* * UtilHttp (org.ofbiz.base.util.UtilHttp)
+* * UtilMisc (org.ofbiz.base.util.UtilMisc)
+* * UtilNumber (org.ofbiz.base.util.UtilNumber)
+* * StringUtil (org.ofbiz.base.util.StringUtil) (NOTE: The method wrapString is obsolete and replaced by #rawString function)
+*
+* NOTE: The return values are subject to screen auto-html-escaping, so depending on the case,
+*   you may need to use #rawString.
+*
+*   * Usage Examples *  
+*   ${Debug.logInfo("Logging from layoutdemo.ftl using Debug", "LayoutDemo.ftl")!"(see log)"}
+*   ${UtilDateTime.nowAsString()!"ERROR"}
+*   ${UtilFormatOut.formatPrice(234.33)!"ERROR"}
+*   ${UtilHttp.getCombinedMap(request)?size}
+*   ${UtilMisc.toMap("key1", "value1", "key2", "value2").key2!"ERROR"}
+*   ${UtilNumber.safeAdd(1, 2)!"ERROR"}
+
+* TODO: Documentation entry support for utility classes.
+-->
+
+<#-- 
+*************************************
 * DEV UTILITIES *
 *************************************
 * For development and debugging purposes.
@@ -5268,7 +5297,7 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
 <#function getVariantContent contentIdTo="">
 	<#local varianContent=Static["com.ilscipio.scipio.cms.media.CmsMediaWorker"].getVariantContentAssocTo(request!, contentIdTo)>
 	<#list varianContent as content>
-		${Static["org.ofbiz.base.util.Debug"].log("content.scpWidth")}
+		${Debug.log("content.scpWidth")}
 	</#list>
 	<#return variantContent>
 </#function>

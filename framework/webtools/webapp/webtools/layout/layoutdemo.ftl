@@ -2220,12 +2220,27 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   </@section>
 </@section>
 
-<@section title="runService (ftl)">
-      <ul>
-        <li>${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}).fullName)!"ERROR"}</li>
-        <li>${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}, true).fullName)!"ERROR"}</li>
-        <li>${(runService({"name":"getPartyNameForDate", "ctx":{"partyId":userLogin.partyId!}}).fullName)!"ERROR"}</li>
-      </ul>
+<@section title="Utilities">
+    <@section title="FreeMarkerWorker built-in utilities">
+          <ul>
+            <li>Debug: ${Debug.logInfo("Logging from layoutdemo.ftl using Debug", "LayoutDemo.ftl")!"(see log)"}</li>
+            <li>UtilDateTime: ${UtilDateTime.nowAsString()!"ERROR"}</li>
+            <li>UtilFormatOut: ${UtilFormatOut.formatPrice(234.33)!"ERROR"}</li>
+            <li>UtilHttp: ${UtilHttp.getCombinedMap(request)?size}</li>
+            <li>UtilMisc (+ auto-html-escaping test): ${UtilMisc.toMap("key1", "value1", "key2", "//&value2;!@#$%^&*()").key2!"ERROR"}</li>
+            <li>UtilNumber: ${UtilNumber.safeAdd(1, 2)!"ERROR"}</li>
+            <li>StringUtil: ${StringUtil.wrapString(rewrapString("/a string that should not be html-escaped"))!"ERROR"}
+                (NOTE: usually you use #rawString instead of StringUtil, but StringUtil also provides additional helpers)</li>
+        </ul>
+    </@section>
+
+    <@section title="runService (ftl)">
+          <ul>
+            <li>${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}).fullName)!"ERROR"}</li>
+            <li>${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}, true).fullName)!"ERROR"}</li>
+            <li>${(runService({"name":"getPartyNameForDate", "ctx":{"partyId":userLogin.partyId!}}).fullName)!"ERROR"}</li>
+          </ul>
+    </@section>
 </@section>
 
 <@section title="Escaping">

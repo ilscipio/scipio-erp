@@ -176,6 +176,8 @@ public final class UtilNumber {
         rbnfRuleSets.put(new Locale("en", "IN"), ruleSet_en_IN);
     }
 
+    private static final UtilNumber INSTANCE = new UtilNumber(); // SCIPIO: This is for FreeMarkerWorker (only!)
+
     private UtilNumber() {}
 
     /**
@@ -477,5 +479,14 @@ public final class UtilNumber {
      */
     public static <N extends Number & Comparable<N>> N getInRangeExcl(N value, N minValue, N maxValue, N defaultValue) {
         return (value != null && isInRangeExcl(value, minValue, maxValue)) ? value : defaultValue;
+    }
+
+    /**
+     * SCIPIO: DO NOT USE: Returns a "dummy" static instance, for use by <code>FreeMarkerWorker</code>.
+     * Subject to change without notice.
+     * Added 2019-01-31.
+     */
+    public static UtilNumber getStaticInstance() {
+        return INSTANCE;
     }
 }

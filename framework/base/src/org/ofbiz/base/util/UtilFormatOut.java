@@ -43,6 +43,8 @@ public final class UtilFormatOut {
     // ------------------- percentage format handlers -------------------
     private static final DecimalFormat percentageDecimalFormat = new DecimalFormat("##0.##%");
 
+    private static final UtilFormatOut INSTANCE = new UtilFormatOut(); // SCIPIO: This is for FreeMarkerWorker (only!)
+    
     private UtilFormatOut() {}
 
     public static String safeToString(Object obj) {
@@ -633,4 +635,13 @@ public final class UtilFormatOut {
         buffer.append(original.substring(original.length()-4));
         return buffer.toString();
     }
+
+    /**
+     * SCIPIO: DO NOT USE: Returns a "dummy" static instance, for use by <code>FreeMarkerWorker</code>.
+     * Subject to change without notice.
+     * Added 2019-01-31.
+     */
+    public static UtilFormatOut getStaticInstance() {
+        return INSTANCE;
+    }    
 }

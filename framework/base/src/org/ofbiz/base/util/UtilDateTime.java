@@ -77,6 +77,8 @@ public final class UtilDateTime {
      */
     public static final String TIME_FORMAT = "HH:mm:ss";
 
+    private static final UtilDateTime INSTANCE = new UtilDateTime(); // SCIPIO: This is for FreeMarkerWorker (only!)
+
     private UtilDateTime() {}
 
     public static double getInterval(Date from, Date thru) {
@@ -1569,4 +1571,12 @@ public final class UtilDateTime {
         }
     }
 
+    /**
+     * SCIPIO: DO NOT USE: Returns a "dummy" static instance, for use by <code>FreeMarkerWorker</code>.
+     * Subject to change without notice.
+     * Added 2019-01-31.
+     */
+    public static UtilDateTime getStaticInstance() {
+        return INSTANCE;
+    }
 }

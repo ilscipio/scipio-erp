@@ -48,8 +48,12 @@ import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilValidate;
@@ -169,6 +173,15 @@ public final class FreeMarkerWorker {
         }
         newConfig.setLocalizedLookup(false);
         newConfig.setSharedVariable("StringUtil", new BeanModel(StringUtil.INSTANCE, wrapper));
+        
+        // SCIPIO: 2019-01-31: New shared variables, to simplify templates
+        newConfig.setSharedVariable("Debug", new BeanModel(Debug.getStaticInstance(), wrapper));
+        newConfig.setSharedVariable("UtilDateTime", new BeanModel(UtilDateTime.getStaticInstance(), wrapper));
+        newConfig.setSharedVariable("UtilFormatOut", new BeanModel(UtilFormatOut.getStaticInstance(), wrapper));
+        newConfig.setSharedVariable("UtilHttp", new BeanModel(UtilHttp.getStaticInstance(), wrapper));
+        newConfig.setSharedVariable("UtilMisc", new BeanModel(UtilMisc.getStaticInstance(), wrapper));
+        newConfig.setSharedVariable("UtilNumber", new BeanModel(UtilNumber.getStaticInstance(), wrapper));
+
         newConfig.setTemplateLoader(new FlexibleTemplateLoader());
         // SCIPIO: Load it from ALL components, like freemarkerTransforms:
         //newConfig.setAutoImports(UtilProperties.getProperties("freemarkerImports"));

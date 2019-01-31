@@ -463,6 +463,12 @@ code package.
 
      <form name="EditProductionRunDeclRoutingTask" type="single" target="updateProductionRunTask" title="" default-map-name="routingTaskData"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <actions>
+            <script lang="groovy"><![CDATA[
+                routingTaskData.comments = org.ofbiz.manufacturing.jobshopmgt.ProductionRun.getCommentsFromProductionRunTask(delegator, routingTaskId);
+            ]]>
+            </script>
+        </actions>
         <field name="actionForm">
             <hidden value="${actionForm}"/>
         </field>
@@ -524,8 +530,9 @@ code package.
         <field name="addQuantityRejected" title="${uiLabelMap.ManufacturingAddQuantityRejected}">
             <text/>
         </field>
+        
         <field name="comments" title="${uiLabelMap.ManufacturingComments}">
-            <text/>
+            <text />
         </field>
         <field name="partyId" title="${uiLabelMap.ManufacturingWorker}">
             <text/>

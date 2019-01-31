@@ -33,6 +33,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.manufacturing.techdata.TechDataServices;
@@ -445,18 +446,18 @@ public class ProductionRun {
     public boolean isUpdateCompletionDate() {
         return updateCompletionDate;
     }
-    
+
     /**
      * Utility method to easily retrieve the note content out of a production run task
      * @param delegator
-     * @param productionRun
+     * @param routingTask
      * @return
      */
-    public static String getCommentsFromProductionRunTask(Delegator delegator, GenericValue productionRun) {
+    public static String getCommentsFromProductionRunTask(Delegator delegator, GenericValue routingTask) {
         String comment = null;
         try {
-            if (UtilValidate.isNotEmpty(productionRun)) {
-                GenericValue productionRunComment = EntityUtil.getFirst(productionRun.getRelated("WorkEffortNote", null, null, true));
+            if (UtilValidate.isNotEmpty(routingTask)) {
+                GenericValue productionRunComment = EntityUtil.getFirst(routingTask.getRelated("WorkEffortNote", null, UtilMisc.toList("createdStamp DESC"), true));
                 if (UtilValidate.isNotEmpty(productionRunComment)) {
                     GenericValue noteData = productionRunComment.getRelatedOne("NoteData", false);
                     if (UtilValidate.isNotEmpty(noteData)) {
@@ -469,10 +470,11 @@ public class ProductionRun {
         }
         return comment;
     }
-    
-    public static String getCommentsFromProductionRunTask(Delegator delegator, String productionRunId) throws GenericEntityException {
-        GenericValue productionRun = delegator.findOne("Workeffort", UtilMisc.toMap("workEffortId", productionRunId), true);
-        return getCommentsFromProductionRunTask(delegator, productionRun);
+
+    public static String getCommentsFromProductionRunTask(Delegator delegator, String routingTaskId) throws GenericEntityException {
+        GenericValue productionRunTask = EntityUtil.getFirst(delegator.findList("WorkEffort",
+                EntityCondition.makeCondition(UtilMisc.toMap("workEffortId", routingTaskId, "workEffortTypeId", "PROD_ORDER_TASK")), null, null, null, true));
+        return getCommentsFromProductionRunTask(delegator, productionRunTask);
     }
 
 }

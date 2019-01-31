@@ -88,7 +88,7 @@ code package.
                 <set field="fdtwArgs.targetLibPath" value="${groovy: request.getAttribute('scipioTmplApiTargetLibPath')}"/><!-- set by templateApiDocPage.jsp -->
                 <set field="fdtwArgs.targetLibName" value=""/>
                 <set field="fdtwArgs.reloadDataModel" type="Boolean" from-field="parameters.reloadDataModel" />
-                <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateOfbiz.groovy"/>
+                <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateAdmin.groovy"/>
                 
                 <set field="title" value="${docLibTitleMap[targetLibName]}"/>
                 <set field="subtitle" value="${docContext.pageTitle}"/>
@@ -117,7 +117,7 @@ code package.
                                 <!-- dumps the docContext we made into main context but with special freemarker object wrapping (do this as late as possible) -->
                                 <set field="fdtwArgs" type="NewMap"/>
                                 <set field="fdtwArgs.doPrepFtlCtx" type="Boolean" value="true"/>
-                                <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateOfbiz.groovy"/>
+                                <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateAdmin.groovy"/>
                             </actions>
                             <widgets>
                                 <platform-specific><html><html-template location="component://common/webcommon/includes/scipio/doc/ftlDocTemplateAdmin.ftl"/></html></platform-specific>

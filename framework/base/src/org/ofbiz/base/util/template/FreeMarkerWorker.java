@@ -860,6 +860,8 @@ public final class FreeMarkerWorker {
             UtilRender.RenderExceptionMode exMode = getRenderExceptionMode(te, env);
             if (exMode == UtilRender.RenderExceptionMode.DEBUG) {
                 handleTemplateExceptionDebug(te, env, out);
+            } else if (exMode == UtilRender.RenderExceptionMode.DEBUG_RETHROW) {
+                handleTemplateExceptionDebugRethrow(te, env, out);
             } else if (exMode == UtilRender.RenderExceptionMode.BLANK) {
                 handleTemplateExceptionBlank(te, env, out);
             } else {
@@ -890,6 +892,11 @@ public final class FreeMarkerWorker {
 
         protected void handleTemplateExceptionBlank(TemplateException te, Environment env, Writer out) throws TemplateException {
             ; // do nothing, should already be logged by Freemarker
+        }
+
+        protected void handleTemplateExceptionDebugRethrow(TemplateException te, Environment env, Writer out) throws TemplateException {
+            handleTemplateExceptionDebug(te, env, out);
+            handleTemplateExceptionRethrow(te, env, out);
         }
     }
 

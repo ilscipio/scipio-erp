@@ -37,7 +37,12 @@ public abstract class UtilRender {
          * but nothing is printed; otherwise performs RETHROW (security trade-off, whether acceptable
          * may depend on application).
          */
-        BLANK;
+        BLANK,
+        /**
+         * Prints the output and then rethrows it.
+         * NOTE: This may produce very heavy log errors.
+         */
+        DEBUG_RETHROW;
 
         /**
          * Gets value permissively or null for any invalid value.

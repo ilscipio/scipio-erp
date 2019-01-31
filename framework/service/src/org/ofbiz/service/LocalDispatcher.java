@@ -76,6 +76,38 @@ public interface LocalDispatcher {
     Map<String, Object> runSync(String serviceName, int transactionTimeout, boolean requireNewTransaction, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
+     * SCIPIO: Run the service synchronously, with optional separate transaction.
+     * Added 2019-01-30.
+     * @param serviceName Name of the service to run.
+     * @param context Map of name, value pairs composing the context.
+     * @param transactionTimeout the overriding timeout for the transaction (if we started it).
+     * @param requireNewTransaction if true we will suspend and create a new transaction so we are sure to start.
+     * @return Map of name, value pairs composing the result.
+     * @throws ServiceAuthException
+     * @throws ServiceValidationException
+     * @throws GenericServiceException
+     */
+    default Map<String, Object> runSync(String serviceName, Map<String, ? extends Object> context, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        return runSync(serviceName, context, -1, requireNewTransaction);
+    }
+
+    /**
+     * SCIPIO: Run the service synchronously in a separate transaction.
+     * Added 2019-01-30.
+     * @param serviceName Name of the service to run.
+     * @param context Map of name, value pairs composing the context.
+     * @param transactionTimeout the overriding timeout for the transaction (if we started it).
+     * @param requireNewTransaction if true we will suspend and create a new transaction so we are sure to start.
+     * @return Map of name, value pairs composing the result.
+     * @throws ServiceAuthException
+     * @throws ServiceValidationException
+     * @throws GenericServiceException
+     */
+    default Map<String, Object> runSyncNewTrans(String serviceName, Map<String, ? extends Object> context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        return runSync(serviceName, context, -1, true);
+    }
+
+    /**
      * Run the service synchronously and IGNORE the result.
      * @param serviceName Name of the service to run.
      * @param context Map of name, value pairs composing the context.

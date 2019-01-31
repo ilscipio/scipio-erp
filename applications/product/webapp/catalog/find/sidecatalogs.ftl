@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <div class="browsecategorylist">
-  <#assign sortList = Static["org.ofbiz.base.util.UtilMisc"].toList("prodCatalogCategoryTypeId", "sequenceNum", "productCategoryId")>
+  <#assign sortList = UtilMisc.toList("prodCatalogCategoryTypeId", "sequenceNum", "productCategoryId")>
   <#list prodCatalogs as prodCatalog>
   <#if curProdCatalogId?? && curProdCatalogId == prodCatalog.prodCatalogId>
     <#assign prodCatalogCategories = prodCatalog.getRelated("ProdCatalogCategory", null, sortList, true)>

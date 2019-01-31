@@ -8,7 +8,7 @@ code package.
 <@section title=uiLabelMap.CommonVisualThemes>
   
   <#if visualThemes?has_content>
-    <#assign orderByList = Static["org.ofbiz.base.util.UtilMisc"].toList("visualThemeId")/>
+    <#assign orderByList = UtilMisc.toList("visualThemeId")/>
     <@grid>  <#-- tilesType="default" -->
         <#list visualThemes as visualTheme>
         <#assign screenshots = delegator.findByAnd("VisualThemeResource", {"visualThemeId":"${visualTheme.visualThemeId}", "resourceTypeEnumId":"VT_SCREENSHOT"}, orderByList, false)>

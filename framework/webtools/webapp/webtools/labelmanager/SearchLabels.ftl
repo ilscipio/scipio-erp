@@ -27,7 +27,7 @@ code package.
      <@field type="select" label=uiLabelMap.WebtoolsLabelManagerLocale name="labelLocaleName">
             <option value="">${uiLabelMap.WebtoolsLabelManagerAllLocales}</option>
             <#list localesFound as localeFound>
-              <#assign locale = Static["org.ofbiz.base.util.UtilMisc"].parseLocale(localeFound)!/>
+              <#assign locale = UtilMisc.parseLocale(localeFound)!/>
               <#assign langAttr = localeFound.toString()?replace("_", "-")>
               <#assign langDir = "ltr">
               <#if 1 < langAttr?length>

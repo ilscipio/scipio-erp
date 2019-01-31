@@ -43,7 +43,7 @@ code package.
                                             <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@serverUrl>">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
                                         <#elseif productId??>
                                             <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@serverUrl>">${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}</a>
-                                            <#if (product.salesDiscontinuationDate)?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(product.salesDiscontinuationDate)>
+                                            <#if (product.salesDiscontinuationDate)?? && UtilDateTime.nowTimestamp().after(product.salesDiscontinuationDate)>
                                                 <br />
                                                     ${uiLabelMap.OrderItemDiscontinued}: <@formattedDateTime date=product.salesDiscontinuationDate />
                                             </#if>

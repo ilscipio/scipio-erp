@@ -7,7 +7,7 @@ code package.
 
   <ul class="no-bullet">
     <#assign altRow = true>
-    <#assign availableLocales = Static["org.ofbiz.base.util.UtilMisc"].availableLocales()/>
+    <#assign availableLocales = UtilMisc.availableLocales()/>
     <#list availableLocales as availableLocale>
         <#assign altRow = !altRow>
         <#assign langAttr = availableLocale.toString()?replace("_", "-")>

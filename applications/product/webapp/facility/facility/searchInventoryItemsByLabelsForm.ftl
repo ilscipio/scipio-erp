@@ -10,7 +10,7 @@ code package.
   <#assign index = 0>
   <#list labelTypes as labelType>
     <#assign index = index + 1>
-    <#assign labels = labelType.getRelated("InventoryItemLabel", null, Static["org.ofbiz.base.util.UtilMisc"].toList("inventoryItemLabelId"), false)>
+    <#assign labels = labelType.getRelated("InventoryItemLabel", null, UtilMisc.toList("inventoryItemLabelId"), false)>
     <@tr>
       <@td>
           <span>${labelType.description!} [${labelType.inventoryItemLabelTypeId}]</span>

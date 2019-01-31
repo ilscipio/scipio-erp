@@ -145,7 +145,7 @@ NOTE: This template does not support globals as-is (#global)
         }/>
 
     <#-- printed by service
-    <#local dummy = Static["org.ofbiz.base.util.Debug"].logInfo("CUSTOM PRODUCT IMAGE: " + productId + " " + imageUrl + " [" + imageNr + "]", "deproduct.ftl")!>-->
+    <#local dummy = Debug.logInfo("CUSTOM PRODUCT IMAGE: " + productId + " " + imageUrl + " [" + imageNr + "]", "deproduct.ftl")!>-->
 
     <#-- Update Product -->
     <#if (imageNr <= 0)>

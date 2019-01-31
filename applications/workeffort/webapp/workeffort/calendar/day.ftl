@@ -10,7 +10,7 @@ code package.
 <#macro menuContent menuArgs={}>
     <@workefflib.calendarDateSwitcher period="day"/>
 </#macro>
-<@section title=Static['org.ofbiz.base.util.UtilDateTime'].timeStampToString(start, 'EEEE MMMM d, yyyy', timeZone, locale)
+<@section title=UtilDateTime.timeStampToString(start, 'EEEE MMMM d, yyyy', timeZone, locale)
     menuContent=menuContent menuLayoutTitle="inline-title"><#--${uiLabelMap.WorkEffortDayView}: -->
 
 <#if periods?has_content>

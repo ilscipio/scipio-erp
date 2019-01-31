@@ -182,7 +182,7 @@ code package.
 
             <#-- Show Associated Products (not for Variants) -->
             <#if cartLine.getProductId()??>
-              <#assign itemProductAssocList = cartLine.getProduct().getRelated("MainProductAssoc", null, Static["org.ofbiz.base.util.UtilMisc"].toList("productAssocTypeId", "sequenceNum"), false)!/>
+              <#assign itemProductAssocList = cartLine.getProduct().getRelated("MainProductAssoc", null, UtilMisc.toList("productAssocTypeId", "sequenceNum"), false)!/>
             </#if>
             <#if itemProductAssocList?? && itemProductAssocList?has_content>
               <#--<@tr type="util"><@td colspan="8"><hr /></@td></@tr>-->

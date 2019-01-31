@@ -28,7 +28,7 @@ code package.
         <#if productStore?has_content>
           <input type="hidden" name="partyIdTo" value="${productStore.payToPartyId!}"/>
         </#if>
-        <input type="hidden" name="note" value="${Static["org.ofbiz.base.util.UtilHttp"].getFullRequestUrl(request)}"/>
+        <input type="hidden" name="note" value="${UtilHttp.getFullRequestUrl(request)}"/>
         <#if message?has_content>
           <input type="hidden" name="parentCommEventId" value="${communicationEvent.communicationEventId}"/>
           <#if (communicationEvent.origCommEventId?? && communicationEvent.origCommEventId?length > 0)>

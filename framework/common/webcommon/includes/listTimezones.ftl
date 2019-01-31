@@ -14,7 +14,7 @@ code package.
   <table cellspacing="0" class="${styles.table_basic!}">
     <#assign altRow = true>
     <#assign displayStyle = Static["java.util.TimeZone"].LONG>
-    <#assign availableTimeZones = Static["org.ofbiz.base.util.UtilDateTime"].availableTimeZones()/>
+    <#assign availableTimeZones = UtilDateTime.availableTimeZones()/>
     <#list availableTimeZones as availableTz>
       <#assign altRow = !altRow>
       <tr<@tableRowClassAttribStr alt=altRow />>

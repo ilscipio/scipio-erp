@@ -72,7 +72,7 @@ code package.
               <#if Static["org.ofbiz.product.category.CategoryWorker"].isCategoryChildOf(delegator, dispatcher, baseCategoryId, catInfo.productCategoryId)>
                 <@categoryList catInfo=catInfo productCategoryId=item.catId level=0 isMultiLevel=true path=item.path!"" count=item.count previousCategoryId=baseCategoryId!""/>
               <#else>
-                <#assign dummy = Static["org.ofbiz.base.util.Debug"].logWarning("Scipio: WARN: Side deep category " + item.catId + 
+                <#assign dummy = Debug.logWarning("Scipio: WARN: Side deep category " + item.catId + 
                     " not child of base category " + (baseCategoryId!"") + "; discarding", "sidedeepcategoryftl")>
               </#if>
           </#list>

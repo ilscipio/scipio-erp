@@ -85,7 +85,7 @@ function getFinAccountTransRunningTotalAndBalances() {
             </#if>
         
             <#-- FIXME: Again, we must determine if this makes sense to diplay it in here, imo it breaks the UX. Note that 'Not Assigned' should be selected for the glReconciliationId in the search filter -->
-            <#assign glReconciliations = delegator.findByAnd("GlReconciliation", {"glAccountId" : finAccount.postToGlAccountId!, "statusId" : "GLREC_CREATED"}, Static["org.ofbiz.base.util.UtilMisc"].toList("reconciledDate DESC"), false)>
+            <#assign glReconciliations = delegator.findByAnd("GlReconciliation", {"glAccountId" : finAccount.postToGlAccountId!, "statusId" : "GLREC_CREATED"}, UtilMisc.toList("reconciledDate DESC"), false)>
             <#if (glReconciliationId?has_content && (glReconciliationId == "_NA_" && finAccountTransList?has_content)) || !grandTotal??>       
                 <@row>
                     <@cell class="+${styles.text_right!}">         

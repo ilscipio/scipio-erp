@@ -12,7 +12,7 @@
         <@field name="fromDate" type="datetime" value=(parameters.fromDate!) label=uiLabelMap.CommonFrom />
         <@field name="thruDate" type="datetime" value=(parameters.thruDate!) label=uiLabelMap.CommonThru tooltip=uiLabelMap.CommonLeaveEmptyForNowDate/>
         <@field type="select" name="intervalScope" label=uiLabelMap.CommonTimeInterval required=true><#-- uiLabelMap.CommonIntervalScope -->
-            <#assign intervals = Static["org.ofbiz.base.util.UtilDateTime"].TIME_INTERVALS />
+            <#assign intervals = UtilDateTime.TIME_INTERVALS />
             <#assign currInterval = chartIntervalScope!parameters.intervalScope!"">
             <#-- This contradicted the groovy which required an interval scope
             <option value=""></option>-->

@@ -72,7 +72,7 @@ code package.
                             </#if>
                             <#if (shipGroup.shipAfterDate)?? || (shipGroup.shipByDate)??>
                                 <#if (shipGroup.shipAfterDate)??>
-                                - ${uiLabelMap.OrderShipAfterDate}: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipGroup.shipAfterDate)}</#if><#if (shipGroup.shipByDate)??> - ${uiLabelMap.OrderShipBeforeDate}: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipGroup.shipByDate)}</#if>
+                                - ${uiLabelMap.OrderShipAfterDate}: ${UtilDateTime.toDateString(shipGroup.shipAfterDate)}</#if><#if (shipGroup.shipByDate)??> - ${uiLabelMap.OrderShipBeforeDate}: ${UtilDateTime.toDateString(shipGroup.shipByDate)}</#if>
                             </#if>
                         </fo:block>
                     </#list>

@@ -36,7 +36,7 @@ code package.
           <#assign showLocale = false>
         </#if>
         <#if showLocale == true>
-          <#assign locale = Static["org.ofbiz.base.util.UtilMisc"].parseLocale(localeFound)!/>
+          <#assign locale = UtilMisc.parseLocale(localeFound)!/>
           <#if locale?? && locale?has_content>
             <#assign langAttr = localeFound.toString()?replace("_", "-")>
             <#assign langDir = "ltr">

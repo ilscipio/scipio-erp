@@ -197,7 +197,7 @@ code package.
   </@section>
 
   <#if shoppingListType?? && shoppingListType.shoppingListTypeId == "SLT_AUTO_REODR">
-  <#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].monthBegin()>
+  <#assign nowTimestamp = UtilDateTime.monthBegin()>
   <#assign sectionTitle>
     ${uiLabelMap.EcommerceShoppingListReorder} - ${shoppingList.listName}
     <#if shoppingList.isActive?default("N") == "N">
@@ -327,13 +327,13 @@ code package.
                   <@td colspan="9">
                     <#assign nextTime = recInfo.next(lastSlOrderTime)!>
                     <#if nextTime?has_content>
-                      <#assign nextTimeStamp = Static["org.ofbiz.base.util.UtilDateTime"].getTimestamp(nextTime)!>
+                      <#assign nextTimeStamp = UtilDateTime.getTimestamp(nextTime)!>
                       <#if nextTimeStamp?has_content>
-                        <#assign nextTimeString = Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(nextTimeStamp)!>
+                        <#assign nextTimeString = UtilFormatOut.formatDate(nextTimeStamp)!>
                       </#if>
                     </#if>
                     <#if lastSlOrderDate?has_content>
-                      <#assign lastOrderedString = Static["org.ofbiz.base.util.UtilFormatOut"].formatDate(lastSlOrderDate)!>
+                      <#assign lastOrderedString = UtilFormatOut.formatDate(lastSlOrderDate)!>
                     </#if>
                     <div>
                       <@table type="fields">

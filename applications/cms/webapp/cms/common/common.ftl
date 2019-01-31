@@ -45,7 +45,7 @@
 
 <#macro webSiteSelectField name="webSiteId" label="" value="" valueUnsafe=false required=false container="" tooltip="" emptyLabel=true>
     <#-- We get cmsWebSiteList from: component://cms/script/com/ilscipio/scipio/cms/editor/CmsEditorCommon.groovy (app-wide auto-include)
-    <#local websites = delegator.findByAnd("WebSite", null, Static["org.ofbiz.base.util.UtilMisc"].toList("siteName ASC"), false)>-->
+    <#local websites = delegator.findByAnd("WebSite", null, UtilMisc.toList("siteName ASC"), false)>-->
     <#local websites = cmsWebSiteList![]>
     <#if !label?has_content>
       <#local label = uiLabelMap.CommonWebsite>
@@ -170,7 +170,7 @@
 </#macro>
 
 <#macro assetAssocFields assetTmpl={}>
-  <#local availAssets = delegator.findByAnd("CmsAssetTemplate", null, Static["org.ofbiz.base.util.UtilMisc"].toList("templateName ASC"), false)>
+  <#local availAssets = delegator.findByAnd("CmsAssetTemplate", null, UtilMisc.toList("templateName ASC"), false)>
   <@field type="select" name="assetTemplateId" label=uiLabelMap.CmsAsset>
     <option value=""> - </option>
     <#list availAssets as asset>

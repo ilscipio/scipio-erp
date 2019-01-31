@@ -46,7 +46,7 @@ code package.
                     <#assign curStatusItem = inventoryItem.getRelatedOne("StatusItem", true)!>
                     <#assign facilityLocation = inventoryItem.getRelatedOne("FacilityLocation", false)!>
                     <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOne("TypeEnumeration", true))!>
-                    <#assign inventoryItemDetailFirst = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(inventoryItem.getRelated("InventoryItemDetail", null, Static["org.ofbiz.base.util.UtilMisc"].toList("effectiveDate"), false))!>
+                    <#assign inventoryItemDetailFirst = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(inventoryItem.getRelated("InventoryItemDetail", null, UtilMisc.toList("effectiveDate"), false))!>
                     <#if curInventoryItemType??>
                         <@tr valign="middle">
                             <@td><a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${(inventoryItem.inventoryItemId)!}</a></@td>

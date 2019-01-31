@@ -120,7 +120,7 @@ function doPublish() {
                     <#assign checked = true/>
                 </#if>
                 <@td><@field type="radio" checked=checked name="useImages" value=assocProduct.productId/></@td>
-                <#assign fromDate = Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productAssoc.getTimestamp("fromDate").toString())/>
+                <#assign fromDate = UtilFormatOut.encodeQueryValue(productAssoc.getTimestamp("fromDate").toString())/>
                 <@td><a class="${styles.link_run_sys!} ${styles.action_remove!}" href="javascript:removeAssoc('${productAssoc.productIdTo}','${fromDate}');">x</a></@td>
             </@tr>
             <#assign idx = idx + 1>

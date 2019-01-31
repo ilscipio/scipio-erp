@@ -55,7 +55,7 @@ code package.
                         <fo:table-cell>
                             <fo:block line-height="12pt" space-before.optimum="1.5pt" space-after.optimum="1.5pt" keep-together="always" text-align="start">
                                 <fo:inline font-size="10pt">${uiLabelMap.ManufacturingEstimatedCompletionDate}:</fo:inline>
-                                <fo:inline font-weight="bold" font-size="10pt">${Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("dd/MM/yyyy")}</fo:inline>
+                                <fo:inline font-weight="bold" font-size="10pt">${UtilDateTime.nowDateString("dd/MM/yyyy")}</fo:inline>
                             </fo:block>
                         </fo:table-cell>
                     </fo:table-row>

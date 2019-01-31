@@ -34,7 +34,7 @@
             </#if>
           <#else>
             <#-- ERROR: invalid db value; always report -->
-            <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("Cms: Error: Attribute '" + (fieldObj.id!"") + "' has invalid expandLang (" + expandLang + ")", "editPageFtl")>
+            <#local dummy = Debug.logError("Cms: Error: Attribute '" + (fieldObj.id!"") + "' has invalid expandLang (" + expandLang + ")", "editPageFtl")>
           </#if>
         </#if>
         <#if fieldObj.targetType?has_content>

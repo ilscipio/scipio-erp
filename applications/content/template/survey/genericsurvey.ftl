@@ -161,7 +161,7 @@ code package.
     <#assign closeMultiRespHeader = false/>
     <#assign surveyMultiResp = surveyQuestionAndAppl.getRelatedOne("SurveyMultiResp", true)!/>
     <#if surveyMultiResp?has_content>
-      <#assign surveyMultiRespColumnList = surveyMultiResp.getRelated("SurveyMultiRespColumn", null, Static["org.ofbiz.base.util.UtilMisc"].toList("sequenceNum"), true)/>
+      <#assign surveyMultiRespColumnList = surveyMultiResp.getRelated("SurveyMultiRespColumn", null, UtilMisc.toList("sequenceNum"), true)/>
 
       <#if lastSurveyMultiRespId == "">
         <#assign openMultiRespHeader = true/>
@@ -219,7 +219,7 @@ code package.
           <#if surveyQuestionAndAppl.surveyMultiRespColId?has_content &&
               nextSqaaWithColId?has_content &&
               nextSqaaWithColId.surveyMultiRespColId = surveyMultiRespColumn.surveyMultiRespColId>
-            <#assign dummySqaaWithColId = Static["org.ofbiz.base.util.UtilMisc"].removeFirst(sqaaWithColIdList)/>
+            <#assign dummySqaaWithColId = UtilMisc.removeFirst(sqaaWithColIdList)/>
             <#assign changed = alreadyShownSqaaPkWithColId.add(nextSqaaWithColId.getPrimaryKey())/>
             <#assign questionFieldName = "answers_" + nextSqaaWithColId.surveyQuestionId + "_" + surveyMultiRespColumn.surveyMultiRespColId/>
           <#else>

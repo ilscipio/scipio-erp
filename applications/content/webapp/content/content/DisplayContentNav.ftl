@@ -42,7 +42,7 @@ var rawdata = [
                 </#if>
                 {
                 "data": {"title" : unescapeHtmlText("${content.contentName!assoc.contentIdTo}"), "attr": {"href": "javascript:void(0);", "onClick" : "callDocument('${assoc.contentIdTo}');"}},
-                <#assign assocChilds  = delegator.findByAnd("ContentAssoc",{"contentId":assoc.contentIdTo, "contentAssocTypeId":"TREE_CHILD"}, Static["org.ofbiz.base.util.UtilMisc"].toList("sequenceNum"), false)/>
+                <#assign assocChilds  = delegator.findByAnd("ContentAssoc",{"contentId":assoc.contentIdTo, "contentAssocTypeId":"TREE_CHILD"}, UtilMisc.toList("sequenceNum"), false)/>
                     "attr": {"id" : "${assoc.contentIdTo}", "contentId" : "${assoc.contentId}", "AssocType" : "${assoc.contentAssocTypeId}", "fromDate" : "${assoc.fromDate}"}
                 <#if assocChilds?has_content>
                     ,"children": [

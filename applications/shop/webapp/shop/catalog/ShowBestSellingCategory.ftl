@@ -21,7 +21,7 @@ code package.
                        </#if>
                        <#assign productCategoryId = productCategory.productCategoryId/>
                        <#assign categoryImageUrl = "/images/defaultImage.jpg">
-                       <#assign productCategoryMembers = delegator.findByAnd("ProductCategoryAndMember", {"productCategoryId":productCategoryId}, Static["org.ofbiz.base.util.UtilMisc"].toList("-quantity"), false)>
+                       <#assign productCategoryMembers = delegator.findByAnd("ProductCategoryAndMember", {"productCategoryId":productCategoryId}, UtilMisc.toList("-quantity"), false)>
                        <#if productCategory.categoryImageUrl?has_content>
                             <#assign categoryImageUrl = productCategory.categoryImageUrl/>
                        <#elseif productCategoryMembers?has_content>

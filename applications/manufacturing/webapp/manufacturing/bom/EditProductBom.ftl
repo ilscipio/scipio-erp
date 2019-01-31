@@ -219,7 +219,7 @@ function lookupBom() {
             <@td>${(assocToProduct.getTimestamp("thruDate"))!}</@td>
             <@td>${(assocToProduct.quantity)!}</@td>
             <@td>
-                <a href="<@pageUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productId)!}&amp;productIdTo=${(assocToProduct.productIdTo)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}&amp;fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&amp;useValues=true</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">
+                <a href="<@pageUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productId)!}&amp;productIdTo=${(assocToProduct.productIdTo)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}&amp;fromDate=${UtilFormatOut.encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&amp;useValues=true</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">
                 ${uiLabelMap.CommonDelete}</a>
             </@td>
         </@tr>

@@ -49,7 +49,7 @@ code package.
                     <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
                     <input type="hidden" name="returnId" value="${requestParameters.returnId!}" />
                     <input type="hidden" name="_useRowSubmit" value="Y" />
-                    <#assign now = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()>
+                    <#assign now = UtilDateTime.nowTimestamp().toString()>
                     <#assign rowCount = 0>
                     <#if !returnItems?? || returnItems?size == 0>
                         <@commonMsg type="result-norecord">${uiLabelMap.ProductNoItemsToReceive}</@commonMsg>

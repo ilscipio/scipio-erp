@@ -14,7 +14,7 @@ code package.
   </div>
   <div class="screenlet-body">
   <#if portalPortlets?has_content>
-    <#assign orderByList = Static["org.ofbiz.base.util.UtilMisc"].toList("portalPortletId")/>
+    <#assign orderByList = UtilMisc.toList("portalPortletId")/>
 
     <table cellspacing="20" class="basic-table">
       <#assign leftColumn = true/>

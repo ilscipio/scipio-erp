@@ -63,7 +63,7 @@ by hand from a real template using a ruler.
                                                 </fo:table-row>
                                                 <fo:table-row>
                                                     <fo:table-cell number-columns-spanned="2">
-                                                        <#assign amount = Static["org.ofbiz.base.util.UtilNumber"].formatRuleBasedAmount(payment.getDouble("amount"), "%dollars-and-hundredths", locale).toUpperCase()>
+                                                        <#assign amount = UtilNumber.formatRuleBasedAmount(payment.getDouble("amount"), "%dollars-and-hundredths", locale).toUpperCase()>
                                                         <fo:block padding-before="0.4cm" margin-left="1.3cm">${amount}<#list 1..(100-amount.length()) as x>*</#list></fo:block>
                                                     </fo:table-cell>
                                                 </fo:table-row>

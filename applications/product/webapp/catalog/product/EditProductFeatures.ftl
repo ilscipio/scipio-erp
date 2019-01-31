@@ -54,12 +54,12 @@ code package.
               ${(curProductFeatureCategory.description)!}
               [${(productFeatureAndAppl.productFeatureCategoryId)!}]</a></@td>
     <#assign hasntStarted = false>
-    <#if (productFeatureAndAppl.getTimestamp("fromDate"))?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productFeatureAndAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
+    <#if (productFeatureAndAppl.getTimestamp("fromDate"))?? && UtilDateTime.nowTimestamp().before(productFeatureAndAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
           <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>
           <@td class=cellClass>${(productFeatureAndAppl.fromDate)!}</@td>
           <@td>
     <#assign hasExpired = false>
-    <#if (productFeatureAndAppl.getTimestamp("thruDate"))?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
+    <#if (productFeatureAndAppl.getTimestamp("thruDate"))?? && UtilDateTime.nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
             <#if hasExpired><#assign class="alert"><#else><#assign class=""></#if>
             <@field type="datetime" name="thruDate_o_${productFeatureAndAppl_index}" value=((productFeatureAndAppl.thruDate)!) size="25" maxlength="30" id="thruDate_o_${productFeatureAndAppl_index}" />
             <@field type="text" size="6" name="amount_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.amount)!}" />

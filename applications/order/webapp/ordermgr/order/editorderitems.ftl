@@ -106,7 +106,7 @@ code package.
                                   
                                       <#if productId??>
                                           <#assign product = orderItem.getRelatedOne("Product", true)>
-                                          <#if product.salesDiscontinuationDate?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(product.salesDiscontinuationDate)>
+                                          <#if product.salesDiscontinuationDate?? && UtilDateTime.nowTimestamp().after(product.salesDiscontinuationDate)>
                                               <span class="alert">${uiLabelMap.OrderItemDiscontinued}: ${product.salesDiscontinuationDate}</span>
                                           </#if>
                                       </#if>

@@ -39,7 +39,7 @@ standard order confirmation page and to be re-usable by other screens.
       <#assign shipItems = cartShipInfo.getShipItems()>
       <#assign numberOfItems = shipItems.size()>
       <#if (numberOfItems > 0)>
-      <#assign shipItems = Static["org.ofbiz.base.util.UtilMisc"].toList(shipItems)>
+      <#assign shipItems = UtilMisc.toList(shipItems)>
 
       <#-- spacer goes here -->
 

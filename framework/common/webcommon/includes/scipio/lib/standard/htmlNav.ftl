@@ -1103,16 +1103,16 @@ functionality.
 
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
     <#if (!viewSize?is_number)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize, "htmlUtilitiesPaginate")!>
+      <#local dummy = Debug.logError("pagination: viewSize was not a number type: " + viewSize, "htmlUtilitiesPaginate")!>
       <#local viewSize = viewSize?number>
     </#if>
     <#local viewSize = viewSize?floor>
     <#if (viewSize <= 0)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a positive number: " + viewSize, "htmlUtilitiesPaginate")!>
+      <#local dummy = Debug.logError("pagination: viewSize was not a positive number: " + viewSize, "htmlUtilitiesPaginate")!>
       <#local viewSize = 1>
     </#if>  
     <#if (!viewIndex?is_number)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex, "htmlUtilitiesPaginate")!>
+      <#local dummy = Debug.logError("pagination: viewIndex was not a number type: " + viewIndex, "htmlUtilitiesPaginate")!>
       <#local viewIndex = viewIndex?number>
     </#if>
     <#local viewIndex = viewIndex?floor>
@@ -1144,7 +1144,7 @@ functionality.
       <#local viewIndexLast = viewIndexFirst>
     </#if>
     <#if (viewIndex < viewIndexFirst) || (viewIndex > viewIndexLast)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlUtilitiesPaginate")!>
+      <#local dummy = Debug.logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlUtilitiesPaginate")!>
       <#if (viewIndex < viewIndexFirst)>
         <#local viewIndex = viewIndexFirst>
       <#else>
@@ -1360,12 +1360,12 @@ functionality.
     
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
     <#if (!viewSize?is_number)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlFormMacroLibraryRenderNextPrev")!><#t>
+      <#local dummy = Debug.logError("pagination: viewSize was not a number type: " + viewSize!, "htmlFormMacroLibraryRenderNextPrev")!><#t>
       <#local viewSize = viewSize?number>
     </#if>
     <#local viewSize = viewSize?floor>
     <#if (!viewIndex?is_number)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlFormMacroLibraryRenderNextPrev")!><#t>
+      <#local dummy = Debug.logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlFormMacroLibraryRenderNextPrev")!><#t>
       <#local viewIndex = viewIndex?number>
     </#if>
     <#local viewIndex = viewIndex?floor>
@@ -1375,7 +1375,7 @@ functionality.
       <#local viewIndexLast = viewIndexFirst>
     </#if>
     <#if (viewIndex < viewIndexFirst) || (viewIndex > viewIndexLast)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!><#t>
+      <#local dummy = Debug.logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!><#t>
       <#if (viewIndex < viewIndexFirst)>
         <#local viewIndex = viewIndexFirst>
       <#else>

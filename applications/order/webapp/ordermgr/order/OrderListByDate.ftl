@@ -4,11 +4,11 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <#if intervalDates?has_content>
-    <#assign intervalDateTitle = rawString(Static['org.ofbiz.base.util.UtilDateTime'].toDateString(intervalDates['dateBegin'])) + 
+    <#assign intervalDateTitle = rawString(UtilDateTime.toDateString(intervalDates['dateBegin'])) + 
         " to " + 
-        rawString(Static['org.ofbiz.base.util.UtilDateTime'].toDateString(intervalDates['dateEnd']))>
+        rawString(UtilDateTime.toDateString(intervalDates['dateEnd']))>
 <#elseif fromDate?has_content>
-    <#assign intervalDateTitle = Static['org.ofbiz.base.util.UtilDateTime'].toDateString(fromDate)>
+    <#assign intervalDateTitle = UtilDateTime.toDateString(fromDate)>
 </#if>
 
 <@section title="${rawLabel('OrderOrdersReceivedFrom')} ${rawString(intervalDateTitle!)}">

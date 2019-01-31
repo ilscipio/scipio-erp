@@ -120,7 +120,7 @@ code package.
               <@td>
                 <#if orderItem.productId??>
                   <#assign product = orderItem.getRelatedOne("Product", false)/>
-                  <#if product.productTypeId == "ASSET_USAGE_OUT_IN">
+                  <#if (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
                     <input type="text" size="8" name="returnPrice_o_${rowCount}" value="0.00"/>
                   <#else>
                     <input type="text" size="8" name="returnPrice_o_${rowCount}" value="${returnableItems.get(orderItem).get("returnablePrice")?string("##0.00")}"/>

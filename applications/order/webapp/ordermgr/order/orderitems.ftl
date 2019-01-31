@@ -150,7 +150,7 @@ code package.
                                                             </#if>
                                                         </#list>
                                                     </#if>
-                                                    <#if product.productTypeId == "SERVICE" && currentItemStatus.statusId == "ITEM_COMPLETED">
+                                                    <#if (product.productTypeId!) == "SERVICE" && currentItemStatus.statusId == "ITEM_COMPLETED">
                                                         <#assign shippedQuantity = orderItem.quantity?default(0)/>
                                                         <#assign totalReceived = orderItem.quantity?default(0)>
                                                     </#if>

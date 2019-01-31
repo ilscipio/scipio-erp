@@ -439,14 +439,14 @@ code package.
                     <input type="hidden" name="reservStart"/>
                     <div>
                        <@table type="fields">
-                       <#if product.productTypeId == "ASSET_USAGE" || product.productTypeId == "ASSET_USAGE_OUT_IN">
+                       <#if (product.productTypeId!) == "ASSET_USAGE" || (product.productTypeId!) == "ASSET_USAGE_OUT_IN">
                             <@tr>
                                 <@td width="1%">&nbsp;</@td>
                                 <@td><@field type="datetime" name="reservStartStr" value=(shoppingListItem.reservStart!) size="15" maxlength="30" id="reservStartStr_${shoppingListItem.shoppingListItemSeqId}" dateType="date" dateDisplayType="date" /></@td>
                                 <@td><input type="text" size="2" name="reservLength" value="${shoppingListItem.reservLength!}"/></@td>
                             </@tr>
                             <@tr open=true close=false />
-                            <#if product.productTypeId == "ASSET_USAGE">
+                            <#if (product.productTypeId!) == "ASSET_USAGE">
                                 <@td>&nbsp;</@td>
                                 <@td><input type="text" size="3" name="reservPersons" value="${shoppingListItem.reservPersons!}"/></@td>
                             <#else>

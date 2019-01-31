@@ -132,7 +132,7 @@ code package.
                 <@td colspan="2">
                     <a href="<@serverUrl>/catalog/control/EditProductInventoryItems?productId=${productId}</@serverUrl>" class="${styles.link_nav!} ${styles.action_update!}"><b>${uiLabelMap.ProductInventory}</b></a> : 
                     ${uiLabelMap.ProductAtp} = ${availableToPromiseMap.get(productId)}, ${uiLabelMap.ProductQoh} = ${quantityOnHandMap.get(productId)}
-                    <#if Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId, "parentTypeId", "MARKETING_PKG")>
+                    <#if Static["org.ofbiz.entity.util.EntityTypeUtil"].hasParentType(delegator, "ProductType", "productTypeId", product.productTypeId!, "parentTypeId", "MARKETING_PKG")>
                     ${uiLabelMap.ProductMarketingPackageATP} = ${mktgPkgATPMap.get(productId)}, ${uiLabelMap.ProductMarketingPackageQOH} = ${mktgPkgQOHMap.get(productId)}
                     <#if (mktgPkgATPMap.get(cartLine.getProductId()) < cartLine.getQuantity()) && (shoppingCart.getOrderType() == 'SALES_ORDER')>
                       <#assign backOrdered = cartLine.getQuantity() - mktgPkgATPMap.get(cartLine.getProductId())/>
@@ -143,7 +143,7 @@ code package.
                     <#if (availableToPromiseMap.get(cartLine.getProductId()) <= 0) && (shoppingCart.getOrderType() == 'SALES_ORDER') && (product.productTypeId!) != "MARKETING_PKG_AUTO" && (product.productTypeId!) != "MARKETING_PKG_PICK" && isPhysical>
                       <span class="${styles.text_color_alert!}">[${cartLine.getQuantity()}&nbsp;${uiLabelMap.OrderBackOrdered}]</span>
                     <#else>
-                      <#if (availableToPromiseMap.get(cartLine.getProductId()) < cartLine.getQuantity()) && (shoppingCart.getOrderType() == 'SALES_ORDER') && product.productTypeId != "MARKETING_PKG_AUTO" && product.productTypeId != "MARKETING_PKG_PICK" && isPhysical>
+                      <#if (availableToPromiseMap.get(cartLine.getProductId()) < cartLine.getQuantity()) && (shoppingCart.getOrderType() == 'SALES_ORDER') && (product.productTypeId!) != "MARKETING_PKG_AUTO" && (product.productTypeId!) != "MARKETING_PKG_PICK" && isPhysical>
                         <#assign backOrdered = cartLine.getQuantity() - availableToPromiseMap.get(cartLine.getProductId())/>
                         <span class="${styles.text_color_alert!}">[${backOrdered!}&nbsp;${uiLabelMap.OrderBackOrdered}]</span>
                       </#if>

@@ -176,7 +176,7 @@ code package.
                                                 <fo:table-cell><fo:block font-size="10pt"><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/></fo:block></fo:table-cell>
                                             </fo:table-row>
                                             </#if>
-                                            <#if product.productTypeId == "MARKETING_PKG_AUTO">
+                                            <#if (product.productTypeId!) == "MARKETING_PKG_AUTO">
                                                 <fo:table-row background-color="${rowColor}">
                                                     <fo:table-cell  number-columns-spanned="6">
                                                         <fo:block text-align="left" font-weight="bold">

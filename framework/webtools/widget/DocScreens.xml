@@ -120,9 +120,7 @@ code package.
                                 <script location="component://common/webcommon/includes/scipio/doc/WEB-INF/actions/ftlDocTemplateOfbiz.groovy"/>
                             </actions>
                             <widgets>
-                                <!--<screenlet>-->
-                                <platform-specific><html><html-template location="component://common/webcommon/includes/scipio/doc/ftlDocTemplateOfbiz.ftl"/></html></platform-specific>
-                                <!--/<screenlet>-->
+                                <platform-specific><html><html-template location="component://common/webcommon/includes/scipio/doc/ftlDocTemplateAdmin.ftl"/></html></platform-specific>
                             </widgets>
                         </section>
                     </decorator-section>

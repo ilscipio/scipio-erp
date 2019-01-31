@@ -46,6 +46,7 @@ import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -2469,6 +2470,24 @@ public final class UtilProperties implements Serializable {
         }
     }
 
+    /**
+     * SCIPIO: Returns a new Map containing the given properties, copied and sorted alphabetically by keys.
+     * Added 2019-01-31.
+     */
+    public static Map<String, String> makeSortedMap(Properties properties) {
+        return new TreeMap<String, String>(UtilGenerics.<Map<String, String>>cast(properties));
+    }
+
+    /**
+     * SCIPIO: Returns a view of of the given properties as a Map, copied and sorted alphabetically by keys.
+     * NOTE: This may return an adapter around the original properties OR a copy; if you need a copy
+     * always, use {@link #makeSortedPropertyMap(Properties)}.
+     * Added 2019-01-31.
+     */
+    public static Map<String, String> asSortedMap(Properties properties) {
+        return makeSortedMap(properties); // NOTE: In principle this should be an adapter, not a map copy, but this may work out faster...
+    }
+    
     /**
      * SCIPIO: Returns all the resource name aliases (read-only).
      * <p>

@@ -188,7 +188,7 @@ public final class FreeMarkerWorker {
         newConfig.setAutoImports(UtilProperties.getMergedPropertiesFromAllComponents("freemarkerImports"));
         
         // SCIPIO: New code for includes and shared vars...
-        Properties includeProperties = UtilProperties.getMergedPropertiesFromAllComponents("freemarkerIncludes");
+        Map<String, String> includeProperties = UtilProperties.asSortedMap(UtilProperties.getMergedPropertiesFromAllComponents("freemarkerIncludes"));
         Properties sharedVarsProperties = UtilProperties.getMergedPropertiesFromAllComponents("freemarkerSharedVars");
         loadSharedVars(sharedVarsProperties,newConfig);
         List<Object> includeFreemarkerTemplates = new ArrayList<Object>(includeProperties.values());

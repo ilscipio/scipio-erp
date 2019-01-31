@@ -8,7 +8,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 
 <#-- SCIPIO: This function imports all main namespace directives (macros and functions) into the current namespace
   if they don't already exist.
-  NO LONGER NEEDED; now dumping scipio directives into global namespace instead - see scipioIncludes.ftl)
+  NO LONGER NEEDED; now dumping scipio directives into global namespace instead - see scipio/includes.ftl)
 <#function importScipioUtilities>
   <#if !scipioUtilitiesDefined??>
     <#list .main?keys as varName>

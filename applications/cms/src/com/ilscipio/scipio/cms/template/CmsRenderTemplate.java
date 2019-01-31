@@ -189,7 +189,7 @@ public interface CmsRenderTemplate extends Serializable {
             }
 
             // CMS-specific includes
-            for(Map.Entry<Object, Object> entry : UtilProperties.getProperties("cmsFreemarkerIncludes").entrySet()) {
+            for(Map.Entry<String, String> entry : UtilProperties.asSortedMap(UtilProperties.getProperties("cmsFreemarkerIncludes")).entrySet()) {
                 cfg.addAutoInclude((String) entry.getValue());
             }
 

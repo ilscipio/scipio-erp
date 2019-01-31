@@ -5132,6 +5132,57 @@ NOTE: "default" is a special map key; should be avoided.
 </#function>
 
 <#-- 
+*************
+* runService
+************
+Runs a service synchronously, after automatically making the context valid.
+
+NOTE: It is generally discouraged to use heavy service calls in FreeMarker templates, but this
+utility can be used to make such code safer.
+
+As with other advanced functions, this function can take either 2 positional parameters (name, context)
+OR a single args map.
+
+  * Usage Examples *   
+    ${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}).fullName)!"ERROR"}
+    ${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}, true).fullName)!"ERROR"}
+    ${(runService({"name":"getPartyNameForDate", "ctx":{"partyId":userLogin.partyId!}}).fullName)!"ERROR"}
+
+  * Parameters *
+    name/args               = (required) The service name to invoke OR a map of arguments
+                              (This is parameter index 0 ({{{args}}}) when using positional arguments)
+    ctx                     = ((map), default: -empty map with context userLogin, locale, timeZone) The service context
+                              (This is parameter index 1 ({{{ctx}}}) when using positional arguments)
+                              This context is automatically populated with {{{userLogin}}}, {{{locale}}} and
+                              {{{timeZone}}} from the environment {{{context}}} (the screen render map stack),
+                              ''unless'' this {{{ctx}}} already contains these keys or {{{inclSysCtx}}} is set to false.
+                              It is automatically passed through {{{DispatcherContext.makeValidContext}}}.
+    newTrans                = ((boolean), default: false) Whether to require a new transaction or not (requireNewTransaction)
+                              (This is parameter index 2 ({{{newTrans}}}) when using positional arguments)
+                              When services return errors during screen renders, the screen render transaction is
+                              aborted; setting this parameter to {{{true}}} prevents service errors from affecting
+                              the screen render.
+    inclEnvCtx              = ((boolean), default: true) Whether to automatically include the fields
+                              {{{userLogin}}}, {{{locale}}} and {{{timeZone}}} from the environment {{{context}}}
+                              (the screen render map stack).
+    throwEx                 = ((boolean), default: false) Whether to throw exceptions on service exceptions.
+                              NOTE: If this is false and an exception occurs, this function will return
+                              void (no result); so unless you set this to true, you '''MUST''' accompany
+                              {{{runService}}} cals with a missing value operator, e.g.:
+                                <#assign runService("myService", {"partyId":userLogin.partyId!})!{}>
+                                
+  * Return Value *
+    The service result OR void/missing if the service threw an exception.
+                                         
+  * History *
+    Added for 1.14.5.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function runService args ctx newTrans>
+</#function>
+-->
+
+<#-- 
 *************************************
 * DEV UTILITIES *
 *************************************

@@ -2220,6 +2220,14 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   </@section>
 </@section>
 
+<@section title="runService (ftl)">
+      <ul>
+        <li>${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}).fullName)!"ERROR"}</li>
+        <li>${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}, true).fullName)!"ERROR"}</li>
+        <li>${(runService({"name":"getPartyNameForDate", "ctx":{"partyId":userLogin.partyId!}}).fullName)!"ERROR"}</li>
+      </ul>
+</@section>
+
 <@section title="Escaping">
   <@section title="Common escaping">
       <ul>

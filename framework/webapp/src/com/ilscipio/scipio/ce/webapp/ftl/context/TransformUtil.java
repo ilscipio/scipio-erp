@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.ce.webapp.ftl.context;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import freemarker.ext.util.WrapperTemplateModel;
 import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateNumberModel;
@@ -56,6 +58,8 @@ public abstract class TransformUtil {
         return env.getGlobalVariable(name);
     }
 
+    // TemplateModel (any source)
+
     /**
      * Gets boolean arg.
      * <p>
@@ -83,7 +87,7 @@ public abstract class TransformUtil {
         return getBooleanArg(obj, null);
     }
 
-    // map
+    // Map (macro arguments)
 
     public static Boolean getBooleanArg(Map<?, ?> args, String key, Boolean defaultValue) throws TemplateModelException {
         return getBooleanArg(getModel(args, key), defaultValue);
@@ -91,8 +95,29 @@ public abstract class TransformUtil {
 
     public static Boolean getBooleanArg(Map<?, ?> args, String key) throws TemplateModelException {
         return getBooleanArg(getModel(args, key), null);
-
     }
+
+    // List (function arguments)
+
+    public static Boolean getBooleanArg(List<?> args, int position, Boolean defaultValue) throws TemplateModelException {
+        return getBooleanArg(getModel(args, position), defaultValue);
+    }
+
+    public static Boolean getBooleanArg(List<?> args, int position) throws TemplateModelException {
+        return getBooleanArg(getModel(args, position), null);
+    }
+
+    // List (function arguments) with input Hash support
+
+    public static Boolean getBooleanArg(List<?> args, String key, int position, Boolean defaultValue) throws TemplateModelException {
+        return getBooleanArg(getModel(args, key, position), defaultValue);
+    }
+
+    public static Boolean getBooleanArg(List<?> args, String key, int position) throws TemplateModelException {
+        return getBooleanArg(getModel(args, key, position), null);
+    }
+
+    // TemplateModel (any source)
 
     /**
      * Gets string arg.
@@ -150,6 +175,8 @@ public abstract class TransformUtil {
         return getStringArg(obj, null, false, true);
     }
 
+    // Map (macro arguments)
+
     public static String getStringArg(Map<?, ?> args, String key, String defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
         return getStringArg(getModel(args, key), defaultValue, useDefaultWhenEmpty, nonEscaping);
     }
@@ -173,6 +200,60 @@ public abstract class TransformUtil {
     public static String getStringNonEscapingArg(Map<?, ?> args, String key) throws TemplateModelException {
         return getStringArg(getModel(args, key), null, false, true);
     }
+
+    // List (function arguments)
+
+    public static String getStringArg(List<?> args, int position, String defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
+        return getStringArg(getModel(args, position), defaultValue, useDefaultWhenEmpty, nonEscaping);
+    }
+
+    public static String getStringArg(List<?> args, int position, String defaultValue) throws TemplateModelException {
+        return getStringArg(getModel(args, position), defaultValue, false, false);
+    }
+
+    public static String getStringArg(List<?> args, int position, boolean nonEscaping) throws TemplateModelException {
+        return getStringArg(getModel(args, position), null, false, nonEscaping);
+    }
+
+    public static String getStringArg(List<?> args, int position) throws TemplateModelException {
+        return getStringArg(getModel(args, position), null, false, false);
+    }
+
+    public static String getStringNonEscapingArg(List<?> args, int position, String defaultValue) throws TemplateModelException {
+        return getStringArg(getModel(args, position), defaultValue, false, true);
+    }
+
+    public static String getStringNonEscapingArg(List<?> args, int position) throws TemplateModelException {
+        return getStringArg(getModel(args, position), null, false, true);
+    }
+
+    // List (function arguments) with input Hash support
+
+    public static String getStringArg(List<?> args, String key, int position, String defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
+        return getStringArg(getModel(args, key, position), defaultValue, useDefaultWhenEmpty, nonEscaping);
+    }
+
+    public static String getStringArg(List<?> args, String key, int position, String defaultValue) throws TemplateModelException {
+        return getStringArg(getModel(args, key, position), defaultValue, false, false);
+    }
+
+    public static String getStringArg(List<?> args, String key, int position, boolean nonEscaping) throws TemplateModelException {
+        return getStringArg(getModel(args, key, position), null, false, nonEscaping);
+    }
+
+    public static String getStringArg(List<?> args, String key, int position) throws TemplateModelException {
+        return getStringArg(getModel(args, key, position), null, false, false);
+    }
+
+    public static String getStringNonEscapingArg(List<?> args, String key, int position, String defaultValue) throws TemplateModelException {
+        return getStringArg(getModel(args, key, position), defaultValue, false, true);
+    }
+
+    public static String getStringNonEscapingArg(List<?> args, String key, int position) throws TemplateModelException {
+        return getStringArg(getModel(args, key, position), null, false, true);
+    }
+
+    // TemplateModel (any source)
 
     public static Object getBooleanOrStringArg(TemplateModel obj, Object defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
         Object result = null;
@@ -200,6 +281,8 @@ public abstract class TransformUtil {
         return getBooleanOrStringArg(obj, null, false, true);
     }
 
+    // Map (macro arguments)
+
     public static Object getBooleanOrStringArg(Map<?, ?> args, String key, Object defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
         return getBooleanOrStringArg(getModel(args, key), defaultValue, useDefaultWhenEmpty, nonEscaping);
     }
@@ -210,8 +293,38 @@ public abstract class TransformUtil {
 
     public static Object getBooleanOrStringNonEscapingArg(Map<?, ?> args, String key) throws TemplateModelException {
         return getBooleanOrStringArg(getModel(args, key), null, false, true);
-
     }
+
+    // List (function arguments)
+
+    public static Object getBooleanOrStringArg(List<?> args, int position, Object defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
+        return getBooleanOrStringArg(getModel(args, position), defaultValue, useDefaultWhenEmpty, nonEscaping);
+    }
+
+    public static Object getBooleanOrStringArg(List<?> args, int position) throws TemplateModelException {
+        return getBooleanOrStringArg(getModel(args, position), null, false, false);
+    }
+
+    public static Object getBooleanOrStringNonEscapingArg(List<?> args, int position) throws TemplateModelException {
+        return getBooleanOrStringArg(getModel(args, position), null, false, true);
+    }
+
+    // List (function arguments) with input Hash support
+
+    public static Object getBooleanOrStringArg(List<?> args, String key, int position, Object defaultValue, boolean useDefaultWhenEmpty, boolean nonEscaping) throws TemplateModelException {
+        return getBooleanOrStringArg(getModel(args, key, position), defaultValue, useDefaultWhenEmpty, nonEscaping);
+    }
+
+    public static Object getBooleanOrStringArg(List<?> args, String key, int position) throws TemplateModelException {
+        return getBooleanOrStringArg(getModel(args, key, position), null, false, false);
+    }
+
+    public static Object getBooleanOrStringNonEscapingArg(List<?> args, String key, int position) throws TemplateModelException {
+        return getBooleanOrStringArg(getModel(args, key, position), null, false, true);
+    }
+
+
+    // TemplateModel (any source)
 
     /**
      * Returns a Locale OR the Locale representation of the string using UtilMisc.parseLocale ofbiz utility.
@@ -229,6 +342,8 @@ public abstract class TransformUtil {
         }
         throw new IllegalArgumentException("unexpected type for locale argument: " + obj.getClass().getName());
     }
+
+    // Map (macro arguments)
 
     public static Locale getOfbizLocaleArg(Map<?, ?> args, String key) throws TemplateModelException {
         return getOfbizLocaleArg(getModel(args, key));
@@ -253,6 +368,52 @@ public abstract class TransformUtil {
         if (locale != null) return locale;
         return ContextFtlUtil.getRequestLocale(env);
     }
+
+    // List (function arguments)
+
+    /**
+     * Special handler that tries to read a locale arg and if not present gets it from context locale.
+     * NOTE: this does NOT check the request locale!
+     */
+    public static Locale getOfbizLocaleArgOrContext(List<?> args, int position, Environment env) throws TemplateModelException {
+        Locale locale = getOfbizLocaleArg(getModel(args, position));
+        if (locale != null) return locale;
+        return ContextFtlUtil.getContextLocale(env);
+    }
+
+    /**
+     * Special handler that tries to read a locale arg and if not present gets it from context locale,
+     * or falls back on request if present.
+     */
+    public static Locale getOfbizLocaleArgOrContextOrRequest(List<?> args, int position, Environment env) throws TemplateModelException {
+        Locale locale = getOfbizLocaleArgOrContext(args, position, env);
+        if (locale != null) return locale;
+        return ContextFtlUtil.getRequestLocale(env);
+    }
+
+    // List (function arguments) with input Hash support
+
+    /**
+     * Special handler that tries to read a locale arg and if not present gets it from context locale.
+     * NOTE: this does NOT check the request locale!
+     */
+    public static Locale getOfbizLocaleArgOrContext(List<?> args, String key, int position, Environment env) throws TemplateModelException {
+        Locale locale = getOfbizLocaleArg(getModel(args, key, position));
+        if (locale != null) return locale;
+        return ContextFtlUtil.getContextLocale(env);
+    }
+
+    /**
+     * Special handler that tries to read a locale arg and if not present gets it from context locale,
+     * or falls back on request if present.
+     */
+    public static Locale getOfbizLocaleArgOrContextOrRequest(List<?> args, String key, int position, Environment env) throws TemplateModelException {
+        Locale locale = getOfbizLocaleArgOrContext(args, key, position, env);
+        if (locale != null) return locale;
+        return ContextFtlUtil.getRequestLocale(env);
+    }
+
+    // TemplateModel (any source)
 
     /**
      * Gets integer arg.
@@ -283,6 +444,8 @@ public abstract class TransformUtil {
         return getIntegerArg(obj, null);
     }
 
+    // Map (macro arguments)
+
     public static Integer getIntegerArg(Map<?, ?> args, String key, Integer defaultValue) throws TemplateModelException {
         return getIntegerArg(getModel(args, key), defaultValue);
     }
@@ -290,6 +453,28 @@ public abstract class TransformUtil {
     public static Integer getIntegerArg(Map<?, ?> args, String key) throws TemplateModelException {
         return getIntegerArg(getModel(args, key), null);
     }
+
+    // List (function arguments)
+
+    public static Integer getIntegerArg(List<?> args, int position, Integer defaultValue) throws TemplateModelException {
+        return getIntegerArg(getModel(args, position), defaultValue);
+    }
+
+    public static Integer getIntegerArg(List<?> args, int position) throws TemplateModelException {
+        return getIntegerArg(getModel(args, position), null);
+    }
+
+    // List (function arguments) with input Hash support
+
+    public static Integer getIntegerArg(List<?> args, String key, int position, Integer defaultValue) throws TemplateModelException {
+        return getIntegerArg(getModel(args, key, position), defaultValue);
+    }
+
+    public static Integer getIntegerArg(List<?> args, String key, int position) throws TemplateModelException {
+        return getIntegerArg(getModel(args, key, position), null);
+    }
+
+    // TemplateModel (any source)
 
     /**
      * Gets a deep-unwrapped map.
@@ -322,8 +507,32 @@ public abstract class TransformUtil {
         return getMapArg(getModel(args, key), defaultValue, useDefaultWhenEmpty, nonEscaping);
     }
 
+    // Map (macro arguments)
+
     public static TemplateModel getModel(Map<?, ?> args, String key) {
         return (TemplateModel) args.get(key);
+    }
+
+    // List (function arguments)
+
+    public static TemplateModel getModel(List<?> args, int position) {
+        return (args.size() > position) ? (TemplateModel) args.get(position) : null;
+    }
+
+    // List (function arguments) with input Hash support
+
+    /**
+     * If the first argument in the list is a hash, returns its value by key; otherwise returns the value
+     * in the list at the given position. This is for functions that need to return
+     * If position is (-1), only map access is supported.
+     */
+    public static TemplateModel getModel(List<?> args, String key, int position) throws TemplateModelException {
+        if (args.size() > 0 && args.get(0) instanceof TemplateHashModelEx) {
+            return ((TemplateHashModelEx) args.get(0)).get(key);
+        } else if (position >= 0 && position < args.size()) {
+            return (TemplateModel) args.get(position);
+        }
+        return null;
     }
 
     /**

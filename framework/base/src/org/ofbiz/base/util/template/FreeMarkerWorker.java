@@ -170,11 +170,13 @@ public final class FreeMarkerWorker {
         newConfig.setLocalizedLookup(false);
         newConfig.setSharedVariable("StringUtil", new BeanModel(StringUtil.INSTANCE, wrapper));
         newConfig.setTemplateLoader(new FlexibleTemplateLoader());
-        newConfig.setAutoImports(UtilProperties.getProperties("freemarkerImports"));
-
+        // SCIPIO: Load it from ALL components, like freemarkerTransforms:
+        //newConfig.setAutoImports(UtilProperties.getProperties("freemarkerImports"));
+        newConfig.setAutoImports(UtilProperties.getMergedPropertiesFromAllComponents("freemarkerImports"));
+        
         // SCIPIO: New code for includes and shared vars...
-        Properties includeProperties = UtilProperties.getProperties("freemarkerIncludes");
-        Properties sharedVarsProperties = UtilProperties.getProperties("freemarkerSharedVars");
+        Properties includeProperties = UtilProperties.getMergedPropertiesFromAllComponents("freemarkerIncludes");
+        Properties sharedVarsProperties = UtilProperties.getMergedPropertiesFromAllComponents("freemarkerSharedVars");
         loadSharedVars(sharedVarsProperties,newConfig);
         List<Object> includeFreemarkerTemplates = new ArrayList<Object>(includeProperties.values());
         if (includeFreemarkerTemplates.size() > 0) {

@@ -667,7 +667,8 @@ under the License.
             <xs:attribute type="xs:string" name="title" />
             <xs:attribute type="xs:string" name="parent-portal-page-value">
                 <xs:annotation>
-                    <xs:documentation>an expanded value of the parentPortalPageId in the Portal entity, will insert buttons using the portalId as the menuitem name portalPageName as the buttom title</xs:documentation>
+                    <xs:documentation>an expanded value of the parentPortalPageId in the Portal entity, will insert buttons using the portalId as the menuitem name portalPageName as the buttom title
+                        SCIPIO: DEPRECATED: 2019-01-29: Completely unmaintained and not used in Scipio.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="tooltip" />

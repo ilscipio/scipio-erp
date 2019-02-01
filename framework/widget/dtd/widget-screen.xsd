@@ -950,6 +950,9 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:element name="include-portal-page" substitutionGroup="AllWidgets">
+        <xs:annotation>
+            <xs:documentation>SCIPIO: DEPRECATED: 2019-01-29: Completely unmaintained and not used in Scipio.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute type="xs:string" name="id" />
             <xs:attribute name="conf-mode" type="xs:string" default="false"><!-- SCIPIO: Supports flexible: type="xs:boolean" -->

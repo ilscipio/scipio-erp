@@ -414,7 +414,11 @@ public final class CommonWidgetModels {
             this.useWhenExdr = FlexibleStringExpander.getInstance(linkElement.getAttribute("use-when"));
         }
 
-        // Portal constructor
+        /**
+         * Portal constructor.
+         * @deprecated SCIPIO: 2019-01-29: Completely unmaintained and not used in Scipio.
+         */
+        @Deprecated
         public Link(GenericValue portalPage, List<Parameter> parameterList, String target, Locale locale) {
             this.autoEntityParameters = null;
             this.autoServiceParameters = null;

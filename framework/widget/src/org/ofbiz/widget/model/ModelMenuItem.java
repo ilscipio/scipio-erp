@@ -292,7 +292,11 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         this.overrideName = "";
     }
 
-    // Portal constructor
+    /**
+     * Portal constructor.
+     * @deprecated SCIPIO: 2019-01-29: Completely unmaintained and not used in Scipio.
+     */
+    @Deprecated
     private ModelMenuItem(GenericValue portalPage, ModelMenuItem parentMenuItem, Locale locale) {
         super(portalPage.getString("portalPageId"));
         this.actions = Collections.emptyList();
@@ -1240,6 +1244,11 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
             this.link = new Link(linkElement);
         }
 
+        /**
+         * Portal constructor.
+         * @deprecated SCIPIO: 2019-01-29: Completely unmaintained and not used in Scipio.
+         */
+        @Deprecated
         public MenuLink(GenericValue portalPage, ModelMenuItem parentMenuItem, Locale locale) {
             this.linkMenuItem = parentMenuItem;
             List<Parameter> parameterList = new ArrayList<>();

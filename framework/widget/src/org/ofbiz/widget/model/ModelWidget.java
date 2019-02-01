@@ -101,6 +101,16 @@ public abstract class ModelWidget implements Serializable {
     }
 
     /**
+     * SCIPIO: Returns the widget's original name, meaning its name without
+     * any possible overrides.
+     * Added 2019-02-01.
+     * @return Widget's name
+     */
+    public String getOriginalName() { // final
+        return name;
+    }
+
+    /**
      * Returns the url as a string, from where this widget was defined.
      * @return url
      */

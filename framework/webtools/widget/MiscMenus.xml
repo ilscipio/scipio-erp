@@ -28,13 +28,28 @@ code package.
 
     <!-- SCIPIO: nested menu test -->
     <menu name="LayoutDemoNestedButton" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <script lang="groovy"><![CDATA[
+                org.ofbiz.base.util.Debug.logInfo('Test: Hello from LayoutDemoNestedButton menu actions', "LayoutDemoNestedButton.groovy");
+            ]]></script>
+        </actions>
         <menu-item name="top1" title="Toplevel1">
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    org.ofbiz.base.util.Debug.logInfo('Test: Hello from Toplevel1 menu-item actions', "LayoutDemoNestedButton.groovy");
+                ]]></script>
+            </actions>
             <link target="${demoTargetUrl}">
                 <parameter param-name="demoParam1"/>
                 <parameter param-name="demoParam2"/>
                 <parameter param-name="demoParam3"/>
             </link>
             <menu-item name="nested1" title="Nested1">
+                <actions>
+                    <script lang="groovy"><![CDATA[
+                        org.ofbiz.base.util.Debug.logInfo('Test: Hello from Nested1 menu-item actions', "LayoutDemoNestedButton.groovy");
+                    ]]></script>
+                </actions>
                 <link target="${demoTargetUrl}">
                     <parameter param-name="demoParam1"/>
                     <parameter param-name="demoParam2"/>

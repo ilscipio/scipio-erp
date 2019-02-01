@@ -134,12 +134,15 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
     public static final String resource = "ServiceErrorUiLabels";
 
-    // SCIPIO: new 2017-09-13
+    // SCIPIO: Added 2017-09-13
     private static final int logParamLevel;
     static {
         Integer level = Debug.getLevelFromString(UtilProperties.getPropertyValue("service", "run.logParamLevel"));
         logParamLevel = (level != null) ? level : Debug.INFO;
     }
+
+    // SCIPIO: Added 2019-01-31
+    public static final List<String> COMMON_INTERNAL_IN_FIELDS = UtilMisc.unmodifiableArrayList("userLogin", "locale", "timeZone");
 
     /** The name of this service */
     public String name;

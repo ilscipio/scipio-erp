@@ -20,6 +20,10 @@ package org.ofbiz.service.engine
 
 import java.util.Map
 
+import javax.servlet.http.HttpServletRequest
+
+import groovy.lang.MissingPropertyException
+
 import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.util.EntityQuery
 import org.ofbiz.service.DispatchContext
@@ -32,26 +36,44 @@ import org.ofbiz.entity.GenericValue
 abstract class GroovyBaseScript extends Script {
     public static final String module = GroovyBaseScript.class.getName()
 
-    Map runService(String serviceName, Map inputMap) throws ExecutionServiceException {
+    /**
+     * SCIPIO: Returns the binding variable with given name, or null if does not exist.
+     */
+    def getBindingVarSafe(String varName) {
+        try {
+            return this.binding.getVariable(varName);
+        } catch(MissingPropertyException e) {
+            return null;
+        }
+    }
+
+    Map runService(String serviceName, Map serviceCtx) throws ExecutionServiceException {
         LocalDispatcher dispatcher = binding.getVariable('dispatcher');
         DispatchContext dctx = dispatcher.getDispatchContext();
-        if (!inputMap.userLogin) {
-            inputMap.userLogin = this.binding.getVariable('parameters').userLogin
+        /* SCIPIO: 2019-01-31: security: These were flawed and potentially dangerous due to
+         * 'parameters' map potentially containing request parameters; also flawed presence checks.
+        if (!serviceCtx.userLogin) {
+            serviceCtx.userLogin = this.binding.getVariable('parameters').userLogin
         }
-        if (!inputMap.timeZone) {
-            inputMap.timeZone = this.binding.getVariable('parameters').timeZone
+        if (!serviceCtx.timeZone) {
+            serviceCtx.timeZone = this.binding.getVariable('parameters').timeZone
         }
-        if (!inputMap.locale) {
-            inputMap.locale = this.binding.getVariable('parameters').locale
+        if (!serviceCtx.locale) {
+            serviceCtx.locale = this.binding.getVariable('parameters').locale
         }
-        Map serviceContext = dctx.makeValidContext(serviceName, ModelService.IN_PARAM, inputMap)
+        */
+        // SCIPIO: NOTE: We ONLY use the request/session for default fields (userLogin, locale, timeZone) 
+        // as backward-compatibility IF their keys are not set in current context, as the renderer should have set them.
+        ServiceUtil.checkSetServiceContextDefaults(serviceCtx, ModelService.COMMON_INTERNAL_IN_FIELDS,
+            getBindingVarSafe('context'), getBindingVarSafe('request'))
+        Map serviceContext = dctx.makeValidContext(serviceName, ModelService.IN_PARAM, serviceCtx)
         Map result = dispatcher.runSync(serviceName, serviceContext)
         if (ServiceUtil.isError(result)) {
             throw new ExecutionServiceException(ServiceUtil.getErrorMessage(result))
         }
         return result
     }
-
+    
     Map run(Map args) throws ExecutionServiceException {
         return runService((String)args.get('service'), (Map)args.get('with', new HashMap()))
     }

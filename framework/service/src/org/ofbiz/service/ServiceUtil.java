@@ -21,6 +21,7 @@ package org.ofbiz.service;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transaction;
 
 import org.ofbiz.base.config.GenericConfigException;
@@ -969,5 +971,62 @@ public final class ServiceUtil {
             }
         }
         return outMap;
+    }
+
+    /**
+     * SCIPIO: For every field name, checks if the serviceContext already contains its key; if it does, do nothing;
+     * if it does not, attempt to fetch it from the source context, request, or session (in that order).
+     * <p>
+     * <strong>WARNING:</strong> In webapp request, the current request/session fallbacks are technically wrong
+     * for some variables such as "locale" and "timeZone"; it is only done here for limited backward-compatibility
+     * for bad old code in GroovyBaseScript.runService, but it may be removed from this method at a future date!
+     * <p>
+     * NOTE: If the source context contains the key but it is null, the null value is used, rather
+     * than falling back to request; this is an implicit context-detect mechanism; in fact,
+     * in most rendering cases, there will be no fallback on request.
+     * <p>
+     * NOTE: We ONLY use the request/session for default fields (userLogin, locale, timeZone),
+     * as backward-compatibility IF their keys are not set in current context, because the renderer
+     * should have set them.
+     * <p>
+     * Used mainly by {@link org.ofbiz.service.engine.GroovyBaseScript#runService(String, Map)} and
+     * {@link org.ofbiz.webapp.ftl.RunServiceMethod#exec(List)}.
+     * <p>
+     * Added 2019-01-31.
+     */
+    public static void checkSetServiceContextDefaults(Map<String, Object> dstServiceContext, Collection<String> fieldNames,
+            Map<String, Object> srcContext, HttpServletRequest srcRequestAndSession) {
+        for(String fieldName : fieldNames) {
+            //  Do NOT do this, because it prevents caller from setting null
+            //if (inputMap[fieldName]) { // stock code
+            if (dstServiceContext.containsKey(fieldName)) {
+                continue;
+            }
+            // Do NOT do this, because 'parameters' map contains request parameters,
+            // plus this can also triggers exceptions
+            //inputMap[fieldName] = this.binding.getVariable('parameters')[fieldName];         // stock code
+            if (srcContext != null && srcContext.containsKey(fieldName)) {
+                dstServiceContext.put(fieldName, srcContext.get(fieldName));
+                continue;
+            }
+            if (srcRequestAndSession == null) {
+                continue;
+            }
+            // NOTE: For servlet API request's and session's getAttribute(String), null is equivalent to missing key.
+            Object value = srcRequestAndSession.getAttribute(fieldName);
+            if (value != null) {
+                dstServiceContext.put(fieldName, value);
+                continue;
+            }
+            HttpSession currentSession = srcRequestAndSession.getSession(false);
+            if (currentSession == null) {
+                continue;
+            }
+            value = currentSession.getAttribute(fieldName);
+            if (value != null) {
+                dstServiceContext.put(fieldName, value);
+                //continue;
+            }
+        }
     }
 }

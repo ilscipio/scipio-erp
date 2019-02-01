@@ -109,16 +109,24 @@ public final class Debug {
         }
     }
 
+    /**
+     * SCIPIO: A workaround for .groovy and .ftl module names not showing.
+     * FIXME?: This should maybe solved another way as this might impact performance?
+     * Added 2016-11-11 (modified 2019-01-31).
+     */
+    private static String checkStripModuleExt(String module) {
+        if (module.endsWith(".groovy")) {
+            return module.substring(0, module.length() - ".groovy".length());
+        } else if (module.endsWith(".ftl")) {
+            return module.substring(0, module.length() - ".ftl".length());
+        }
+        return module;
+    }
+
     public static Logger getLogger(String module) {
-        if (UtilValidate.isNotEmpty(module)) {
-            // SCIPIO: 2016-11-11: this is a workaround for .groovy module names not showing
-            // FIXME?: This should maybe solved another way as this might impact performance?
-            if (module != null && module.endsWith(".groovy")) {
-                // 2018-05-22: some of the groovy names are very long, and this looks a little poor, so simply omit the groovy part
-                //module = module.substring(0, module.length() - 7) + "Groovy";
-                module = module.substring(0, module.length() - 7);
-            }
-            return LogManager.getLogger(module);
+        // SCIPIO: refactored for checkStripModuleExt
+        if (module != null && !module.isEmpty()) {
+            return LogManager.getLogger(checkStripModuleExt(module));
         } else {
             return root;
         }

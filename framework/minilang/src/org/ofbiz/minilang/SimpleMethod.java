@@ -471,7 +471,9 @@ public final class SimpleMethod extends MiniLangElement {
             boolean forceError = false;
             String tempErrorMsg = (String) methodContext.getEnv(eventErrorMessageName);
             if (errorMsg.length() > 0 || UtilValidate.isNotEmpty(tempErrorMsg)) {
-                errorMsg += tempErrorMsg;
+                if (UtilValidate.isNotEmpty(tempErrorMsg)) { // SCIPIO: 2019-02-01: Added check, to prevents appending the string "null"
+                    errorMsg += tempErrorMsg;
+                }
                 methodContext.getRequest().setAttribute("_ERROR_MESSAGE_", errorMsg);
                 forceError = true;
                 summaryErrorStringBuffer.append(errorMsg);
@@ -519,7 +521,7 @@ public final class SimpleMethod extends MiniLangElement {
             boolean forceError = false;
             String tempErrorMsg = (String) methodContext.getEnv(serviceErrorMessageName);
             if (errorMsg.length() > 0 || UtilValidate.isNotEmpty(tempErrorMsg)) {
-                if (UtilValidate.isNotEmpty(tempErrorMsg)) { // SCIPIO: 2018-08-30: missing check: this could add "null"
+                if (UtilValidate.isNotEmpty(tempErrorMsg)) { // SCIPIO: 2018-08-30: Added check, to prevents appending the string "null"
                     errorMsg += tempErrorMsg;
                 }
                 methodContext.putResult(ModelService.ERROR_MESSAGE, errorMsg);

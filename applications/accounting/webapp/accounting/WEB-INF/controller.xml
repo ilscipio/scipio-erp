@@ -2032,6 +2032,38 @@ code package.
             <redirect-parameter name="daysOffset"/>
         </response>
     </request-map>
+    
+        <!-- SCIPIO (02/01/2019): Transaction page requests readded -->
+    <request-map uri="FindGatewayResponses">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindGatewayResponses"/>
+    </request-map>
+    <request-map uri="ViewGatewayResponse">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewGatewayResponse"/>
+    </request-map>
+    <request-map uri="AuthorizeTransaction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AuthorizeTransaction"/>
+    </request-map>
+    <request-map uri="CaptureTransaction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CaptureTransaction"/>
+    </request-map>
+
+    <request-map uri="ManualTransaction">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ManualTransaction"/>
+    </request-map>
+    <request-map uri="manualETx">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ManualTransaction"/>
+    </request-map>
+    <request-map uri="processManualCcTx">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="manualForcedCcTransaction"/>
+        <response name="success" type="view" value="ManualTransaction"/>
+    </request-map>
 
     <!-- Payment Group requests -->
     <request-map uri="FindPaymentGroup">
@@ -3139,8 +3171,6 @@ code package.
     <view-map name="GlAccountTrialBalanceReportPdf" type="screenfop" page="component://accounting/widget/journals/ReportFinancialSummaryScreens.xml#GlAccountTrialBalanceReportPdf" content-type="application/pdf" encoding="none"/>
     <view-map name="GlAccountTrialBalance" type="screen" page="component://accounting/widget/journals/ReportFinancialSummaryScreens.xml#GlAccountTrialBalance"/>
 
-
-
     
     <!-- 
     **************
@@ -3155,6 +3185,11 @@ code package.
     <view-map name="PrintChecks" type="screenfop" page="component://accounting/widget/payments/PaymentScreens.xml#PrintChecks" content-type="application/pdf" encoding="none"/>
     <view-map name="FindSalesInvoicesByDueDate" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#FindSalesInvoicesByDueDate"/>
     <view-map name="FindPurchaseInvoicesByDueDate" type="screen" page="component://accounting/widget/payments/PaymentScreens.xml#FindPurchaseInvoicesByDueDate"/>
+
+    <view-map name="FindGatewayResponses" page="component://accounting/widget/payments/PaymentScreens.xml#FindGatewayResponses" type="screen"/>
+    <view-map name="ViewGatewayResponse" page="component://accounting/widget/payments/PaymentScreens.xml#ViewGatewayResponse" type="screen"/>
+    <view-map name="AuthorizeTransaction" page="component://accounting/widget/payments/PaymentScreens.xml#AuthorizeTransaction" type="screen"/>
+    <view-map name="CaptureTransaction" page="component://accounting/widget/payments/PaymentScreens.xml#CaptureTransaction" type="screen"/>
 
     <!-- Payment Group -->
     <view-map name="FindPaymentGroup" type="screen" page="component://accounting/widget/payments/PaymentGroupScreens.xml#FindPaymentGroup"/>

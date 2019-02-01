@@ -1530,12 +1530,27 @@
                 <parameter param-name="paymentId" from-field="payment.paymentId" />
             </link>
         </menu-item>
+        <menu-item name="editPaymentApplications" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingPaymentTabApplications}">
+        </menu-item>
+         <menu-item name="authorizetransactiontab" title="${uiLabelMap.AccountingAuthorize}">
+            <link target="AuthorizeTransaction"/>
+        </menu-item>
+        <menu-item name="capturetransactiontab" title="${uiLabelMap.AccountingCapture}">
+            <link target="CaptureTransaction"/>
+        </menu-item>
+        <menu-item name="gatewayresponsestab" title="${uiLabelMap.AccountingGatewayResponses}">
+            <link target="FindGatewayResponses"/>
+        </menu-item>
+        <menu-item name="manualtransactiontab" title="${uiLabelMap.AccountingManualTransaction}">
+            <link target="ManualTransaction"/>
+        </menu-item>
     </menu>
 
     <menu name="PaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="PaymentTabBar" recursive="includes-only" />
         <menu-item-alias name="findPayment" for="PARENT-NOSUB"/>
         <menu-item-alias name="newPayment" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newPayment" for="PARENT-WITHSUB"/>
     </menu>
 
     <menu name="PaymentSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

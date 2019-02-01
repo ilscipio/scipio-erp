@@ -62,7 +62,7 @@ jQuery(document).ready(function() {
         <#assign currentCountryGeoId = pafFallbacks.countryGeoId>
       <#else>
         <#-- redundant done
-        <#assign currentCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">-->
+        <#assign currentCountryGeoId = getPropertyValue("general", "country.geo.id.default")!"">-->
         <#assign currentCountryGeoId = "">
       </#if>
     <#-- SCIPIO: there's no reason for this; allow countries ftl to select the right one

@@ -23,7 +23,7 @@ code package.
 var autocomp = [
     <#if autocompleteOptions?has_content>
         <#if !displayReturnField??>
-            <#assign displayReturnField = getPropertyValue("widget.properties", "widget.autocompleter.displayReturnField")!"">
+            <#assign displayReturnField = getPropertyValue("widget", "widget.autocompleter.displayReturnField")!"">
         </#if>
         <#list autocompleteOptions as autocompleteOption>
             {

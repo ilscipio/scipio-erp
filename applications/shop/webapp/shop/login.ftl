@@ -4,9 +4,9 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <#-- SCIPIO: now points to shop -->
-<#assign janrainEnabled = getPropertyValue("shop.properties", "janrain.enabled")!"">
-<#assign appName = getPropertyValue("shop.properties", "janrain.appName")!"">
-<#assign useMultitenant = getPropertyValue("general.properties", "multitenant")!"">
+<#assign janrainEnabled = getPropertyValue("shop", "janrain.enabled")!"">
+<#assign appName = getPropertyValue("shop", "janrain.appName")!"">
+<#assign useMultitenant = getPropertyValue("general", "multitenant")!"">
 
 <@row class="+Signlogin">
     <@cell columns=6>

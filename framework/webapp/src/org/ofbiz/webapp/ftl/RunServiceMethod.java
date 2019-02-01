@@ -9,6 +9,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
@@ -34,12 +35,12 @@ public class RunServiceMethod implements TemplateMethodModelEx {
         LocalDispatcher dispatcher = ContextFtlUtil.getDispatcher(env);
 
         @SuppressWarnings("unchecked")
-        Map<String, Object> context = (Map<String, Object>) LangFtlUtil.unwrap(TransformUtil.getModel(arguments, "ctx", 1));
-        if (context == null) {
-            context = new HashMap<>();
+        Map<String, Object> serviceCtx = (Map<String, Object>) LangFtlUtil.unwrap(TransformUtil.getModel(arguments, "ctx", 1));
+        if (serviceCtx == null) {
+            serviceCtx = new HashMap<>();
         } else {
             try {
-                context = dispatcher.getDispatchContext().makeValidContext(serviceName, ModelService.IN_PARAM, context);
+                serviceCtx = dispatcher.getDispatchContext().makeValidContext(serviceName, ModelService.IN_PARAM, serviceCtx);
             } catch (Exception e) {
                 Debug.logError(e, "Error validating service '" + serviceName + "' context", module);
                 if (isThrowExceptions(arguments)) {
@@ -50,21 +51,15 @@ public class RunServiceMethod implements TemplateMethodModelEx {
         }
 
         if (!Boolean.FALSE.equals(TransformUtil.getBooleanArg(arguments, "inclEnvCtx", -1))) {
-            Map<String, Object> envCtx = ContextFtlUtil.getContext(env);
-            if (!context.containsKey("userLogin") && envCtx.containsKey("userLogin")) {
-                context.put("userLogin", envCtx.get("userLogin"));
-            }
-            if (!context.containsKey("locale") && envCtx.containsKey("locale")) {
-                context.put("locale", envCtx.get("locale"));
-            }
-            if (!context.containsKey("timeZone") && envCtx.containsKey("timeZone")) {
-                context.put("timeZone", envCtx.get("timeZone"));
-            }
+            // NOTE: We ONLY use the request/session for default fields (userLogin, locale, timeZone) 
+            // as backward-compatibility IF their keys are not set in current context, as the renderer should have set them.
+            ServiceUtil.checkSetServiceContextDefaults(serviceCtx, ModelService.COMMON_INTERNAL_IN_FIELDS,
+                    ContextFtlUtil.getContext(env), ContextFtlUtil.getRequest(env));
         }
 
         boolean newTrans = Boolean.TRUE.equals(TransformUtil.getBooleanArg(arguments, "newTrans", -1));
         try {
-            return dispatcher.runSync(serviceName, context, newTrans);
+            return dispatcher.runSync(serviceName, serviceCtx, newTrans);
         } catch (Exception e) {
             Debug.logError(e, "Error invoking service '" + serviceName + "'", module);
             if (isThrowExceptions(arguments)) {

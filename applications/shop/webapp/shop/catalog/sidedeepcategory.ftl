@@ -72,8 +72,8 @@ code package.
               <#if Static["org.ofbiz.product.category.CategoryWorker"].isCategoryChildOf(delegator, dispatcher, baseCategoryId, catInfo.productCategoryId)>
                 <@categoryList catInfo=catInfo productCategoryId=item.catId level=0 isMultiLevel=true path=item.path!"" count=item.count previousCategoryId=baseCategoryId!""/>
               <#else>
-                <#assign dummy = Debug.logWarning("Scipio: WARN: Side deep category " + item.catId + 
-                    " not child of base category " + (baseCategoryId!"") + "; discarding", "sidedeepcategoryftl")>
+                <#assign dummy = Debug.logWarning("Scipio: WARN: Side deep category " + rawString(item.catId!) + 
+                    " not child of base category " + rawString(baseCategoryId!"") + "; discarding", "sidedeepcategory.ftl")!>
               </#if>
           </#list>
         <#elseif topLevelList?has_content><#-- SCIPIO: Fallback for empty categories / catalogs -->

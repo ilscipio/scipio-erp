@@ -34,7 +34,7 @@
             </#if>
           <#else>
             <#-- ERROR: invalid db value; always report -->
-            <#local dummy = Debug.logError("Cms: Error: Attribute '" + (fieldObj.id!"") + "' has invalid expandLang (" + expandLang + ")", "editPageFtl")>
+            <#local dummy = Debug.logError("Cms: @pageAttrField: Error: Attribute '" + rawString(fieldObj.id!"") + "' has invalid expandLang (" + expandLang + ")", "editPage.ftl")!>
           </#if>
         </#if>
         <#if fieldObj.targetType?has_content>

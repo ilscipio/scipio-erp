@@ -1753,4 +1753,12 @@ public final class UtilMisc {
     public static UtilMisc getStaticInstance() {
         return INSTANCE;
     }
+
+    /**
+     * SCIPIO: Returns true if either the passed value is non-null or if the given map contains the passed key.
+     * This can be used to optimize Map accesses when the values are biased toward predominantly non-null.
+     */
+    public static <K, V> boolean containsKey(Map<K, V> map, K key, V value) {
+        return (value != null || map.containsKey(key));
+    }
 }

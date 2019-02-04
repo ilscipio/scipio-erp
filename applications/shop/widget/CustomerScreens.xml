@@ -841,6 +841,20 @@ code package.
                 <set field="pageHeader" value="${uiLabelMap.CommonContactUs}"/>
                 <set field="activeMainMenuItem" value="contactus"/>
                 <set field="submitRequest" value="contactsubmit"/>
+                
+                <!-- SCIPIO: If logged-in, get the current user email -->
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    userLogin = context.userLogin;
+                    if (userLogin?.partyId) {
+                        try {
+                            servRes = runService("getPartyEmail", [partyId:userLogin.partyId, userLogin:userLogin]);
+                            context.partyEmailAddress = servRes.emailAddress;
+                        } catch(Exception e) {
+                            Debug.logError(e, "AnonContactusScreen.groovy");
+                        }
+                    }
+                ]]></script>
             </actions>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">

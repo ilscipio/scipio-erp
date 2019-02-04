@@ -260,6 +260,13 @@ public class OrderReturnServices {
                 sendMap.put("xslfoAttachScreenLocation", xslfoAttachScreenLocation);
 
                 Map<String, Object> bodyParameters = UtilMisc.<String, Object>toMap("returnHeader", returnHeader, "returnItems", returnItems, "returnAdjustments", returnAdjustments, "locale", locale, "userLogin", userLogin);
+                if (orderHeader != null) { // SCIPIO
+                    bodyParameters.put("orderId", orderHeader.get("orderId"));
+                    bodyParameters.put("orderHeader", orderHeader);
+                }
+                if (returnHeader != null) { // SCIPIO
+                    bodyParameters.put("returnId", returnHeader.get("returnId"));
+                }
                 sendMap.put("bodyParameters", bodyParameters);
 
                 sendMap.put("subject", productStoreEmail.getString("subject"));

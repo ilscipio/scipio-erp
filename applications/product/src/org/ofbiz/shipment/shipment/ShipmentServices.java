@@ -1143,6 +1143,7 @@ public class ShipmentServices {
             // This is only technically an error if the email contains links back to a website.
             Debug.logWarning("sendShipmentCompleteNotification: No webSiteId determined for store '" + productStoreId + "' email", module);
         }
+        bodyParameters.put("productStoreId", productStoreId); // SCIPIO
 
         // send the notification
         Map<String, Object> sendResp = null;

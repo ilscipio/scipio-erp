@@ -1014,6 +1014,7 @@ public class ProductEvents {
         }
         paramMap.put("locale", UtilHttp.getLocale(request));
         paramMap.put("userLogin", session.getAttribute("userLogin"));
+        paramMap.put("productStoreId", productStoreId); // SCIPIO
 
         Map<String, Object> context = new HashMap<>();
         context.put("bodyScreenUri", bodyScreenLocation);

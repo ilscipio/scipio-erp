@@ -271,7 +271,7 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
     }
 
     @Override
-    public void visit(ModelMenuAction.SetField setField) throws Exception {
+    public void visit(@SuppressWarnings("deprecation") ModelMenuAction.SetField setField) throws Exception { // SCIPIO: deprecation
     }
 
     @Override

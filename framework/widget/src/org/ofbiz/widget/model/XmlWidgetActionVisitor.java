@@ -194,6 +194,7 @@ public class XmlWidgetActionVisitor extends XmlAbstractWidgetVisitor implements 
         writer.append("/>");
     }
 
+    @SuppressWarnings("deprecation") // SCIPIO: Deprecated
     @Override
     public void visit(org.ofbiz.widget.model.ModelMenuAction.SetField setField) throws Exception {
         writer.append("<set");

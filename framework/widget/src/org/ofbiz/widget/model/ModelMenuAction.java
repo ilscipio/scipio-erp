@@ -53,20 +53,25 @@ public abstract class ModelMenuAction implements Serializable {
         List<? extends Element> actionElementList = UtilXml.childElementList(parentElement);
         List<ModelAction> actions = new ArrayList<>(actionElementList.size());
         for (Element actionElement : actionElementList) {
-            if ("set".equals(actionElement.getNodeName())) {
-                actions.add(new SetField(modelMenu, actionElement));
-            } else {
-                actions.add(AbstractModelAction.newInstance(modelMenu, actionElement));
-            }
+            // SCIPIO: 2019-02-04: The SetField element below appears completely deprecated and buggy,
+            // and provides nothing over org.ofbiz.widget.model.AbstractModelAction.SetField.
+            //if ("set".equals(actionElement.getNodeName())) {
+            //    actions.add(new SetField(modelMenu, actionElement));
+            //} else {
+            actions.add(AbstractModelAction.newInstance(modelMenu, actionElement));
+            //}
         }
         return Collections.unmodifiableList(actions);
     }
 
     /**
      * Models the &lt;set&gt; element.
+     * @deprecated SCIPIO: 2019-02-04: This appears poorly maintained, deprecated and buggy, and appeared
+     * to do nothing useful over what {@link org.ofbiz.widget.model.AbstractModelAction.SetField} does.
      *
      * @see <code>widget-common.xsd</code>
      */
+    @Deprecated
     public static class SetField extends AbstractModelAction {
         private final FlexibleMapAccessor<Object> field;
         private final FlexibleMapAccessor<Object> fromField;

@@ -47,7 +47,7 @@ public interface ModelActionVisitor {
 
     void visit(ModelFormAction.Service service) throws Exception;
 
-    void visit(ModelMenuAction.SetField setField) throws Exception;
+    void visit(@SuppressWarnings("deprecation") ModelMenuAction.SetField setField) throws Exception; // SCIPIO: Deprecated
 
     void visit(ModelTreeAction.Script script) throws Exception;
 

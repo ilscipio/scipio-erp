@@ -1404,6 +1404,12 @@ code package.
         </if-compare-field>
     </simple-method>
     <simple-method method-name="createAnonContact" short-description="Create a non Contact" login-required="false">
+        <!-- SCIPIO: 2019-02-04: This service was erroneously checking and setting partyId instead of partyIdFrom,
+            so we switch it to use partyIdFrom and maintain backward support for partyId. -->
+        <if-empty field="parameters.partyIdFrom">
+           <set field="parameters.partyIdFrom" from-field="parameters.partyId"/>
+        </if-empty>
+    
         <entity-one entity-name="UserLogin" value-field="systemUserLogin">
             <field-map field-name="userLoginId" value="system"/>
         </entity-one>
@@ -1431,10 +1437,10 @@ code package.
             <add-error><fail-property resource="PartyUiLabels" property="PartyCaptchaMissingError"/></add-error>
         </if-compare-field>
         <check-errors/>
-        <if-empty field="parameters.partyId">
+        <if-empty field="parameters.partyIdFrom"><!-- SCIPIO: fixed: field="parameters.partyId"> -->
             <set-service-fields service-name="createPerson" map="parameters" to-map="newPerson"/>
             <call-service service-name="createPerson" in-map-name="newPerson">
-                <result-to-field result-name="partyId" field="parameters.partyId"/>
+                <result-to-field result-name="partyId" field="parameters.partyIdFrom"/><!-- SCIPIO: fixed: field="parameters.partyId"> -->
             </call-service>
             <set-service-fields service-name="createPartyContactMech" map="parameters" to-map="newContact"/>
             <set field="newContact.infoString" from-field="parameters.emailAddress"/>
@@ -1445,6 +1451,20 @@ code package.
             </call-service>
             <else>
                 <set field="parameters.contactMechIdFrom" from-field="contact.contactMechId"/>
+
+                <!-- SCIPIO: Security: 2019-02-04: Ensure the current user has permissions to use the given partyId -->
+                <set-service-fields service-name="partyIdPermissionCheck" map="parameters" to-map="partyIdPermCheckMap"/>
+                <set field="partyIdPermCheckMap.mainAction" value="VIEW"/>
+                <set field="partyIdPermCheckMap.partyId" value="parameters.partyIdFrom"/>
+                <call-service service-name="partyIdPermissionCheck" in-map-name="partyIdPermCheckMap">
+                    <result-to-field result-name="hasPermission" field="hasPartyIdPerm"/>
+                </call-service>
+                <if-compare field="hasPartyIdPerm" operator="not-equals" type="Boolean" value="true">
+                    <property-to-field resource="PartyUiLabels" property="PartyPermissionErrorForThisParty" field="partyErrMsg"/>
+                    <property-to-field resource="CommonUiLabels" property="CommonTryLoginAgainContactSupport" field="reloginErrMsg"/>
+                    <add-error><fail-message message="${partyErrMsg} (${reloginErrMsg})"/></add-error>
+                    <check-errors/>
+                </if-compare>
             </else>
         </if-empty>
         <set-service-fields service-name="sendContactUsEmailToCompany" map="parameters" to-map="newComm"/>

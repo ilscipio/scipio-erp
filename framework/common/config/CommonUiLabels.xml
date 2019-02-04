@@ -13011,6 +13011,14 @@
         <value xml:lang="zh">是</value>
         <value xml:lang="zh-TW">真</value>
     </property>
+    <property key="CommonTryLoginAgain">
+        <value xml:lang="en">Try logging out and logging in again</value>
+        <value xml:lang="de">Versuchen Sie sich abzumelden und erneut anzumelden</value>
+    </property>
+    <property key="CommonTryLoginAgainContactSupport">
+        <value xml:lang="en">Try logging out and logging in again; if the problem persists, please contact support</value>
+        <value xml:lang="de">Versuchen Sie sich abzumelden und erneut anzumelden; wenn das Problem weiterhin besteht, wenden Sie sich an den Support</value>
+    </property>
     <property key="CommonTryReloadingPage">
         <value xml:lang="en">Try reloading the page</value>
         <value xml:lang="de">Versuchen Sie, die Seite neu zu laden</value>

@@ -311,6 +311,10 @@
         <value xml:lang="zh">总是在添加一个明细后浏览购物车</value>
         <value xml:lang="zh-TW">總是在增加一細項後檢視購物車</value>
     </property>
+    <property key="EcommerceAnonContactUsInfoHeader">
+        <value xml:lang="de">Ein Benutzer hat die folgenden Informationen mithilfe des Kontaktformulars gesendet:</value>
+        <value xml:lang="en">A user has sent the following information using the Contact Us form:</value>
+    </property>
     <property key="EcommerceArticleInformation">
         <value xml:lang="da">Vareinformation</value>
         <value xml:lang="de">Artikelinformationen</value>

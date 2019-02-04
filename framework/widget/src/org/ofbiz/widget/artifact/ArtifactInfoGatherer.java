@@ -23,6 +23,7 @@ import java.util.Set;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.control.ConfigXMLReader;
+import org.ofbiz.widget.model.AbstractModelAction.ClearField;
 import org.ofbiz.widget.model.AbstractModelAction.EntityAnd;
 import org.ofbiz.widget.model.AbstractModelAction.EntityCondition;
 import org.ofbiz.widget.model.AbstractModelAction.EntityOne;
@@ -614,6 +615,11 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
 
     @Override
     public void visit(ModelSubMenu subMenu) throws Exception {
+        // SCIPIO: TODO?
+    }
+
+    @Override
+    public void visit(ClearField clearField) throws Exception {
         // SCIPIO: TODO?
     }
 }

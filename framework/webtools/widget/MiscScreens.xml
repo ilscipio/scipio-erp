@@ -250,6 +250,11 @@ code package.
     <screen name="WebtoolsLayoutDemoOfbizWidgets">
         <section>
             <actions>
+                <set field="clearFieldTest1" value="[This is a test of the clear-field directive]"/>
+                <script lang="groovy">org.ofbiz.base.util.Debug.logInfo("clearFieldTest1 (pre-clear-field): " + context.clearFieldTest1, "InlineClearFieldTest.groovy");</script>
+                <clear-field field="clearFieldTest1"/>
+                <script lang="groovy">org.ofbiz.base.util.Debug.logInfo("clearFieldTest1 (post-clear-field, should be null): " + context.clearFieldTest1, "InlineClearFieldTest.groovy");</script>
+
                 <set field="commonActionField1" value="This value should get overridden... [ERROR]"/>
                 <set field="commonActionField2" value="This value should get overridden... [ERROR]"/>
                 <set field="nonCommonActionField4" value="This value should keep its original value from WebtoolsLayoutDemoOfbizWidgets. [SUCCESS]"/>

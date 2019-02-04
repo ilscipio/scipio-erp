@@ -99,6 +99,8 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
         String nodeName = UtilXml.getNodeNameIgnorePrefix(actionElement);
         if ("set".equals(nodeName)) {
             return new SetField(modelWidget, actionElement);
+        } else if ("clear-field".equals(nodeName)) { // SCIPIO: New, adapted from minilang
+            return new ClearField(modelWidget, actionElement);
         } else if ("property-map".equals(nodeName)) {
             return new PropertyMap(modelWidget, actionElement);
         } else if ("property-to-field".equals(nodeName)) {
@@ -1086,6 +1088,35 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
 
         public FlexibleStringExpander getValueExdr() {
             return valueExdr;
+        }
+    }
+    
+    /**
+     * SCIPIO: Models the &lt;clear-field&gt; element.
+     * Derived from: {@link org.ofbiz.minilang.method.envops.ClearField}.
+     *
+     * @see <code>widget-common.xsd</code>
+     */
+    public static class ClearField extends AbstractModelAction {
+        private final FlexibleMapAccessor<Object> field;
+
+        public ClearField(ModelWidget modelWidget, Element clearFieldElement) {
+            super(modelWidget, clearFieldElement);
+            this.field = FlexibleMapAccessor.getInstance(clearFieldElement.getAttribute("field"));
+        }
+
+        @Override
+        public void runAction(Map<String, Object> context) {
+            field.put(context, null);
+        }
+
+        @Override
+        public void accept(ModelActionVisitor visitor) throws Exception {
+            visitor.visit(this);
+        }
+
+        public FlexibleMapAccessor<Object> getField() {
+            return field;
         }
     }
 

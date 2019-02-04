@@ -444,6 +444,18 @@ under the License.
             </xs:attribute>
         </xs:complexType>
     </xs:element>
+    <xs:element name="clear-field" substitutionGroup="AllActions">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Sets the specified field to null.
+                This is the same as the simple-methods*.xsd language clear-field.
+                Added 2019-02-04.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute type="xs:string" name="field" use="required" />
+        </xs:complexType>
+    </xs:element>
     <xs:element name="property-map" substitutionGroup="AllActions">
         <xs:complexType>
             <xs:attribute type="xs:string" name="resource" use="required" />

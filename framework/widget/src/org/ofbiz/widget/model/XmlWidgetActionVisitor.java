@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.widget.model;
 
+import org.ofbiz.widget.model.AbstractModelAction.ClearField;
 import org.ofbiz.widget.model.AbstractModelAction.EntityAnd;
 import org.ofbiz.widget.model.AbstractModelAction.EntityCondition;
 import org.ofbiz.widget.model.AbstractModelAction.EntityOne;
@@ -206,6 +207,13 @@ public class XmlWidgetActionVisitor extends XmlAbstractWidgetVisitor implements 
         visitAttribute("type", setField.getType());
         visitAttribute("to-scope", setField.getToScope());
         visitAttribute("from-scope", setField.getFromScope());
+        writer.append("/>");
+    }
+
+    @Override
+    public void visit(ClearField clearField) throws Exception { // SCIPIO: Added 2019-02-04
+        writer.append("<clear-field");
+        visitAttribute("field", clearField.getField());
         writer.append("/>");
     }
 }

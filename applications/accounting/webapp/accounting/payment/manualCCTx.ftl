@@ -5,14 +5,14 @@ code package.
 -->
 
     <#-- reference number -->
-    ${Static["org.ofbiz.base.util.Debug"].log("txType ===========> " + txType)}
     <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_CAPTURE" || 
-         txType?default("") == "PRDS_PAY_RELEASE" || txType?default("") == "PRDS_PAY_REFUND">
+         txType?default("") == "PRDS_PAY_RELEASE" || txType?default("") == "PRDS_PAY_REFUND" ||
+         txType?default("") == "PRDS_PAY_AUTH">
         <#assign dummy = setRequestAttribute("validTx", "true")>
         <#assign validTx = true>
         <hr />
         <@field type="input" size="30" maxlength="60" name="referenceNum" label=uiLabelMap.AccountingReferenceNumber required=true/>
-        <@field type="text" size="20" maxlength="20" name="orderPaymentPreferenceId" label=uiLabelMap.FormFieldTitle_orderPaymentPreferenceId required=true />      
+        <@field type="lookup" formName="manualTxForm" name="orderPaymentPreferenceId" id="orderPaymentPreferenceId" fieldFormName="LookupOrderPaymentPreference" label=uiLabelMap.FormFieldTitle_orderPaymentPreferenceId/>
     </#if>
     <#-- manual credit card information -->
     <#if txType?default("") == "PRDS_PAY_RELEASE">      
@@ -27,7 +27,13 @@ code package.
         document.manualTxForm.action = "<@pageUrl>processRefundTransaction</@pageUrl>";
       </@script>    
     </#if>
-    <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_AUTH">     
+    <#if txType?default("") == "PRDS_PAY_AUTH">
+      <#assign dummy = setRequestAttribute("validTx", "true")>
+      <@script>
+        document.manualTxForm.action = "<@pageUrl>processAuthorizeTransaction</@pageUrl>";
+      </@script>    
+    </#if>
+    <#if txType?default("") == "PRDS_PAY_CREDIT">
         <#assign dummy = setRequestAttribute("validTx", "true")>
         <@script>
             document.manualTxForm.action = "<@pageUrl>processManualCcTx</@pageUrl>";

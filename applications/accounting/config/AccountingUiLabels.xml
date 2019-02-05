@@ -9484,6 +9484,13 @@
         <value xml:lang="zh">查找支付</value>
         <value xml:lang="zh-TW">尋找支付</value>
     </property>
+    <property key="AccountingLookupOrderPaymentPreference">
+        <value xml:lang="de">Bestellpräferenz-Lookup</value>
+        <value xml:lang="en">Lookup Order Payment Preference</value>
+        <value xml:lang="es">Buscar preferencia de pago del pedido</value>
+        <value xml:lang="fr">Consultation de préférence de paiement</value>
+        <value xml:lang="it">Ricerca delle preferenze di pagamento dell'ordine</value>
+    </property>
     <property key="AccountingMainMenu">
         <value xml:lang="ar">الرئيسية</value>
         <value xml:lang="de">Haupt</value>

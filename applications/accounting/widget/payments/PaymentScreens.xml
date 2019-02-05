@@ -776,19 +776,19 @@ code package.
 
                 <entity-one entity-name="PaymentGatewayResponse" value-field="paymentGatewayResponse" auto-field-map="true"/>
 
-                <script location="component://accounting/groovyScripts/transaction/ViewGatewayResponse.groovy"/>
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/transaction/ViewGatewayResponse.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPaymentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleViewGatewayResponse}">
-                            <include-form name="ViewGatewayResponseRelations" location="component://accounting/widget/TransactionForms.xml"/>
+                            <include-form name="ViewGatewayResponseRelations" location="component://accounting/widget/payments/PaymentForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.AccountingPaymentsMenu}">
-                            <include-form name="ViewGatewayResponsePayments" location="component://accounting/widget/TransactionForms.xml"/>
+                            <include-form name="ViewGatewayResponsePayments" location="component://accounting/widget/payments/PaymentForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleViewGatewayResponse}">
-                            <include-form name="ViewGatewayResponse" location="component://accounting/widget/TransactionForms.xml"/>
+                            <include-form name="ViewGatewayResponse" location="component://accounting/widget/payments/PaymentForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

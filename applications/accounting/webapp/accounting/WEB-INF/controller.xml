@@ -2068,13 +2068,13 @@ code package.
         <security https="true" auth="true"/>
         <event type="service" invoke="authOrderPaymentPreference"/>
         <response name="success" type="view" value="ViewGatewayResponse"/>
-        <response name="error" type="view" value="AuthorizeTransaction"/>
+        <response name="error" type="view" value="ManualTransaction"/>
     </request-map>
     <request-map uri="processCaptureTransaction">
         <security https="true" auth="true"/>
         <event type="service" invoke="captureOrderPayments"/>
         <response name="success" type="view" value="ViewGatewayResponse"/>
-        <response name="error" type="view" value="CaptureTransaction"/>
+        <response name="error" type="view" value="ManualTransaction"/>
     </request-map>
     <request-map uri="processReleaseTransaction">
         <security https="true" auth="true"/>
@@ -2803,6 +2803,7 @@ code package.
     <!-- SCIPIO: new lookups -->
     <request-map uri="LookupTaxAuthorityGeo"><security auth="true" https="true"/><response name="success" type="view" value="LookupTaxAuthorityGeo"/></request-map>
     <request-map uri="LookupTaxAuthorityPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupTaxAuthorityPartyName"/></request-map>
+    <request-map uri="LookupOrderPaymentPreference"><security auth="true" https="true"/><response name="success" type="view" value="LookupOrderPaymentPreference"/></request-map>
 
     <request-map uri="viewprofile"><security https="true" auth="true"/><response name="success" type="view" value="viewprofile"/></request-map>
 
@@ -3313,6 +3314,7 @@ code package.
     <!-- SCIPIO: new lookups -->
     <view-map name="LookupTaxAuthorityGeo" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupTaxAuthorityGeo"/>
     <view-map name="LookupTaxAuthorityPartyName" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupTaxAuthorityPartyName"/>
+    <view-map name="LookupOrderPaymentPreference" type="screen" page="component://accounting/widget/LookupScreens.xml#LookupOrderPaymentPreference"/>
 
     <view-map name="LookupCustomerName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCustomerName"/>
     <view-map name="NewDepositSlip" type="screen" page="component://accounting/widget/finance/FinAccountScreens.xml#NewDepositSlip"/>

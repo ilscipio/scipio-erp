@@ -33,6 +33,10 @@
         <value xml:lang="en">An error occurred. Please contact support.</value>
         <value xml:lang="de">Ein Fehler ist aufgetreten. Bitte wenden Sie sich an den Support.</value>
     </property>
+    <property key="CommonErrorOccurredContactTryAgain">
+        <value xml:lang="en">An error occurred. Please try again.</value>
+        <value xml:lang="de">Ein Fehler ist aufgetreten. Bitte versuche es erneut.</value>
+    </property> 
     <property key="CommonInvalidFileTypeForMediaCat">
         <value xml:lang="en">Invalid file type (${mediaType}) for media type category (${providedType})</value>
         <value xml:lang="de">Ungültiger Dateityp (${mediaType}) für Medientyp-Kategorie (${providedType})</value>

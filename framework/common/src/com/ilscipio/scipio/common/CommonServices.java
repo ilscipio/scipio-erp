@@ -270,7 +270,7 @@ public class CommonServices {
             //String custRequestId = (String) bodyParameters.get("custRequestId");
 
             bodyParameters.put("communicationEventId", serviceContext.get("communicationEventId"));
-            NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
+            NotificationServices.checkSetWebSiteFields(dctx.getDelegator(), webSiteId, bodyParameters);
             //String contentType = (String) serviceContext.remove("contentType");
 
             StringWriter bodyWriter = new StringWriter();

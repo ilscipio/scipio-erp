@@ -9,6 +9,7 @@ code package.
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-component.xsd">
     <resource-loader name="main" type="component"/>
+    <classpath type="jar" location="build/lib/*"/><!-- SCIPIO -->
     <classpath type="dir" location="config"/>
     
     <entity-resource type="data" reader-name="seed" loader="main" location="data/EntityDiagramGroupData.xml"/>
@@ -23,6 +24,7 @@ code package.
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_email.xml"/><!-- SCIPIO -->
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     
     <!-- SCIPIO: DEPRECATED: ofbizsetup webapp is replaced by full dedicated setup component: component://setup/ofbiz-component.xml

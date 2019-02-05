@@ -14,6 +14,7 @@ code package.
                securityext/build.xml, humanres/build.xml,
                cms/build.xml,
                shop/build.xml,
+               commonext/build.xml,
                setup/build.xml,
                solr/build.xml"/>
 </project>

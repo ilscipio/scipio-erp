@@ -44,4 +44,6 @@ if (orderHeader.productStoreId) {
 }
 
 // set the baseUrl parameter, required by some email bodies
-NotificationServices.setBaseUrl(delegator, context.webSiteId, context);
+// SCIPIO: Use better method
+//NotificationServices.setBaseUrl(delegator, context.webSiteId, context);
+NotificationServices.checkSetWebSiteFields(delegator, context.webSiteId, context);

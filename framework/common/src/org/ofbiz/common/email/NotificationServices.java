@@ -198,8 +198,10 @@ public class NotificationServices {
         }
 
         try {
-            // ensure the baseURl is defined
-            setBaseUrl(delegator, webSiteId, templateData);
+            // ensure the baseUrl is defined
+            // SCIPIO: 2019-02-04: Use better method
+            //setBaseUrl(delegator, webSiteId, templateData);
+            checkSetWebSiteFields(delegator, webSiteId, templateData);
 
             // initialize the template reader and processor
             URL templateUrl = FlexibleLocation.resolveLocation(templateName);
@@ -296,5 +298,38 @@ public class NotificationServices {
         if (!context.containsKey("baseWebSiteId")) {
             context.put("baseWebSiteId", webSiteId);
         }
+    }
+
+    /**
+     * SCIPIO: Sets the given webSiteId in context IF there isn't already a key for it.
+     * @return the effective webSiteId
+     */
+    public static String checkSetWebSiteId(Delegator delegator, String webSiteId, Map<String, Object> context) {
+        String contextWebSiteId = (String) context.get("webSiteId");
+        if (contextWebSiteId == null && !context.containsKey("webSiteId")) {
+            context.put("webSiteId", webSiteId);
+            return webSiteId;
+        } else {
+            return contextWebSiteId;
+        }
+    }
+
+    /**
+     * SCIPIO: Sets the given webSiteId, along with baseUrl/baseSecureUrl in context IF there aren't already keys for them.
+     * NOTE: You probably want to call the abstracted method {@link #checkSetWebSiteIdAndRelated} instead.
+     * @return the effective webSiteId
+     */
+    public static String checkSetBaseUrlAndWebSiteId(Delegator delegator, String webSiteId, Map<String, Object> context) {
+        setBaseUrl(delegator, webSiteId, context);
+        return checkSetWebSiteId(delegator, webSiteId, context);
+    }
+
+    /**
+     * SCIPIO: Sets the given webSiteId, along with baseUrl/baseSecureUrl in context IF there aren't already keys for them,
+     * and along with anything related (abstraction method).
+     * @return the effective webSiteId
+     */
+    public static String checkSetWebSiteFields(Delegator delegator, String webSiteId, Map<String, Object> context) {
+        return checkSetBaseUrlAndWebSiteId(delegator, webSiteId, context);
     }
 }

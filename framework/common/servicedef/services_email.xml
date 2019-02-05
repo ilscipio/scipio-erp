@@ -106,12 +106,33 @@ code package.
                 Backend emails can leave this empty.
             </description><!-- SCIPIO: Added description (and removed the old fix-me) -->
         </attribute>
+        <attribute name="autoInferParams" type="Boolean" mode="IN" optional="true" default-value="true">
+            <description>
+                SCIPIO: If true (default), allows sendMailFromScreen implementations to automatically try
+                to determine common services parameters and bodyParameters from each other.
+                2019-02-04: This is now enabled by default and done by the Scipio sendMailFromScreen/sendMailFromScreenExt
+                override in commonext component; it simply tries to determine the following fields from each other and
+                put them in both service context and the bodyParameters: webSiteId, productStoreId, orderId.
+                This is catch-all measure to prevent a number of bugs.
+            </description>
+        </attribute>
         <attribute name="subject" type="String" mode="OUT" optional="true"/>
         <attribute name="body" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="sendMailFromScreen" max-retry="3" engine="java"
         location="org.ofbiz.common.email.EmailServices" invoke="sendMailFromScreen">
-        <description>Send E-Mail From Screen Widget Service</description>
+        <description>Send E-Mail From Screen Widget Service -
+            SCIPIO: 2019-02-01: This service is now overridden in the CommonExt component
+            for extended webSiteId/productStoreId/orderId handling; if you need the
+            original behavior, call sendMailFromScreenStd instead.</description>
+        <implements service="sendMailFromScreenInterface"/>
+        <attribute name="hideInLog" type="Boolean" mode="IN" optional="true"/>
+    </service>
+    <service name="sendMailFromScreenStd" max-retry="3" engine="java"
+        location="org.ofbiz.common.email.EmailServices" invoke="sendMailFromScreen">
+        <description>Send E-Mail From Screen Widget Service - 
+            SCIPIO: This invokes the original implementation of the sendMailFromScreen service,
+            without the supplemental webSiteId/productStoreId/orderId processing.</description>
         <implements service="sendMailFromScreenInterface"/>
         <attribute name="hideInLog" type="Boolean" mode="IN" optional="true"/>                        
     </service>

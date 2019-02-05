@@ -71,4 +71,19 @@ code package.
         <description>Get system messages for an authenticated party</description>
         <auto-attributes mode="IN" entity-name="NoteData" include="all" optional="true"/>        
     </service>
+
+    <service name="sendMailFromScreenExt" max-retry="3" engine="java"
+        location="org.ofbiz.commonext.email.ExtEmailServices" invoke="sendMailFromScreen">
+        <description>SCIPIO: Send E-Mail From Screen Widget Service (CommonExt override)
+            This version provides improved webSiteId/productStoreId/orderId handling.</description>
+        <implements service="sendMailFromScreenStd"/>
+    </service>
+
+    <service name="sendMailFromScreen" max-retry="3" engine="java"
+        location="org.ofbiz.commonext.email.ExtEmailServices" invoke="sendMailFromScreen">
+        <description>SCIPIO: Send E-Mail From Screen Widget Service (CommonExt override)
+            This version provides improved webSiteId/productStoreId/orderId handling.</description>
+        <implements service="sendMailFromScreenExt"/>
+    </service>
+
 </services>

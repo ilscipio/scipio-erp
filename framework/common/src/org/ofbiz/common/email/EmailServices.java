@@ -425,6 +425,7 @@ public class EmailServices {
     public static Map<String, Object> sendMailFromScreen(DispatchContext dctx, Map<String, ? extends Object> rServiceContext) {
         Map<String, Object> serviceContext = UtilMisc.makeMapWritable(rServiceContext);
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        serviceContext.remove("autoInferParams"); // SCIPIO: 2019-02-04: This can't be passed to sendMail
         String webSiteId = (String) serviceContext.remove("webSiteId");
         String bodyText = (String) serviceContext.remove("bodyText");
         String bodyScreenUri = (String) serviceContext.remove("bodyScreenUri");
@@ -466,19 +467,24 @@ public class EmailServices {
         String custRequestId = (String) bodyParameters.get("custRequestId");
 
         bodyParameters.put("communicationEventId", serviceContext.get("communicationEventId"));
-        NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
+        // SCIPIO: Use new, better method
+        //NotificationServices.setBaseUrl(dctx.getDelegator(), webSiteId, bodyParameters);
+        NotificationServices.checkSetWebSiteFields(dctx.getDelegator(), webSiteId, bodyParameters);
         String contentType = (String) serviceContext.remove("contentType");
 
         // SCIPIO: For debugging and development reasons, note whether a webSiteId is present,
         // and also whether bodyParameters was outfitted with a productStoreId.
         // TODO?: In future, switch this to verbose when confidence is higher there are no more issues left from this.
         if (Debug.infoOn()) {
-            Debug.logInfo("sendMailFromScreen:"
+            Debug.logInfo("sendMailFromScreen: "
                     + " [sendTo=" + serviceContext.get("sendTo")
                     + ", partyId=" + partyId
                     + ", bodyScreenUri=" + bodyScreenUri
                     + ", webSiteId=" + webSiteId
+                    + ", orderId=" + orderId
+                    + ", bodyParameters.webSiteId=" + bodyParameters.get("webSiteId")
                     + ", bodyParameters.productStoreId=" + bodyParameters.get("productStoreId")
+                    + ", bodyParameters.orderId=" + bodyParameters.get("orderId")
                     + ", locale=" + locale
                     + "]", module);
         }

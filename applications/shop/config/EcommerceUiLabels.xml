@@ -3859,6 +3859,15 @@
         <value xml:lang="zh">谢谢你</value>
         <value xml:lang="zh-TW">謝謝你</value>
     </property>
+    <property key="EcommerceThankYouForContactingUs">
+        <value xml:lang="de">Danke, dass Sie uns kontaktiert haben.</value>
+        <value xml:lang="en">Thank You for contacting us.</value>
+        <value xml:lang="zh">感谢您与我们联系！</value>
+    </property>
+    <property key="EcommerceThankYouForContactingUsResponseSoon">
+        <value xml:lang="de">Danke, dass Sie uns kontaktiert haben. Wenn für Ihre Anfrage eine Antwort erforderlich war, werden wir uns so schnell wie möglich mit Ihnen in Verbindung setzen.</value>
+        <value xml:lang="en">Thank You for contacting us. If your enquiry required a response, we will get back to you as soon as possible.</value>
+    </property>
     <property key="EcommerceToOrderCreateCustRequestFromCart">
         <value xml:lang="da">For at bestille, opret kundeanmodning fra indkøbskurv</value>
         <value xml:lang="de">um einen Auftrag zu erstellen machen Sie eine Anfrage über den Warenkorb</value>

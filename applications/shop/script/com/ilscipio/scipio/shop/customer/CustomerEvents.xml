@@ -1471,7 +1471,7 @@ code package.
         <set field="newComm.emailType" value="CONT_NOTI_EMAIL"/>
         <!-- SCIPIO: 2019-02-05: Modified so that it returns a generic message in case of error -->
         <call-service service-name="sendContactUsEmailToCompany" in-map-name="newComm" break-on-error="false" >
-            <default-message property="ThankYouForContactingUs" resource="EcommerceUiLabels"></default-message>
+            <default-message property="EcommerceThankYouForContactingUsResponseSoon" resource="EcommerceUiLabels"></default-message>
             <results-to-map map-name="sendResult"/>
         </call-service>
         <if-compare field="${groovy:org.ofbiz.service.ServiceUtil.isSuccess(context.sendResult)}" operator="equals" type="Boolean" value="false">

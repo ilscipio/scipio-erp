@@ -97,11 +97,12 @@ public class WebSiteWorker {
     public static String getWebSiteIdFromContext(Map<String, Object> context, RenderEnvType renderEnvType) {
         if (renderEnvType.isStatic()) { // NOTE: for now we assume email and non-email static should all be similar...
             String webSiteId = (String) context.get("webSiteId");
-            if (UtilValidate.isEmpty(webSiteId)) {
-                webSiteId = (String) context.get("baseWebSiteId");
-                if (UtilValidate.isNotEmpty(webSiteId)) {
-                    return webSiteId;
-                }
+            if (UtilValidate.isNotEmpty(webSiteId)) {
+                return webSiteId;
+            }
+            webSiteId = (String) context.get("baseWebSiteId");
+            if (UtilValidate.isNotEmpty(webSiteId)) {
+                return webSiteId;
             }
         } else if (renderEnvType.isWebapp()) {
             ServletRequest request = (ServletRequest) context.get("request");

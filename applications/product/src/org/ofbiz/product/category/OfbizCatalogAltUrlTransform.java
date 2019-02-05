@@ -129,9 +129,8 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                     Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
 
                     if (request != null) {
-                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams),
-                                request,
-                                null);
+                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams),
+                                TransformUtil.getStringArg(args, "prefix", rawParams), request, null);
                         // SCIPIO: now delegated to our new reusable method
                         HttpServletResponse response = ContextFtlUtil.getResponse(env);
                         url = CatalogUrlFilter.makeCatalogAltLink(request, response, locale, productCategoryId, productId, previousCategoryId, urlParams, targetWebappInfo,
@@ -143,9 +142,8 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         Map<String, Object> context = ContextFtlUtil.getContext(env);
                         Delegator delegator = ContextFtlUtil.getDelegator(request, env);
                         LocalDispatcher dispatcher = ContextFtlUtil.getDispatcher(env);
-                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams),
-                                null,
-                                context);
+                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams),
+                                TransformUtil.getStringArg(args, "prefix", rawParams), null, context);
                         // SCIPIO: now delegated to our new reusable method
                         url = CatalogUrlFilter.makeCatalogAltLink(context, delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId,
                                 urlParams, targetWebappInfo, fullPath, secure, viewSize, viewIndex, viewSort, searchString);

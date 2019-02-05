@@ -4,6 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
+<@section>
 <#if security.hasEntityPermission("MANUAL", "_PAYMENT", request) || security.hasEntityPermission("ACCOUNTING", "_CREATE", request)>
     <#assign dummy = setRequestAttribute("validTx", "false")>
     <form name="manualTxForm" method="post" action="<@pageUrl>manualETx</@pageUrl>">
@@ -72,3 +73,4 @@ code package.
 <#else>
     <@commonMsg type="error">${uiLabelMap.AccountingPermissionError}</@commonMsg>
 </#if>
+</@section>

@@ -544,6 +544,15 @@ code package.
         <attribute name="categories" type="java.util.Map" mode="OUT" optional="true"/>
     </service>
     
+    <service name="solrAvailableCategoriesExtended" engine="java"
+        transaction-timeout="72000"
+        location="com.ilscipio.scipio.solr.SolrProductSearch"
+        invoke="getAvailableCategoriesExtended" >
+        <implements service="solrAvailableCategories"/>
+        <description>Run a query on Solr and return the results in a more detailed way like solrSideDeepCategory</description>
+        <attribute mode="IN" optional="true" name="depth" type="String"/>
+    </service>
+    
     <service name="solrSideDeepCategory" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"

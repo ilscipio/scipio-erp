@@ -267,6 +267,7 @@ public class OrderReturnServices {
                 if (returnHeader != null) { // SCIPIO
                     bodyParameters.put("returnId", returnHeader.get("returnId"));
                 }
+                bodyParameters.put("productStoreId", productStoreId); // SCIPIO
                 sendMap.put("bodyParameters", bodyParameters);
 
                 sendMap.put("subject", productStoreEmail.getString("subject"));

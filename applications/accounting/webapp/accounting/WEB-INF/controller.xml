@@ -2064,6 +2064,30 @@ code package.
         <event type="service" invoke="manualForcedCcTransaction"/>
         <response name="success" type="view" value="ManualTransaction"/>
     </request-map>
+    <request-map uri="processAuthorizeTransaction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="authOrderPaymentPreference"/>
+        <response name="success" type="view" value="ViewGatewayResponse"/>
+        <response name="error" type="view" value="AuthorizeTransaction"/>
+    </request-map>
+    <request-map uri="processCaptureTransaction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="captureOrderPayments"/>
+        <response name="success" type="view" value="ViewGatewayResponse"/>
+        <response name="error" type="view" value="CaptureTransaction"/>
+    </request-map>
+    <request-map uri="processReleaseTransaction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="releaseOrderPaymentPreference"/>
+        <response name="success" type="view" value="ManualTransaction"/>
+        <response name="error" type="view" value="ManualTransaction"/>
+    </request-map>
+    <request-map uri="processRefundTransaction">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="refundOrderPaymentPreference"/>
+        <response name="success" type="view" value="ManualTransaction"/>
+        <response name="error" type="view" value="ManualTransaction"/>
+    </request-map>
 
     <!-- Payment Group requests -->
     <request-map uri="FindPaymentGroup">

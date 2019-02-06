@@ -1431,6 +1431,10 @@ code package.
                 </if-validate-method>
             </else>
         </if-empty>
+        <if-empty field="parameters.captcha"><!-- SCIPIO: Added missing empty check (this can crash otherwise) -->
+            <add-error><fail-property resource="PartyUiLabels" property="PartyCaptchaMissingError"/></add-error>
+            <check-errors/>
+        </if-empty>
         <call-object-method obj-field="parameters.captcha" method-name="toLowerCase" ret-field="submittedCaptcha"/>
         <script lang="groovy"><![CDATA[ context.actualCaptcha = request.getSession().getAttribute("_CAPTCHA_CODE_")?.get("captchaImage")?.toLowerCase()]]></script>
         <if-compare-field field="submittedCaptcha" operator="not-equals" to-field="actualCaptcha">

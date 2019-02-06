@@ -18,50 +18,39 @@
  *******************************************************************************/
 package org.ofbiz.webapp.ftl;
 
-import static org.ofbiz.base.util.UtilGenerics.checkMap;
-
 import java.io.IOException;
-import java.io.Writer;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import freemarker.core.Environment;
-import freemarker.template.TemplateTransformModel;
+import freemarker.template.TemplateDirectiveBody;
+import freemarker.template.TemplateDirectiveModel;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
 
 /**
  * RenderWrappedTextTransform - Freemarker Transform for URLs (links)
+ * <p>
+ * SCIPIO: 2019-02-05: Reimplemented as TemplateDirectiveModel (was previously: RenderWrappedTextTransform)
  */
-public class RenderWrappedTextTransform implements  TemplateTransformModel {
-
+public class RenderWrappedTextDirective implements TemplateDirectiveModel {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public Writer getWriter(final Writer out, @SuppressWarnings("rawtypes") Map args) {
-        final Environment env = FreeMarkerWorker.getCurrentEnvironment();
-        Map<String, Object> ctx = checkMap(FreeMarkerWorker.getWrappedObject("context", env), String.class, Object.class);
-        final String wrappedFTL = FreeMarkerWorker.getArg(checkMap(args, String.class, Object.class), "wrappedFTL", ctx);
-
-        return new Writer(out) {
-
-            @Override
-            public void write(char cbuf[], int off, int len) {
+    @Override
+    public void execute(Environment env, @SuppressWarnings("rawtypes") Map args, TemplateModel[] loopVars, TemplateDirectiveBody body)
+            throws TemplateException, IOException {
+        Map<String, Object> ctx = UtilGenerics.checkMap(FreeMarkerWorker.getWrappedObject("context", env), String.class, Object.class);
+        String wrappedFTL = FreeMarkerWorker.getArg(UtilGenerics.checkMap(args, String.class, Object.class), "wrappedFTL", ctx);
+        if (UtilValidate.isNotEmpty(wrappedFTL)) {
+            env.getOut().write(wrappedFTL);
+        } else {
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("wrappedFTL was empty. skipping write.", module);
             }
-
-            @Override
-            public void flush() throws IOException {
-                out.flush();
-            }
-
-            @Override
-            public void close() throws IOException {
-                if (UtilValidate.isNotEmpty(wrappedFTL)) {
-                        out.write(wrappedFTL);
-                } else {
-                    Debug.logInfo("wrappedFTL was empty. skipping write.", module);
-                }
-            }
-        };
+        }
     }
 }

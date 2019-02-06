@@ -576,4 +576,69 @@ public final class UtilNumber {
             return null;
         }
     }
+
+    /**
+     * SCIPIO: Sets the given scale and rounding mode on the number, or does nothing and returns as-is if null.
+     */
+    public static BigDecimal setScale(BigDecimal number, int newScale, RoundingMode roundingMode) { // SCIPIO
+        if (number != null) {
+            number.setScale(newScale, roundingMode);
+        }
+        return number;
+    }
+
+    /**
+     * SCIPIO: Converts any number representation or string to a BigDecimal, or throws NumberFormatException if not possible.
+     * WARN: Some types may result in loss of precision. You may also need to set the scale manually afterward.
+     * Empty string and null both return null.
+     */
+    public static BigDecimal toBigDecimal(Object number, int newScale, RoundingMode roundingMode) throws NumberFormatException {
+        return setScale(toBigDecimal(number), newScale, roundingMode);
+    }
+
+    /**
+     * SCIPIO: Converts any number to a BigDecimal, or throws NumberFormatException if not possible.
+     * Empty string and null both return null.
+     * WARN: Some types may result in loss of precision. You may also need to set the scale manually afterward.
+     */
+    public static BigDecimal toBigDecimal(Number number, int newScale, RoundingMode roundingMode) throws NumberFormatException {
+        return setScale(toBigDecimal(number), newScale, roundingMode);
+
+    }
+
+    /**
+     * SCIPIO: Converts a string number to BigDecimal, or throws NumberFormatException if not possible.
+     * Empty string and null both return null.
+     * WARN: Some types may result in loss of precision. You may also need to set the scale manually afterward.
+     */
+    public static BigDecimal toBigDecimal(String number, int newScale, RoundingMode roundingMode) throws NumberFormatException {
+        return setScale(toBigDecimal(number), newScale, roundingMode);
+    }
+
+    /**
+     * SCIPIO: Converts any number representation or string to a BigDecimal, or returns null if not possible.
+     * Empty string and null both return null.
+     * WARN: Some types may result in loss of precision. You may also need to set the scale manually afterward.
+     */
+    public static BigDecimal toBigDecimalOrNull(Object number, int newScale, RoundingMode roundingMode) {
+        return setScale(toBigDecimalOrNull(number), newScale, roundingMode);
+    }
+
+    /**
+     * SCIPIO: Converts any number to a BigDecimal, or throws NumberFormatException if not possible.
+     * Empty string and null both return null.
+     * WARN: Some types may result in loss of precision. You may also need to set the scale manually afterward.
+     */
+    public static BigDecimal toBigDecimalOrNull(Number number, int newScale, RoundingMode roundingMode) {
+        return setScale(toBigDecimalOrNull(number), newScale, roundingMode);
+    }
+
+    /**
+     * SCIPIO: Converts a string number to BigDecimal, or throws NumberFormatException if not possible.
+     * Empty string and null both return null.
+     * WARN: Some types may result in loss of precision. You may also need to set the scale manually afterward.
+     */
+    public static BigDecimal toBigDecimalOrNull(String number, int newScale, RoundingMode roundingMode) {
+        return setScale(toBigDecimalOrNull(number), newScale, roundingMode);
+    }
 }

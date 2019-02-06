@@ -33,7 +33,8 @@ code package.
   </#if>
   <form method="post" action="<@pageUrl>querygcbalance</@pageUrl>">
     <input type="hidden" name="currency" value="USD" />
-    <input type="hidden" name="paymentConfig" value="${paymentProperties!"payment.properties"}" />
+    <#-- SCIPIO: Security: Server-side code must set the paymentConfig
+    <input type="hidden" name="paymentConfig" value="${paymentProperties!"payment.properties"}" />-->
     <@tr>
       <@td>${uiLabelMap.AccountingCardNumber}</@td>
       <@td><input type="text" name="cardNumber" size="20" value="${(requestParameters.cardNumber)!}" /></@td>

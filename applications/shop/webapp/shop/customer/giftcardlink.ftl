@@ -10,7 +10,8 @@ code package.
 <p>${uiLabelMap.AccountingEnterGiftCardLink}.</p>
 
 <form name="gclink" method="post" action="<@pageUrl>linkgiftcard</@pageUrl>">
-  <input type="hidden" name="paymentConfig" value="${paymentProperties!"payment.properties"}" />
+  <#-- SCIPIO: Security: Server-side code must set the paymentConfig
+  <input type="hidden" name="paymentConfig" value="${paymentProperties!"payment.properties"}" />-->
   <#if userLogin?has_content>
     <input type="hidden" name="partyId" value="${userLogin.partyId}" />
   </#if>

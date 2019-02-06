@@ -1273,9 +1273,16 @@ code package.
         <security https="true" auth="false"/>
         <response name="success" type="view" value="giftcardbalance"/>
     </request-map>
-    <request-map uri="querygcbalance">
+    <request-map uri="querygcbalance" method="post"><!-- SCIPIO: Security: Restricted to POST -->
         <security https="true" auth="false"/>
-        <event type="service" invoke="balanceInquireGiftCard"/>
+        <!-- SCIPIO: Security: Server-side code must set the paymentConfig
+        <event type="service" invoke="balanceInquireGiftCard"/>-->
+        <event type="groovy"><script><![CDATA[
+            import org.ofbiz.product.store.ProductStoreWorker; import org.ofbiz.webapp.event.EventUtil;
+            ctx = EventUtil.getServiceEventParamMap(request, "balanceInquireGiftCard");
+            ctx.paymentConfig = ProductStoreWorker.getProductStorePaymentProperties(request, "GIFT_CARD", null, true) ?: "payment.properties";
+            return EventUtil.runServiceAsEvent(request, response, "balanceInquireGiftCard", ctx);
+        ]]></script></event>
         <response name="success" type="view" value="giftcardbalance"/>
         <response name="error" type="view" value="giftcardbalance"/>
     </request-map>
@@ -1284,9 +1291,16 @@ code package.
         <security https="true" auth="false"/>
         <response name="success" type="view" value="giftcardlink"/>
     </request-map>
-    <request-map uri="linkgiftcard">
+    <request-map uri="linkgiftcard" method="post"><!-- SCIPIO: Security: Restricted to POST -->
         <security https="true" auth="false"/>
-        <event type="service" invoke="linkPhysicalGiftCard"/>
+        <!-- SCIPIO: Security: Server-side code must set the paymentConfig
+        <event type="service" invoke="linkPhysicalGiftCard"/>-->
+        <event type="groovy"><script><![CDATA[
+            import org.ofbiz.product.store.ProductStoreWorker; import org.ofbiz.webapp.event.EventUtil;
+            ctx = EventUtil.getServiceEventParamMap(request, "linkPhysicalGiftCard");
+            ctx.paymentConfig = ProductStoreWorker.getProductStorePaymentProperties(request, "GIFT_CARD", null, true) ?: "payment.properties";
+            return EventUtil.runServiceAsEvent(request, response, "linkPhysicalGiftCard", ctx);
+        ]]></script></event>
         <response name="success" type="view" value="giftcardlink"/>
         <response name="error" type="view" value="giftcardlink"/>
     </request-map>

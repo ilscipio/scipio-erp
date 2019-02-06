@@ -54,7 +54,7 @@ by hand from a real template using a ruler.
                                                     <fo:table-cell padding-before="0.8cm">
                                                         <fo:block margin-left="3.0cm">
                                                             <#assign toPartyNameResult = runService("getPartyNameForDate", {"partyId":payment.partyIdTo, "compareDate":payment.effectiveDate, "userLogin":userLogin})/>
-                                                            ${toPartyNameResult.fullName!"Name Not Found"}
+                                                            ${toPartyNameResult.fullName!uiLabelMap.OrderPartyNameNotFound}
                                                         </fo:block>
                                                     </fo:table-cell>
                                                     <fo:table-cell padding-before="0.8cm">
@@ -94,7 +94,7 @@ by hand from a real template using a ruler.
                                                     <fo:table-cell padding="3pt" number-columns-spanned="3" text-align="center">
                                                         <fo:block text-align="center">
                                                             <#assign toPartyNameResult = runService("getPartyNameForDate", {"partyId":payment.partyIdTo, "compareDate":payment.effectiveDate, "userLogin":userLogin})/>
-                                                            ${toPartyNameResult.fullName!"Name Not Found"}
+                                                            ${toPartyNameResult.fullName!uiLabelMap.OrderPartyNameNotFound}
                                                         </fo:block>
                                                     </fo:table-cell>
                                                     <fo:table-cell padding="3pt" number-columns-spanned="4" text-align="center">

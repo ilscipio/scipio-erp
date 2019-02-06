@@ -17,7 +17,7 @@ code package.
                     </@td>
                     <@td width="5%">&nbsp;</@td>
                     <@td valign="top" width="80%">
-                        ${rolePartyNameResult.fullName!"Name Not Found"}
+                        ${rolePartyNameResult.fullName!uiLabelMap.OrderPartyNameNotFound}
                     </@td>
                 </@tr>
             <#if quoteRoles.size() != row>

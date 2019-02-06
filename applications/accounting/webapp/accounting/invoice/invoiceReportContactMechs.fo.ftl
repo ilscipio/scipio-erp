@@ -14,7 +14,7 @@ code package.
     <fo:block>
     <#if billingAddress?has_content>
         <#assign billToPartyNameResult = runService("getPartyNameForDate", {"partyId":billToParty.partyId, "compareDate":invoice.invoiceDate, "userLogin":userLogin})/>
-        <fo:block wrap-option="wrap">${billToPartyNameResult.fullName?default(billingAddress.toName)?default("Billing Name Not Found")}</fo:block>
+        <fo:block wrap-option="wrap">${billToPartyNameResult.fullName!(billingAddress.toName)!uiLabelMap.OrderPartyNameNotFound}</fo:block>
         <#if billingAddress.attnName??>
             <fo:block wrap-option="wrap">${billingAddress.attnName}</fo:block>
         </#if>

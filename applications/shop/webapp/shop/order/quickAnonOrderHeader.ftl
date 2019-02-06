@@ -33,7 +33,7 @@ code package.
                 <@td align="right" valign="top" width="15%"><b>${uiLabelMap.PartyName}</b>
                 </@td>
                 <@td valign="top" width="80%">
-                    ${(displayPartyNameResult.fullName)!"[Name Not Found]"}
+                    ${(displayPartyNameResult.fullName)!("["+rawLabel("OrderPartyNameNotFound")+"]")}
                 </@td>
               </@tr>
               <@tr type="util"><@td colspan="7"><hr /></@td></@tr>

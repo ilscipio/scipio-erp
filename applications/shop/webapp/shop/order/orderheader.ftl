@@ -71,7 +71,7 @@ code package.
                     <#if displayPartyNameResult?has_content>
                         <@tr>
                           <@td class="${styles.grid_large!}2">${uiLabelMap.PartyName}</@td>
-                          <@td colspan="3">${(displayPartyNameResult.fullName)!"[Name Not Found]"}</@td>
+                          <@td colspan="3">${(displayPartyNameResult.fullName)!("["+rawLabel("OrderPartyNameNotFound")+"]")}</@td>
                         </@tr>
                     </#if>
                   </#if>

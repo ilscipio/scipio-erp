@@ -657,8 +657,9 @@ public class TaxAuthorityServices {
             if ("Y".equals(partyTaxInfo.getString("isExempt"))) {
                 adjValue.set("amount", BigDecimal.ZERO);
                 // SCIPIO: Added fix for included VAT calculation
-                if (adjValue.getBigDecimal("amountAlreadyIncluded").compareTo(BigDecimal.ZERO) != 0) {
-                    adjValue.set("exemptAmount", adjValue.getBigDecimal("amountAlreadyIncluded"));
+                BigDecimal amountAlreadyIncluded = adjValue.getBigDecimal("amountAlreadyIncluded");
+                if (amountAlreadyIncluded != null && amountAlreadyIncluded.compareTo(BigDecimal.ZERO) != 0) {
+                    adjValue.set("exemptAmount", amountAlreadyIncluded);
                 } else {
                     adjValue.set("exemptAmount", taxAmount);
                 }

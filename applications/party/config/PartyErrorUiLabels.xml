@@ -1337,6 +1337,7 @@
         <value xml:lang="zh-TW">無法更新人員資訊 (寫失敗):${0}</value>
     </property>
     <property key="PartyCaptchaMissingError">
+        <value xml:lang="de">Falsches Captcha. Bitte versuche es erneut.</value>
         <value xml:lang="en">Wrong captcha. Please try again.</value>
     </property>
     <property key="PartyRequiredFieldMissingContactMechTypeId">

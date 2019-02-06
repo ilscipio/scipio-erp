@@ -292,10 +292,35 @@ public final class ServiceUtil {
 
     }
 
+    /**
+     * Concatenates the error and event messages from the given service result into a single error string and a single event string,
+     * and sets them as the request attributes _ERROR_MESSAGE_ and _EVENT_MESSAGE_, respectively.
+     * <p>
+     * SCIPIO: NOTE: This is ambiguously named and does not preserve event/error message lists; because of this,
+     * you may want to use {@link #appendRequestMessages} or {@link #setRequestMessages(HttpServletRequest, Map)}.
+     */
+    public static void getMessages(HttpServletRequest request, Map<String, ? extends Object> result) { // SCIPIO: Added missing overload
+        getMessages(request, result, null, null, null, null, null, null, null);
+    }
+
+    /**
+     * Concatenates the error and event messages from the given service result into a single error string and a single event string,
+     * and sets them as the request attributes _ERROR_MESSAGE_ and _EVENT_MESSAGE_, respectively.
+     * <p>
+     * SCIPIO: NOTE: This is ambiguously named and does not preserve event/error message lists; because of this,
+     * you may want to use {@link #appendRequestMessages} or {@link #setRequestMessages(HttpServletRequest, Map)}.
+     */
     public static void getMessages(HttpServletRequest request, Map<String, ? extends Object> result, String defaultMessage) {
         getMessages(request, result, defaultMessage, null, null, null, null, null, null);
     }
 
+    /**
+     * Concatenates the error and event messages from the given service result into a single error string and a single event string,
+     * and sets them as the request attributes _ERROR_MESSAGE_ and _EVENT_MESSAGE_, respectively.
+     * <p>
+     * SCIPIO: NOTE: This is ambiguously named and does not preserve event/error message lists; because of this,
+     * you may want to use {@link #appendRequestMessages} or {@link #setRequestMessages(HttpServletRequest, Map)}.
+     */
     public static void getMessages(HttpServletRequest request, Map<String, ? extends Object> result, String defaultMessage,
                                    String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix, String successPrefix, String successSuffix) {
         String errorMessage = ServiceUtil.makeErrorMessage(result, msgPrefix, msgSuffix, errorPrefix, errorSuffix);
@@ -306,17 +331,36 @@ public final class ServiceUtil {
     /**
      * SCIPIO: Alternative to {@link #getMessages(HttpServletRequest, Map, String)} that preserves lists when setting in request.
      * The lists are appended to existing, but single message is replaced.
+     * @deprecated 2019-02-05: This method was ambiguous, use {@link #appendRequestMessages(HttpServletRequest, Map)} instead.
      */
-    public static void appendMessageLists(HttpServletRequest request, Map<String, ? extends Object> result) {
-        String errorMessage = (String) result.get(ModelService.ERROR_MESSAGE);
-        String successMessage =  (String) result.get(ModelService.SUCCESS_MESSAGE);
-        List<?> errorList = UtilGenerics.checkList(result.get(ModelService.ERROR_MESSAGE_LIST));
-        List<?> successList = UtilGenerics.checkList(result.get(ModelService.SUCCESS_MESSAGE_LIST));
-        if (UtilValidate.isNotEmpty(errorMessage)) {
-            request.setAttribute("_ERROR_MESSAGE_", errorMessage);
-        }
+    @Deprecated
+    public static void appendMessageLists(HttpServletRequest request, Map<String, ? extends Object> serviceResult) {
+        appendRequestMessages(request, serviceResult);
+    }
+
+    /**
+     * SCIPIO: Alternative to {@link #getMessages(HttpServletRequest, Map, String)} that preserves lists when setting in request.
+     * The lists are appended to existing, but single message is replaced.
+     */
+    public static void appendRequestMessages(HttpServletRequest request, Map<String, ? extends Object> serviceResult) {
+        String successMessage = (String) serviceResult.get(ModelService.SUCCESS_MESSAGE);
+        List<?> successList = UtilGenerics.checkList(serviceResult.get(ModelService.SUCCESS_MESSAGE_LIST));
+        String errorMessage = (String) serviceResult.get(ModelService.ERROR_MESSAGE);
+        List<?> errorList = UtilGenerics.checkList(serviceResult.get(ModelService.ERROR_MESSAGE_LIST));
+        Map<?, ?> errorMap = UtilGenerics.checkMap(serviceResult.get(ModelService.ERROR_MESSAGE_MAP));
         if (UtilValidate.isNotEmpty(successMessage)) {
             request.setAttribute("_EVENT_MESSAGE_", successMessage);
+        }
+        if (UtilValidate.isNotEmpty(successList)) {
+            List<Object> reqEventList = UtilGenerics.checkList(request.getAttribute("_EVENT_MESSAGE_LIST_"));
+            if (reqEventList == null) {
+                reqEventList = new ArrayList<Object>();
+            }
+            reqEventList.addAll(successList);
+            request.setAttribute("_EVENT_MESSAGE_LIST_", reqEventList);
+        }
+        if (UtilValidate.isNotEmpty(errorMessage)) {
+            request.setAttribute("_ERROR_MESSAGE_", errorMessage);
         }
         if (UtilValidate.isNotEmpty(errorList)) {
             List<Object> reqErrorList = UtilGenerics.checkList(request.getAttribute("_ERROR_MESSAGE_LIST_"));
@@ -326,14 +370,38 @@ public final class ServiceUtil {
             reqErrorList.addAll(errorList);
             request.setAttribute("_ERROR_MESSAGE_LIST_", reqErrorList);
         }
-        if (UtilValidate.isNotEmpty(successList)) {
-            List<Object> reqEventList = UtilGenerics.checkList(request.getAttribute("_EVENT_MESSAGE_LIST_"));
-            if (reqEventList == null) {
-                reqEventList = new ArrayList<Object>();
+        if (UtilValidate.isNotEmpty(errorMap)) {
+            Map<Object, Object> reqErrorMap = UtilGenerics.checkMap(request.getAttribute("_ERROR_MESSAGE_MAP_"));
+            if (reqErrorMap == null) {
+                reqErrorMap = new HashMap<>();
             }
-            reqEventList.addAll(successList);
-            request.setAttribute("_ERROR_MESSAGE_LIST_", reqEventList);
+            reqErrorMap.putAll(errorMap);
+            request.setAttribute("_ERROR_MESSAGE_MAP_", reqErrorMap);
         }
+    }
+
+    /**
+     * SCIPIO: Alternative to {@link #getMessages(HttpServletRequest, Map, String)} that preserves lists when setting in request.
+     * Unlike {@link #appendMessageLists(HttpServletRequest, Map)}, all existing messages are completely replaced, efficiently.
+     */
+    public static void setRequestMessages(HttpServletRequest request, Map<String, ? extends Object> serviceResult) {
+        // NOTE: null values simply cause the servlet API to remove the attribute, which is fine here.
+        request.setAttribute("_EVENT_MESSAGE_", serviceResult.get(ModelService.SUCCESS_MESSAGE));
+        request.setAttribute("_EVENT_MESSAGE_LIST_", serviceResult.get(ModelService.SUCCESS_MESSAGE_LIST));
+        request.setAttribute("_ERROR_MESSAGE_", serviceResult.get(ModelService.ERROR_MESSAGE));
+        request.setAttribute("_ERROR_MESSAGE_LIST_", serviceResult.get(ModelService.ERROR_MESSAGE_LIST));
+        request.setAttribute("_ERROR_MESSAGE_MAP_", serviceResult.get(ModelService.ERROR_MESSAGE_MAP));
+    }
+
+    /**
+     * SCIPIO: Clears all the event message request attributes.
+     */
+    public static void clearRequestMessages(HttpServletRequest request) {
+        request.removeAttribute("_EVENT_MESSAGE_");
+        request.removeAttribute("_EVENT_MESSAGE_LIST_");
+        request.removeAttribute("_ERROR_MESSAGE_");
+        request.removeAttribute("_ERROR_MESSAGE_LIST_");
+        request.removeAttribute("_ERROR_MESSAGE_MAP_");
     }
 
     public static String getErrorMessage(Map<String, ? extends Object> result) {

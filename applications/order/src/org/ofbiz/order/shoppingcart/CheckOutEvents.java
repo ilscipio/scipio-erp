@@ -126,7 +126,7 @@ public class CheckOutEvents {
                 if (ServiceUtil.isSuccess(contactMechResult)) {
                     shippingContactMechId = (String) contactMechResult.get("contactMechId");
                 } else {
-                    ServiceUtil.appendMessageLists(request, contactMechResult);
+                    ServiceUtil.appendRequestMessages(request, contactMechResult);
                     return "error";
                 }
             } catch (GeneralException e1) {
@@ -203,7 +203,7 @@ public class CheckOutEvents {
                 selectedPaymentMethods = getSelectedPaymentMethods(request);
             } catch (ServiceErrorException e) {
                 Debug.logInfo(e.getMessage(), module); // regular error (probably user)
-                ServiceUtil.appendMessageLists(request, e.getServiceResult());
+                ServiceUtil.appendRequestMessages(request, e.getServiceResult());
                 return "error";
             } catch (GeneralException e) {
                 Debug.logError(e, module); // unexpected error
@@ -501,7 +501,7 @@ public class CheckOutEvents {
             selectedPaymentMethods = getSelectedPaymentMethods(request);
         } catch (ServiceErrorException e) {
             Debug.logInfo(e.getMessage(), module); // regular error (probably user)
-            ServiceUtil.appendMessageLists(request, e.getServiceResult());
+            ServiceUtil.appendRequestMessages(request, e.getServiceResult());
             return "error";
         } catch (GeneralException e) {
             Debug.logError(e, module); // unexpected error
@@ -538,7 +538,7 @@ public class CheckOutEvents {
             if (ServiceUtil.isSuccess(contactMechResult)) {
                 shippingContactMechId = (String) contactMechResult.get("contactMechId");
             } else {
-                ServiceUtil.appendMessageLists(request, contactMechResult);
+                ServiceUtil.appendRequestMessages(request, contactMechResult);
                 return "error";
             }
         } catch (GeneralException e1) {
@@ -1149,7 +1149,7 @@ public class CheckOutEvents {
                 selectedPaymentMethods = getSelectedPaymentMethods(request);
             } catch (ServiceErrorException e) {
                 Debug.logInfo(e.getMessage(), module); // regular error (probably user)
-                ServiceUtil.appendMessageLists(request, e.getServiceResult());
+                ServiceUtil.appendRequestMessages(request, e.getServiceResult());
                 return "error";
             } catch (GeneralException e) {
                 Debug.logError(e, module); // unexpected error

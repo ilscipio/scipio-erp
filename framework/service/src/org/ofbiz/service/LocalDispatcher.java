@@ -400,7 +400,17 @@ public interface LocalDispatcher {
      * De-Registers this LocalDispatcher
      */
     void deregister();
-    
+
+    /**
+     * Gets the ModelService instance that corresponds to given the name
+     * SCIPIO: New method: This is the same as <code>getDispatchContext().getModelService(...)</code>. Added 2019-02-05.
+     * @param serviceName Name of the service
+     * @return GenericServiceModel that corresponds to the serviceName
+     */
+    public default ModelService getModelService(String serviceName) throws GenericServiceException {
+        return getDispatchContext().getModelService(serviceName);
+    }
+
     /**
      * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
      * Note: This goes not guarantee the context will be 100% valid, there may be missing fields

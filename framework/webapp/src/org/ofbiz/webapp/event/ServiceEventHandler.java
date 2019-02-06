@@ -310,7 +310,7 @@ public class ServiceEventHandler implements EventHandler {
 
         // get only the parameters for this service - converted to proper type
         // TODO: pass in a list for error messages, like could not convert type or not a proper X, return immediately with messages if there are any
-        List<Object> errorMessages = new LinkedList<Object>();
+        List<Object> errorMessages = new LinkedList<>();
         serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM, true, errorMessages, timeZone, locale);
         if (errorMessages.size() > 0) {
             // uh-oh, had some problems...
@@ -376,19 +376,13 @@ public class ServiceEventHandler implements EventHandler {
             }
 
             // set the messages in the request; this will be picked up by messages.ftl and displayed
-            request.setAttribute("_ERROR_MESSAGE_LIST_", result.get(ModelService.ERROR_MESSAGE_LIST));
-            request.setAttribute("_ERROR_MESSAGE_MAP_", result.get(ModelService.ERROR_MESSAGE_MAP));
-            request.setAttribute("_ERROR_MESSAGE_", result.get(ModelService.ERROR_MESSAGE));
-
-            request.setAttribute("_EVENT_MESSAGE_LIST_", result.get(ModelService.SUCCESS_MESSAGE_LIST));
-            request.setAttribute("_EVENT_MESSAGE_", result.get(ModelService.SUCCESS_MESSAGE));
+            EventUtil.setRequestMessagesFromService(request, result); // SCIPIO: Factored out
 
             // SCIPIO: Some services don't set any result messages, either because they aren't explicitly set in the service logic (minilang, groovy, java...)
             // or because the service is just a direct DB operation
             if (ModelService.RESPOND_SUCCESS.equals(responseString) && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_LIST_"))
                     && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_"))) {
                 request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage("CommonUiLabels", "CommonServiceSuccessMessage", locale));
-
             }
 
             // set the results in the request

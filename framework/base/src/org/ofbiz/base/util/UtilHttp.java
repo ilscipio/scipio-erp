@@ -114,7 +114,7 @@ public final class UtilHttp {
 
     /**
      * Create a combined map from servlet context, session, attributes and parameters
-     * -- this method will only use the skip names for session and servlet context attributes
+     * -- this method will only use the skip names for session and servlet context attributes.
      * @return The resulting Map
      */
     public static Map<String, Object> getCombinedMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
@@ -123,7 +123,53 @@ public final class UtilHttp {
         combinedMap.putAll(getServletContextMap(request, namesToSkip)); // bottom level application attributes
         combinedMap.putAll(getSessionMap(request, namesToSkip));        // session overrides application
         combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
+        return combinedMap;
+    }
 
+    /**
+     * SCIPIO: Create a combined map from request attributes and request parameters only, with attributes having priority.
+     * Added 2019-02-05.
+     * @return The resulting Map
+     */
+    public static Map<String, Object> getAttrParamMap(HttpServletRequest request) {
+        return getAttrParamMap(request, null);
+    }
+
+    /**
+     * SCIPIO: Create a combined map from request attributes and request parameters, with attributes having priority.
+     * -- this method will only use the skip names for session and servlet context attributes.
+     * Added 2019-02-05.
+     * @return The resulting Map
+     */
+    public static Map<String, Object> getAttrParamMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
+        Map<String, Object> combinedMap = new HashMap<>();
+        combinedMap.putAll(getParameterMap(request));                   // parameters override nothing
+        combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
+        return combinedMap;
+    }
+
+    /**
+     * SCIPIO: Create a combined map from request attributes and request parameters and session attributes, with 
+     * request attributes having priority, followed by request parameters, and finally session attributes.
+     * Added 2019-02-05.
+     * @return The resulting Map
+     */
+    public static Map<String, Object> getAttrParamSessionMap(HttpServletRequest request) {
+        return getAttrParamSessionMap(request, null);
+    }
+
+    /**
+     * SCIPIO: Create a combined map from request attributes and request parameters and session attributes, with 
+     * request attributes having priority, followed by request parameters, and finally session attributes
+     * -- this method will only use the skip names for session and servlet context attributes.
+     * Added 2019-02-05.
+     * @return The resulting Map
+     */
+    public static Map<String, Object> getAttrParamSessionMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
+        Map<String, Object> combinedMap = new HashMap<>();
+        combinedMap.putAll(getSessionMap(request, namesToSkip));        // session overrides application
+        combinedMap.putAll(getParameterMap(request));                   // parameters override nothing
+        combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
         return combinedMap;
     }
 
@@ -1823,5 +1869,14 @@ public final class UtilHttp {
      */
     public static UtilHttp getStaticInstance() {
         return INSTANCE;
+    }
+    
+    /**
+     * SCIPIO: Returns the session attribute IF the session and attribute exist.
+     * Does not force session creation.
+     */
+    public static <T> T getSessionAttribute(HttpServletRequest request, String attrName) {
+        HttpSession session = request.getSession(false); // do not create.
+        return (session != null) ? UtilGenerics.cast(session.getAttribute(attrName)) : null;
     }
 }

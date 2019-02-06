@@ -61,7 +61,7 @@ public class CurrencyDirective implements TemplateDirectiveModel {
 
         BigDecimal amount = TransformUtil.getBigDecimalArg(args, "amount");
         if (amount == null) {
-            throw new TemplateException("Missing or invalid currency amount: " + amount, env);
+            throw new TemplateException("Missing or invalid currency amount", env);
         }
         String isoCode = TransformUtil.getStringNonEscapingArg(args, "isoCode"); // SCIPIO: Renamed var (not param name)
         Locale locale = TransformUtil.getOfbizLocaleArgOrCurrent(args, "locale", env);

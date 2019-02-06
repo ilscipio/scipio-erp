@@ -468,19 +468,13 @@ public abstract class TransformUtil {
         if (obj instanceof TemplateNumberModel) {
             return ((TemplateNumberModel) obj).getAsNumber().intValue();
         } else if (obj instanceof TemplateScalarModel) {
-            TemplateScalarModel s = (TemplateScalarModel) obj;
-            String strResult = LangFtlUtil.getAsString(s, true);
-            if (strResult.isEmpty()) {
-                return defaultValue;
-            } else {
-                return Integer.parseInt(strResult);
-            }
+            String strResult = LangFtlUtil.getAsString((TemplateScalarModel) obj, true);
+            return strResult.isEmpty() ? defaultValue : Integer.parseInt(strResult);
         } else if (obj == null) {
             return defaultValue;
-        } else {
-            throw new TemplateModelException("Expected integer model or string representing of integer, but got a " +
-                    obj.getClass() + " instead");
         }
+        throw new TemplateModelException("Expected integer model or string representing of integer, but got a " +
+                obj.getClass() + " instead");
     }
 
     public static Integer getIntegerArg(TemplateModel obj) throws TemplateModelException {
@@ -520,6 +514,61 @@ public abstract class TransformUtil {
     // TemplateModel (any source)
 
     /**
+     * Gets integer arg.
+     * <p>
+     * If string passed, will be parsed as integer. Other types such as maps or lists
+     * will throw TemplateModelException.
+     */
+    public static Double getDoubleArg(TemplateModel obj, Double defaultValue) throws TemplateModelException, NumberFormatException {
+        if (obj instanceof TemplateNumberModel) {
+            return ((TemplateNumberModel) obj).getAsNumber().doubleValue();
+        } else if (obj instanceof TemplateScalarModel) {
+            String strResult = LangFtlUtil.getAsString((TemplateScalarModel) obj, true);
+            return strResult.isEmpty() ? defaultValue :  Double.parseDouble(strResult);
+        } else if (obj == null) {
+            return defaultValue;
+        }
+        throw new TemplateModelException("Expected integer model or string representing of integer, but got a " +
+                obj.getClass() + " instead");
+    }
+
+    public static Double getDoubleArg(TemplateModel obj) throws TemplateModelException {
+        return getDoubleArg(obj, null);
+    }
+
+    // Map (macro arguments)
+
+    public static Double getDoubleArg(Map<?, ?> args, String key, Double defaultValue) throws TemplateModelException {
+        return getDoubleArg(getModel(args, key), defaultValue);
+    }
+
+    public static Double getDoubleArg(Map<?, ?> args, String key) throws TemplateModelException {
+        return getDoubleArg(getModel(args, key), null);
+    }
+
+    // List (function arguments)
+
+    public static Double getDoubleArg(List<?> args, int position, Double defaultValue) throws TemplateModelException {
+        return getDoubleArg(getModel(args, position), defaultValue);
+    }
+
+    public static Double getDoubleArg(List<?> args, int position) throws TemplateModelException {
+        return getDoubleArg(getModel(args, position), null);
+    }
+
+    // List (function arguments) with input Hash support
+
+    public static Double getDoubleArg(List<?> args, String key, int position, Double defaultValue) throws TemplateModelException {
+        return getDoubleArg(getModel(args, key, position), defaultValue);
+    }
+
+    public static Double getDoubleArg(List<?> args, String key, int position) throws TemplateModelException {
+        return getDoubleArg(getModel(args, key, position), null);
+    }
+    
+    // TemplateModel (any source)
+
+    /**
      * Gets BigDecimal arg.
      * <p>
      * If string or number passed, will be parsed as BigDecimal. Other types such as maps or lists
@@ -530,19 +579,13 @@ public abstract class TransformUtil {
             Number number = ((TemplateNumberModel) obj).getAsNumber();
             return UtilNumber.toBigDecimal(number);
         } else if (obj instanceof TemplateScalarModel) {
-            TemplateScalarModel s = (TemplateScalarModel) obj;
-            String strResult = LangFtlUtil.getAsString(s, true);
-            if (strResult.isEmpty()) {
-                return defaultValue;
-            } else {
-                return UtilNumber.toBigDecimal(strResult);
-            }
+            String strResult = LangFtlUtil.getAsString((TemplateScalarModel) obj, true);
+            return strResult.isEmpty() ? defaultValue : UtilNumber.toBigDecimal(strResult);
         } else if (obj == null) {
             return defaultValue;
-        } else {
-            throw new TemplateModelException("Expected BigDecimal model or string representing of BigDecimal, but got a " +
-                    obj.getClass() + " instead");
         }
+        throw new TemplateModelException("Expected BigDecimal model or string representing of BigDecimal, but got a " +
+                obj.getClass() + " instead");
     }
 
     public static BigDecimal getBigDecimalArg(TemplateModel obj) throws TemplateModelException {

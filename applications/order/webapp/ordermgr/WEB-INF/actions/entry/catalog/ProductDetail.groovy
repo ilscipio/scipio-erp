@@ -36,7 +36,6 @@ import org.ofbiz.product.product.ProductSearchSession;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
-import org.ofbiz.webapp.ftl.OfbizCurrencyTransform
 import org.ofbiz.webapp.stats.VisitHandler;
 import org.ofbiz.webapp.website.WebSiteWorker
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;

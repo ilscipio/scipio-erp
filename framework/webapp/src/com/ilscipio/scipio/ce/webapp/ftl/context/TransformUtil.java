@@ -1,11 +1,13 @@
 package com.ilscipio.scipio.ce.webapp.ftl.context;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
@@ -350,67 +352,108 @@ public abstract class TransformUtil {
     }
 
     /**
+     * Special handler that tries to read a locale arg and if not present gets it from context locale,
+     * or falls back on request if present (abstracted method, behavior could change).
+     */
+    public static Locale getOfbizLocaleArgOrCurrent(Map<?, ?> args, String key, Environment env) throws TemplateModelException {
+        Locale locale = getOfbizLocaleArg(getModel(args, key));
+        return (locale != null) ? locale : ContextFtlUtil.getCurrentLocale(env);
+    }
+
+    /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale.
      * NOTE: this does NOT check the request locale!
+     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link getOfbizLocaleArgOrCurrent} instead.
      */
+    @Deprecated
     public static Locale getOfbizLocaleArgOrContext(Map<?, ?> args, String key, Environment env) throws TemplateModelException {
         Locale locale = getOfbizLocaleArg(getModel(args, key));
-        if (locale != null) return locale;
-        return ContextFtlUtil.getContextLocale(env);
+        return (locale != null) ? locale : ContextFtlUtil.getContextLocale(env);
     }
 
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale,
      * or falls back on request if present.
+     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link getOfbizLocaleArgOrCurrent} instead.
      */
+    @Deprecated
     public static Locale getOfbizLocaleArgOrContextOrRequest(Map<?, ?> args, String key, Environment env) throws TemplateModelException {
-        Locale locale = getOfbizLocaleArgOrContext(args, key, env);
-        if (locale != null) return locale;
-        return ContextFtlUtil.getRequestLocale(env);
+        Locale locale = getOfbizLocaleArg(getModel(args, key));
+        return (locale != null) ? locale : ContextFtlUtil.getContextOrRequestLocale(env);
     }
 
     // List (function arguments)
 
+    public static Locale getOfbizLocaleArg(List<?> args, int position, Environment env) throws TemplateModelException {
+        return getOfbizLocaleArg(getModel(args, position));
+    }
+
+    /**
+     * Special handler that tries to read a locale arg and if not present gets it from context locale,
+     * or falls back on request if present (abstracted method, behavior could change).
+     */
+    public static Locale getOfbizLocaleArgOrCurrent(List<?> args, int position, Environment env) throws TemplateModelException {
+        Locale locale = getOfbizLocaleArg(getModel(args, position));
+        return (locale != null) ? locale : ContextFtlUtil.getCurrentLocale(env);
+    }
+
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale.
      * NOTE: this does NOT check the request locale!
+     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link getOfbizLocaleArgOrCurrent} instead.
      */
+    @Deprecated
     public static Locale getOfbizLocaleArgOrContext(List<?> args, int position, Environment env) throws TemplateModelException {
         Locale locale = getOfbizLocaleArg(getModel(args, position));
-        if (locale != null) return locale;
-        return ContextFtlUtil.getContextLocale(env);
+        return (locale != null) ? locale : ContextFtlUtil.getContextLocale(env);
     }
 
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale,
      * or falls back on request if present.
+     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link getOfbizLocaleArgOrCurrent} instead.
      */
+    @Deprecated
     public static Locale getOfbizLocaleArgOrContextOrRequest(List<?> args, int position, Environment env) throws TemplateModelException {
-        Locale locale = getOfbizLocaleArgOrContext(args, position, env);
-        if (locale != null) return locale;
-        return ContextFtlUtil.getRequestLocale(env);
+        Locale locale = getOfbizLocaleArg(getModel(args, position));
+        return (locale != null) ? locale : ContextFtlUtil.getContextOrRequestLocale(env);
     }
 
     // List (function arguments) with input Hash support
 
+    public static Locale getOfbizLocaleArg(List<?> args, String key, int position, Environment env) throws TemplateModelException {
+        return getOfbizLocaleArg(getModel(args, key, position));
+    }
+
+    /**
+     * Special handler that tries to read a locale arg and if not present gets it from context locale,
+     * or falls back on request if present (abstracted method, behavior could change).
+     */
+    public static Locale getOfbizLocaleArgOrCurrent(List<?> args, String key, int position, Environment env) throws TemplateModelException {
+        Locale locale = getOfbizLocaleArg(getModel(args, key, position));
+        return (locale != null) ? locale : ContextFtlUtil.getCurrentLocale(env);
+    }
+
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale.
      * NOTE: this does NOT check the request locale!
+     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link getOfbizLocaleArgOrCurrent} instead.
      */
+    @Deprecated
     public static Locale getOfbizLocaleArgOrContext(List<?> args, String key, int position, Environment env) throws TemplateModelException {
         Locale locale = getOfbizLocaleArg(getModel(args, key, position));
-        if (locale != null) return locale;
-        return ContextFtlUtil.getContextLocale(env);
+        return (locale != null) ? locale : ContextFtlUtil.getContextLocale(env);
     }
 
     /**
      * Special handler that tries to read a locale arg and if not present gets it from context locale,
      * or falls back on request if present.
+     * @deprecated 2019-02-05: It's best not to use this; use the abstract {@link getOfbizLocaleArgOrCurrent} instead.
      */
+    @Deprecated
     public static Locale getOfbizLocaleArgOrContextOrRequest(List<?> args, String key, int position, Environment env) throws TemplateModelException {
-        Locale locale = getOfbizLocaleArgOrContext(args, key, position, env);
-        if (locale != null) return locale;
-        return ContextFtlUtil.getRequestLocale(env);
+        Locale locale = getOfbizLocaleArg(getModel(args, key, position));
+        return (locale != null) ? locale : ContextFtlUtil.getContextOrRequestLocale(env);
     }
 
     // TemplateModel (any source)
@@ -472,6 +515,68 @@ public abstract class TransformUtil {
 
     public static Integer getIntegerArg(List<?> args, String key, int position) throws TemplateModelException {
         return getIntegerArg(getModel(args, key, position), null);
+    }
+
+    // TemplateModel (any source)
+
+    /**
+     * Gets BigDecimal arg.
+     * <p>
+     * If string or number passed, will be parsed as BigDecimal. Other types such as maps or lists
+     * will throw TemplateModelException.
+     */
+    public static BigDecimal getBigDecimalArg(TemplateModel obj, BigDecimal defaultValue) throws TemplateModelException, NumberFormatException {
+        if (obj instanceof TemplateNumberModel) {
+            Number number = ((TemplateNumberModel) obj).getAsNumber();
+            return UtilNumber.toBigDecimal(number);
+        } else if (obj instanceof TemplateScalarModel) {
+            TemplateScalarModel s = (TemplateScalarModel) obj;
+            String strResult = LangFtlUtil.getAsString(s, true);
+            if (strResult.isEmpty()) {
+                return defaultValue;
+            } else {
+                return UtilNumber.toBigDecimal(strResult);
+            }
+        } else if (obj == null) {
+            return defaultValue;
+        } else {
+            throw new TemplateModelException("Expected BigDecimal model or string representing of BigDecimal, but got a " +
+                    obj.getClass() + " instead");
+        }
+    }
+
+    public static BigDecimal getBigDecimalArg(TemplateModel obj) throws TemplateModelException {
+        return getBigDecimalArg(obj, null);
+    }
+
+    // Map (macro arguments)
+
+    public static BigDecimal getBigDecimalArg(Map<?, ?> args, String key, BigDecimal defaultValue) throws TemplateModelException {
+        return getBigDecimalArg(getModel(args, key), defaultValue);
+    }
+
+    public static BigDecimal getBigDecimalArg(Map<?, ?> args, String key) throws TemplateModelException {
+        return getBigDecimalArg(getModel(args, key), null);
+    }
+
+    // List (function arguments)
+
+    public static BigDecimal getBigDecimalArg(List<?> args, int position, BigDecimal defaultValue) throws TemplateModelException {
+        return getBigDecimalArg(getModel(args, position), defaultValue);
+    }
+
+    public static BigDecimal getBigDecimalArg(List<?> args, int position) throws TemplateModelException {
+        return getBigDecimalArg(getModel(args, position), null);
+    }
+
+    // List (function arguments) with input Hash support
+
+    public static BigDecimal getBigDecimalArg(List<?> args, String key, int position, BigDecimal defaultValue) throws TemplateModelException {
+        return getBigDecimalArg(getModel(args, key, position), defaultValue);
+    }
+
+    public static BigDecimal getBigDecimalArg(List<?> args, String key, int position) throws TemplateModelException {
+        return getBigDecimalArg(getModel(args, key, position), null);
     }
 
     // TemplateModel (any source)

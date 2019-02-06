@@ -20,6 +20,7 @@
 package org.ofbiz.base.util;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Locale;
@@ -488,5 +489,91 @@ public final class UtilNumber {
      */
     public static UtilNumber getStaticInstance() {
         return INSTANCE;
+    }
+
+    /**
+     * SCIPIO: Converts any number representation or string to a BigDecimal, or throws NumberFormatException if not possible.
+     * WARN: Some types may result in loss of precision. You may also need to set the scale manually afterward.
+     * Empty string and null both return null.
+     */
+    public static BigDecimal toBigDecimal(Object number) throws NumberFormatException {
+        if (number instanceof BigDecimal) { // NOTE: comparison order is by popularity
+            return (BigDecimal) number;
+        } else if (number instanceof Integer) {
+            return new BigDecimal((Integer) number);
+        } else if (number instanceof Long) {
+            return new BigDecimal((Long) number);
+        } else if (number instanceof Double) {
+            return new BigDecimal((Double) number);
+        } else if (number instanceof Float) {
+            return new BigDecimal((Float) number);
+        } else if (number instanceof String) {
+            return toBigDecimal((String) number);
+        } else if (number instanceof BigInteger) {
+            return new BigDecimal((BigInteger) number);
+        } else if (number == null) {
+            return null;
+        }
+        return toBigDecimal((String) number.toString()); // catch-all
+    }
+
+    /**
+     * SCIPIO: Converts any number to a BigDecimal, or throws NumberFormatException if not possible.
+     * Empty string and null both return null.
+     * WARN: Some types may result in loss of precision. You may also need to set the scale manually afterward.
+     */
+    public static BigDecimal toBigDecimal(Number number) throws NumberFormatException {
+        return toBigDecimal((Object) number);
+    }
+
+    /**
+     * SCIPIO: Converts a string number to BigDecimal, or throws NumberFormatException if not possible.
+     * Empty string and null both return null.
+     * WARN: Some types may result in loss of precision. You may also need to set the scale manually afterward.
+     */
+    public static BigDecimal toBigDecimal(String number) throws NumberFormatException {
+        if (number == null || number.isEmpty()) {
+            return null;
+        }
+        return new BigDecimal(number);
+    }
+
+    /**
+     * SCIPIO: Converts any number representation or string to a BigDecimal, or returns null if not possible.
+     * Empty string and null both return null.
+     * WARN: Some types may result in loss of precision. You may also need to set the scale manually afterward.
+     */
+    public static BigDecimal toBigDecimalOrNull(Object number) {
+        try {
+            return toBigDecimal(number);
+        } catch(NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /**
+     * SCIPIO: Converts any number to a BigDecimal, or throws NumberFormatException if not possible.
+     * Empty string and null both return null.
+     * WARN: Some types may result in loss of precision. You may also need to set the scale manually afterward.
+     */
+    public static BigDecimal toBigDecimalOrNull(Number number) {
+        try {
+            return toBigDecimal(number);
+        } catch(NumberFormatException e) {
+            return null;
+        }
+    }
+
+    /**
+     * SCIPIO: Converts a string number to BigDecimal, or throws NumberFormatException if not possible.
+     * Empty string and null both return null.
+     * WARN: Some types may result in loss of precision. You may also need to set the scale manually afterward.
+     */
+    public static BigDecimal toBigDecimalOrNull(String number) {
+        try {
+            return toBigDecimal(number);
+        } catch(NumberFormatException e) {
+            return null;
+        }
     }
 }

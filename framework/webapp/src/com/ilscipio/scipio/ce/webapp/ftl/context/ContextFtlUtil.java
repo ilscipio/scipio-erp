@@ -811,25 +811,46 @@ public abstract class ContextFtlUtil {
     }
 
     /**
+     * Gets "current" locale from the context or otherwise using the HttpServletRequest object in context using UtilHttp
+     * (abstracted method, behavior could change).
+     * NOTE: This is the preferred method in most cases.
+     */
+    public static Locale getCurrentLocale(Environment env) throws TemplateModelException {
+        return getContextOrRequestLocale(env);
+    }
+
+    /**
      * Attempts to get the current "user" or "screen" locale normally found in screen context
      * as the simple "locale" variable.
      * TODO: REVIEW: this is currently using getGlobalVariable as most likely the fastest that
      * will avoid problems from macros - unclear if more or less reliable than trying to read
      * out of "context" map (which not guaranteed present).
+     * <p>
+     * NOTE: In most transforms, the preferred method is: {@link #getCurrentLocale(Environment)}.
      */
     public static Locale getContextLocale(Environment env) throws TemplateModelException {
         WrapperTemplateModel model = (WrapperTemplateModel) env.getGlobalVariable("locale");
-        if (model != null) return (Locale) ((WrapperTemplateModel) model).getWrappedObject();
-        return null;
+        return (model != null) ? (Locale) ((WrapperTemplateModel) model).getWrappedObject() : null;
     }
 
     /**
      * Gets locale from the HttpServletRequest object in context using UtilHttp.
+     * <p>
+     * NOTE: In most transforms, the preferred method is: {@link #getCurrentLocale(Environment)}.
      */
     public static Locale getRequestLocale(Environment env) throws TemplateModelException {
         HttpServletRequest request = getRequest(env);
-        if (request != null) return UtilHttp.getLocale(request);
-        return null;
+        return (request != null) ? UtilHttp.getLocale(request) : null;
+    }
+
+    /**
+     * Gets "current" locale from the context or otherwise using the HttpServletRequest object in context using UtilHttp.
+     * <p>
+     * NOTE: In most transforms, the preferred method is: {@link #getCurrentLocale(Environment)}.
+     */
+    public static Locale getContextOrRequestLocale(Environment env) throws TemplateModelException {
+        Locale locale = getContextLocale(env);
+        return (locale != null) ? locale : getRequestLocale(env);
     }
 
     /**

@@ -42,12 +42,12 @@ code package.
                 </@tr>
                 <@tr>
                     <@td>${uiLabelMap.AccountingOpeningBalance}</@td>
-                    <@td><@ofbizCurrency amount=previousGlReconciliation.openingBalance?default('0')/></@td>
+                    <@td><@ofbizCurrency amount=(previousGlReconciliation.openingBalance!'0')/></@td>
                 </@tr>
                 <#if previousGlReconciliation.reconciledBalance??>
                     <@tr>
                         <@td>${uiLabelMap.FormFieldTitle_reconciledBalance}</@td>
-                        <@td><@ofbizCurrency amount=previousGlReconciliation.reconciledBalance?default('0')/></@td>
+                        <@td><@ofbizCurrency amount=(previousGlReconciliation.reconciledBalance!'0')/></@td>
                     </@tr>
                 </#if>
                 <#if previousClosingBalance??>

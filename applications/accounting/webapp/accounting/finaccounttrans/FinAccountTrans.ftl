@@ -81,7 +81,7 @@ function getFinAccountTransRunningTotalAndBalances() {
             <input name="statusId" type="hidden" value="${parameters.statusId!}"/>
             <#if !grandTotal??>
                 <input name="reconciledBalance" type="hidden" value="${(glReconciliation.reconciledBalance)!}"/>
-                <input name="reconciledBalanceWithUom" type="hidden" id="reconciledBalanceWithUom" value="<@ofbizCurrency amount=(glReconciliation.reconciledBalance)?default('0')/>"/>
+                <input name="reconciledBalanceWithUom" type="hidden" id="reconciledBalanceWithUom" value="<@ofbizCurrency amount=((glReconciliation.reconciledBalance)!'0')/>"/>
             </#if>
         
             <#-- FIXME: Again, we must determine if this makes sense to diplay it in here, imo it breaks the UX. Note that 'Not Assigned' should be selected for the glReconciliationId in the search filter -->
@@ -325,8 +325,8 @@ function getFinAccountTransRunningTotalAndBalances() {
                             <span id="finAccountTransRunningTotal"></span> /
                             <span id="numberOfFinAccountTransaction"></span>
                         </@td>
-                        <@td><@ofbizCurrency amount=glReconciliation.openingBalance?default('0')/></@td>
-                        <@td><@ofbizCurrency amount=glReconciliation.reconciledBalance?default('0')/></@td>
+                        <@td><@ofbizCurrency amount=(glReconciliation.openingBalance!'0')/></@td>
+                        <@td><@ofbizCurrency amount=(glReconciliation.reconciledBalance!'0')/></@td>
                         <@td id="endingBalance"><@ofbizCurrency amount=(glReconciliationApprovedGrandTotal!)/></@td>
                         <input type="hidden" id="endingBalanceInput" value="<@ofbizCurrency amount=(glReconciliationApprovedGrandTotal!)/>"/>
                     </@tr>

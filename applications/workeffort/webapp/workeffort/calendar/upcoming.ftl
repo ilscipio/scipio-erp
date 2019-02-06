@@ -6,7 +6,8 @@ code package.
 <#include "component://workeffort/webapp/workeffort/common/common.ftl">
 
 <#-- SCIPIO: FTL now includes the title -->
-<@section title=uiLabelMap.WorkEffortUpComingEvents><#--title=uiLabelMap.WorkEffortCalendarUpComingEventsView-->
+<#-- SCIPIO: FIXME: Somebody set this label, but it does not exist: title=uiLabelMap.WorkEffortUpComingEvents -->
+<@section title=uiLabelMap.WorkEffortCalendarUpComingEventsView><#--title=uiLabelMap.WorkEffortCalendarUpComingEventsView-->
 
 <#-- SCIPIO: have to pre-check if any content using this -->
   <#assign hasEvents = false>

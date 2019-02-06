@@ -5,8 +5,8 @@ code package.
 -->
 <#escape x as x?xml>
 
-        <#assign fromPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":returnHeader.fromPartyId, "compareDate":returnHeader.entryDate, "userLogin":userLogin})/>
-        <#assign toPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":returnHeader.toPartyId, "compareDate":returnHeader.entryDate, "userLogin":userLogin})/>
+        <#assign fromPartyNameResult = runService("getPartyNameForDate", {"partyId":returnHeader.fromPartyId, "compareDate":returnHeader.entryDate, "userLogin":userLogin})/>
+        <#assign toPartyNameResult = runService("getPartyNameForDate", {"partyId":returnHeader.toPartyId, "compareDate":returnHeader.entryDate, "userLogin":userLogin})/>
 
         <fo:table>
           <fo:table-column column-width="3.50in"/>

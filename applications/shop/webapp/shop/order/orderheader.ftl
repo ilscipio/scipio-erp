@@ -66,13 +66,7 @@ code package.
                     <#assign displayParty = placingParty/>
                     <#assign displayPartyNameResult = {}/>
                     <#if displayParty?has_content>
-                        <#-- SCIPIO: can't pass userLogin! because it becomes the empty string when userLogin missing
-                        <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":(displayParty.partyId!), "compareDate":(orderDate!), "userLogin":userLogin!})/>-->
-                        <#assign dpnArgs = {"partyId":(displayParty.partyId!), "compareDate":(orderDate!)}>
-                        <#if userLogin??>
-                          <#assign dpnArgs = dpnArgs + {"userLogin":userLogin}>
-                        </#if>
-                        <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", dpnArgs)>
+                        <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":(displayParty.partyId!), "compareDate":(orderDate!), "userLogin":userLogin!})/>
                     </#if>
                     <#if displayPartyNameResult?has_content>
                         <@tr>
@@ -115,22 +109,21 @@ code package.
                     <@tr>
                       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDistributor}</@td>
                       <@td colspan="3">
-                         <#assign distPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":distributorId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+                         <#assign distPartyNameResult = runService("getPartyNameForDate", {"partyId":distributorId, "compareDate":orderHeader.orderDate, "userLogin":userLogin!})/>
                          ${distPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
                       </@td>
                     </@tr>
                   </#if>
-                
+
                   <#if affiliateId??>
                     <@tr>
                       <@td>${uiLabelMap.OrderAffiliate}</@td>
                       <@td colspan="3">
-                        <#assign affPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":affiliateId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+                        <#assign affPartyNameResult = runService("getPartyNameForDate", {"partyId":affiliateId, "compareDate":orderHeader.orderDate, "userLogin":userLogin!})/>
                         ${affPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
                       </@td>
                     </@tr>
                   </#if>
-            
                 </@table>
             </@section>
         </@cell>

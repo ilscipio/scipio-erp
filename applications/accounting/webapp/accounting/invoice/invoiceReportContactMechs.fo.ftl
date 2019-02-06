@@ -13,7 +13,7 @@ code package.
     </fo:block-container>
     <fo:block>
     <#if billingAddress?has_content>
-        <#assign billToPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":billToParty.partyId, "compareDate":invoice.invoiceDate, "userLogin":userLogin})/>
+        <#assign billToPartyNameResult = runService("getPartyNameForDate", {"partyId":billToParty.partyId, "compareDate":invoice.invoiceDate, "userLogin":userLogin})/>
         <fo:block wrap-option="wrap">${billToPartyNameResult.fullName?default(billingAddress.toName)?default("Billing Name Not Found")}</fo:block>
         <#if billingAddress.attnName??>
             <fo:block wrap-option="wrap">${billingAddress.attnName}</fo:block>

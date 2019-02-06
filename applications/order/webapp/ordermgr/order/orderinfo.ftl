@@ -113,7 +113,7 @@ code package.
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDistributor}</@td>
       <@td colspan="3">
-         <#assign distPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":distributorId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+         <#assign distPartyNameResult = runService("getPartyNameForDate", {"partyId":distributorId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
          ${distPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
       </@td>
     </@tr>
@@ -123,7 +123,7 @@ code package.
     <@tr>
       <@td>${uiLabelMap.OrderAffiliate}</@td>
       <@td colspan="3">
-        <#assign affPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":affiliateId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+        <#assign affPartyNameResult = runService("getPartyNameForDate", {"partyId":affiliateId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
         ${affPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
       </@td>
     </@tr>

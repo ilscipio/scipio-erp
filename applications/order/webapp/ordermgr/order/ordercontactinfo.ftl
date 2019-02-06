@@ -77,7 +77,7 @@ code package.
           <@td class="${styles.grid_large!}3">${uiLabelMap.CommonName}</@td>
           <@td colspan="3">
                 <#if partyId?? && displayParty?has_content>
-                    <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+                    <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
                     <a href="${customerDetailLink}${partyId}${rawString(externalKeyParam)}" target="partymgr" class="">${displayPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}</a>
                     <#else>
                     <a href="${customerDetailLink}${partyId}${rawString(externalKeyParam)}" target="partymgr" class="">${partyId}</a>

@@ -20,7 +20,7 @@
             </#if>
 
             <#if emplApp.applyingPartyId?has_content>
-              <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":emplApp.applyingPartyId, 
+              <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":emplApp.applyingPartyId, 
                 "compareDate":emplApp.applicationDate!nowTimestamp, "userLogin":userLogin})/>
               <#assign qualifications = Static["org.ofbiz.entity.util.EntityUtil"].filterByDate(delegator.findByAnd("PartyQual", {"partyId": emplApp.applyingPartyId}, [], false)!)!>  
             <#else>

@@ -27,7 +27,7 @@ code package.
             <#if localOrderReadHelper?? && orderHeader?has_content>
               <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
               <#if displayParty?has_content>
-                  <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
+                  <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
               </#if>
               <@tr>
                 <@td align="right" valign="top" width="15%"><b>${uiLabelMap.PartyName}</b>

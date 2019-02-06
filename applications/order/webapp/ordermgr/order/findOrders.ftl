@@ -441,7 +441,7 @@ document.lookuporder.orderId.focus();
               <@td>
                 <div>
                   <#if displayParty?has_content>
-                      <#assign displayPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate!, "userLogin":userLogin})/>
+                      <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate!, "userLogin":userLogin})/>
                       ${displayPartyNameResult.fullName!"[${uiLabelMap.OrderPartyNameNotFound}]"}
                   <#else>
                     ${uiLabelMap.CommonNA}

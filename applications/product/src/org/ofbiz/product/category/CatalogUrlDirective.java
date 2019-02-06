@@ -103,7 +103,7 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
         Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
 
         // SCIPIO: 2018-08-02: get proper locale
-        Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
+        Locale locale = TransformUtil.getOfbizLocaleArgOrCurrent(args, "locale", env);
 
         if (request != null) {
             FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams),

@@ -94,7 +94,7 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
 
                     String url = "";
                     if (UtilValidate.isNotEmpty(contentId)) {
-                        Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env); // SCIPIO
+                        Locale locale = TransformUtil.getOfbizLocaleArgOrCurrent(args, "locale", env); // SCIPIO
                         if (request != null) {
                             // SCIPIO: replaced
                             //url = ContentUrlFilter.makeContentAltUrl(request, response, contentId, viewContent, urlDecode);

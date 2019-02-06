@@ -198,7 +198,7 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
                     //output(requestUrl, env);
                 }
             } else if (webSiteId != null || webappInfoCache.getCurrentWebappWebSiteId() != null) {
-                Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
+                Locale locale = TransformUtil.getOfbizLocaleArgOrCurrent(args, "locale", env);
                 String link = RequestHandler.makeLinkAuto(ContextFtlUtil.getContext(env), delegator, locale, webSiteId, requestUrl, absPath,
                         interWebappEff, controller, fullPath, secure, encode);
                 if (link != null) {

@@ -120,7 +120,7 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
 
                     // SCIPIO: 2017-11-06: new Locale arg + context reading for most cases
                     // NOTE: the fallback on request locale is LEGACY BEHAVIOR - not all transforms should necessarily use "OrRequest" here!
-                    Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
+                    Locale locale = TransformUtil.getOfbizLocaleArgOrCurrent(args, "locale", env);
 
                     if (request != null) {
                         FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams),

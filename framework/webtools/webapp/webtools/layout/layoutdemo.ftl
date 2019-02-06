@@ -250,6 +250,11 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 </@section>
 
 <#if debugMode>
+
+<@section title="runExampleCtrlInlineGroovy">
+    <a href="<@pageUrl uri='runExampleCtrlInlineGroovy'/>">Click to run (reloads page)</a>
+</@section>
+
 <@section title="Nested sub-menus (markup test only!)">
     <@menu type="button" class="+my-button-menu-class" id="my-button-menu">
       <@menuitem type="link" text="Menu Button 1" />

@@ -95,7 +95,19 @@ public class GroovyEventHandler implements EventHandler {
                 if (scriptHelper != null) {
                     context.put(ScriptUtil.SCRIPT_HELPER_KEY, scriptHelper);
                 }
-                Script script = InvokerHelper.createScript(GroovyUtil.getScriptClassFromLocation(event.path), GroovyUtil.getBinding(context));
+                // SCIPIO: 2019-02-05: Added support for inline groovy script body:
+                //   <event type="groovy"><script><![CDATA[...]]></script></event>
+                Class<?> scriptClass;
+                if (event.getScriptBody() != null) {
+                    if (event.getCompiledScript() == null) {
+                        scriptClass = GroovyUtil.GroovyLangVariant.STANDARD.getCommonGroovyClassLoader().parseClass(event.getScriptBody());
+                        event.setCompiledScript(scriptClass);
+                    }
+                    scriptClass = (Class<?>) event.getCompiledScript();  
+                } else {
+                    scriptClass = GroovyUtil.getScriptClassFromLocation(event.path);
+                }
+                Script script = InvokerHelper.createScript(scriptClass, GroovyUtil.getBinding(context));
                 if (UtilValidate.isEmpty(event.invoke)) {
                     result = script.run();
                 } else {

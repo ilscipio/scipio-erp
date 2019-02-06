@@ -1767,6 +1767,8 @@ public class ConfigXMLReader {
         public final Boolean transaction; // = null; // SCIPIO: A generic transaction flag
         public final String abortTransaction; // = ""; // SCIPIO: Allow aborting transaction
         protected final List<ValueExpr> synchronizedExprList; // SCIPIO
+        protected final String scriptBody; // SCIPIO
+        protected Object compiledScript; // SCIPIO: Optimization
         
         public Event(Element eventElement) {
             this.type = eventElement.getAttribute("type");
@@ -1806,6 +1808,9 @@ public class ConfigXMLReader {
                 }
             }
             this.synchronizedExprList = synchronizedExprList;
+
+            // SCIPIO: Script body
+            this.scriptBody = UtilXml.childElementValue(eventElement, "script", null);
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction) {
@@ -1819,6 +1824,7 @@ public class ConfigXMLReader {
             this.transactionTimeout = DEFAULT_TRANSACTION_TIMEOUT;
             this.metrics = null;
             this.synchronizedExprList = null;
+            this.scriptBody = null;
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction, Metrics metrics,
@@ -1833,6 +1839,7 @@ public class ConfigXMLReader {
             this.transactionTimeout = DEFAULT_TRANSACTION_TIMEOUT;
             this.metrics = null;
             this.synchronizedExprList = null;
+            this.scriptBody = null;
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
@@ -1879,6 +1886,18 @@ public class ConfigXMLReader {
                 objList.add(expr.getValue(request, response));
             }
             return objList;
+        }
+
+        public String getScriptBody() {
+            return scriptBody;
+        }
+        
+        public Object getCompiledScript() {
+            return compiledScript;
+        }
+
+        public void setCompiledScript(Object compiledScript) { // NOTE: no need for thread safety on this field
+            this.compiledScript = compiledScript;
         }
     }
 

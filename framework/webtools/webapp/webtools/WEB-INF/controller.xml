@@ -657,6 +657,17 @@ code package.
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="runExampleCtrlInlineGroovy"><!-- SCIPIO: new -->
+        <security https="true" auth="true"/>
+        <event type="groovy"><script><![CDATA[
+            import org.ofbiz.base.util.*;
+            Debug.logInfo("runExampleCtrlInlineGroovy: Hello from inline groovy event!", "runExampleCtrlInlineGroovy.groovy");
+            request.setAttribute("_EVENT_MESSAGE_", "runExampleCtrlInlineGroovy executed successfully!");
+            return "success";
+        ]]></script></event>
+        <response name="success" type="request" value="WebtoolsLayoutDemo"/>
+        <response name="error" type="request" value="WebtoolsLayoutDemo"/>
+    </request-map>
     
     <!-- SCIPIO: EntityUtilityServices -->
     <request-map uri="EntityUtilityServices">

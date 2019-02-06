@@ -669,6 +669,16 @@ under the License.
             <xs:sequence>
                 <xs:element minOccurs="0" ref="metric"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="synchronized"/><!-- SCIPIO: 2018-11-19 -->
+                <xs:element minOccurs="0" maxOccurs="1" name="script"><!-- SCIPIO: 2019-02-05 -->
+                    <xs:annotation>
+                        <xs:documentation>Inline script body (SCIPIO), alternative to script location.
+                            NOTE: 2019-02-05: Currently, this is only supported for the "groovy" event type.</xs:documentation>
+                        <!-- TODO?: This currently depends on the "groovy" event handler, but ideally we should also
+                            have a dedicated generalized script handler, e.g.: `<event type="script"><script lang="groovy">...`
+                            instead of only supporting groovy via: `<event type="groovy"><script>...` -->
+                    </xs:annotation>
+                    <xs:complexType mixed="true"/>
+                </xs:element>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.event"/>
         </xs:complexType>

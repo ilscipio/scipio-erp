@@ -42,12 +42,12 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 
 /**
- * CatalogUrlDirective - Freemarker Template Directive for generating URLs suitable for use by the CatalogUrlServlet
+ * Catalog URL Alt Transform.
  * <p>
- * Accepts the following arguments (see CatalogUrlServlet for their definition):
+ * Accepts the following arguments (see CatalogUrlFilter for their definition):
  * <ul>
  * <li>productId</li>
- * <li>currentCategoryId</li>
+ * <li>productCategoryId</li>
  * <li>previousCategoryId</li>
  * </ul>
  * <p>
@@ -74,31 +74,39 @@ import freemarker.template.TemplateModel;
  * <ul>
  * <li>params (TODO: support map of parameters)</li>
  * </ul>
+ * <p>
+ * SCIPIO: 2019-02-05: Reimplemented as TemplateDirectiveModel (was previously: OfbizCatalogAltUrlTransform)
  */
-public class CatalogUrlDirective implements TemplateDirectiveModel {
+public class CatalogAltUrlDirective implements TemplateDirectiveModel {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @Override
-    public void execute(Environment env, @SuppressWarnings("rawtypes") Map args, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
-        final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
+    public void execute(Environment env, @SuppressWarnings("rawtypes") Map args, TemplateModel[] loopVars, TemplateDirectiveBody body)
+            throws TemplateException, IOException {
+        String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
         boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
-        final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
+        boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
         boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
-        final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
+        Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
 
-        String productId = TransformUtil.getStringArg(args, "productId", rawParams);
-        String currentCategoryId = TransformUtil.getStringArg(args, "currentCategoryId", rawParams);
-        String previousCategoryId = TransformUtil.getStringArg(args, "previousCategoryId", rawParams);
-
-        HttpServletRequest request = ContextFtlUtil.getRequest(env);
+        HttpServletRequest request = ContextFtlUtil.getRequest(env); // SCIPIO
         RenderEnvType renderEnvType = ContextFtlUtil.getRenderEnvType(env, request);
 
-        Boolean secure = TransformUtil.getBooleanArg(args, "secure");
-        Boolean encode = TransformUtil.getBooleanArg(args, "encode");
-        Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
+        final Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
+        final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: changed from boolean to Boolean
+        final Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: new flag
+
+        String previousCategoryId = TransformUtil.getStringArg(args, "previousCategoryId", rawParams);
+        String productCategoryId = TransformUtil.getStringArg(args, "productCategoryId", rawParams);
+        String productId = TransformUtil.getStringArg(args, "productId", rawParams);
+
+        String viewSize = TransformUtil.getStringArg(args, "viewSize", rawParams);
+        String viewIndex = TransformUtil.getStringArg(args, "viewIndex", rawParams);
+        String viewSort = TransformUtil.getStringArg(args, "viewSort", rawParams);
+        String searchString = TransformUtil.getStringArg(args, "searchString", rawParams);
 
         Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
-        Locale locale = TransformUtil.getOfbizLocaleArgOrCurrent(args, "locale", env); // SCIPIO: 2018-08-02: get proper locale
+        Locale locale = TransformUtil.getOfbizLocaleArgOrCurrent(args, "locale", env); // SCIPIO: 2017-11-06: new Locale arg + context reading
 
         String url;
         try {
@@ -106,16 +114,16 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
                 FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams),
                         TransformUtil.getStringArg(args, "prefix", rawParams), request, null);
                 HttpServletResponse response = ContextFtlUtil.getResponse(env);
-                url = CatalogUrlServlet.makeCatalogLink(request, response, locale, productId, currentCategoryId, previousCategoryId, urlParams,
-                        targetWebappInfo, fullPath, secure, encode);
-            } else { // SCIPIO: New: Handle non-request cases
+                url = CatalogUrlFilter.makeCatalogAltLink(request, response, locale, productCategoryId, productId, previousCategoryId, urlParams, targetWebappInfo,
+                        fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
+            } else {
                 Map<String, Object> context = ContextFtlUtil.getContext(env);
                 Delegator delegator = ContextFtlUtil.getDelegator(request, env);
                 LocalDispatcher dispatcher = ContextFtlUtil.getDispatcher(env);
                 FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams),
                         TransformUtil.getStringArg(args, "prefix", rawParams), null, context);
-                url = CatalogUrlServlet.makeCatalogLink(context, delegator, dispatcher, locale, productId,
-                        currentCategoryId, previousCategoryId, urlParams, targetWebappInfo, fullPath, secure, encode);
+                url = CatalogUrlFilter.makeCatalogAltLink(context, delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId,
+                        urlParams, targetWebappInfo, fullPath, secure, viewSize, viewIndex, viewSort, searchString);
             }
             if (url != null) {
                 url = UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env);

@@ -235,7 +235,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       dateType controls the type of data sent to the server; dateDisplayType only controls what's displayed to user. 
       (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->
   <#if !dateDisplayFormat?has_content> 
-    <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#elseif dateDisplayType == "month">yyyy-MM<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+      <#local dateDisplayFormat = getFieldDateDispFmtStd(dateDisplayType)>
   </#if>
   <#-- don't do this here, let script macro handle the picker-specific stuff
   <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
@@ -350,6 +350,22 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <@field_datetime_markup_script inputId=inputId inputName=inputName displayInputId=displayInputId displayInputName=displayInputName 
     dateType=dateType dateDisplayType=dateDisplayType required=required attribs=toSimpleMap(attribs) origArgs=origArgs passArgs=passArgs />
 </#macro>
+
+<#function getFieldDateDispFmtStd dateDisplayType>
+  <#if dateDisplayType == "date">
+    <#return convertFieldDateDispFmtToStd((field_datetime_disptypefmts.date)!"YYYY-MM-DD")>
+  <#elseif dateDisplayType == "time">
+    <#return convertFieldDateDispFmtToStd((field_datetime_disptypefmts.time)!"HH:mm:ss.SSS")>
+  <#elseif dateDisplayType == "month">
+    <#return convertFieldDateDispFmtToStd((field_datetime_disptypefmts.month)!"YYYY-MM")>
+  <#else>
+    <#return convertFieldDateDispFmtToStd((field_datetime_disptypefmts.timestamp)!"YYYY-MM-DD HH:mm:ss.SSS")>
+  </#if>
+</#function>
+
+<#function convertFieldDateDispFmtToStd fmt><#-- Converts from field_datetime_disptypefmts to legacy ofbiz legacy format -->
+  <#return fmt?replace("YYYY", "yyyy")?replace("DD", "dd")>
+</#function>
 
 <#-- Internal/hidden datetime date formats - should not be changed -->
 <#assign field_datetime_typefmts = {
@@ -487,14 +503,17 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_datefind_markup_widget id="" class="" style="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" dateDisplayType=""
+<#macro field_datefind_markup_widget id="" class="" style="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" dateDisplayType="" dateDisplayFormat=""
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleClass="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" 
     title="" tooltip="" inlineLabel=false inlinePostfix=false origLabel=origLabel required=false attribs={} origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.field_datefind_default!"")>
   <#local selectClass = styles.field_datefind_select_default!"">
   <#-- NOTE: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
-  <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+  <#-- Reuse the template-derived formats -->
+  <#if !dateDisplayFormat?has_content>
+      <#local dateDisplayFormat = getFieldDateDispFmtStd(dateDisplayType)>
+  </#if>
   <#local displayInputId = "">
   <#local inputId = "">
   <#if id?has_content>

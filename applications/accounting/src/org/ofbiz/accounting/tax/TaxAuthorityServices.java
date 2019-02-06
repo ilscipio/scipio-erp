@@ -529,7 +529,8 @@ public class TaxAuthorityServices {
                 GenericValue taxAdjValue = delegator.makeValue("OrderAdjustment");
 
                 // SCIPIO: Added fix for VAT calculation
-                if ((productPrice != null && "Y".equals(productPrice.getString("taxInPrice"))) || "Y".equals(productStore.getString("showPricesWithVatTax"))) {
+                // TODO: REVIEW: productStore may be null here, happens with purchase orders - what then?
+                if ((productPrice != null && "Y".equals(productPrice.getString("taxInPrice"))) || (productStore != null && "Y".equals(productStore.getString("showPricesWithVatTax")))) {
                     // tax is in the price already, so we want the adjustment to be a VAT_TAX adjustment to be subtracted instead of a SALES_TAX adjustment to be added
                     taxAdjValue.set("orderAdjustmentTypeId", "VAT_TAX");
 

@@ -635,7 +635,7 @@ code package.
     
     <request-map uri="WebtoolsLayoutDemo">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="WebtoolsLayoutDemo"/>
+        <response name="success" type="request-redirect" value="LayoutDemo"/>
     </request-map>
     <request-map uri="LayoutDemo"><!-- SCIPIO: cleaner URL -->
         <security https="true" auth="true"/>

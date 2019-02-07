@@ -270,13 +270,16 @@ public abstract class PropertyMessage implements Serializable {
         return new DynamicPropertyMessage(resource, propertyName, null, null, null);
     }
 
-    /**
-     * Makes a localized property message, with delayed evaluation.
-     * Same as {@link #make(String, String, String, String, Map)} except the message variables can be passed
-     * as inline vararg pairs to the method.
-     */
+    public static PropertyMessage makeWithVarsFull(String resource, String propertyName, String prefix, String suffix, Map<String, ?> msgVars) {
+        return new DynamicPropertyMessage(resource, propertyName, prefix, suffix, msgVars);
+    }
+
     public static PropertyMessage makeWithVarsFull(String resource, String propertyName, String prefix, String suffix, Object... msgVars) {
         return new DynamicPropertyMessage(resource, propertyName, prefix, suffix, UtilMisc.toMap(msgVars));
+    }
+
+    public static PropertyMessage makeWithVars(String resource, String propertyName, Map<String, ?> msgVars) {
+        return new DynamicPropertyMessage(resource, propertyName, null, null, msgVars);
     }
 
     public static PropertyMessage makeWithVars(String resource, String propertyName, Object... msgVars) {

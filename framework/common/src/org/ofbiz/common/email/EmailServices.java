@@ -50,13 +50,11 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.MimeConstants;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.UtilGenerics;
@@ -77,7 +75,6 @@ import org.ofbiz.webapp.view.ApacheFopWorker;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
-import org.xml.sax.SAXException;
 
 import com.sun.mail.smtp.SMTPAddressFailedException;
 
@@ -509,7 +506,9 @@ public class EmailServices {
         if (bodyScreenUri != null) {
             try {
                 screens.render(bodyScreenUri);
-            } catch (GeneralException | IOException | SAXException | ParserConfigurationException e) {
+            // SCIPIO: let's be more conservative
+            //} catch (GeneralException | IOException | SAXException | ParserConfigurationException e) {
+            } catch(Exception e) {
                 Debug.logError(e, "Error rendering screen for email: " + e.toString(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonEmailSendRenderingScreenEmailError", UtilMisc.toMap("errorString", e.toString()), locale));
             }

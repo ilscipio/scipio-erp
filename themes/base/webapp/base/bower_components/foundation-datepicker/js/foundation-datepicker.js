@@ -475,8 +475,8 @@
                 i = 0;
             while (i < 12) {
                  // Scipio ERP fix
-                        // html += '<span class="month">' + dates[this.language].monthsShort[i++] + '</span>';
-                  html+=$('<span>').addClass('month').text(dates[this.language].monthsShort[i++]);
+                  html += '<span class="month">' + dates[this.language].monthsShort[i++] + '</span>';
+                 // html+=$('<span>').addClass('month').text(dates[this.language].monthsShort[i++]);
             }
             this.picker.find('.datepicker-months td').html(html);
         },

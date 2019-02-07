@@ -10,7 +10,7 @@ code package.
             <input type="hidden" name="finalizeMode" value="term" />
         </form>
         <@row>
-            <@cell columns=6>
+            <@cell columns=12>
                         <#if orderTerms?has_content && parameters.createNew?default('') != 'Y'>
                             <@table type="data-list" autoAltRows=true>
                               <@thead>

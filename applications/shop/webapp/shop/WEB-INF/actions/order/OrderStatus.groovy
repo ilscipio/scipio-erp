@@ -27,7 +27,7 @@ import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 
-
+userLogin = context.userLogin; // SCIPIO: Make sure variable exists
 
 orderId = parameters.orderId;
 orderHeader = null;

@@ -5,7 +5,7 @@ code package.
 -->
 
 
-<#assign acctgTransAndEntries = dispatcher.runSync("getAssociatedAcctgTransEntriesWithFinAccountTrans", {"finAccountTransId":finAccountTrans.finAccountTransId, "userLogin":userLogin})/>
+<#assign acctgTransAndEntries = runService("getAssociatedAcctgTransEntriesWithFinAccountTrans", {"finAccountTransId":finAccountTrans.finAccountTransId, "userLogin":userLogin!})/>
 <#assign acctgTransAndEntries = acctgTransAndEntries.acctgTransAndEntries>
 <@table type="data-list">
     <@thead>

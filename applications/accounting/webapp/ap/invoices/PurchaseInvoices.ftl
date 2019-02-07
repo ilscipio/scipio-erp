@@ -174,7 +174,7 @@ function runAction() {
       </@tr>
       </@thead>
       <#list invoices as invoice>
-        <#assign invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", {"invoiceId":invoice.invoiceId, "userLogin":userLogin})/>
+        <#assign invoicePaymentInfoList = runService("getInvoicePaymentInfoList", {"invoiceId":invoice.invoiceId, "userLogin":userLogin})/>
         <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)!>
           <#assign statusItem = invoice.getRelatedOne("StatusItem", true)>
           <@tr valign="middle">

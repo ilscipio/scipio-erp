@@ -147,7 +147,7 @@ code package.
       </@thead>
       <@tbody>
         <#list invoiceList as invoice>
-          <#assign invoicePaymentInfoList = dispatcher.runSync("getInvoicePaymentInfoList", {"invoiceId":invoice.invoiceId, "userLogin":userLogin})/>
+          <#assign invoicePaymentInfoList = runService("getInvoicePaymentInfoList", {"invoiceId":invoice.invoiceId, "userLogin":userLogin})/>
           <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)!>
             <@tr valign="middle">
               <@td><a class="${styles.link_nav_info_id!}" href="<@pageUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@pageUrl>">${invoice.get("invoiceId")}</a></@td>

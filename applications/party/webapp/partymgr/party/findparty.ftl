@@ -248,7 +248,7 @@ code package.
         <@td></@td><@td></@td>
       </#if>
         <@td>
-            <#assign mainRole = dispatcher.runSync("getPartyMainRole", {"partyId": partyRow.partyId, "userLogin": userLogin})/>
+            <#assign mainRole = runService("getPartyMainRole", {"partyId": partyRow.partyId, "userLogin": userLogin})/>
             ${mainRole.description!}
         </@td>
         <#assign partyDate = delegator.findOne("Party", {"partyId":partyRow.partyId}, true)/>

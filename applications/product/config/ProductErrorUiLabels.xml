@@ -804,6 +804,12 @@
         <value xml:lang="zh">产品特征类型标识必须只包含字符、下划线和数字。请重新输入</value>
         <value xml:lang="zh-TW">產品特色類型識別必須只包含字元、下劃線和數字.請重新輸入</value>
     </property>
+    <property key="ProductFeatureTypeAndIdCodeNotFound">
+        <value xml:lang="de">Die Kombination zwischen Produkt-Feature-Typ-ID und Code-ID wurde nicht gefunden.</value>
+        <value xml:lang="en">The combination between Product Feature Type Id and Code Id could not be found.</value>
+        <value xml:lang="fr">La combinaison entre l'identifiant de type de fonctionnalité du produit et l'identifiant de code est introuvable.</value>
+        <value xml:lang="it">Non è stato possibile trovare la combinazione tra ID tipo di prodotto e ID codice.</value>
+    </property>
     <property key="ProductFieldEmpty">
         <value xml:lang="de">Bitte füllen Sie zunächst das Produktfeld</value>
         <value xml:lang="en">Please, fill the product field before</value>

@@ -1231,4 +1231,23 @@ public class ProductEvents {
         }
         return "success";
     }
+    
+    public static String findProductFeatureTypesAndCodes(HttpServletRequest request, HttpServletResponse response) {
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        String productFeatureTypeId = request.getParameter("productFeatureTypeId");
+
+        if (UtilValidate.isNotEmpty(productFeatureTypeId)) {
+            try {
+                List<EntityCondition> condition = UtilMisc.newList();
+                condition.add(EntityCondition.makeCondition("productFeatureTypeId", EntityOperator.EQUALS, productFeatureTypeId));
+                condition.add(EntityCondition.makeCondition("idCode", EntityOperator.NOT_EQUAL, null));
+                
+                List<GenericValue> productFeatureCodes = EntityQuery.use(delegator).from("ProductFeature").where(condition).queryList();
+                request.setAttribute("productFeatureCodes", productFeatureCodes);
+            } catch (GenericEntityException e) {
+                Debug.logError(e.getMessage(), module);
+            }
+        }
+        return "success";
+    }
 }

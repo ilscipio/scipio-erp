@@ -141,14 +141,40 @@ code package.
     <form method="post" action="<@pageUrl>ApplyFeatureToProductFromTypeAndCode</@pageUrl>" name="addFeatureByTypeIdCode">
       <input type="hidden" name="productId" value="${productId}"/>
       
-      <@field type="select" label=uiLabelMap.ProductFeatureType size=1 name="productFeatureTypeId">
-      <#list productFeatureTypes as productFeatureType>
-        <option value="${(productFeatureType.productFeatureTypeId)!}">${(productFeatureType.get("description",locale))!} </option>
-      </#list>
-      </@field>
+      <@script>
+        $(window).load(function() {
+            $("select[name=productFeatureTypeId]").change(function() { 
+                $.ajax ({
+                    url: '<@pageUrl>FindProductFeatureTypesAndCodes</@pageUrl>',
+                    type: "POST",
+                    async: true,
+                    data: {"productFeatureTypeId" : this.value},
+                    success: function(data) {
+                        if (data.productFeatureCodes) {
+                            $('select[name=idCode]').html('');
+                            for (code in data.productFeatureCodes) {
+                                productFeature = data.productFeatureCodes[code];
+                                $('select[name=idCode]').append('<option value="' + productFeature.idCode + '">' + productFeature.idCode + ' [' + productFeature.description + ']</option>')
+                            }
+                        }
+                    }
+                });
+            });
+        });
+      </@script>
       
-      <@field type="input" label=uiLabelMap.CommonIdCode size=10 name="idCode" value="" />
-    
+      <@field type="select" label=uiLabelMap.ProductFeatureType size=1 name="productFeatureTypeId">
+          <option value="">--</option>
+          <#list productFeatureTypes as productFeatureType>
+            <option value="${(productFeatureType.productFeatureTypeId)!}">${(productFeatureType.get("description",locale))!} </option>
+          </#list>
+      </@field>
+
+      <#-- @field type="input" label=uiLabelMap.CommonIdCode size=10 name="idCode" value="" / -->
+      <@field type="select" label=uiLabelMap.CommonIdCode name="idCode">
+        <option value="">--</option>
+      </@field>
+
       <@field type="select" label=uiLabelMap.ProductFeatureApplicationType size=1 name="productFeatureApplTypeId">
       <#list productFeatureApplTypes as productFeatureApplType>
         <option value="${(productFeatureApplType.productFeatureApplTypeId)!}"

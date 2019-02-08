@@ -1366,6 +1366,13 @@ code package.
         <response name="success" type="view" value="EditProductFeatures"/>
         <response name="error" type="view" value="EditProductFeatures"/>
     </request-map>
+    <!-- SCIPIO (2019-08-02): Returns the feature codes available for a given ProductFeatureType in json format  -->
+    <request-map uri="FindProductFeatureTypesAndCodes">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="findProductFeatureTypesAndCodes"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     <request-map uri="createProductFeatureApplAttr">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createProductFeatureApplAttr"/>

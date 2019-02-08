@@ -12,6 +12,8 @@ code package.
         <set field="callingMethodName" value="applyFeatureToProductFromTypeAndCode"/>
         <set field="checkAction" value="CREATE"/>
         <call-simple-method method-name="checkProductRelatedPermission" xml-resource="component://product/script/org/ofbiz/product/product/ProductServices.xml"/>
+
+        
         <check-errors/>
 
         <!-- find the ProductFeatures by type and id code -->
@@ -19,6 +21,14 @@ code package.
             <field-map field-name="productFeatureTypeId" from-field="parameters.productFeatureTypeId"/>
             <field-map field-name="idCode" from-field="parameters.idCode"/>
         </entity-and>
+
+        <!-- <log message="productFeatureTypeId =======> ${parameters.productFeatureTypeId}" level="always"/>
+        <log message="productFeatures =======> ${productFeatures}" level="always"/> -->
+        <if-empty field="productFeatures">
+            <add-error><fail-property resource="ProductUiLabels" property="ProductFeatureTypeAndIdCodeNotFound"/></add-error>
+        </if-empty> 
+        
+        <check-errors/>
 
         <iterate list="productFeatures" entry="productFeature">
             <set-service-fields service-name="applyFeatureToProduct" map="parameters" to-map="applyFeatureContext"/>

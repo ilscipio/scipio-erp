@@ -5144,9 +5144,10 @@ As with other advanced functions, this function can take either 1-3 positional p
 OR a single args map.
 
   * Usage Examples *   
-    ${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}).fullName)!"ERROR"}
-    ${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}, true).fullName)!"ERROR"}
-    ${(runService({"name":"getPartyNameForDate", "ctx":{"partyId":userLogin.partyId!}}).fullName)!"ERROR"}
+    ${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}).fullName)!}
+    ${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}, true).fullName)!}
+    ${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}, true, "null").fullName)!"ERROR"}
+    ${(runService({"name":"getPartyNameForDate", "ctx":{"partyId":userLogin.partyId!}, "newTrans":true, "exMode":"error"}).fullName)!}
 
   * Parameters *
     name/args               = (required) The service name to invoke OR a map of arguments
@@ -5162,23 +5163,47 @@ OR a single args map.
                               When services return errors during screen renders, the screen render transaction is
                               aborted; setting this parameter to {{{true}}} prevents service errors from affecting
                               the screen render.
+                              NOTE: You may often want to use {{{newTrans=true}}} if you need to prevent
+                                  errors from interfering with renderer. For legacy/compatibility/performance reasons,
+                                  the {{{newTrans}}} default must remain false.
+    exMode                  = (exmap|error|empty|null|throw, default: exmap) What to do on exceptions
+                              (This is parameter index 3 ({{{exMode}}}) when using positional arguments)
+                              * {{{exmap}}}: Returns a map containing a  "errorEx" key containing the exception
+                                             and a "errorMessageEx" key containing the exception message.
+                                             NOTE: Does NOT contain a "responseMessage" or "errorMessage[List]" field.
+                              * {{{error}}}: Same as {{{exmap}}} but also converts the exception to a regular service error,
+                                             with the exception message for the "errorMessage" key and "error" for "responseMessage" key.
+                                             NOTE: This is ''not'' recommended to use because exception messages are rarely
+                                                 appropriate for output to users as-is, and in many UI cases it may even be a security risk
+                                                 to treat them as equivalent!
+                              * {{{empty}}}: Returns an empty map
+                              * {{{null}}} (string): Returns null/missing/void; for use with the missing value operator.
+                              * {{{throw}}}: Throws the exception, as a FreeMarker TemplateModelException
+                                             NOTE: This is generally discouraged; if you need to throw exceptions,
+                                                 better to do it from a groovy script.
+                              In addition, you may add one of the following suffixes:
+                              * {{{-nolog}}}: Don't log the error ourselves, or nothing more than what the service engine normally logs.
+                              NOTE: The reason the default is exmap (rather than the more convenient {{{errorMap}}})
+                                  is that it is not safe to assume exception messages and service error
+                                  messages are both displayable to users - exception messages are generally
+                                  completely inappropriate for display.
+                              NOTE: You may often want to use {{{newTrans=true}}} if you need to prevent
+                                  errors from interfering with renderer. For legacy/compatibility/performance reasons,
+                                  the {{{newTrans}}} default must remain false.
+                              NOTE: This ''only'' concerns literal service exceptions (ServiceValidationException, GenericServiceException, etc.);
+                                  it does NOT handle regular service errors or failures, which are simply returned in a map result, as usual for services.
     inclEnvCtx              = ((boolean), default: true) Whether to automatically include the fields
                               {{{userLogin}}}, {{{locale}}} and {{{timeZone}}} from the environment {{{context}}}
                               (the screen render map stack).
-    throwEx                 = ((boolean), default: false) Whether to throw exceptions on service exceptions.
-                              NOTE: If this is false and an exception occurs, this function will return
-                              void (no result); so unless you set this to true, you '''MUST''' accompany
-                              {{{runService}}} cals with a missing value operator, e.g.:
-                                <#assign runService("myService", {"partyId":userLogin.partyId!})!{}>
-                                
+                                            
   * Return Value *
     The service result OR void/missing if the service threw an exception.
-                                         
+                        
   * History *
     Added for 1.14.5.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function runService args ctx newTrans>
+<#function runService args ctx newTrans exMode>
 </#function>
 -->
 

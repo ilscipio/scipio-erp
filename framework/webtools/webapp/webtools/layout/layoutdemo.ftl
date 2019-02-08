@@ -2240,10 +2240,19 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     </@section>
 
     <@section title="runService (ftl)">
+        <p><em>Note: The following examples are only failing if "ERROR" is printed (other errors are intentional)
+            or a stack trace is printed.</em></p>
           <ul>
             <li>${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}).fullName)!"ERROR"}</li>
             <li>${(runService("getPartyNameForDate", {"partyId":userLogin.partyId!}, true).fullName)!"ERROR"}</li>
             <li>${(runService({"name":"getPartyNameForDate", "ctx":{"partyId":userLogin.partyId!}}).fullName)!"ERROR"}</li>
+          <#if allowErrors>
+            <li>${(runService("getPartyNameForDate", {"invalidParam":"invalidValue"}, true).errorMessageEx)!"ERROR"}</li>
+            <li>${(runService("getPartyNameForDate", {"invalidParam":"invalidValue"}, true, "null-nolog").fullName)!"(exception triggered (good))"}</li>
+            <li>${(runService({"name":"getPartyNameForDate", "ctx":{"invalidParam":"invalidValue"}, "newTrans":true, "exMode":"error-nolog"}).errorMessage)!"ERROR"}</li>
+            <li>${(runService({"name":"getPartyNameForDate", "ctx":{"invalidParam":"invalidValue"}, "newTrans":true, "exMode":"null-nolog"}).fullName)!"(exception triggered (good))"}</li>
+            <li>${(runService({"name":"getPartyNameForDate", "ctx":{"invalidParam":"invalidValue"}, "newTrans":true, "exMode":"empty-nolog"}).test1)!"(exception triggered (good))"}</li>
+          </#if>
           </ul>
     </@section>
 </@section>

@@ -32,6 +32,7 @@ code package.
     <screen name="WebtoolsLayoutDemoActions">
         <actions>
             <set field="debugMode" from-field="parameters.debugMode" type="Boolean" default-value="false" />
+            <set field="allowErrors" from-field="parameters.allowErrors" type="Boolean" default-value="false" />
             <if>
                 <condition><if-true field="parameters.debugMode"/></condition><!-- NOTE: if-true succeeds with either proper Boolean or string of boolean, "true" -->
                 <then>

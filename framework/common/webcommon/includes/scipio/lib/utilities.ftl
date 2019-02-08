@@ -5166,8 +5166,11 @@ OR a single args map.
                               NOTE: You may often want to use {{{newTrans=true}}} if you need to prevent
                                   errors from interfering with renderer. For legacy/compatibility/performance reasons,
                                   the {{{newTrans}}} default must remain false.
-    exMode                  = (exmap|error|empty|null|throw, default: exmap) What to do on exceptions
+    exMode                  = (exmap|error|empty|null|throw, default: exmap) What to do on exceptions (''except'' for validation exceptions)
                               (This is parameter index 3 ({{{exMode}}}) when using positional arguments)
+                              Any of the following values may be set, which will apply the specified behavior for all
+                              excepts '''except''' for service validation exceptions ({{{org.ofbiz.service.ServiceValidationException}}}), 
+                              which are always thrown:
                               * {{{exmap}}}: Returns a map containing a  "errorEx" key containing the exception
                                              and a "errorMessageEx" key containing the exception message.
                                              NOTE: Does NOT contain a "responseMessage" or "errorMessage[List]" field.

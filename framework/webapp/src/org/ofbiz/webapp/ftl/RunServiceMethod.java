@@ -10,6 +10,7 @@ import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.ServiceValidationException;
 
 import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
@@ -41,6 +42,8 @@ public class RunServiceMethod implements TemplateMethodModelEx {
         } else {
             try {
                 serviceCtx = dispatcher.getDispatchContext().makeValidContext(serviceName, ModelService.IN_PARAM, serviceCtx);
+            } catch(ServiceValidationException e) {
+                throw new TemplateModelException(e); // Service validation errors are always programming errors, so rethrow
             } catch (Exception e) {
                 String exMode = TransformUtil.getStringNonEscapingArg(args, "exMode", 3, "");
                 if (!exMode.endsWith("-nolog")) {
@@ -60,6 +63,8 @@ public class RunServiceMethod implements TemplateMethodModelEx {
         boolean newTrans = Boolean.TRUE.equals(TransformUtil.getBooleanArg(args, "newTrans", 2));
         try {
             return dispatcher.runSync(serviceName, serviceCtx, newTrans);
+        } catch(ServiceValidationException e) {
+            throw new TemplateModelException(e); // Service validation errors are always programming errors, so rethrow
         } catch (Exception e) {
             String exMode = TransformUtil.getStringNonEscapingArg(args, "exMode", 3, "");
             if (!exMode.endsWith("-nolog")) {

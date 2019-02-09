@@ -50,9 +50,12 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.ScipioFtlWrappers;
 import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
@@ -417,14 +420,70 @@ public interface CmsRenderTemplate extends Serializable {
             if (protectScope) {
                 renderArgs.getContext().push();
             }
+            
+            boolean useTransaction = true; // TODO
+            int transactionTimeout = -1; // TODO
+            FlexibleStringExpander transactionTimeoutExdr = FlexibleStringExpander.getEmptyExpr(); // TODO
+            
+            /* TODO: the following is insufficient
+            if (parameters != null) {
+                String transactionTimeoutPar = parameters.get("TRANSACTION_TIMEOUT");
+                if (transactionTimeoutPar != null) {
+                    try {
+                        transactionTimeout = Integer.parseInt(transactionTimeoutPar);
+                    } catch (NumberFormatException nfe) { 
+                        Debug.logWarning("Cms: TRANSACTION_TIMEOUT parameter for screen [" + this.sourceLocation
+                            + "#" + getName() + "] is invalid and it will be ignored: " + nfe.toString(), module);
+                    }
+                }
+            }
+            */
+            
+            if (transactionTimeout < 0 && !transactionTimeoutExdr.isEmpty()) {
+                String transactionTimeoutStr = transactionTimeoutExdr.expandString(renderArgs.getContext());
+                if (UtilValidate.isNotEmpty(transactionTimeoutStr)) {
+                    try {
+                        transactionTimeout = Integer.parseInt(transactionTimeoutStr);
+                    } catch (NumberFormatException e) {
+                        Debug.logWarning(e, "Cms: Could not parse transaction-timeout value: original=["
+                                + transactionTimeoutExdr + "], expanded=[" + transactionTimeoutStr + "]", module);
+                    }
+                }
+            }
+            
+            boolean beganTransaction = false;
             try {
+                if (useTransaction) {
+                    if (transactionTimeout < 0) {
+                        beganTransaction = TransactionUtil.begin();
+                    }
+                    if (transactionTimeout > 0) {
+                        beganTransaction = TransactionUtil.begin(transactionTimeout);
+                    }
+                }
+
                 // Populate context
                 populateRenderContext(renderArgs);
 
                 // Render template
                 renderTemplate(renderArgs.getOut(), renderArgs.getContext());
 
+                TransactionUtil.commit(beganTransaction);
                 return null;
+            } catch (Exception e) { // Implied: | CmsException e)
+                String errMsg = "Error rendering CMS template: " + e.toString();
+                try {
+                    TransactionUtil.rollback(beganTransaction, errMsg, e);
+                } catch (GenericEntityException e2) {
+                    Debug.logError("Cms: Could not rollback transaction: " + e2.toString(), module);
+                }
+                if (e instanceof CmsException) {
+                    throw (CmsException) e;
+                } else if (e instanceof RuntimeException) {
+                    throw (RuntimeException) e; // TODO: REVIEW: Should this get wrapped in a CmsException or not?
+                } else {
+                    throw new CmsException(e);
+                }
             } finally {
                 if (protectScope) {
                     renderArgs.getContext().pop();

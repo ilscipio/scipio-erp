@@ -2281,7 +2281,6 @@ public class ProductionRunServices {
                         workEffortPartyAssignment.set("thruDate", UtilDateTime.nowAsString());
                         workEffortPartyAssignment.store();
                     }
-                    Debug.log("workEffortPartyAssignment ======> " + workEffortPartyAssignment);
                 }
                 if (!currentWorkEffortPartyAssignment.getString("partyId").equals(partyId)
                         || !currentWorkEffortPartyAssignment.getString("roleTypeId").equals(userEmployeeRole.getString("roleTypeId"))) {

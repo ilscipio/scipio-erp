@@ -106,7 +106,6 @@ public final class UtilHttp {
 
     /**
      * Create a combined map from servlet context, session, attributes and parameters
-     * @return The resulting Map
      */
     public static Map<String, Object> getCombinedMap(HttpServletRequest request) {
         return getCombinedMap(request, null);
@@ -115,7 +114,6 @@ public final class UtilHttp {
     /**
      * Create a combined map from servlet context, session, attributes and parameters
      * -- this method will only use the skip names for session and servlet context attributes.
-     * @return The resulting Map
      */
     public static Map<String, Object> getCombinedMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
         Map<String, Object> combinedMap = new HashMap<>();
@@ -127,12 +125,102 @@ public final class UtilHttp {
     }
 
     /**
+     * SCIPIO: Checks the following in the given order and returns the first non-null named attribute or parameter:
+     * request attributes -> session attributes -> servlet context attributes -> request parameters.
+     * Uses same combining rules as {@link #getCombinedMap(HttpServletRequest)}.
+     */
+    public static Object getCombinedAttrParam(HttpServletRequest request, String name) {
+        Object value = getAllAttr(request, name);
+        if (value != null) {
+            return value;
+        }
+        return getRequestParam(request, name);
+    }
+    
+    /**
+     * SCIPIO: Create a combined map from request attributes and request parameters and session attributes, with
+     * request attributes having priority, followed by request parameters, and finally session attributes.
+     */
+    public static Map<String, Object> getRequestSessionAttrParamMap(HttpServletRequest request) {
+        return getRequestSessionAttrParamMap(request, null);
+    }
+
+    /**
+     * SCIPIO: Create a combined map from request attributes and request parameters and session attributes, with
+     * request attributes having priority, followed by request parameters, and finally session attributes
+     * -- this method will only use the skip names for session and servlet context attributes.
+     */
+    public static Map<String, Object> getRequestSessionAttrParamMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
+        Map<String, Object> combinedMap = new HashMap<>();
+        combinedMap.putAll(getSessionMap(request, namesToSkip));        // session overrides application
+        combinedMap.putAll(getParameterMap(request));                   // parameters override nothing
+        combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
+        return combinedMap;
+    }
+
+    /**
+     * SCIPIO: Checks the following in the given order and returns the first non-null named attribute:
+     * request attributes -> session attributes -> servlet context attributes.
+     * Uses same combining rules as {@link #getRequestSessionAttrParamMap(HttpServletRequest)}.
+     */
+    public static Object getRequestSessionAttrParam(HttpServletRequest request, String name) {
+        Object value = getRequestAttr(request, name);
+        if (value != null) {
+            return value;
+        }
+        value = getRequestParam(request, name);
+        if (value != null) {
+            return value;
+        }
+        return getSessionAttr(request, name);
+    }
+
+    /**
+     * SCIPIO: Create a combined map from request, session and servlet context attributes, in that order of priority.
+     * Does NOT contain request parameters.
+     */
+    public static Map<String, Object> getAllAttributeMap(HttpServletRequest request) {
+        return getRequestSessionAttrParamMap(request, null);
+    }
+
+    /**
+     * SCIPIO: Create a combined map from request, session and servlet context attributes, in that order of priority.
+     * -- this method will only use the skip names for session and servlet context attributes.
+     *  Does NOT contain request parameters.
+     */
+    public static Map<String, Object> getAllAttributeMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
+        Map<String, Object> combinedMap = new HashMap<>();
+        combinedMap.putAll(getServletContextMap(request, namesToSkip)); // bottom level application attributes
+        combinedMap.putAll(getSessionMap(request, namesToSkip));        // session overrides application
+        combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
+        return combinedMap;
+    }
+
+    /**
+     * SCIPIO: Checks the following in the given order and returns the first non-null named attribute:
+     * request attributes -> session attributes -> servlet context attributes.
+     * Uses same combining rules as {@link #getRequestSessionAttrParamMap(HttpServletRequest)}.
+     * Does NOT check request parameters.
+     */
+    public static Object getAllAttr(HttpServletRequest request, String name) {
+        Object value = getRequestAttr(request, name);
+        if (value != null) {
+            return value;
+        }
+        value = getSessionAttr(request, name);
+        if (value != null) {
+            return value;
+        }
+        return getServletContextAttr(request, name);
+    }
+    
+    /**
      * SCIPIO: Create a combined map from request attributes and request parameters only, with attributes having priority.
      * Added 2019-02-05.
      * @return The resulting Map
      */
-    public static Map<String, Object> getAttrParamMap(HttpServletRequest request) {
-        return getAttrParamMap(request, null);
+    public static Map<String, Object> getRequestAttrParamMap(HttpServletRequest request) {
+        return getRequestAttrParamMap(request, null);
     }
 
     /**
@@ -141,7 +229,7 @@ public final class UtilHttp {
      * Added 2019-02-05.
      * @return The resulting Map
      */
-    public static Map<String, Object> getAttrParamMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
+    public static Map<String, Object> getRequestAttrParamMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
         Map<String, Object> combinedMap = new HashMap<>();
         combinedMap.putAll(getParameterMap(request));                   // parameters override nothing
         combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
@@ -149,30 +237,18 @@ public final class UtilHttp {
     }
 
     /**
-     * SCIPIO: Create a combined map from request attributes and request parameters and session attributes, with 
-     * request attributes having priority, followed by request parameters, and finally session attributes.
-     * Added 2019-02-05.
-     * @return The resulting Map
+     * SCIPIO: Checks the following in the given order and returns the first non-null named attribute or parameter:
+     * request attributes -> request parameters.
+     * Uses same combining rules as {@link #getRequestAttrParamMap(HttpServletRequest)}.
      */
-    public static Map<String, Object> getAttrParamSessionMap(HttpServletRequest request) {
-        return getAttrParamSessionMap(request, null);
+    public static Object getRequestAttrParam(HttpServletRequest request, String name) {
+        Object value = getRequestAttr(request, name);
+        if (value != null) {
+            return value;
+        }
+        return getRequestParam(request, name);
     }
-
-    /**
-     * SCIPIO: Create a combined map from request attributes and request parameters and session attributes, with 
-     * request attributes having priority, followed by request parameters, and finally session attributes
-     * -- this method will only use the skip names for session and servlet context attributes.
-     * Added 2019-02-05.
-     * @return The resulting Map
-     */
-    public static Map<String, Object> getAttrParamSessionMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
-        Map<String, Object> combinedMap = new HashMap<>();
-        combinedMap.putAll(getSessionMap(request, namesToSkip));        // session overrides application
-        combinedMap.putAll(getParameterMap(request));                   // parameters override nothing
-        combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
-        return combinedMap;
-    }
-
+    
     /**
      * Create a map from a HttpServletRequest (parameters) object
      * @return The resulting Map
@@ -205,7 +281,7 @@ public final class UtilHttp {
             Object value = null;
             String[] paramArr = request.getParameterValues(name);
             if (paramArr != null) {
-                if (paramArr.length > 1) {
+                if (paramArr.length != 1) { // SCIPIO: For correctness, switched this: (paramArr.length > 1)
                     value = Arrays.asList(paramArr);
                 } else {
                     value = paramArr[0];
@@ -232,6 +308,25 @@ public final class UtilHttp {
         return canonicalizeParameterMap(paramMap);
     }
 
+    /**
+     * SCIPIO: Returns the named request parameter, using the same rules as {@link #getParameterMap(HttpServletRequest)}.
+     */
+    public static Object getRequestParam(HttpServletRequest request, String name) {
+        Object value = getPathInfoOnlyParam(request, name);
+        if (value == null) {
+            String[] paramArr = request.getParameterValues(name);
+            if (paramArr != null) {
+                if (paramArr.length != 1) { // SCIPIO: For correctness, switched this: (paramArr.length > 1)
+                    value = Arrays.asList(paramArr);
+                } else {
+                    value = paramArr[0];
+                    // does the same thing basically, nothing better about it as far as I can see: value = request.getParameter(name);
+                }
+            }
+        }
+        return canonicalizeParameter(value);
+    }
+    
     public static Map<String, Object> getQueryStringOnlyParameterMap(String queryString) {
         Map<String, Object> paramMap = new HashMap<>();
         if (UtilValidate.isNotEmpty(queryString)) {
@@ -250,6 +345,14 @@ public final class UtilHttp {
             }
         }
         return canonicalizeParameterMap(paramMap);
+    }
+
+    /**
+     * SCIPIO: Returns the named request parameter, using the same rules as {@link #getQueryStringOnlyParameterMap(String)}.
+     * WARN: At current time (2019-02), this implementation is slow; if you check for than one param, use the Map method.
+     */
+    public static Object getQueryStringOnlyParam(String queryString, String name) {
+        return getQueryStringOnlyParameterMap(queryString).get(name); // TODO: Optimize
     }
 
     public static Map<String, Object> getPathInfoOnlyParameterMap(HttpServletRequest request, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip) {
@@ -304,6 +407,14 @@ public final class UtilHttp {
         return canonicalizeParameterMap(paramMap);
     }
 
+    /**
+     * SCIPIO: Returns the named request parameter, using the same rules as {@link #getPathInfoOnlyParameterMap(String)}.
+     * WARN: At current time (2019-02), this implementation is slow; if you check for than one param, use the Map method.
+     */
+    public static Object getPathInfoOnlyParam(HttpServletRequest request, String name) {
+        return getPathInfoOnlyParameterMap(request.getPathInfo(), null, null).get(name); // TODO: Optimize
+    }
+
     public static Map<String, Object> getUrlOnlyParameterMap(HttpServletRequest request) {
         // NOTE: these have already been through canonicalizeParameterMap, so not doing it again here
         Map<String, Object> paramMap = getQueryStringOnlyParameterMap(request.getQueryString());
@@ -311,12 +422,20 @@ public final class UtilHttp {
         return paramMap;
     }
 
+    /**
+     * SCIPIO: Returns the named request parameter, using the same rules as {@link #getUrlOnlyParameterMap(HttpServletRequest)}.
+     * WARN: At current time (2019-02), this implementation is slow; if you check for than one param, use the Map method.
+     */
+    public static Object getUrlOnlyParam(HttpServletRequest request, String name) {
+        return getUrlOnlyParameterMap(request).get(name); // TODO: Optimize
+    }
+
     public static Map<String, Object> canonicalizeParameterMap(Map<String, Object> paramMap) {
         for (Map.Entry<String, Object> paramEntry: paramMap.entrySet()) {
             if (paramEntry.getValue() instanceof String) {
                 paramEntry.setValue(canonicalizeParameter((String) paramEntry.getValue()));
             } else if (paramEntry.getValue() instanceof Collection<?>) {
-                List<String> newList = new LinkedList<>();
+                List<String> newList = new ArrayList<>(); // SCIPIO: Switched to ArrayList
                 for (String listEntry: UtilGenerics.<String>checkCollection(paramEntry.getValue())) {
                     newList.add(canonicalizeParameter(listEntry));
                 }
@@ -324,6 +443,19 @@ public final class UtilHttp {
             }
         }
         return paramMap;
+    }
+
+    public static Object canonicalizeParameter(Object paramValue) { // SCIPIO
+        if (paramValue instanceof String) {
+            paramValue = canonicalizeParameter((String) paramValue);
+        } else if (paramValue instanceof Collection<?>) {
+            List<String> newList = new ArrayList<>();
+            for (String listEntry: UtilGenerics.<String>checkCollection(paramValue)) {
+                newList.add(canonicalizeParameter((String) listEntry));
+            }
+            paramValue = newList;
+        }
+        return paramValue;
     }
 
     public static String canonicalizeParameter(String paramValue) {
@@ -408,6 +540,13 @@ public final class UtilHttp {
     }
 
     /**
+     * SCIPIO: Returns the named request attribute.
+     */
+    public static Object getRequestAttr(HttpServletRequest request, String name) {
+        return request.getAttribute(name);
+    }
+
+    /**
      * Create a map from a HttpSession object
      * @return The resulting Map
      */
@@ -444,6 +583,14 @@ public final class UtilHttp {
     }
 
     /**
+     * SCIPIO: Returns the named session attribute, IF a session exists. Does not force session creation.
+     */
+    public static <T> T getSessionAttr(HttpServletRequest request, String name) {
+        HttpSession session = request.getSession(false); // Do not create.
+        return (session != null) ? UtilGenerics.cast(session.getAttribute(name)) : null;
+    }
+
+    /**
      * Create a map from a ServletContext object
      * @return The resulting Map
      */
@@ -477,6 +624,13 @@ public final class UtilHttp {
         }
 
         return servletCtxMap;
+    }
+
+    /**
+     * SCIPIO: Returns the named servlet context attribute.
+     */
+    public static <T> T getServletContextAttr(HttpServletRequest request, String name) {
+        return UtilGenerics.cast(request.getServletContext().getAttribute(name));
     }
 
     public static Map<String, Object> makeParamMapWithPrefix(HttpServletRequest request, String prefix, String suffix) {
@@ -1709,7 +1863,7 @@ public final class UtilHttp {
     public static List<String> getParameterNamesWithValue(HttpServletRequest request, String value, String paramNamePrefix) {
         return getParameterNamesWithValue(request, UtilMisc.toSet(value), paramNamePrefix);
     }
-    
+
     /**
      * SCIPIO: Returns an object which can be used for full session synchronization (never null).
      * <p>
@@ -1718,7 +1872,7 @@ public final class UtilHttp {
      * session facades from being used in projects.
      * <p>
      * The sync object is normally set on session creation by {@link SessionSyncEventListener}
-     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer. 
+     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer.
      * This method will print a warning if it's missing, because such case can cause a race.
      * <p>
      * Added 2018-12-03.
@@ -1737,7 +1891,7 @@ public final class UtilHttp {
             }
             syncObj = createSessionSyncObject();
             session.setAttribute(SESSION_SYNC_OBJECT, syncObj);
-            Debug.logWarning("Session synchronization object (" + SESSION_SYNC_OBJECT 
+            Debug.logWarning("Session synchronization object (" + SESSION_SYNC_OBJECT
                     + ") not found in session attributes; creating", module); // log after to minimize exposure
         }
         return syncObj;
@@ -1751,7 +1905,7 @@ public final class UtilHttp {
      * session facades from being used in projects.
      * <p>
      * The sync object is normally set on session creation by {@link SessionSyncEventListener}
-     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer. 
+     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer.
      * This method will print a warning if it's missing, because such case can cause a race.
      * <p>
      * Added 2018-12-03.
@@ -1794,7 +1948,7 @@ public final class UtilHttp {
      * servlet context facades from being used in projects.
      * <p>
      * The sync object is normally set on servlet context creation by {@link ServletContextSyncEventListener}
-     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer. 
+     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer.
      * This method will print a warning if it's missing, because such case can cause a race.
      * <p>
      * Added 2018-12-03.
@@ -1813,7 +1967,7 @@ public final class UtilHttp {
             }
             syncObj = createServletContextSyncObject();
             context.setAttribute(SERVLETCONTEXT_SYNC_OBJECT, syncObj);
-            Debug.logWarning("ServletContext synchronization object (" + SERVLETCONTEXT_SYNC_OBJECT 
+            Debug.logWarning("ServletContext synchronization object (" + SERVLETCONTEXT_SYNC_OBJECT
                     + ") not found in servlet context attributes; creating", module); // log after to minimize exposure
         }
         return syncObj;
@@ -1827,7 +1981,7 @@ public final class UtilHttp {
      * servlet context facades from being used in projects.
      * <p>
      * The sync object is normally set on servlet context creation by {@link ServletContextSyncEventListener}
-     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer. 
+     * which is automatically added to all webapps (since 2018-12-03) by CatalinaContainer.
      * This method will print a warning if it's missing, because such case can cause a race.
      * <p>
      * Added 2018-12-03.
@@ -1861,7 +2015,7 @@ public final class UtilHttp {
         public void contextDestroyed(ServletContextEvent sce) {
         }
     }
-    
+
     /**
      * SCIPIO: DO NOT USE: Returns a "dummy" static instance, for use by <code>FreeMarkerWorker</code>.
      * Subject to change without notice.
@@ -1869,14 +2023,5 @@ public final class UtilHttp {
      */
     public static UtilHttp getStaticInstance() {
         return INSTANCE;
-    }
-    
-    /**
-     * SCIPIO: Returns the session attribute IF the session and attribute exist.
-     * Does not force session creation.
-     */
-    public static <T> T getSessionAttribute(HttpServletRequest request, String attrName) {
-        HttpSession session = request.getSession(false); // do not create.
-        return (session != null) ? UtilGenerics.cast(session.getAttribute(attrName)) : null;
     }
 }

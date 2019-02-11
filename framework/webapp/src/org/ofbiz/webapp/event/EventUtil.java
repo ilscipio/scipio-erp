@@ -268,7 +268,7 @@ public final class EventUtil {
      * Added 2019-02-05.
      */
     public static Map<String, Object> getServiceEventParamMap(HttpServletRequest request, String serviceName) {
-        return getServiceEventParamMap(request, serviceName, false, null, UtilHttp.getSessionAttribute(request, "userLogin"),
+        return getServiceEventParamMap(request, serviceName, false, null, UtilHttp.getSessionAttr(request, "userLogin"),
                 UtilHttp.getLocale(request), UtilHttp.getTimeZone(request));
     }
 
@@ -281,7 +281,7 @@ public final class EventUtil {
      * Added 2019-02-05.
      */
     public static Map<String, Object> getValidServiceEventParamMap(HttpServletRequest request, String serviceName, List<Object> errorMessages) {
-        return getServiceEventParamMap(request, serviceName, true, errorMessages, UtilHttp.getSessionAttribute(request, "userLogin"),
+        return getServiceEventParamMap(request, serviceName, true, errorMessages, UtilHttp.getSessionAttr(request, "userLogin"),
                 UtilHttp.getLocale(request), UtilHttp.getTimeZone(request));
     }
 
@@ -320,7 +320,7 @@ public final class EventUtil {
 
             GenericValue userLogin = (GenericValue) serviceContext.get("userLogin");
             if (!UtilMisc.containsKey(serviceContext, "userLogin", userLogin)) {
-                userLogin = UtilHttp.getSessionAttribute(request, "userLogin");
+                userLogin = UtilHttp.getSessionAttr(request, "userLogin");
             }
             Locale locale = (Locale) serviceContext.get("locale");
             if (!UtilMisc.containsKey(serviceContext, "locale", locale)) {

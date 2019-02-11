@@ -2251,11 +2251,54 @@ public class ProductionRunServices {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         // Mandatory input fields
-        String productionRunId = (String)context.get("productionRunId");
-        String workEffortId = (String)context.get("productionRunTaskId");
-        String partyId = (String)context.get("partyId");
-        if (UtilValidate.isEmpty(partyId)) {
-            partyId = userLogin.getString("partyId");
+        String productionRunId = (String) context.get("productionRunId");
+        String workEffortId = (String) context.get("productionRunTaskId");
+        String partyId = userLogin.getString("partyId");
+        if (UtilValidate.isNotEmpty(partyId)) {
+            partyId = (String) context.get("partyId");
+        }
+
+        try {
+            // FIXME?: Does it make sense to restrict to EMPLOYEES roles? who else could be assigned to production run tasks?
+            Map<String, Object> roleTypeAndPartyCond = UtilMisc.toMap("partyId", partyId, "parentTypeId", "EMPLOYEE");
+            if (context.containsKey("roleTypeId")) {
+                roleTypeAndPartyCond.put("roleTypeId", context.get("roleTypeId"));
+            }
+            GenericValue userEmployeeRole = EntityUtil.getFirst(EntityQuery.use(delegator).from("RoleTypeAndParty").where(roleTypeAndPartyCond).cache().queryList());
+            if (UtilValidate.isEmpty(userEmployeeRole)) {
+                return ServiceUtil.returnError(UtilProperties.getMessage("ManufacturingUiLabels", "ManufacturingProductionRunTaskInvalidWorkerRole", locale));
+            }
+
+            // SCIPIO (2019-02-11): PartyId is not used at all and it is supposed to represent the person (worker) of that given task. 
+            // We must create/update the corresponding WorkeffortPartyAssignment record to make this meaningful
+            List<GenericValue> workEffortPartyAssignments = EntityQuery.use(delegator).from("WorkEffortPartyAssignment")
+                    .where(UtilMisc.toMap("workEffortId", workEffortId, "partyId", partyId)).filterByDate().orderBy("fromDate").cache(false).queryList();
+            if (UtilValidate.isNotEmpty(workEffortPartyAssignments)) {
+                GenericValue currentWorkEffortPartyAssignment = EntityUtil.getFirst(workEffortPartyAssignments);
+                for (int i = 1; i < workEffortPartyAssignments.size(); i++) {
+                    GenericValue workEffortPartyAssignment = workEffortPartyAssignments.get(i);
+                    if (UtilValidate.isEmpty(workEffortPartyAssignment.get("thruDate"))) {
+                        workEffortPartyAssignment.set("thruDate", UtilDateTime.nowAsString());
+                        workEffortPartyAssignment.store();
+                    }
+                    Debug.log("workEffortPartyAssignment ======> " + workEffortPartyAssignment);
+                }
+                if (!currentWorkEffortPartyAssignment.getString("partyId").equals(partyId)
+                        || !currentWorkEffortPartyAssignment.getString("roleTypeId").equals(userEmployeeRole.getString("roleTypeId"))) {
+                    GenericValue newWorkEffortPartyAssignment = delegator.makeValidValue("WorkEffortPartyAssignment", currentWorkEffortPartyAssignment);
+                    newWorkEffortPartyAssignment.setString("partyId", partyId);
+                    newWorkEffortPartyAssignment.setString("roleTypeId", userEmployeeRole.getString("roleTypeId"));
+                    newWorkEffortPartyAssignment.create();
+                    currentWorkEffortPartyAssignment.set("thruDate", UtilDateTime.nowAsString());
+                    currentWorkEffortPartyAssignment.store();
+                }
+            } else {
+                GenericValue newWorkEffortPartyAssignment = delegator.makeValidValue("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId, "partyId", partyId,
+                    "roleTypeId", userEmployeeRole.getString("roleTypeId"), "fromDate", UtilDateTime.nowTimestamp(), "statusId", "PRTYASGN_ASSIGNED"));
+                newWorkEffortPartyAssignment.create();
+            }
+        } catch (GenericEntityException e1) {
+            Debug.logError(e1.getMessage(), module);
         }
 
         // Optional input fields

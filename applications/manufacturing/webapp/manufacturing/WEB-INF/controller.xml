@@ -39,6 +39,7 @@ code package.
     </request-map>
 
     <!-- Lookup request mappings -->
+    <request-map uri="LookupPerson"><security auth="true" https="true"/><response name="success" type="view" value="LookupPerson"/></request-map>
     <request-map uri="LookupCustomerName">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupCustomerName"/>
@@ -770,6 +771,8 @@ code package.
     <view-map name="EditRoutingProductLink" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#EditRoutingProductLink" type="screen"/>
     <view-map name="EditRoutingTaskFixedAssets" page="component://manufacturing/widget/manufacturing/RoutingScreens.xml#EditRoutingTaskFixedAssets" type="screen"/>
     <!-- Lookup view mappings -->
+    
+    <view-map name="LookupPerson" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson"/>
     <view-map name="LookupCustomerName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupCustomerName"/>
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
     <view-map name="LookupVariantProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct" type="screen"/>

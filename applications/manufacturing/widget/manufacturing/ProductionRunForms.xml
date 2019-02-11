@@ -535,7 +535,16 @@ code package.
             <text />
         </field>
         <field name="partyId" title="${uiLabelMap.ManufacturingWorker}">
-            <text/>
+            <lookup target-form-name="LookupPerson"/>
+        </field>
+        <!-- SCIPIO (2019-02-11): Added role type because it's necessary for the WorkEffortPartyAssignment -->
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}" position="2">
+            <drop-down allow-empty="false" no-current-selected-key="_NA_" >
+                <entity-options entity-name="RoleType" description="${description}">
+                    <entity-constraint name="parentTypeId" operator="equals" value="EMPLOYEE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>

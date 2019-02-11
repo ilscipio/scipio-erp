@@ -37,6 +37,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.manufacturing.techdata.TechDataServices;
+import org.ofbiz.party.party.PartyHelper;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
@@ -475,6 +476,22 @@ public class ProductionRun {
         GenericValue productionRunTask = EntityUtil.getFirst(delegator.findList("WorkEffort",
                 EntityCondition.makeCondition(UtilMisc.toMap("workEffortId", routingTaskId, "workEffortTypeId", "PROD_ORDER_TASK")), null, null, null, true));
         return getCommentsFromProductionRunTask(delegator, productionRunTask);
+    }
+    
+    
+    /**
+     * Utility method to easily retrieve the worker (party) out of a production run task
+     * @param delegator
+     * @param routingTaskId
+     * @return
+     * @throws GenericEntityException
+     */
+    public static String getWorkerFromProductionRunTask(Delegator delegator, GenericValue routingTask) throws GenericEntityException {
+        GenericValue partyAssignment = EntityUtil.getFirst(EntityUtil.filterByDate(routingTask.getRelated("WorkEffortPartyAssignment", null, null, false)));
+        if (UtilValidate.isNotEmpty(partyAssignment)) {
+            return PartyHelper.getPartyName(delegator, partyAssignment.getString("partyId"), false);
+        }
+        return null;
     }
 
 }

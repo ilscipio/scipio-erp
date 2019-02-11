@@ -4180,6 +4180,12 @@
         <value xml:lang="zh">生产运行任务无法启动，之前的任务没有完成</value>
         <value xml:lang="zh-TW">生產運行任務無法啟動,之前的任務沒有完成</value>
     </property>
+    <property key="ManufacturingProductionRunTaskInvalidWorkerRole">
+        <value xml:lang="de">Eine ungültige Arbeiterrolle wurde dieser Produktionslaufaufgabe zugewiesen</value>
+        <value xml:lang="en">Invalid worker role assigned to this Production Run Task</value>
+        <value xml:lang="it">Ruolo di lavoro non valido assegnato a questa attività Esecuzione di produzione</value>
+        <value xml:lang="es">Rol inválido de empleado para esta order de producción</value>
+    </property>
     <property key="ManufacturingProductionRunTaskNotFound">
         <value xml:lang="de">Kann die Produktionslauf- Aufgabe mit ID nicht finden: ${productionRunTaskId}</value>
         <value xml:lang="en">Cannot find the production run task with id: ${productionRunTaskId}</value>

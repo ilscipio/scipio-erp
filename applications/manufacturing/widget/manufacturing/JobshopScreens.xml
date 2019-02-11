@@ -226,7 +226,7 @@ code package.
                               <not><if-empty field="parameters.routingTaskId"/></not>
                             </condition>
                             <widgets>
-                              <container style="${styles.grid_large}6">
+                              <container style="${styles.grid_large}12">
                                 <include-form name="EditProductionRunDeclRoutingTask" location="component://manufacturing/widget/manufacturing/ProductionRunForms.xml"/>
                               </container>
                               <container style="${styles.grid_large}6">

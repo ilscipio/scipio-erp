@@ -321,6 +321,8 @@ code package.
         <attribute name="productionRunId" type="String" mode="IN" optional="false"/>
         <attribute name="productionRunTaskId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <!-- SCIPIO (2019-02-11): Added role type because it's necessary for the WorkEffortPartyAssignment -->
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="addQuantityProduced" type="BigDecimal" mode="IN" optional="true"/>

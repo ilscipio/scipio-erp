@@ -114,9 +114,10 @@ code package.
             <#-- Tasks   -->
             <#if productionRunRoutingTasks?has_content>
             <fo:table width="100%">
-              <fo:table-column column-width="20%"/>
-              <fo:table-column column-width="20%"/>
-              <fo:table-column column-width="20%"/>
+              <fo:table-column column-width="15%"/>
+              <fo:table-column column-width="15%"/>
+              <fo:table-column column-width="15%"/>
+              <fo:table-column column-width="15%"/>
               <fo:table-column column-width="10%"/>
               <fo:table-column column-width="10%"/>
               <fo:table-column column-width="20%"/>
@@ -124,6 +125,7 @@ code package.
                     <fo:table-row font-weight="bold">
                         <fo:table-cell><fo:block>${uiLabelMap.ManufacturingProductionRunFixedAssets}</fo:block></fo:table-cell>
                         <fo:table-cell><fo:block>${uiLabelMap.ManufacturingRoutingTask}</fo:block></fo:table-cell>
+                        <fo:table-cell><fo:block>${uiLabelMap.ManufacturingWorker}</fo:block></fo:table-cell>
                         <fo:table-cell><fo:block>${uiLabelMap.CommonDescription}</fo:block></fo:table-cell>
                         <fo:table-cell><fo:block>${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}</fo:block></fo:table-cell>
                         <fo:table-cell><fo:block>${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}</fo:block></fo:table-cell>
@@ -138,6 +140,9 @@ code package.
                             </fo:table-cell>
                             <fo:table-cell>
                                 <fo:block>${productionRunRoutingTask.workEffortName!}</fo:block>
+                            </fo:table-cell>
+                            <fo:table-cell>
+                                <fo:block>${Static["org.ofbiz.manufacturing.jobshopmgt.ProductionRun"].getWorkerFromProductionRunTask(delegator, productionRunRoutingTask)!}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell>
                                 <fo:block>${productionRunRoutingTask.description!}</fo:block>

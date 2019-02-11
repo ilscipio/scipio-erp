@@ -97,7 +97,14 @@ if (productionRunId) {
             routingTaskData.estimatedSetupMillis = routingTask.getDouble("estimatedSetupMillis");
             routingTaskData.estimatedMilliSeconds = routingTask.getDouble("estimatedMilliSeconds");
             context.routingTaskData = routingTaskData;
-            routingTaskData.partyId = userLogin.partyId;
+
+            // SCIPIO (2019-02-11): Gettting the partyId from WorkEffortPartyAssignment or the current logged userLogin if there's no assignment.
+            partyAssignment = from("WorkEffortPartyAssignment").where("workEffortId", routingTask.workEffortId).filterByDate().queryFirst();
+            if (partyAssignment) {
+                routingTaskData.partyId = partyAssignment.partyId;
+            } else {
+                routingTaskData.partyId = userLogin.partyId;
+            }
             context.routingTaskId = routingTaskId;
             // Get the list of deliverable products, i.e. the WorkEffortGoodStandard entries
             // with workEffortGoodStdTypeId = "PRUNT_PROD_DELIV":

@@ -693,8 +693,8 @@ code package.
     <!-- form for authorizing a transaction -->
     <form name="AuthorizeTransaction" type="single" target="processAuthorizeTransaction" title=""
         header-row-style="header-row-2" default-table-style="basic-table">
-        <field name="orderId"><text/></field>
-        <field name="orderPaymentPreferenceId"><text/></field>
+        <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
+        <field name="orderPaymentPreferenceId"><lookup target-form-name="LookupOrderPaymentPreference"/></field>
         <field name="paymentMethodTypeId" title="${uiLabelMap.CommonPaymentMethodType}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentMethodType"/>
@@ -707,8 +707,8 @@ code package.
     <!-- form for capturing a transaction -->
     <form name="CaptureTransaction" type="single" target="processCaptureTransaction" title=""
         header-row-style="header-row-2" default-table-style="basic-table">
-        <field name="orderId"><text/></field>
-        <field name="orderPaymentPreferenceId"><text/></field>
+        <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
+        <field name="orderPaymentPreferenceId"><lookup target-form-name="LookupOrderPaymentPreference"/></field>
         <field name="paymentMethodTypeId" title="${uiLabelMap.CommonPaymentMethodType}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentMethodType"/>

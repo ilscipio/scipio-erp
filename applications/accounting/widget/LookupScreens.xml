@@ -385,7 +385,7 @@ code package.
                 <!-- required: fields to search a match -->
                 <!-- the first element from searchFields is returned after user selection --> 
                 <!-- it might be hidden based on widget.autocompleter.displayReturnField property in widget.properties -->                
-                <set field="searchFields" value="[orderPaymentPreferenceId, orderId, paymentMethodTypeId, paymentMethodId, maxAmount, statusId]"/>
+                <set field="searchFields" value="[orderPaymentPreferenceId, orderId, paymentMethodTypeId, paymentMethodId, statusId]"/>
  
                 <!-- optional: fields to display in the given order, default is searchFields -->
                 <set field="displayFields" value="[orderPaymentPreferenceId, orderId, maxAmount, statusId]"/>

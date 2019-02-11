@@ -730,8 +730,8 @@ public class StringUtil {
     }
 
     /**
-     * SCIPIO: Ensures the string does not pass the given length and returns 
-     * the first lengthLimit characters if longer, with extra suffix to 
+     * SCIPIO: Ensures the string does not pass the given length and returns
+     * the first lengthLimit characters if longer, with extra suffix to
      * add if passes the length (e.g., "...").
      * <p>
      * Added 2018-09-17.
@@ -744,7 +744,7 @@ public class StringUtil {
     }
 
     /**
-     * SCIPIO: Ensures the string does not pass the given length and returns the 
+     * SCIPIO: Ensures the string does not pass the given length and returns the
      * first lengthLimit characters if longer.
      * <p>
      * Added 2018-09-17.
@@ -1003,7 +1003,7 @@ public class StringUtil {
         }
         return -1;
     }
-    
+
     /**
      * SCIPIO: Checks if two strings of same size have same characters between the given indices (unsafe).
      */

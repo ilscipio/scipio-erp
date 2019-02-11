@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.ServiceLoader;
 
 import org.ofbiz.base.lang.Factory;
@@ -203,5 +205,86 @@ public final class UtilObject {
             }
         }
         throw new ClassNotFoundException(factoryInterface.getClass().getName());
+    }
+
+    /**
+     * SCIPIO: Returns the first non-null value, or null.
+     */
+    @SafeVarargs
+    public static <T> T firstNonNull(T... values) {
+        for(T value : values) {
+            if (value != null) return value;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Returns the first non-null value, or null.
+     */
+    public static <T> T firstNonNull(Collection<T> values) {
+        for(T value : values) {
+            if (value != null) return value;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: If the object is null, returns the altValue; in all other cases returns the original value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and
+     * repeated container accesses, much like the {@link Objects} methods.
+     */
+    public static <T> T altIfNull(T value, T altValue) {
+        return (value == null) ? altValue : value;
+    }
+
+    /**
+     * SCIPIO: If the object is non-null, returns the altValue; in all other cases returns the original value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and
+     * repeated container accesses, much like the {@link Objects} methods.
+     */
+    public static <T> T altIfNotNull(T value, T altValue) {
+        return (value != null) ? altValue : value;
+    }
+
+    /**
+     * SCIPIO: If the object is equal to the target, returns null; in all other cases returns the original value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and
+     * repeated container accesses, much like the {@link Objects} methods.
+     */
+    public static <T> T nullIfEquals(T value, Object target) {
+        return (value != null) ? (value.equals(target) ? null : value) : null;
+    }
+
+    /**
+     * SCIPIO: If the object is not equal to the target, returns null; in all other cases returns the original value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and
+     * repeated container accesses, much like the {@link Objects} methods.
+     */
+    public static <T> T nullIfNotEquals(T value, Object target) {
+        return (value != null) ? (!value.equals(target) ? null : value) : null;
+    }
+
+    /**
+     * SCIPIO: If the object is equal to the target, returns the altValue; in all other cases returns the original value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and
+     * repeated container accesses, much like the {@link Objects} methods.
+     */
+    public static <T> T altIfEquals(T value, Object target, T altValue) {
+        return (value != null) ? (value.equals(target) ? altValue : value) : ((value == altValue) ? altValue : value);
+    }
+
+    /**
+     * SCIPIO: If the object is not equal to the target, returns the altValue; in all other cases returns the original value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and
+     * repeated container accesses, much like the {@link Objects} methods.
+     */
+    public static <T> T altIfNotEquals(T value, Object target, T altValue) {
+        return (value != null) ? (!value.equals(target) ? altValue : value) : ((value != altValue) ? altValue : value);
     }
 }

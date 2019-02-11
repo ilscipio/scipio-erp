@@ -247,8 +247,46 @@ public final class UtilValidate {
         return (m != null) && !m.isEmpty();
     }
 
+    /**
+     * SCIPIO: If the value is non-empty, returns it as-is; otherwise (if empty or null) returns null.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and repeated container accesses.
+     */
+    public static <T> T nullIfEmpty(T value) {
+        return isEmpty(value) ? null : value;
+    }
+
+    /**
+     * SCIPIO: If the value is non-empty, returns it as-is; otherwise (if empty or null) returns null.
+     * In other words, this makes the empty string case return null, as a convenience, to simplify code.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and repeated container accesses.
+     */
+    public static <T extends CharSequence> T nullIfEmpty(T value) {
+        return isEmpty(value) ? null : value;
+    }
+
+    /**
+     * SCIPIO: If the value is non-empty, returns it as-is; otherwise (if empty or null) returns the altValue.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and repeated container accesses.
+     */
+    public static <T> T altIfEmpty(T value, T altValue) {
+        return isEmpty(value) ? altValue : value;
+    }
+
+    /**
+     * SCIPIO: If the value is non-empty, returns it as-is; otherwise (if empty or null) returns the altValue.
+     * In alt words, this makes the empty string case return null, as a convenience, to simplify code.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and repeated container accesses.
+     */
+    public static <T extends CharSequence> T altIfEmpty(T value, T altValue) {
+        return isEmpty(value) ? altValue : value;
+    }
+
     public static boolean isString(Object obj) {
-        return ((obj != null) && (obj instanceof java.lang.String));
+        return (obj instanceof String); // SCIPIO: Removed useless null check: (obj != null)
     }
 
     /** Returns true if string s is empty or whitespace characters only. */
@@ -327,6 +365,219 @@ public final class UtilValidate {
             i++;
         }
         return s.substring(i);
+    }
+
+    /**
+     * SCIPIO: Returns Boolean.TRUE if value is Boolean.TRUE or "true", or Boolean.FALSE
+     * if value is Boolean.FALSE or "false", or null if anything else (case-sensitive).
+     */
+    public static Boolean booleanValue(Object value) {
+        if (value == null || value instanceof Boolean) {
+            return (Boolean) value;
+        } else if ("true".equals(value)) {
+            return Boolean.TRUE;
+        } else if ("false".equals(value)) {
+            return Boolean.FALSE;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Returns Boolean.TRUE if value is "true", or Boolean.FALSE
+     * if value is "false", or null if anything else (case-sensitive).
+     */
+    public static Boolean booleanValue(String value) {
+        if (value == null) {
+            return null;
+        } else if ("true".equals(value)) {
+            return Boolean.TRUE;
+        } else if ("false".equals(value)) {
+            return Boolean.FALSE;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Returns true if value is Boolean.TRUE or "true", or false
+     * if value is Boolean.FALSE or "false", or defaultValue if anything else (case-sensitive).
+     */
+    public static boolean booleanValue(Object value, boolean defaultValue) {
+        Boolean res = booleanValue(value);
+        return res != null ? res : defaultValue;
+    }
+
+    /**
+     * SCIPIO: Returns true if value is "true", or false
+     * if value is "false", or defaultValue if anything else (case-sensitive).
+     */
+    public static boolean booleanValue(String value, boolean defaultValue) {
+        Boolean res = booleanValue(value);
+        return res != null ? res : defaultValue;
+    }
+
+    /**
+     * SCIPIO: Returns Boolean.TRUE if value is Boolean.TRUE or "Y", or Boolean.FALSE
+     * if value is Boolean.FALSE or "N", or null if anything else (case-sensitive).
+     */
+    public static Boolean booleanValueIndicator(Object value) {
+        if (value == null || value instanceof Boolean) {
+            return (Boolean) value;
+        } else if ("Y".equals(value)) {
+            return Boolean.TRUE;
+        } else if ("N".equals(value)) {
+            return Boolean.FALSE;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Returns Boolean.TRUE if value is "Y", or Boolean.FALSE
+     * if value is "N", or null if anything else (case-sensitive).
+     */
+    public static Boolean booleanValueIndicator(String value) {
+        if (value == null) {
+            return null;
+        } else if ("Y".equals(value)) {
+            return Boolean.TRUE;
+        } else if ("N".equals(value)) {
+            return Boolean.FALSE;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Returns true if value is Boolean.TRUE or "Y", or false
+     * if value is Boolean.FALSE or "N", or defaultValue if anything else (case-sensitive).
+     */
+    public static boolean booleanValueIndicator(Object value, boolean defaultValue) {
+        Boolean res = booleanValueIndicator(value);
+        return res != null ? res : defaultValue;
+    }
+
+    /**
+     * SCIPIO: Returns true if value is "Y", or false
+     * if value is "N", or defaultValue if anything else (case-sensitive).
+     */
+    public static boolean booleanValueIndicator(String value, boolean defaultValue) {
+        Boolean res = booleanValueIndicator(value);
+        return res != null ? res : defaultValue;
+    }
+
+    /**
+     * SCIPIO: Returns Boolean.TRUE if value is Boolean.TRUE, "true" or "Y", or Boolean.FALSE
+     * if value is Boolean.FALSE, "false" or "N", or null if anything else (case-sensitive).
+     */
+    public static Boolean booleanValueVersatile(Object value) {
+        if (value == null || value instanceof Boolean) {
+            return (Boolean) value;
+        } else if ("true".equals(value) || "Y".equals(value)) {
+            return Boolean.TRUE;
+        } else if ("false".equals(value) || "N".equals(value)) {
+            return Boolean.FALSE;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Returns Boolean.TRUE if value is "true" or "Y", or Boolean.FALSE
+     * if value is "false" or "N", or null if anything else (case-sensitive).
+     */
+    public static Boolean booleanValueVersatile(String value) {
+        if (value == null) {
+            return null;
+        } else if ("true".equals(value) || "Y".equals(value)) {
+            return Boolean.TRUE;
+        } else if ("false".equals(value) || "N".equals(value)) {
+            return Boolean.FALSE;
+        }
+        return null;
+    }
+
+    /**
+     * SCIPIO: Returns true if value is Boolean.TRUE, "true" or "Y", or false
+     * if value is Boolean.FALSE, "false" or "N", or defaultValue if anything else (case-sensitive).
+     */
+    public static boolean booleanValueVersatile(Object value, boolean defaultValue) {
+        Boolean res = booleanValueVersatile(value);
+        return res != null ? res : defaultValue;
+    }
+
+    /**
+     * SCIPIO: Returns true if value is "true" or "Y", or false
+     * if value is "false" or "N", or defaultValue if anything else (case-sensitive).
+     */
+    public static boolean booleanValueVersatile(String value, boolean defaultValue) {
+        Boolean res = booleanValueVersatile(value);
+        return res != null ? res : defaultValue;
+    }
+
+    /**
+     * SCIPIO: Returns "Y" if value is Boolean.TRUE or "Y", or "N"
+     * if value is Boolean.FALSE or "N", or null if anything else (case-sensitive).
+     */
+    public static String indicatorValue(Object value) {
+        if (value instanceof Boolean) {
+            return ((Boolean) value) ? "Y" : "N";
+        } else if ("Y".equals(value) || "N".equals(value)) {
+            return (String) value;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * SCIPIO: Returns "Y" if value is Boolean.TRUE or "Y", or "N"
+     * if value is Boolean.FALSE or "N", or defaultValue if anything else (case-sensitive).
+     */
+    public static String indicatorValue(Object value, String defaultValue) {
+        String res = indicatorValue(value);
+        return (res != null) ? res : defaultValue;
+    }
+
+    /**
+     * SCIPIO: Returns "Y" if value is Boolean.TRUE, "true" or "Y", or "N"
+     * if value is Boolean.FALSE, "false" or "N", or null if anything else (case-sensitive).
+     */
+    public static String indicatorValueVersatile(Object value) {
+        if (value instanceof Boolean) {
+            return ((Boolean) value) ? "Y" : "N";
+        } else if ("true".equals(value) || "Y".equals(value)) {
+            return "Y";
+        } else if ("false".equals(value) || "N".equals(value)) {
+            return "N";
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * SCIPIO: Returns "Y" if value is Boolean.TRUE, "true" or "Y", or "N"
+     * if value is Boolean.FALSE, "false" or "N", or defaultValue if anything else (case-sensitive).
+     */
+    public static String indicatorValueVersatile(Object value, String defaultValue) {
+        String res = indicatorValueVersatile(value);
+        return (res != null) ? res : defaultValue;
+    }
+
+    /**
+     * SCIPIO: Returns true if value is either "true" or "false" (case-sensitive).
+     */
+    public static boolean isBoolean(String value) {
+        return (booleanValue(value) != null);
+    }
+
+    /**
+     * SCIPIO: Returns true if value is either "Y" or "N" (case-sensitive).
+     */
+    public static boolean isBooleanIndicator(String value) {
+        return (booleanValueIndicator(value) != null);
+    }
+
+    /**
+     * SCIPIO: Returns true if value is "true", "false", "Y" or "N" (case-sensitive).
+     */
+    public static boolean isBooleanVersatile(String value) {
+        return (booleanValueVersatile(value) != null);
     }
 
     /** Returns true if character c is an English letter (A .. Z, a..z).

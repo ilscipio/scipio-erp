@@ -171,7 +171,8 @@
     </service>
 
     <service name="cmsImportXmlData" engine="java" auth="true"
-        location="com.ilscipio.scipio.cms.data.importexport.CmsImportExportServices" invoke="importXmlData">
+        location="com.ilscipio.scipio.cms.data.importexport.CmsImportExportServices" invoke="importXmlData"
+        use-transaction="false"><!-- NOTE: The service itself must set up the transaction timeout and start the transaction -->
         <description>Imports CMS data</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <implements service="entityImport"/>

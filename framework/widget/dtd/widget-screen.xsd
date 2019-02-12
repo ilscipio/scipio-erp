@@ -175,6 +175,35 @@ under the License.
                     <xs:documentation>Transaction timeout in seconds</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="transaction-timeout-attr" use="optional"><!-- default="TRANSACTION_TIMEOUT" -->
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: The name of a transaction timeout request, session and application attribute
+                        consulted to determine the transaction timeout; these have priority over the transaction-timeout-param
+                        from requests parameters.
+                        Default: If transaction-timeout-param is set to a non-boolean, non-empty value,
+                        transaction-timeout-attr defaults to the same value; otherwise, "TRANSACTION_TIMEOUT".
+                        WARNING: 2019-02-11: It is recommended AGAINST changing this setting at this time; it is here
+                        primarily for testing purposes. The name "TRANSACTION_TIMEOUT" may be assumed by important code!
+                        WARNING: EXPERIMENTAL: 2019-02-11: This setting is currently experimental and subject to change OR removal.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="transaction-timeout-param" use="optional" default="false">
+                <xs:annotation>
+                    <xs:documentation>SCIPIO: For screens that begin new transactions, indicates whether the 
+                        transaction timeout request parameter may be consulted to determine the transaction timeout:
+                        if true (boolean), the screen allows the transaction timeout request parameter to control the transaction
+                        timeout, in seconds, for the screen render, with lower priority than the transaction timeout
+                        request, session and application attribute; if false (boolean, default) OR no such parameter, only the
+                        request, session, and application attributes are checked for a transaction timeout attribute.
+                        Default: If true, this defaults to the value of transaction-timeout-attr, which in turn defaults
+                        to "TRANSACTION_TIMEOUT"; otherwise disabled (false).
+                        This boolean (true/false) setting may optionally be set to an alternative name to use
+                        as the timeout parameter name, in which case it is implied the parameter is enabled (true).
+                        NOTE: This usually only works on top-level screens, because they are the generally the ones that
+                        begin the screen render transaction.
+                        WARNING: EXPERIMENTAL: 2019-02-11: This setting is currently experimental and subject to change OR removal.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="use-transaction" type="xs:boolean" default="true"/>
             <xs:attribute name="use-cache" type="xs:boolean" default="false"/>
         </xs:complexType>

@@ -8,7 +8,7 @@ code package.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="EntitySQLProcessor">
+    <screen name="EntitySQLProcessor" transaction-timeout="7200" transaction-timeout-param="true"><!-- SCIPIO: Added timeout -->
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEntitySQLProcessor"/>
@@ -17,7 +17,8 @@ code package.
                 <set field="sqlCommand" from-field="parameters.sqlCommand"/>
                 <set field="selGroup" from-field="parameters.group"/>
                 <set field="rowLimit" from-field="parameters.rowLimit" type="Integer"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <!-- SCIPIO: Has no effect because transaction already started -> added to screen element instead
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>-->
 
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/EntitySQLProcessor.groovy"/>
             </actions>
@@ -37,7 +38,8 @@ code package.
             <actions>
                 <set field="titleProperty" value="PageTitleEntityExportAll"/>
                 <set field="activeSubMenuItem" value="entityExportAll"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <!-- SCIPIO: Has no effect because transaction already started + not needed for this screen
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>-->
                 <set field="results" from-field="parameters.results"/>
             </actions>
             <widgets>
@@ -112,7 +114,8 @@ code package.
             <actions>
                 <set field="titleProperty" value="PageTitleEntityImportDir"/>
                 <set field="activeSubMenuItem" value="entityImportDir"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <!-- SCIPIO: Has no effect because transaction already started + not needed for this screen
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>-->
 
                 <set field="messages" from-field="parameters.messages"/>
             </actions>
@@ -134,7 +137,8 @@ code package.
             <actions>
                 <set field="titleProperty" value="PageTitleEntityImport"/>
                 <set field="activeSubMenuItem" value="entityImport"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <!-- SCIPIO: Has no effect because transaction already started + not needed for this screen
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>-->
 
                 <set field="messages" from-field="parameters.messages"/>
             </actions>
@@ -156,7 +160,8 @@ code package.
             <actions>
                 <set field="titleProperty" value="PageTitleEntityImportReaders"/>
                 <set field="activeSubMenuItem" value="entityImportReaders"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>
+                <!-- SCIPIO: Has no effect because transaction already started + not needed for this screen
+                <set field="parameters.TRANSACTION_TIMEOUT" value="7200"/>-->
 
                 <set field="messages" from-field="parameters.messages"/>
                 

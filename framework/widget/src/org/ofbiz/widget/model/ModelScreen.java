@@ -22,11 +22,16 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -49,13 +54,17 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    static final Set<String> validScreenElementTagNames = Collections.unmodifiableSet(
-            UtilMisc.toSet("screen")); // SCIPIO: new, for future use
+    static final Set<String> validScreenElementTagNames = Collections.unmodifiableSet(UtilMisc.toSet("screen")); // SCIPIO: new, for future use
+
+    protected static final String TRANSACTION_TIMEOUT_ATTR = "TRANSACTION_TIMEOUT"; // SCIPIO: NOTE: This is a default name and may be configured by the screen
+    protected static final String TRANSACTION_TIMEOUT_PARAM = TRANSACTION_TIMEOUT_ATTR; // SCIPIO: NOTE: This is a default name and may be configured by the screen
 
     private final String sourceLocation;
     private final FlexibleStringExpander transactionTimeoutExdr;
-    // SCIPIO: generalized
-    //private final Map<String, ModelScreen> modelScreenMap;
+    private final String transactionTimeoutAttr; // SCIPIO: null -> don't use, non-empty -> attribute name
+    private final String transactionTimeoutParam; // SCIPIO: null -> don't use, non-empty -> parameter name
+    private final boolean transactionTimeoutAttrParamEquals; // SCIPIO: Optimization
+    //private final Map<String, ModelScreen> modelScreenMap; // SCIPIO: generalized
     private final ModelScreenGroup modelScreenGroup;
     private final boolean useTransaction;
     private final boolean useCache;
@@ -66,6 +75,22 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
         super(screenElement);
         this.sourceLocation = sourceLocation;
         this.transactionTimeoutExdr = FlexibleStringExpander.getInstance(screenElement.getAttribute("transaction-timeout"));
+        
+        // SCIPIO: Configurable transaction timeout request/session/application attribute and request parameter (Added 2019-02-08)
+        String ttoAttr = UtilValidate.nullIfEmpty(UtilObject.nullIfEquals(screenElement.getAttribute("transaction-timeout-attr"), "true"));
+        String ttoParam = UtilValidate.nullIfEmpty(UtilObject.nullIfEquals(screenElement.getAttribute("transaction-timeout-param"), "true"));
+        if ("true".equals(ttoParam)) {
+            
+        } else if (ttoAttr == null || "false".equals(ttoAttr)) {
+            ttoAttr = ("false".equals(ttoAttr)) ? null : (ttoParam != null && !"false".equals(ttoParam)) ? ttoParam : TRANSACTION_TIMEOUT_ATTR;
+            ttoParam = (ttoParam == null) ? TRANSACTION_TIMEOUT_PARAM : UtilObject.nullIfEquals(ttoParam, "false");
+        } else if (ttoParam == null || "false".equals(ttoParam)){
+            ttoParam = ("false".equals(ttoParam)) ? null : (ttoParam != null && !"false".equals(ttoParam)) ? ttoParam : TRANSACTION_TIMEOUT_ATTR;
+        }
+        this.transactionTimeoutAttr = ttoAttr;
+        this.transactionTimeoutParam = ttoParam;
+        this.transactionTimeoutAttrParamEquals = Objects.equals(ttoAttr, ttoParam);
+        
         this.modelScreenGroup = modelScreenGroup;
         this.useTransaction = "true".equals(screenElement.getAttribute("use-transaction"));
         this.useCache = "true".equals(screenElement.getAttribute("use-cache"));
@@ -176,29 +201,58 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
         context.put("nullField", GenericEntity.NULL_FIELD);
 
         // wrap the whole screen rendering in a transaction, should improve performance in querying and such
-        Map<String, String> parameters = UtilGenerics.cast(context.get("parameters"));
         boolean beganTransaction = false;
-        int transactionTimeout = -1;
-        if (parameters != null) {
-            String transactionTimeoutPar = parameters.get("TRANSACTION_TIMEOUT");
-            if (transactionTimeoutPar != null) {
+        Integer transactionTimeout = null; // SCIPIO: Switched Integer -> int
+
+        // SCIPIO: Refactored TRANSACTION_TIMEOUT parameter check + several improvements
+        if (!TransactionUtil.isTransactionInPlaceSafe()) {
+            Object transactionTimeoutObj = null;
+            if (transactionTimeoutParam != null) {
+                if (transactionTimeoutAttrParamEquals) {
+                    // SCIPIO: Original stock case (unsafe for most screens)
+                    Map<String, String> parameters = UtilGenerics.cast(context.get("parameters"));
+                    if (parameters != null) {
+                        transactionTimeoutObj = parameters.get(transactionTimeoutParam); // SCIPIO: Unhardcoded: "TRANSACTION_TIMEOUT"
+                    }
+                } else {
+                    HttpServletRequest request = UtilGenerics.cast(context.get("request"));
+                    if (request != null) {
+                        if (transactionTimeoutAttr != null) {
+                            transactionTimeoutObj = UtilHttp.getAllAttr(request, transactionTimeoutAttr);
+                            if (transactionTimeoutObj == null) {
+                                transactionTimeoutObj = UtilHttp.getRequestParam(request, transactionTimeoutParam);
+                            }
+                        } else {
+                            transactionTimeoutObj = UtilHttp.getRequestParam(request, transactionTimeoutParam);
+                        }
+                    }
+                }
+            } else if (transactionTimeoutAttr != null) {
+                HttpServletRequest request = UtilGenerics.cast(context.get("request"));
+                if (request != null) {
+                    transactionTimeoutObj = UtilHttp.getAllAttr(request, transactionTimeoutAttr);
+                }
+            }
+            if (transactionTimeoutObj != null) {
                 try {
-                    transactionTimeout = Integer.parseInt(transactionTimeoutPar);
-                } catch (NumberFormatException nfe) {
-                    String msg = "TRANSACTION_TIMEOUT parameter for screen [" + this.sourceLocation + "#" + getName() + "] is invalid and it will be ignored: " + nfe.toString();
+                    transactionTimeout = parseTransactionTimeout(transactionTimeoutObj);
+                } catch (NumberFormatException e) {
+                    String msg = "Transaction timeout attr/param '" + transactionTimeoutAttr + "' for screen ["
+                            + this.sourceLocation + "#" + getName() + "] is invalid and it will be ignored: " + e.toString();
                     Debug.logWarning(msg, module);
                 }
             }
-        }
-
-        if (transactionTimeout < 0 && !transactionTimeoutExdr.isEmpty()) {
-            // no TRANSACTION_TIMEOUT parameter, check screen attribute
-            String transactionTimeoutStr = transactionTimeoutExdr.expandString(context);
-            if (UtilValidate.isNotEmpty(transactionTimeoutStr)) {
+    
+            if (transactionTimeout == null && !transactionTimeoutExdr.isEmpty()) {
+                // no TRANSACTION_TIMEOUT parameter, check screen attribute
+                // SCIPIO: We can improve this to avoid String intermediate where possible
+                //String transactionTimeoutStr = transactionTimeoutExdr.expandString(context);
+                transactionTimeoutObj = transactionTimeoutExdr.expand(context);
                 try {
-                    transactionTimeout = Integer.parseInt(transactionTimeoutStr);
+                    transactionTimeout = parseTransactionTimeout(transactionTimeoutObj);
                 } catch (NumberFormatException e) {
-                    Debug.logWarning(e, "Could not parse transaction-timeout value, original=[" + transactionTimeoutExdr + "], expanded=[" + transactionTimeoutStr + "]", module);
+                    Debug.logWarning(e, "Could not parse transaction-timeout value, original=[" + transactionTimeoutExdr
+                            + "], expanded=[" + transactionTimeoutObj + "]", module);
                 }
             }
         }
@@ -208,10 +262,9 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
             // If transaction timeout is present, use it to start the transaction
             // If transaction timeout is set to zero, no transaction is started
             if (useTransaction) {
-                if (transactionTimeout < 0) {
+                if (transactionTimeout == null) {
                     beganTransaction = TransactionUtil.begin();
-                }
-                if (transactionTimeout > 0) {
+                } else {
                     beganTransaction = TransactionUtil.begin(transactionTimeout);
                 }
             }
@@ -246,6 +299,15 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
         }
     }
 
+    public static Integer parseTransactionTimeout(Object transactionTimeoutObj) throws NumberFormatException { // SCIPIO
+        if (transactionTimeoutObj instanceof Number) {
+            return ((Number) transactionTimeoutObj).intValue();
+        } else if (UtilValidate.isNotEmptyString(transactionTimeoutObj)) {
+            return Integer.parseInt((String) transactionTimeoutObj);
+        }
+        return null;
+    }
+    
     /**
      * SCIPIO: New wrapper around *Core method for targeted rendering.
      */

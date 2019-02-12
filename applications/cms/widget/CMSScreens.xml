@@ -428,7 +428,6 @@
                 <set field="layoutSettings.VT_FTPR_JAVASCRIPT[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
                 <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsMenuTree.groovy"/>
                 <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsContentTree.groovy"/>
-
             </actions>
             <widgets>
                 <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -447,8 +446,6 @@
             <actions>
                 <set field="titleProperty" value="WebtoolsDataImport"/>
                 <set field="activeSubMenuItem" value="dataImport"/>
-                <set field="parameters.TRANSACTION_TIMEOUT" from-field="parameters.TRANSACTION_TIMEOUT" default-value="7200"/>
-
                 <set field="messages" from-field="parameters.messages"/>
                 <script location="component://cms/script/com/ilscipio/scipio/cms/importexport/CmsDataImport.groovy"/>
                 <!-- NOTE: ENTITY_MAINT is still checked for some parameter options -->

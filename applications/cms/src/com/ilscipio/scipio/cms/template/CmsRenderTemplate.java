@@ -456,8 +456,7 @@ public interface CmsRenderTemplate extends Serializable {
                 if (useTransaction) {
                     if (transactionTimeout < 0) {
                         beganTransaction = TransactionUtil.begin();
-                    }
-                    if (transactionTimeout > 0) {
+                    } else if (transactionTimeout > 0) {
                         beganTransaction = TransactionUtil.begin(transactionTimeout);
                     }
                 }

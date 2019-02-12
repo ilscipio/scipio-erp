@@ -175,7 +175,8 @@ under the License.
                     <xs:documentation>Transaction timeout in seconds</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute type="xs:string" name="transaction-timeout-attr" use="optional"><!-- default="TRANSACTION_TIMEOUT" -->
+            <!-- SCIPIO: 2019-02-11: Not supported at current time; currently fixed as TRANSACTION_TIMEOUT
+            <xs:attribute type="xs:string" name="transaction-timeout-attr" use="optional"><!- - default="TRANSACTION_TIMEOUT" - ->
                 <xs:annotation>
                     <xs:documentation>SCIPIO: The name of a transaction timeout request, session and application attribute
                         consulted to determine the transaction timeout; these have priority over the transaction-timeout-param
@@ -187,6 +188,7 @@ under the License.
                         WARNING: EXPERIMENTAL: 2019-02-11: This setting is currently experimental and subject to change OR removal.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            -->
             <xs:attribute type="xs:string" name="transaction-timeout-param" use="optional" default="false">
                 <xs:annotation>
                     <xs:documentation>SCIPIO: For screens that begin new transactions, indicates whether the 

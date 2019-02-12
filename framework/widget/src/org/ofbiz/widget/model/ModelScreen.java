@@ -56,8 +56,8 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
 
     static final Set<String> validScreenElementTagNames = Collections.unmodifiableSet(UtilMisc.toSet("screen")); // SCIPIO: new, for future use
 
-    protected static final String TRANSACTION_TIMEOUT_ATTR = "TRANSACTION_TIMEOUT"; // SCIPIO: NOTE: This is a default name and may be configured by the screen
-    protected static final String TRANSACTION_TIMEOUT_PARAM = TRANSACTION_TIMEOUT_ATTR; // SCIPIO: NOTE: This is a default name and may be configured by the screen
+    public static final String TRANSACTION_TIMEOUT_ATTR = "TRANSACTION_TIMEOUT"; // SCIPIO: NOTE: This is a default name and may be configured by the screen
+    public static final String TRANSACTION_TIMEOUT_PARAM = TRANSACTION_TIMEOUT_ATTR; // SCIPIO: NOTE: This is a default name and may be configured by the screen
 
     private final String sourceLocation;
     private final FlexibleStringExpander transactionTimeoutExdr;
@@ -262,9 +262,10 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
             // If transaction timeout is present, use it to start the transaction
             // If transaction timeout is set to zero, no transaction is started
             if (useTransaction) {
-                if (transactionTimeout == null) {
+                // SCIPIO: NOTE: Value zero (0) is the same as useTransaction==false
+                if (transactionTimeout == null || transactionTimeout < 0) {
                     beganTransaction = TransactionUtil.begin();
-                } else {
+                } else if (transactionTimeout > 0) {
                     beganTransaction = TransactionUtil.begin(transactionTimeout);
                 }
             }

@@ -31,7 +31,8 @@
     </context-param>-->
     <!--<context-param>
         <description>SCIPIO: Initial context-building script, webapp-specific version of widgetContextScripts.properties entries; runs just after those. 
-            Has no default. In most cases renderInitScriptScreenLocation is more appropriate. 2016-11-11: Added for 1.14.3.</description>
+            Has no default. In most cases renderInitScriptScreenLocation is more appropriate. 2016-11-11: Added for 1.14.3.
+            WARNING: This script may not be running under a database transaction (see widgetContextScripts.properties for info).</description>
         <param-name>widgetContextScriptLocation</param-name>
         <param-value>component://@component-name@/widget/WidgetContextScript.groovy</param-value>
     </context-param>-->

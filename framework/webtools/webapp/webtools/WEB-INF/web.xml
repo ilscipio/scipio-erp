@@ -48,7 +48,8 @@ code package.
             This is simply a webapp-specific version of widgetContextScripts.properties entries and runs just after those.
             NOTE: In most cases renderInitScriptScreenLocation is more appropriate, unless you specifically need
                 to alter the initial context (e.g. to produce a non-standard context adapted for different purpose).
-            2016-11-11: Added for 1.14.3.</description>
+            2016-11-11: Added for 1.14.3.
+            WARNING: This script may not be running under a database transaction (see widgetContextScripts.properties for info).</description>
         <param-name>widgetContextScriptLocation</param-name>
         <param-value>component://webtools/widget/WidgetContextScript.groovy</param-value>
     </context-param>-->

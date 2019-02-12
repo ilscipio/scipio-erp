@@ -247,6 +247,16 @@ public final class UtilValidate {
         return (m != null) && !m.isEmpty();
     }
 
+    /** SCIPIO: Check whether the object is a string AND empty. */
+    public static boolean isEmptyString(Object o) {
+        return (o instanceof String && ((String) o).isEmpty());
+    }
+
+    /** SCIPIO: Check whether the object is a string AND NOT empty. */
+    public static boolean isNotEmptyString(Object o) {
+        return (o instanceof String && !((String) o).isEmpty());
+    }
+
     /**
      * SCIPIO: If the value is non-empty, returns it as-is; otherwise (if empty or null) returns null.
      * <p>

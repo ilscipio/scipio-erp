@@ -44,6 +44,7 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -55,7 +56,9 @@ import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.ScipioFtlWrappers;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.widget.model.ModelScreen;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
@@ -163,7 +166,6 @@ public interface CmsRenderTemplate extends Serializable {
         protected final T template;
 
         public TemplateRenderer(T template) {
-            super();
             this.template = template;
         }
 
@@ -245,6 +247,10 @@ public interface CmsRenderTemplate extends Serializable {
             }
         }
 
+        public T getCmsTemplate() {
+            return template;
+        }
+
         public Template getTemplate() {
             return getFreeMarkerTemplate();
         }
@@ -282,6 +288,8 @@ public interface CmsRenderTemplate extends Serializable {
             private boolean shareScope;
 
             private boolean newCmsCtx = true; // high-level flag mainly used by subclasses
+
+            private FlexibleStringExpander txTimeoutExdr;
 
             public RenderArgs() {
                 this.skipSystemCtx = false;
@@ -409,6 +417,18 @@ public interface CmsRenderTemplate extends Serializable {
             public void setNewCmsCtx(boolean newCmsCtx) {
                 this.newCmsCtx = newCmsCtx;
             }
+            public FlexibleStringExpander getTxTimeoutExdr() {
+                return txTimeoutExdr;
+            }
+            public void setTxTimeoutExdr(FlexibleStringExpander txTimeout) {
+                this.txTimeoutExdr = txTimeout;
+            }
+            public boolean hasTxTimeout() {
+                return (txTimeoutExdr != null && !txTimeoutExdr.isEmpty());
+            }
+            public boolean isTxEnabled() { // NOTE: This is a pre-expansion check
+                return !(txTimeoutExdr != null && "0".equals(txTimeoutExdr.getOriginal()));
+            }
         }
 
         /**
@@ -420,49 +440,45 @@ public interface CmsRenderTemplate extends Serializable {
             if (protectScope) {
                 renderArgs.getContext().push();
             }
-            
-            boolean useTransaction = true; // TODO
-            int transactionTimeout = -1; // TODO
-            FlexibleStringExpander transactionTimeoutExdr = FlexibleStringExpander.getEmptyExpr(); // TODO
-            
-            /* TODO: the following is insufficient
-            if (parameters != null) {
-                String transactionTimeoutPar = parameters.get("TRANSACTION_TIMEOUT");
-                if (transactionTimeoutPar != null) {
-                    try {
-                        transactionTimeout = Integer.parseInt(transactionTimeoutPar);
-                    } catch (NumberFormatException nfe) { 
-                        Debug.logWarning("Cms: TRANSACTION_TIMEOUT parameter for screen [" + this.sourceLocation
-                            + "#" + getName() + "] is invalid and it will be ignored: " + nfe.toString(), module);
-                    }
-                }
-            }
-            */
-            
-            if (transactionTimeout < 0 && !transactionTimeoutExdr.isEmpty()) {
-                String transactionTimeoutStr = transactionTimeoutExdr.expandString(renderArgs.getContext());
-                if (UtilValidate.isNotEmpty(transactionTimeoutStr)) {
-                    try {
-                        transactionTimeout = Integer.parseInt(transactionTimeoutStr);
-                    } catch (NumberFormatException e) {
-                        Debug.logWarning(e, "Cms: Could not parse transaction-timeout value: original=["
-                                + transactionTimeoutExdr + "], expanded=[" + transactionTimeoutStr + "]", module);
-                    }
-                }
-            }
-            
+
+            boolean useTransaction = renderArgs.isTxEnabled(); // NOTE: If txTimeout is exactly the string "0", prevents transaction, even if req attr was set
+
             boolean beganTransaction = false;
             try {
-                if (useTransaction) {
-                    if (transactionTimeout < 0) {
-                        beganTransaction = TransactionUtil.begin();
-                    } else if (transactionTimeout > 0) {
-                        beganTransaction = TransactionUtil.begin(transactionTimeout);
-                    }
-                }
 
                 // Populate context
-                populateRenderContext(renderArgs);
+                // This does not work anymore, because the transaction has to be started in the middle:
+                //populateRenderContext(renderArgs);
+
+                if (renderArgs.getContent().isImmutable()) { // this makes the error clearer
+                    throw new IllegalStateException("Tried to populate CMS page directives on immutable CmsPageContent");
+                }
+                try {
+                    // TODO: REVIEW: At current time (2019-02), we will have to emulate ModelScreen and start the
+                    // transaction after system context is populated but BEFORE screen scripts are run,
+                    // otherwise the txTimeout expression has no context to work with.
+                    if (!renderArgs.isSkipSystemCtx()) {
+                        populateSystemRenderContext(renderArgs);
+                    } else {
+                        // Emulates ModelScreen behavior...
+                        renderArgs.getContext().put("nullField", GenericEntity.NULL_FIELD);
+                    }
+                    // TODO: REVIEW: For now, leaving populateProcessorScript BEFORE transaction start, because otherwise
+                    // it will be inconsistent with the scripts invoked from populateSystemRenderContext, AND
+                    // it's possible the txTimeout expander needs to fetch something from the common processor.
+                    // We COULD split populateExtraCommonRenderContext into 2 and include the processor in the transaction,
+                    // but for the time being, we don't even supply a processor anymore, so it's unclear if there's any real need
+                    // for it to be wrapped in a transaction.
+                    if (!renderArgs.isSkipExtraCommonCtx()) {
+                        populateExtraCommonRenderContext(renderArgs);
+                    }
+                    if (useTransaction) {
+                        beganTransaction = beginRenderTx(renderArgs);
+                    }
+                    populateWidgetRenderContext(renderArgs);
+                } catch (Throwable t) {
+                    throw new CmsException("Error preparing context for template render: " + t.getMessage(), t);
+                }
 
                 // Render template
                 renderTemplate(renderArgs.getOut(), renderArgs.getContext());
@@ -490,12 +506,59 @@ public interface CmsRenderTemplate extends Serializable {
             }
         }
 
+        protected static boolean beginRenderTx(RenderArgs renderArgs) throws GenericTransactionException {
+            Integer transactionTimeout = getRenderTxTimeout(renderArgs);
+            // NOTE: Value zero (0) is the same as useTransaction==false
+            if (transactionTimeout == null || transactionTimeout < 0) {
+                return TransactionUtil.begin();
+            } else if (transactionTimeout > 0) {
+                return TransactionUtil.begin(transactionTimeout);
+            }
+            return false;
+        }
+        
+        protected static Integer getRenderTxTimeout(RenderArgs renderArgs) {
+            Integer transactionTimeout = null;
+
+            if (!TransactionUtil.isTransactionInPlaceSafe()) {
+                // TODO: Investigate if it's worth unhardcoding transactionTimeoutAttr and a transactionTimeoutParam like widgets
+                final String transactionTimeoutAttr = ModelScreen.TRANSACTION_TIMEOUT_ATTR;
+                Object transactionTimeoutObj = null;
+                // Check the "TRANSACTION_TIMEOUT" request attribute for consistency/compat with widget renderer (ModelScreen)
+                HttpServletRequest request = UtilGenerics.cast(renderArgs.getContext().get("request"));
+                if (request != null) {
+                    transactionTimeoutObj = UtilHttp.getAllAttr(request, ModelScreen.TRANSACTION_TIMEOUT_ATTR);
+                }
+                if (transactionTimeoutObj != null) {
+                    try {
+                        transactionTimeout = ModelScreen.parseTransactionTimeout(transactionTimeoutObj);
+                    } catch (NumberFormatException e) {
+                        String msg = "Cms: Transaction timeout attr/param '" + transactionTimeoutAttr + "' is invalid and"
+                                + "it will be ignored: " + e.toString();
+                        Debug.logWarning(msg, module);
+                    }
+                }
+                if (transactionTimeout == null && renderArgs.hasTxTimeout()) {
+                    transactionTimeoutObj = renderArgs.getTxTimeoutExdr().expand(renderArgs.getContext());
+                    try {
+                        transactionTimeout = ModelScreen.parseTransactionTimeout(transactionTimeoutObj);
+                    } catch (NumberFormatException e) {
+                        Debug.logWarning(e, "Cms: Could not parse transaction-timeout value, original=[" + renderArgs.getTxTimeoutExdr()
+                                + "], expanded=[" + transactionTimeoutObj + "]", module);
+                    }
+                }
+            }
+            return transactionTimeout;
+        }
+        
         /**
          * Fully populates the render context as necessary, depending highly on the
          * template type.
+         * @deprecated 2019-02-11: This does not work anymore, because the transaction has to be started in the middle - see {@link #processAndRender(RenderArgs)}.
          * <p>
          * NOTE: subclass may need to override this (2017-02-20: using the flags instead for now).
          */
+        @Deprecated
         public void populateRenderContext(RenderArgs renderArgs) {
             if (renderArgs.getContent().isImmutable()) { // this makes the error clearer
                 throw new IllegalStateException("Tried to populate CMS page directives on immutable CmsPageContent");

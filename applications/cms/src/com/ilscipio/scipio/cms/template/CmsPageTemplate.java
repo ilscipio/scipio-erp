@@ -601,6 +601,11 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
 
         @Override
         public Object processAndRender(RenderArgs renderArgs) throws CmsException {
+            // SPECIAL: Transaction timeout: for top-level template renders, if the page has a specific
+            // transaction timeout, it will be used over us.
+            if (!renderArgs.hasTxTimeout()) {
+                renderArgs.setTxTimeoutExdr(this.getCmsTemplate().getTxTimeoutExdr());
+            }
             return super.processAndRender(renderArgs);
         }
 

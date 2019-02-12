@@ -498,6 +498,12 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
                 renderArgs.setSkipSystemCtx(true);
                 renderArgs.setSkipExtraCommonCtx(true);
             }
+            // NOTE: The txTimeout for assets will rarely be invoked; but it is needed
+            // to maintain the consistency with widget renderer as well as ensure a transaction
+            // is present if the asset is ever reused somewhere else that has no transaction.
+            if (!renderArgs.hasTxTimeout()) {
+                renderArgs.setTxTimeoutExdr(this.getCmsTemplate().getTxTimeoutExdr());
+            }
             return super.processAndRender(renderArgs);
         }
 
@@ -610,7 +616,7 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
                     fields.put("webSiteId", webSiteId);
                 }
                 // NOTE: always null webSiteIds first - this matters
-                List<CmsAssetTemplate> assets = findAll(delegator, fields, UtilMisc.toList("webSiteId"), 
+                List<CmsAssetTemplate> assets = findAll(delegator, fields, UtilMisc.toList("webSiteId"),
                         isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache));
                 if (assets.size() > 0) {
                     asset = assets.get(0);

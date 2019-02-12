@@ -427,6 +427,8 @@
                         </#assign>
                         <@field label=uiLabelMap.CmsRevisions type="display" value=pageRevisions/>
 
+                        <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(pageTemplate.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
+
                         <@menu type="button">
                             <@menuitem type="link" href="javascript:updateTemplateInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
                         </@menu>

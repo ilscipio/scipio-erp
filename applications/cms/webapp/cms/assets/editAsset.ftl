@@ -233,6 +233,10 @@
                         <@webSiteSelectField name="webSiteId" value=(assetTemplateModel.webSiteId!) required=false
                             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
                         
+                        <#-- This will extremely rarely be used for assets, but could have impact in the future...
+                        <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(assetTemplateModel.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
+                        -->
+                        
                         <@menu type="button">
                             <@menuitem type="link" href="javascript:updateAssetInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
                         </@menu> 

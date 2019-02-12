@@ -194,6 +194,7 @@
         <attribute name="pageTemplateId" type="String" mode="IN" optional="false"/>
         <attribute name="pageName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="txTimeout" type="String" mode="IN" optional="true"/>
         <attribute name="pageId" type="String" mode="OUT" optional="false"/>
     </service>
 
@@ -224,6 +225,7 @@
         </attribute>
         <attribute name="pageTemplateId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
+         <attribute name="txTimeout" type="String" mode="IN" optional="true"/>
         <attribute name="pageName" type="String" mode="IN" optional="true"/>
     </service>
 
@@ -360,6 +362,7 @@
         <attribute name="templateBody" type="String" mode="IN" optional="true" allow-html="any"/>
         <attribute name="templateLocation" type="String" mode="IN" optional="true"/>
         <attribute name="templateSource" type="String" mode="IN" optional="true"/><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
+        <attribute name="txTimeout" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="cmsCopyPageTemplate" engine="java" auth="true"
@@ -381,6 +384,7 @@
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="webSiteId" mode="IN" type="String" optional="true"/>
+        <attribute name="txTimeout" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="cmsGetPageTemplate" engine="java"
@@ -529,6 +533,7 @@
         <attribute name="templateLocation" type="String" mode="IN" optional="true"/>
         <attribute name="templateSource" type="String" mode="IN" optional="true"/><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
         <attribute name="active" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="txTimeout" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="cmsCopyAsset" engine="java"
@@ -550,6 +555,7 @@
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="contentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="txTimeout" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="cmsGetAssetTemplateTypes" engine="java"

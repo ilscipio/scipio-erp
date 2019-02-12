@@ -600,6 +600,8 @@
                                     <@field type="option" value="N" selected=(indexable?is_boolean && !indexable)>N</@field>
                                  </@field>
 
+                                 <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(meta.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
+
                                  <@menu type="button">
                                     <@menuitem type="link" href="javascript:updatePageInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
                                  </@menu> 

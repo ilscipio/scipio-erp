@@ -24,6 +24,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -88,6 +89,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     private Optional<CmsPageVersion> activeVersion = null; // NOTE: NOT cached when live.
 
     private String activeVersionId = null; // NOTE: NOT cached when live. // 2016: this is no longer stored on CmsPage. NOTE: empty string "" means cache checked OR unset active upon store().
+    protected transient FlexibleStringExpander txTimeoutExdr; // Optimization (cached FlexibleExpression)
 
     private Set<String> candidateWebSiteIds = null; // NOTE: NOT cached when live.
 
@@ -436,7 +438,23 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         return version;
     }
 
+    public FlexibleStringExpander getTxTimeoutExdr() {
+        FlexibleStringExpander txTimeout = this.txTimeoutExdr;
+        if (txTimeout == null) {
+            String expr = getTxTimeout();
+            if (expr != null) {
+                txTimeout = FlexibleStringExpander.getInstance(expr);
+            } else {
+                txTimeout = FlexibleStringExpander.getEmptyExpr();
+            }
+            this.txTimeoutExdr = txTimeout;
+        }
+        return txTimeout;
+    }
 
+    public String getTxTimeout() {
+        return entity.getString("txTimeout");
+    }
 
     /**
      * Returns the content as map.
@@ -603,6 +621,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         return descriptor;
     }
 
+    // TODO: GET RID OF THIS DESCRIPTOR USAGE, not needed for freemarker, very annoying to maintain...
     protected void populateBasicDescriptorFields(Map<String, Object> descriptor, String webSiteId, Locale locale) {
         preventIfImmutable(); // WARN: currently dangerous if called from rendering!
 
@@ -624,7 +643,8 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                 "pageTemplateId", (pageTemplate != null) ? pageTemplate.getId() : null,
                 "primaryMappingCount", getPrimaryProcessMappingsListCopy().size(),
                 "status", isActive(),
-                "description", getDescription(locale)));
+                "description", getDescription(locale),
+                "txTimeout", getTxTimeout()));
     }
 
     /**
@@ -1937,6 +1957,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             boolean shareScope = true; // we don't need to push it here...
             PtRenderArgs renderArgs = new PtRenderArgs(out, context, content, pageContext, shareScope);
             renderArgs.setRunPageScripts(true);
+            renderArgs.setTxTimeoutExdr(page.getTxTimeoutExdr()); // NOTE: If set, overrides the template's timeout.
             page.getTemplate().getRenderer().processAndRender(renderArgs);
         }
 
@@ -2083,7 +2104,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         public List<CmsPage> findByWebSiteId(Delegator delegator, String webSiteId, boolean useCache) {
             return findAll(delegator, UtilMisc.toMap("webSiteId", webSiteId), getPagesOrderBy(), useCache);
         }
- 
+
         /**
          * Gets best-matching page by name and webSiteId, using special webSiteId handling.
          * <p>
@@ -2115,7 +2136,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                 if (CmsUtil.verboseOn()) {
                     Debug.logInfo("Cms: Retrieving page from database: name: " + pageName, module);
                 }
-                page = findByNameBestCore(delegator, pageName, exactWebSiteId, webSiteLookupMode, preferredWebSiteId, 
+                page = findByNameBestCore(delegator, pageName, exactWebSiteId, webSiteLookupMode, preferredWebSiteId,
                     isUseDbCacheBehindObjCacheStatic(useCache, useGlobalCache), useGlobalCache);
                 if (useGlobalCache) {
                     cache.put(key, page);
@@ -2130,7 +2151,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             }
             return page;
         }
-        
+
         private CmsPage findByNameBestCore(Delegator delegator, String pageName, String exactWebSiteId, String webSiteLookupMode,
                 String preferredWebSiteId, boolean useCache, boolean reuseIdCache) throws GenericEntityException {
             boolean webSiteIdLegacyLookup = true;
@@ -2142,9 +2163,9 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                     webSiteIdLegacyLookup = false;
                 }
             }
-            
+
             FindPageByNameResults findResults = new FindPageByNameResults();
-            
+
             // 2016: double-lookup:
             // do a manual fast cached DB lookup to find the pageId, and afterward re-query
             // the CmsPage using using the findById call -
@@ -2176,7 +2197,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             }
             return page;
         }
-        
+
         /**
          * Gets best-matching page by name and webSiteId, using special webSiteId handling.
          * <p>
@@ -2242,14 +2263,14 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                 }
             }
         }
-        
+
         private static class FindPageByNameResults {
             GenericValue exactPageValue; // if non-null, exact result found
             GenericValue candidatePageValue; // used as last resort
-            
+
             GenericValue getResultPageValue() { return exactPageValue != null ? exactPageValue : candidatePageValue; }
         }
-        
+
         /**
          * Returns one of 3 possible values: null, the string "null" (meaning "search for null"),
          * or a webSiteId. (Only) The result may be used with isWebSiteIdNullLookup and getEffectiveWebSiteId.
@@ -2264,7 +2285,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             }
             return null;
         }
-        
+
         /**
          * Returns one of 3 possible values: null, the string "null" (meaning "search for null"),
          * or a non-empty webSiteId. (Only) The result may be used with isWebSiteIdNullLookup and getEffectiveWebSiteId.
@@ -2279,14 +2300,14 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             }
             return webSiteId;
         }
-        
+
         /**
          * For use with {@link #findByNameBest}. Assumes normalized already using {@link #normalizeWebSiteId}.
          */
         public static boolean isWebSiteIdNullLookup(String webSiteId) {
             return "null".equals(webSiteId);
         }
-        
+
         /**
          * For use with {@link #findByNameBest}. Assumes normalized already using {@link #normalizeWebSiteId}.
          */

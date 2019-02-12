@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -39,6 +41,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
      * for preloadContent().
      */
     protected List<CmsScriptTemplate> sortedScriptTemplates;
+    protected transient FlexibleStringExpander txTimeoutExdr; // Optimization (cached FlexibleExpression)
 
     protected CmsMasterComplexTemplate(GenericValue entity) {
         super(entity);
@@ -234,6 +237,33 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
         return entity.getString("activeContentId");
     }
 
+    public FlexibleStringExpander getTxTimeoutExdr() {
+        FlexibleStringExpander txTimeoutExdr = this.txTimeoutExdr;
+        if (txTimeoutExdr == null) {
+            String expr = getTxTimeout();
+            if (expr != null) {
+                txTimeoutExdr = FlexibleStringExpander.getInstance(expr);
+            } else {
+                txTimeoutExdr = FlexibleStringExpander.getEmptyExpr();
+            }
+            this.txTimeoutExdr = txTimeoutExdr;
+        }
+        return txTimeoutExdr;
+    }
+    
+    public String getTxTimeout() {
+        return entity.getString("txTimeout");
+    }
+    
+    @Override
+    public Map<String, Object> getDescriptor(Locale locale) {
+        preventIfImmutable(); // WARN: currently dangerous if called from rendering!
+
+        Map<String, Object> descriptor = super.getDescriptor(locale);
+        descriptor.put("txTimeout", getTxTimeout());
+        return descriptor;
+    }
+    
     @Override
     public int remove() throws CmsException {
         int rowsAffected = 0;

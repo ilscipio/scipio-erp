@@ -15964,6 +15964,10 @@
         <value xml:lang="zh">合计</value>
         <value xml:lang="zh-TW">合計</value>
     </property>
+    <property key="FormFieldTitle_txTimeout">
+        <value xml:lang="de">Transaction Timeout</value>
+        <value xml:lang="en">Transaction Timeout</value>
+    </property>
     <property key="FormFieldTitle_uomId">
         <value xml:lang="ar">رمز وحدة القياس</value>
         <value xml:lang="cs">Jednotka</value>

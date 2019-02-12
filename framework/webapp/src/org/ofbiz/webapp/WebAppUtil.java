@@ -41,11 +41,13 @@ import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilXml.LocalErrorHandler;
 import org.ofbiz.base.util.UtilXml.LocalResolver;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
 import org.ofbiz.security.SecurityConfigurationException;
 import org.ofbiz.security.SecurityFactory;
@@ -682,6 +684,29 @@ public final class WebAppUtil {
             } 
         }
         return security;
+    }
+
+    /**
+     * SCIPIO: Returns the current user login from "userLogin" request attribute or, if not set,
+     * the "userLogin" session attribute; <strong>may</strong> also update the request attribute
+     * from the session attribute (not guaranteed).
+     * <p>
+     * NOTE: This method can also be found in {@link org.ofbiz.base.util.UtilHttp#getUserLogin(HttpServletRequest)}.
+     * Added 2019-02-12.
+     */
+    public static GenericValue getUserLogin(HttpServletRequest request) {
+        return UtilHttp.getUserLogin(request);
+    }
+
+    /**
+     * SCIPIO: Returns the current user login from "userLogin" session attribute or null otherwise
+     * or if the session is null.
+     * <p>
+     * NOTE: This method can also be found in {@link org.ofbiz.base.util.UtilHttp#getUserLogin(HttpSession)}.
+     * Added 2019-02-12.
+     */
+    public static GenericValue getUserLogin(HttpSession session) {
+        return UtilHttp.getUserLogin(session);
     }
 
     private WebAppUtil() {}

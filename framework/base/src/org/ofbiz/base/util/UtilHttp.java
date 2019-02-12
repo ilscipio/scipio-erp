@@ -983,6 +983,49 @@ public final class UtilHttp {
     }
 
     /**
+     * SCIPIO: Returns the current user login from "userLogin" request attribute or, if not set,
+     * the "userLogin" session attribute; <strong>may</strong> also update the request attribute
+     * from the session attribute (not guaranteed).
+     * <p>
+     * NOTE: This method does not really belong in a base package utility like UtilHttp because
+     * it violates build dependencies, but because getLocale and getTimeZone are on this class,
+     * this is simply where everyone expects them to be.
+     * <p>
+     * NOTE: This method can also be found in {@link org.ofbiz.webapp.WebAppUtil#getUserLogin(HttpServletRequest)}.
+     * Added 2019-02-12.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Map<String, Object>> T getUserLogin(HttpServletRequest request) {
+        T userLogin = (T) request.getAttribute("userLogin");
+        /* TODO: REVIEW: This will likely be enabled in the future!
+        if (userLogin == null) {
+            userLogin = getUserLogin(request.getSession(false));
+            if (userLogin != null) {
+                request.setAttribute("userLogin", userLogin);
+            }
+        }
+        return userLogin;
+        */
+        return (userLogin != null) ? userLogin : getUserLogin(request.getSession(false));
+    }
+
+    /**
+     * SCIPIO: Returns the current user login from "userLogin" session attribute or null otherwise
+     * or if the session is null.
+     * <p>
+     * NOTE: This method does not really belong in a base package utility like UtilHttp because
+     * it violates build dependencies, but because getLocale and getTimeZone are on this class,
+     * this is simply where everyone expects them to be.
+     * <p>
+     * NOTE: This method can also be found in {@link org.ofbiz.webapp.WebAppUtil#getUserLogin(HttpSession)}.
+     * Added 2019-02-12.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Map<String, Object>> T getUserLogin(HttpSession session) {
+        return (session != null) ? (T) session.getAttribute("userLogin") : null;
+    }
+
+    /**
      * Get the currency string from the session.
      * @param session HttpSession object to use for lookup
      * @return String The ISO currency code

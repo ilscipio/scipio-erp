@@ -568,7 +568,14 @@
 
                                  <@field type="select" name="primaryTargetPath" id="primaryTargetPath" items=primaryTargetPathOptions currentValue=primaryTargetPath label="${rawLabel('CommonPath')} ${rawLabel('CommonSettings')}" required=false />
 
-                                 <@field type="select" name="pageTemplateId" label=uiLabelMap.CmsTemplate required=true><#-- duplicate: id="pageTemplateId" -->
+                                 <#if meta.pageTemplateId?has_content>
+                                   <#assign pgTmplLabel>${uiLabelMap.CmsTemplate} <#t>
+                                     <a href="<@pageUrl uri='editTemplate?pageTemplateId='+rawString(meta.pageTemplateId)/>" target="_blank"><#t>
+                                     <i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></#assign>
+                                 <#else>
+                                   <#assign pgTmplLabel>${uiLabelMap.CmsTemplate}</#assign>
+                                 </#if>
+                                 <@field type="select" name="pageTemplateId" labelContent=pgTmplLabel required=true><#-- duplicate: id="pageTemplateId" -->
                                    <#assign pageTmplFoundInSelect = false>
                                    <#assign pageTmplSelOpts>
                                      <#if availableTemplates?has_content>

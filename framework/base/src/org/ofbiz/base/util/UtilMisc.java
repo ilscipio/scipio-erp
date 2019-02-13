@@ -397,11 +397,11 @@ public final class UtilMisc {
         return list;
     }
 
-    public static <K, V> void addToListInMap(V element, Map<K, Object> theMap, K listKey) {
+    public static <K, V> void addToListInMap(V element, Map<K, ?> theMap, K listKey) { // SCIPIO: Generalized this: Map<K, Object>
         List<V> theList = UtilGenerics.checkList(theMap.get(listKey));
         if (theList == null) {
             theList = new ArrayList<>(); // SCIPIO: switched to ArrayList
-            theMap.put(listKey, theList);
+            UtilGenerics.<Map<K, List<V>>>cast(theMap).put(listKey, theList); // SCIPIO: cast
         }
         theList.add(element);
     }
@@ -409,11 +409,11 @@ public final class UtilMisc {
     /**
      * SCIPIO: Adds element to the list in the in map having given key; if no set yet, listSupplier provides a new one.
      */
-    public static <K, V> void addToListInMap(V element, Map<K, Object> theMap, K listKey, Supplier<List<V>> listSupplier) {
+    public static <K, V> void addToListInMap(V element, Map<K, ?> theMap, K listKey, Supplier<List<V>> listSupplier) { // SCIPIO: Generalized this: Map<K, Object>
         List<V> theList = UtilGenerics.checkList(theMap.get(listKey));
         if (theList == null) {
             theList = listSupplier.get();
-            theMap.put(listKey, theList);
+            UtilGenerics.<Map<K, List<V>>>cast(theMap).put(listKey, theList); // SCIPIO: cast
         }
         theList.add(element);
     }
@@ -1578,6 +1578,17 @@ public final class UtilMisc {
      */
     public static <T> List<T> unmodifiableReversedList(Collection<T> list) {
         return Collections.unmodifiableList(asReversedList(list));
+    }
+
+    /**
+     * SCIPIO: Takes a list of maps and groups them using the specified key value.
+     */
+    public static <K, V, M extends Map<K, V>> Map<K, List<M>> groupMapsByKey(Iterable<M> records, K groupByKey) {
+        Map<K, List<M>> map = new HashMap<>();
+        for(M elem : records) {
+            addToListInMap(elem, map, groupByKey);
+        }
+        return map;
     }
 
     /**

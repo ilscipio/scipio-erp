@@ -145,7 +145,7 @@ public class ShoppingListServices {
 
                     GenericValue recurrenceInfo = shoppingList.getRelatedOne("RecurrenceInfo", false);
                     Timestamp startDateTime = recurrenceInfo.getTimestamp("startDateTime");
-                    
+
                     if (recurrenceInfo != null) {
                         try {
                             recurrence = new RecurrenceInfo(recurrenceInfo);
@@ -485,10 +485,9 @@ public class ShoppingListServices {
                         reservPersons = shoppingListItem.getBigDecimal("reservPersons");
                     }
                     if (UtilValidate.isNotEmpty(productId) && quantity != null) {
-
-                    if (UtilValidate.isNotEmpty(configId)) {
-                        configWrapper = ProductConfigWorker.loadProductConfigWrapper(delegator, dispatcher, configId, productId, listCart.getProductStoreId(), null, listCart.getWebSiteId(), listCart.getCurrency(), listCart.getLocale(), listCart.getAutoUserLogin());
-                    }
+                        if (UtilValidate.isNotEmpty(configId)) {
+                            configWrapper = ProductConfigWorker.loadProductConfigWrapper(delegator, dispatcher, configId, productId, listCart.getProductStoreId(), null, listCart.getWebSiteId(), listCart.getCurrency(), listCart.getLocale(), listCart.getAutoUserLogin());
+                        }
                         // list items are noted in the shopping cart
                         String listId = shoppingListItem.getString("shoppingListId");
                         String itemId = shoppingListItem.getString("shoppingListItemSeqId");

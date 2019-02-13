@@ -97,7 +97,15 @@
         <description>Cms Media Servlet</description>
         <servlet-class>com.ilscipio.scipio.cms.media.CmsMediaServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
-    </servlet>     
+        <init-param>
+            <param-name>useCache</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>useCacheParam</param-name>
+            <param-value>cache</param-value><!-- Set to empty or false to disable ?cache= param (for security or otherwise) -->
+        </init-param>
+    </servlet>
     
     <servlet-mapping>
         <servlet-name>ControlServlet</servlet-name>

@@ -510,13 +510,13 @@
                                         <#assign rowSelected = (versionId == (version.id!""))>
                                         <#-- FIXME?: remove the alt and style using selected only? -->
                                         <@tr alt=rowSelected selected=rowSelected>
-                                           <@td><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_user!}" style="font-size:16px;margin:4px;"/></@td>
+                                           <@td><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_user!}" style="font-size:16px;margin:4px;"></i></@td>
                                            <@td> ${version.createdBy!"Anonymous"}</@td>
                                            <#assign verLinkMkrp><@pageUrl escapeAs="html">editPage?pageId=${escapeVal(pageId!, 'url')}&versionId=${escapeVal(version.id!, 'url')}</@pageUrl></#assign>
                                            <@td><#if version.date?has_content><a href="${verLinkMkrp}">${rawString(version.date)?datetime}</a></#if></@td>
                                            <@td><#if version.comment?has_content>${version.comment!""}</#if></@td>
-                                           <@td><a href="${verLinkMkrp}"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"/></a></@td>
-                                           <@td><#if version.active==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"/></#if></@td>      
+                                           <@td><a href="${verLinkMkrp}"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></@td>
+                                           <@td><#if version.active==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"></i></#if></@td>
                                         </@tr>
                                     </#list>
                                 </@tbody>

@@ -389,12 +389,12 @@
                                 <#assign rowSelected = (version.versionId == (pageTemplate.versionId!""))>
                                 <#-- FIXME?: remove the alt and style using selected only? -->
                                 <@tr alt=rowSelected selected=rowSelected>
-                                   <@td><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_user!}" style="font-size:16px;margin:4px;"/></@td>
+                                   <@td><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_user!}" style="font-size:16px;margin:4px;"></i></@td>
                                    <@td>${version.createdBy!"Anonymous"}</@td>
                                    <@td><a href="<@pageUrl>editTemplate?versionId=${version.versionId!""}&pageTemplateId=${version.pageTemplateId}</@pageUrl>">${version.lastUpdatedStamp}</a></@td>
                                    <@td><#if version.versionComment?has_content>${version.versionComment!""}</#if></@td>
-                                   <@td><a href="<@pageUrl>editTemplate?versionId=${version.versionId!""}&pageTemplateId=${version.pageTemplateId}</@pageUrl>"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"/></a></@td>
-                                   <@td><#if version.isActive==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"/></#if></@td>
+                                   <@td><a href="<@pageUrl>editTemplate?versionId=${version.versionId!""}&pageTemplateId=${version.pageTemplateId}</@pageUrl>"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></@td>
+                                   <@td><#if version.isActive==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"></i></#if></@td>
                                 </@tr>
                             </#list>
                             </@table>

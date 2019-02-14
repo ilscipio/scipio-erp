@@ -1938,8 +1938,8 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 </@section>
 
 <@section title="URL generation">
-  <#assign shopWebSiteId = rawString(shopInfo.webSiteId!)>
-  <#assign shopMountPoint = rawString(shopInfo.mountPoint!)>
+  <#assign shopWebSiteId = raw(shopInfo.webSiteId!)>
+  <#assign shopMountPoint = raw(shopInfo.mountPoint!)>
   <#if shopMountPoint == "/">
     <#assign shopMainUri = "/control/main">
   <#else>

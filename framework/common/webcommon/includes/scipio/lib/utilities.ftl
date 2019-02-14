@@ -2155,16 +2155,24 @@ NOTES:
 * rawString
 ************
 Returns the given value, bypassing the screen renderer html auto-escaping, as a simple Freemarker string.
+NOTE: 2019-02-14: See also the shorthand alias, #raw.
 
-This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
+This is the same as the java function, {{{StringUtil.wrapString}}}, but further simplifies
 the resulting type into a simple Freemarker string.
 
-This can be seen as the reverse operation of #rewrapString.
+Can be seen as the reverse operation of #rewrapString.
 
 NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings using ?string operator.
 
 NOTE: 2016-10-20: Now supports multiple parameters, which are each {{{rawString}}}-ed and then
     concatenated together.
+
+NOTE: 2019-02-14: This is very similar to the FreeMarker 2.3.27+ built-in, {{{?no_esc}}}, but currently,
+    in Scipio, you must use this function instead of the FreeMarker built-in; they are not compatible.
+
+  * Usage Examples *
+    <@field id="something_${rawString(orderId)}" .../>
+    <@field id="something_${raw(orderId)}" .../>
 
   * Parameters *
     value...                    = ((string), required) Value(s) to return without/bypassing screen renderer html auto-escaping
@@ -2177,10 +2185,11 @@ NOTE: 2016-10-20: Now supports multiple parameters, which are each {{{rawString}
                                     rawString(var1) + " " + rawString(var2)
                                   except the former is more efficient.
   * Related *
+    #raw
     #rewrapString  
     
   * History *
-    Enhanced for 1.14.2.                        
+    Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function rawString value...>
@@ -2189,12 +2198,62 @@ NOTE: 2016-10-20: Now supports multiple parameters, which are each {{{rawString}
 </#function>
 -->
 
+<#--
+*************
+* raw
+************
+Returns the given value, bypassing screen renderer html auto-escaping, as a simple Freemarker string.
+Alias for #rawString.
+
+This is the same as the java function, {{{StringUtil.wrapString}}}, but further simplifies
+the resulting type into a simple Freemarker string.
+
+Can be seen as the reverse operation of #rewrapString.
+
+NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings using ?string operator.
+
+NOTE: 2016-10-20: Now supports multiple parameters, which are each {{{rawString}}}-ed and then
+    concatenated together.
+
+NOTE: 2019-02-14: This is very similar to the FreeMarker 2.3.27+ built-in, {{{?no_esc}}}, but currently,
+    in Scipio, you must use this function instead of the FreeMarker built-in; they are not compatible.
+
+  * Usage Examples *
+    <@field id="something_${rawString(orderId)}" .../>
+    <@field id="something_${raw(orderId)}" .../>
+
+  * Parameters *
+    value...                    = ((string), required) Value(s) to return without/bypassing screen renderer html auto-escaping
+                                  If more than one parameter is passed to #rawString, 
+                                  each is applied the logical #rawString bypass, and
+                                  the result is a concatenation of all the parameters.
+                                  So
+                                    rawString(var1, " ", var2)
+                                  is equivalent to
+                                    rawString(var1) + " " + rawString(var2)
+                                  except the former is more efficient.
+
+  * Related *
+    #rawString
+    #rewrapString
+
+  * History *
+    Enhanced for 1.14.5.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function toRawString value...>
+</#function>
+-->
+
 <#-- 
 *************
 * toRawString
 ************
-Returns the given value, bypassing ofbiz screen renderer html auto-escaping, as a simple Freemarker string.
+Returns the given value, bypassing screen renderer html auto-escaping, as a simple Freemarker string.
 Alias for #rawString.
+
+  * Related *
+    #rawString
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function toRawString value...>

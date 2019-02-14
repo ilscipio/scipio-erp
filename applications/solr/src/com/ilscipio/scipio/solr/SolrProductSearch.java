@@ -13,7 +13,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -1129,7 +1131,8 @@ public abstract class SolrProductSearch {
     }
     
     /**
-     * SCIPIO (2019-05-02)[WIP]: Gets available categories in to be consumed in a menu-like format (like getSideDeepCategories) [experimental] 
+     * SCIPIO (2019-05-02): Gets all available categories in order to be consumed in a menu-like format (like getSideDeepCategories)
+     * 
      * @param dctx
      * @param context
      * @return
@@ -1137,15 +1140,17 @@ public abstract class SolrProductSearch {
     @SuppressWarnings("unchecked")
     public static Map<String, Object> getAvailableCategoriesExtended(DispatchContext dctx, Map<String, Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        
-        String catalogId = (String) context.get("catalogId");
-        
         Map<String, Object> result;
         try {
-            Map<String, List<Map<String, Object>>> catLevel = new HashMap<>();
+//            Map<String, Map<String, Object>> catLevel = new HashMap<>();
+            List<Map<String, List<Map<String, Object>>>> catLevel = UtilMisc.newList();
+
+            String catalogId = (String) context.get("catalogId");
 
             Map<String, Object> categories = null;
-            result = dispatcher.runSync("solrAvailableCategories", context);
+            Map<String, Object> solrAvailableCategoriesCtx = ServiceUtil.setServiceFields(dispatcher, "solrAvailableCategories", context, (GenericValue) context.get("userLogin"), (TimeZone) context.get("timeZone"),
+                    (Locale) context.get("locale"));
+            result = dispatcher.runSync("solrAvailableCategories", solrAvailableCategoriesCtx);
             if (ServiceUtil.isSuccess(result)) {
                 categories = (Map<String, Object>) result.get("categories");
             }
@@ -1153,90 +1158,160 @@ public abstract class SolrProductSearch {
                 return ServiceUtil.returnError("Categories not found.");
             }
 
+            Map<String, Object> allCategoriesMap = UtilMisc.newInsertOrderMap();
             for (String currentTrail : categories.keySet()) {
                 String[] trailElements = currentTrail.split("/");
-                long numFound = 0;
+                if (Debug.isOn(Debug.VERBOSE))
+                    Debug.logVerbose("Solr: currentTrail: " + currentTrail, module);
 
-//                int level;
-//                for (String element : trailElements) {
-//                    if (Debug.verboseOn()) Debug.logVerbose("Solr: getSideDeepCategories: iterating element: " + element, module);
-//                    Debug.log("Solr: getSideDeepCategories: iterating element: " + element, module);
-
-                List<Map<String, Object>> categoriesExtended = UtilMisc.newList();
-
-//                String categoryPath = SolrCategoryUtil.getCategoryNameWithTrail(currentTrail, catalogId, dctx, Arrays.asList(trailElements));
-                //String[] categoryPathArray = categoryPath.split("/");
-                int level = Integer.parseInt(trailElements[0]);
-
-                if (catLevel.containsKey("menu-" + level)) {
-                    categoriesExtended = catLevel.get("menu-" + level);
-                }
-
-                String facetPrefix = SolrCategoryUtil.getFacetFilterForCategory(currentTrail, dctx);
-                // 2016-03-22: IMPORTANT: the facetPrefix MUST end with / otherwise it will return unrelated categories!
-                // solr facetPrefix is not aware of our path delimiters
-                if (!facetPrefix.endsWith("/")) {
-                    facetPrefix += "/";
-                }
-                // Debug.logInfo("categoryPath: "+categoryPath + "
-                // facetPrefix: "+facetPrefix,module);
-                Map<String, Object> query = getAvailableCategories(dctx, context, catalogId, currentTrail, null, facetPrefix, false, 0, 0);
-                Debug.log("Solr: currentTrail: " + currentTrail , module);
-                if (ServiceUtil.isError(query)) {
-                    throw new Exception(ServiceUtil.getErrorMessage(query));
-                }
-
-                QueryResponse cat = (QueryResponse) query.get("rows");
-                result = ServiceUtil.returnSuccess();
-                result.put("numFound", (long) 0);
-
-                Long subNumFound = (Long) query.get("numFound");
-                if (subNumFound != null) {
-                    numFound += subNumFound;
-                }
-                List<FacetField> catList = (List<FacetField>) cat.getFacetFields();
-                for (Iterator<FacetField> catIterator = catList.iterator(); catIterator.hasNext();) {
-                    FacetField field = (FacetField) catIterator.next();
-                    List<Count> catL = (List<Count>) field.getValues();
-                    if (catL != null) {
-                        for (Iterator<Count> catIter = catL.iterator(); catIter.hasNext();) {
-                            FacetField.Count facet = (FacetField.Count) catIter.next();
-                            if (facet.getCount() > 0) {
-                                Map<String, Object> catMap = new HashMap<>();
-                                List<String> iName = new LinkedList<>();
-                                iName.addAll(Arrays.asList(facet.getName().split("/")));
-                                // Debug.logInfo("topLevel "+topLevel,"");
-                                // int l = Integer.parseInt((String)
-                                // iName.getFirst());
-                                catMap.put("catId", iName.get(iName.size() - 1)); // get last
-                                iName.remove(0); // remove first
-                                String path = facet.getName();
-                                catMap.put("path", path);
-                                if (level > 0) {
-                                    iName.remove(iName.size() - 1); // remove last
-                                    catMap.put("parentCategory", StringUtils.join(iName, "/"));
-                                } else {
-                                    catMap.put("parentCategory", null);
-                                }
-                                catMap.put("count", Long.toString(facet.getCount()));
-                                categoriesExtended.add(catMap);
-                            }
-                        }
-                    }
-                }
-                catLevel.put("menu-" + level, categoriesExtended);
-//                }
-
-                result.put("categories", catLevel);
-                result.put("numFound", numFound);
+                String[] elements = Arrays.copyOfRange(trailElements, 1, trailElements.length);
+                Map<String, Object> categoriesExtended = getAllCategoriesFromMap(allCategoriesMap, elements);
+                allCategoriesMap.putAll(categoriesExtended);
             }
+            
+            for (String catKey : allCategoriesMap.keySet()) {
+//                Debug.log("building extended top category: " + catKey);                
+                Map<String, List<Map<String, Object>>> categoryMap = UtilMisc.newInsertOrderMap();
+                categoryMap.put("menu-0", prepareAndRunSorlCategoryQuery(dctx, context, catalogId, "0/" + catKey, "1/" + catKey + "/", 0));
+                catLevel.add(buildCategoriesExtendedFromMap(categoryMap, (Map<String, Object>) allCategoriesMap.get(catKey), "/" + catKey,
+                        dctx, context, catalogId));
+            }
+
+            result.put("categoriesMap", allCategoriesMap);
+            result.put("categories", catLevel);
+//                result.put("numFound", numFound);
+
         } catch (Exception e) {
             result = ServiceUtil.returnError(e.toString());
             result.put("numFound", (long) 0);
+            Debug.logError(e, module);
             return result;
         }
         return result;
     }
+    
+    
+    /**
+     * 
+     * @param categoriesExtended
+     * @param multiLevelEntryCategoryMap
+     * @param currentTrail
+     * @param dctx
+     * @param context
+     * @param catalogId
+     * @return
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    private static Map<String, List<Map<String, Object>>> buildCategoriesExtendedFromMap(Map<String, List<Map<String, Object>>> categoriesExtended,
+            Map<String, Object> multiLevelEntryCategoryMap, String currentTrail, DispatchContext dctx, Map<String, Object> context, String catalogId)
+            throws Exception {
+        for (String catKey : multiLevelEntryCategoryMap.keySet()) {
+            String trail = currentTrail + "/" + catKey; 
+            Map<String, Object> multiLevelEntryCategory = (Map<String, Object>) multiLevelEntryCategoryMap.get(catKey);
+            if (UtilValidate.isNotEmpty(multiLevelEntryCategory)) {
+                categoriesExtended.putAll(buildCategoriesExtendedFromMap(categoriesExtended, multiLevelEntryCategory, trail, dctx, context, catalogId));
+            }
+            String[] elements = trail.split("/");
+            String categoryPath = SolrCategoryUtil.getCategoryNameWithTrail(catKey, catalogId, dctx, Arrays.asList(elements));
+            int level = Integer.valueOf(categoryPath.split("/")[0]);
+            String facetPrefix = SolrCategoryUtil.getFacetFilterForCategory(categoryPath, dctx);
+            if (!facetPrefix.endsWith("/")) {
+                facetPrefix += "/";
+            }
+            if (Debug.isOn(Debug.VERBOSE)) {
+                Debug.logInfo("Solr: getSideDeepCategories: level: " + level + " iterating element: " + catKey + "   categoryPath: " + categoryPath
+                        + " facetPrefix: " + facetPrefix, module);
+            }
+            List<Map<String, Object>> tempList = prepareAndRunSorlCategoryQuery(dctx, context, catalogId, categoryPath, facetPrefix, level);
+            if (categoriesExtended.containsKey("menu-" + level)) {
+                categoriesExtended.get("menu-" + level).addAll(tempList);
+            } else {
+                categoriesExtended.put("menu-" + level, tempList);
+            }
+        }
+        return categoriesExtended;
+    }
+    
+    /**
+     * 
+     * @param dctx
+     * @param context
+     * @param catalogId
+     * @param categoryPath
+     * @param facetPrefix
+     * @param level
+     * @return
+     * @throws Exception
+     */
+    private static List<Map<String, Object>> prepareAndRunSorlCategoryQuery(DispatchContext dctx, Map<String, Object> context, String catalogId,
+            String categoryPath, String facetPrefix, int level) throws Exception {
+        // TODO: Use this method in sideDeepCategories
+        Map<String, Object> query = getAvailableCategories(dctx, context, catalogId, categoryPath, null, facetPrefix, false, 0, 0);
+        if (ServiceUtil.isError(query)) {
+            throw new Exception(ServiceUtil.getErrorMessage(query));
+        }
+        QueryResponse cat = (QueryResponse) query.get("rows");
+        List<Map<String, Object>> result = UtilMisc.newList();
+        List<FacetField> catList = (List<FacetField>) cat.getFacetFields();
+        for (Iterator<FacetField> catIterator = catList.iterator(); catIterator.hasNext();) {
+            FacetField field = (FacetField) catIterator.next();
+            List<Count> catL = (List<Count>) field.getValues();
+            if (catL != null) {
+                for (Iterator<Count> catIter = catL.iterator(); catIter.hasNext();) {
+                    FacetField.Count facet = (FacetField.Count) catIter.next();
+                    if (facet.getCount() > 0) {
+                        Map<String, Object> catMap = new HashMap<>();
+                        List<String> iName = new LinkedList<>();
+                        iName.addAll(Arrays.asList(facet.getName().split("/")));
+                        catMap.put("catId", iName.get(iName.size() - 1)); 
+                        iName.remove(0); // remove first
+                        String path = facet.getName();
+                        catMap.put("path", path);
+                        if (level > 0) {
+                            iName.remove(iName.size() - 1); // remove last
+                            catMap.put("parentCategory", StringUtils.join(iName, "/"));
+                        } else {
+                            catMap.put("parentCategory", null);
+                        }
+                        catMap.put("count", Long.toString(facet.getCount()));
+                        result.add(catMap);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 
+     * @param currentMap
+     * @param categoryIds
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> getAllCategoriesFromMap(Map<String, Object> currentMap, String[] categoryIds) {
+        
+        int catsSize = categoryIds.length;
+        if (catsSize > 0) {
+            int i = 0;
+            for (String key : currentMap.keySet()) {
+                if (i < catsSize && key.equals(categoryIds[i])) {
+                    i++;
+                    Map<String, Object> currentSubMap = (Map<String, Object>) currentMap.get(key);
+                    if (i + 1 == catsSize) {                    
+                        currentSubMap.put(categoryIds[i], UtilMisc.newInsertOrderMap());
+                    } else {
+                        getAllCategoriesFromMap(currentSubMap, Arrays.copyOfRange(categoryIds, i, categoryIds.length));
+                    }
+                    return currentMap; 
+                }
+            }
+            return UtilMisc.toMap(categoryIds[i], UtilMisc.newInsertOrderMap());
+        }
+        return null;
+    }
+
     /**
      * NOTE: This method is package-private for backward compat only and should not be made public; its interface is subject to change.
      * Client code should call the solrAvailableCategories or solrSideDeepCategory service instead.

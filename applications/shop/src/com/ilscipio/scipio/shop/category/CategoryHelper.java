@@ -99,6 +99,8 @@ public class CategoryHelper {
                     else if (UtilValidate.isNotEmpty(description)) {
                         info.put("displayName", description);
                     }
+                    // SCIPIO (2019-02-14): This was assumed to be present in ftl but it wasn't really added to the catInfo map.
+                    info.put("productCategory", productCategory);
                 }
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);

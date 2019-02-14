@@ -50,6 +50,29 @@ code package.
         </@tr>
         </@thead>
 
+        <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+        <#macro orderItemAttrInfo cartLine>
+            <#if cartLine.getConfigWrapper()??>
+              <#local selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
+              <#if selectedOptions?has_content>
+                <ul class="order-item-attrib-list">
+                  <#list selectedOptions as option>
+                    <li>${option.getDescription()}</li>
+                  </#list>
+                </ul>
+              </#if>
+            </#if>
+            <#assign attrs = cartLine.getOrderItemAttributes()!/>
+            <#if attrs?has_content>
+                <#local attrEntries = attrs.entrySet()/>
+                <ul class="order-item-attrib-list">
+                  <#list attrEntries as attrEntry>
+                    <li>${attrEntry.getKey()}: ${attrEntry.getValue()}</li>
+                  </#list>
+                </ul>
+            </#if>
+        </#macro>
+
         <#assign itemsFromList = false>
         <#list shoppingCart.items() as cartLine>
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
@@ -66,29 +89,7 @@ code package.
                     <#-- product item -->
                     <a href="<@pageUrl>product?product_id=${cartLine.getProductId()}</@pageUrl>" class="${styles.link_nav_info_id!}">${cartLine.getProductId()}</a> -
                     <@field size="30" type="input" inline=true name="description_${cartLineIndex}" value=(cartLine.getName()!"")/> <i>${cartLine.getDescription()!}</i><br />
-                      <#-- SCIPIO: This indented code is borrowed from shop's showcart.ftl -->
-                        <#-- For configurable products, the selected options are shown -->
-                        <#if cartLine.getConfigWrapper()??>
-                          <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
-                          <#if selectedOptions??>
-                            <ul class="order-item-attrib-list">
-                            <#list selectedOptions as option>
-                                <li>${option.getDescription()}</li>
-                            </#list>
-                            </ul>
-                          </#if>
-                        </#if>
-                        <#assign attrs = cartLine.getOrderItemAttributes()/>
-                        <#if attrs?has_content>
-                            <#assign attrEntries = attrs.entrySet()/>
-                            <ul class="order-item-attrib-list">
-                            <#list attrEntries as attrEntry>
-                                <li>
-                                    ${attrEntry.getKey()}: ${attrEntry.getValue()}
-                                </li>
-                            </#list>
-                            </ul>
-                        </#if>
+                    <@orderItemAttrInfo cartLine=cartLine/>
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
                       <#-- only applies to sales orders, not purchase orders -->
                       <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
@@ -101,6 +102,7 @@ code package.
                   <#else>
                     <#-- this is a non-product item -->
                     <b>${cartLine.getItemTypeDescription()!}</b> : ${cartLine.getName()!}
+                    <@orderItemAttrInfo cartLine=cartLine/>
                   </#if>
                     <#-- display the item's features -->
                    <#assign features = "">

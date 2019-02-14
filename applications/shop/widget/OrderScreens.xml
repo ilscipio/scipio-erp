@@ -724,7 +724,7 @@ code package.
                 <set field="checkoutAllowAnonUnknown" type="Boolean" value="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonCheckoutDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonCheckoutDecorator">
                     <decorator-section name="pre-body">
                         <include-screen name="quickAnonCheckoutLinks"/>
                     </decorator-section>

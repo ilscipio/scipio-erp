@@ -4256,6 +4256,21 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
     }
 
+    /**
+     * SCIPIO: Returns the ProductConfigWrapper for each order item.
+     * WARNING: This ONLY works if the order items have already been expanded, using {@link #makeOrderItems} or other,
+     * otherwise there will be no orderItemSeqIds to use!
+     */
+    public Map<String, ProductConfigWrapper> getProductConfigWrappersByOrderItemSeqId() {
+        Map<String, ProductConfigWrapper> result = new HashMap<>();
+        for (ShoppingCartItem item : cartLines) {
+            if (item.getOrderItemSeqId() != null && item.getConfigWrapper() != null) {
+                result.put(item.getOrderItemSeqId(), item.getConfigWrapper());
+            }
+        }
+        return result;
+    }
+
     /** create WorkEfforts from the shoppingcart items when itemType = RENTAL_ORDER_ITEM */
     public List<GenericValue> makeWorkEfforts() {
         List<GenericValue> allWorkEfforts = new ArrayList<>();
@@ -4513,6 +4528,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     public int getShipInfoSize() {
         return this.shipInfo.size();
+    }
+
+    public Map<String, List<GenericValue>> makeAllOrderItemAttributesByOrderItemSeqId() { // SCIPIO
+        return UtilMisc.groupMapsByKey(makeAllOrderItemAttributes(), "orderItemSeqId");
     }
 
     public List<GenericValue> makeAllOrderItemAttributes() {

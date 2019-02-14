@@ -15,4 +15,12 @@ if (orderItems) {
 }
 context.productDownloads = productDownloads;
 
-
+// SCIPIO: OrderItemAttributes and ProductConfigWrappers
+// Only do this if it's not a persisted order...
+cart = context.cart;
+if (cart != null && !(context.orderHeader?.orderId)) {
+    orderItemAttrMap = cart.makeAllOrderItemAttributesByOrderItemSeqId();
+    context.orderItemAttrMap = orderItemAttrMap;
+    orderItemProdCfgMap = cart.getProductConfigWrappersByOrderItemSeqId();
+    context.orderItemProdCfgMap = orderItemProdCfgMap;
+}

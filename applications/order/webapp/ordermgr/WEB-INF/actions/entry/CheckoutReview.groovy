@@ -157,3 +157,9 @@ if (orderTerms) {
 
 orderType = cart.getOrderType();
 context.orderType = orderType;
+
+// SCIPIO: OrderItemAttributes and ProductConfigWrappers
+orderItemAttrMap = cart.makeAllOrderItemAttributesByOrderItemSeqId();
+context.orderItemAttrMap = orderItemAttrMap;
+orderItemProdCfgMap = cart.getProductConfigWrappersByOrderItemSeqId();
+context.orderItemProdCfgMap = orderItemProdCfgMap;

@@ -3,7 +3,6 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-
 <#if orderHeader?has_content>
 <@section title=uiLabelMap.OrderOrderItems>
             <@table type="data-complex" role="grid">
@@ -17,6 +16,37 @@ code package.
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.OrderSubTotal}</@th>
                 </@tr>
                 </@thead>
+                <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+                <#macro orderItemAttrInfo orderItem>
+                    <#local orderItemSeqId = rawString(orderItem.orderItemSeqId!)>
+                    <#if orderItemProdCfgMap??>
+                      <#local cfgWrp = (orderItemProdCfgMap[orderItemSeqId])!false>
+                    <#else>
+                      <#local cfgWrp = false><#-- TODO -->
+                    </#if>
+                    <#if !cfgWrp?is_boolean>
+                      <#local selectedOptions = cfgWrp.getSelectedOptions()! />
+                      <#if selectedOptions?has_content>
+                        <ul class="order-item-attrib-list">
+                          <#list selectedOptions as option>
+                            <li>${option.getDescription()}</li>
+                          </#list>
+                        </ul>
+                      </#if>
+                    </#if>
+                    <#if orderItemProdCfgMap??>
+                      <#local orderItemAttributes = orderItemAttrMap[orderItemSeqId]!/>
+                    <#else>
+                      <#local orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
+                    </#if>
+                    <#if orderItemAttributes?has_content>
+                        <ul>
+                          <#list orderItemAttributes as orderItemAttribute>
+                            <li>${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}</li>
+                          </#list>
+                        </ul>
+                    </#if>
+                </#macro>
                 <#if !orderItemList?has_content>
                     <@tr type="meta">
                         <@td colspan="6">
@@ -35,13 +65,14 @@ code package.
                             <#assign productId = orderItem.productId!>
                             <#-- SCIPIO: This product lookup added by us, missing from upstream patch -->
                             <#assign product = orderItem.getRelatedOne("Product", false)!>
-                            <#if productId?? && productId == "shoppingcart.CommentLine">
+                            <#if rawString(productId) == "shoppingcart.CommentLine">
                                 <@td> &gt;&gt; ${orderItem.itemDescription}</@td>
+                                <@orderItemAttrInfo orderItem=orderItem/>
                             <#else>
                                 <@td>
                                         <#if orderItem.supplierProductId?has_content>
                                             <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@serverUrl>">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
-                                        <#elseif productId??>
+                                        <#elseif productId?has_content>
                                             <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@serverUrl>">${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}</a>
                                             <#if (product.salesDiscontinuationDate)?? && UtilDateTime.nowTimestamp().after(product.salesDiscontinuationDate)>
                                                 <br />
@@ -52,17 +83,8 @@ code package.
                                         <#else>
                                             <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@serverUrl>">${orderItem.itemDescription!}</a>
                                         </#if>
-                                        
-                                        <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
-                                        <#if orderItemAttributes?has_content>
-                                            <ul>
-                                            <#list orderItemAttributes as orderItemAttribute>
-                                                <li>
-                                                    ${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}
-                                                </li>
-                                            </#list>
-                                            </ul>
-                                        </#if>
+                                        <@orderItemAttrInfo orderItem=orderItem/>
+
                                         <#-- SCIPIO: order by ProductContent.sequenceNum -->
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"}, ["sequenceNum ASC"], true)/>
                                         <#if downloadContents?has_content>
@@ -78,12 +100,12 @@ code package.
                                         </#if>
                                 </@td>
                             </#if>
-                            <#if productId?? && productId == "shoppingcart.CommentLine">
+                            <#if rawString(productId) == "shoppingcart.CommentLine">
                                 <@td colspan="6"> &gt;&gt; ${orderItem.itemDescription}</@td>
                             <#else>
                                 <#-- now show status details per line item -->
-                                <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)>
-                                <@td class="${styles.text_right!}">
+                                <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)!>
+                                <@td class=(styles.text_right!)>
                                     <#assign productItemStatus>
                                                 <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>                                       
                                                     <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId!""}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveItem}</a>
@@ -125,7 +147,7 @@ code package.
                                         </#if>
                                     </#assign>
                                     <#if productItemStatus?has_content>
-                                        <@modal id="${productId}_st" label=(currentItemStatus.get('description',locale)!(currentItemStatus.statusId))>${productItemStatus!}</@modal>
+                                        <@modal id="${rawString(productId)}_st" label=(currentItemStatus.get('description',locale)!(currentItemStatus.statusId))>${productItemStatus!}</@modal>
                                     <#else>
                                         ${currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)}
                                     </#if>
@@ -296,11 +318,11 @@ code package.
                                         </#if>
                                     </#if>
                                 </@td>
-                                <@td class="${styles.text_right!}" valign="top" nowrap="nowrap">
+                                <@td class=(styles.text_right!) valign="top" nowrap="nowrap">
                                     <@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/>
                                     / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/>
                                 </@td>
-                                <@td class="${styles.text_right!}" valign="top" nowrap="nowrap">
+                                <@td class=(styles.text_right!) valign="top" nowrap="nowrap">
                                     <#assign modalLabel><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/></#assign>
                                     <@modal id="${productId}_adj" label=modalLabel>
                                         <@table type="data-complex" class="+grid">
@@ -309,7 +331,7 @@ code package.
                                                 <@th width="70%" colspan="2">${uiLabelMap.OrderAdjustments}</@th>
                                                 <@th></@th>
                                                 <@th></@th>
-                                                <@th width="10%" class="${styles.text_right!}">${uiLabelMap.OrderSubTotal}</@th>
+                                                <@th width="10%" class=(styles.text_right!)>${uiLabelMap.OrderSubTotal}</@th>
                                                 <@th></@th>
                                                 <@th></@th>
                                                 </@tr>

@@ -3,7 +3,6 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-
 <@section title=uiLabelMap.OrderOrderItems>
         <@menu type="button"> <#-- class="boxlink" -->
           <#if (maySelectItems!false) == true>
@@ -29,12 +28,45 @@ code package.
             </#if>
           </@tr>
           </@thead>
+        <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+        <#macro orderItemAttrInfo orderItem>
+            <#local orderItemSeqId = rawString(orderItem.orderItemSeqId!)>
+            <#if orderItemProdCfgMap??>
+              <#local cfgWrp = (orderItemProdCfgMap[orderItemSeqId])!false>
+            <#else>
+              <#local cfgWrp = false><#-- TODO -->
+            </#if>
+            <#if !cfgWrp?is_boolean>
+              <#local selectedOptions = cfgWrp.getSelectedOptions()! />
+              <#if selectedOptions?has_content>
+                <ul class="order-item-attrib-list">
+                  <#list selectedOptions as option>
+                    <li>${option.getDescription()}</li>
+                  </#list>
+                </ul>
+              </#if>
+            </#if>
+            <#if orderItemProdCfgMap??>
+              <#local orderItemAttributes = orderItemAttrMap[orderItemSeqId]!/>
+            <#else>
+              <#local orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
+            </#if>
+            <#if orderItemAttributes?has_content>
+                <ul>
+                  <#list orderItemAttributes as orderItemAttribute>
+                    <li>${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}</li>
+                  </#list>
+                </ul>
+            </#if>
+        </#macro>
           <#list (orderItems!) as orderItem>
             <#assign itemType = orderItem.getRelatedOne("OrderItemType", false)!>
             <@tr>
               <#if orderItem.productId?? && orderItem.productId == "_?_">
                 <@td colspan=(maySelectItems!false)?string("6", "5") valign="top">
                   <b><div> &gt;&gt; ${orderItem.itemDescription}</div></b>
+                    <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+                    <@orderItemAttrInfo orderItem=orderItem/>
                 </@td>
               <#else>
                 <@td valign="top">
@@ -43,7 +75,8 @@ code package.
                     <#else>
                       <b>${(itemType.description)!}</b> : ${orderItem.itemDescription!}
                     </#if>
-                  </@td>
+                    <@orderItemAttrInfo orderItem=orderItem/>
+                </@td>
                 <#assign effTotalQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)))><#-- SCIPIO -->
                 <@td class="${styles.text_right!}" valign="top">${effTotalQuantity?string.number}</@td><#-- SCIPIO: inappropriate, includes cancelled: orderItem.quantity?string.number -->
                 <@td class="${styles.text_right!}" valign="top"><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/></@td>

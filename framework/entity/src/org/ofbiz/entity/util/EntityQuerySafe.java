@@ -26,6 +26,13 @@ public class EntityQuerySafe extends EntityQuery {
         super(delegator);
     }
 
+    /** Construct an EntityQuery object for use against the specified Delegator
+     * @param delegator The delegator instance to use for the query
+     */
+    public static EntityQuerySafe use(Delegator delegator) {
+        return new EntityQuerySafe(delegator);
+    }
+    
     @Override
     public EntityQuerySafe select(Set<String> fieldsToSelect) {
         return (EntityQuerySafe) super.select(fieldsToSelect);

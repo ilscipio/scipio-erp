@@ -42,6 +42,8 @@ import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entity.util.EntityCrypto;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityQuerySafe;
 import org.ofbiz.entity.util.EntityStoreOptions;
 import org.ofbiz.entity.util.SequenceUtil;
 import org.w3c.dom.Document;
@@ -954,4 +956,86 @@ public interface Delegator {
     default boolean isEntity(String entityName) {
         return (getModelReader().getModelEntityNoCheck(entityName) != null);
     }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator,
+     * equivalent to: <code>EntityQuery.use(delegator)</code>.
+     */
+    default EntityQuery query() {
+        return EntityQuery.use(this);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuery.use(delegator).from(entityName)</code>.
+     */
+    default EntityQuery from(String entityName) {
+        return query().from(entityName);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuery.use(delegator).from(entityName)</code>.
+     */
+    default EntityQuery from(DynamicViewEntity dynamicViewEntity) {
+        return query().from(dynamicViewEntity);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to select the specific fields,
+     * equivalent to: <code>EntityQuery.use(delegator).select(fieldsToSelect)</code>.
+     */
+    default EntityQuery select(Set<String> fieldsToSelect) {
+        return query().select(fieldsToSelect);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to select the specific fields,
+     * equivalent to: <code>EntityQuery.use(delegator).select(fieldsToSelect)</code>.
+     */
+    default EntityQuery select(String... fieldsToSelect) {
+        return query().select(fieldsToSelect);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator,
+     * equivalent to: <code>EntityQuerySafe.use(delegator)</code>.
+     * This is the same as {@link #query()} except this EntityQuery does not throw GenericEntityExceptions.
+     */
+    default EntityQuery querySafe() {
+        return EntityQuerySafe.use(this);
+    }
+
+    // SCIPIO: TODO: REVIEW: These are uglier, thus not supported for the time being - use querySafe() instead.
+//    /**
+//     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to query the specified entity,
+//     * equivalent to: <code>EntityQuery.use(delegator).from(entityName)</code>.
+//     */
+//    default EntityQuery fromSafe(String entityName) {
+//        return querySafe().from(entityName);
+//    }
+//
+//    /**
+//     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to query the specified entity,
+//     * equivalent to: <code>EntityQuery.use(delegator).from(entityName)</code>.
+//     */
+//    default EntityQuery fromSafe(DynamicViewEntity dynamicViewEntity) {
+//        return querySafe().from(dynamicViewEntity);
+//    }
+//
+//    /**
+//     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to select the specific fields,
+//     * equivalent to: <code>EntityQuery.use(delegator).select(fieldsToSelect)</code>.
+//     */
+//    default EntityQuery selectSafe(Set<String> fieldsToSelect) {
+//        return querySafe().select(fieldsToSelect);
+//    }
+//
+//    /**
+//     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to select the specific fields,
+//     * equivalent to: <code>EntityQuery.use(delegator).select(fieldsToSelect)</code>.
+//     */
+//    default EntityQuery selectSafe(String... fieldsToSelect) {
+//        return querySafe().select(fieldsToSelect);
+//    }
 }

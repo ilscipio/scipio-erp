@@ -6,21 +6,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.collections.PagedList;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
 
 /**
- * SCIPIO: A version of EntityQuery that avoids throwing GenericEntityException,
- * though it <em>may</em> still throw programming-related unchecked exceptions.
+ * SCIPIO: A version of EntityQuery that avoids throwing GenericEntityException and instead returns null.
+ * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+ * <p>
+ * NOTE: This simply overrides the queryXxx methods and forces them to call querySafeXxx instead,
+ * thus offers an alternative to calling the queryXxxSafe methods manually.
  */
 public class EntityQuerySafe extends EntityQuery {
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public EntityQuerySafe(Delegator delegator) {
         super(delegator);
@@ -32,7 +33,7 @@ public class EntityQuerySafe extends EntityQuery {
     public static EntityQuerySafe use(Delegator delegator) {
         return new EntityQuerySafe(delegator);
     }
-    
+
     @Override
     public EntityQuerySafe select(Set<String> fieldsToSelect) {
         return (EntityQuerySafe) super.select(fieldsToSelect);
@@ -195,71 +196,36 @@ public class EntityQuerySafe extends EntityQuery {
 
     @Override
     public List<GenericValue> queryList() {
-        try {
-            return super.queryList();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryList(): " + e.getMessage(), module);
-            return null;
-        }
+        return queryListSafe();
     }
 
     @Override
     public EntityListIterator queryIterator() {
-        try {
-            return super.queryIterator();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryIterator(): " + e.getMessage(), module);
-            return null;
-        }
+        return queryIteratorSafe();
     }
 
     @Override
     public GenericValue queryFirst() {
-        try {
-            return super.queryFirst();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryFirst(): " + e.getMessage(), module);
-            return null;
-        }
+        return queryFirstSafe();
     }
 
     @Override
     public GenericValue queryOne() {
-        try {
-            return super.queryOne();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryOne(): " + e.getMessage(), module);
-            return null;
-        }
+        return queryOneSafe();
     }
 
     @Override
     public long queryCount() {
-        try {
-            return super.queryCount();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryCount(): " + e.getMessage(), module);
-            return 0;
-        }
+        return queryCountSafe();
     }
 
     @Override
     public <T> List<T> getFieldList(String fieldName) {
-        try {
-            return super.getFieldList(fieldName);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
-            return null;
-        }
+        return getFieldListSafe(fieldName);
     }
 
     @Override
     public PagedList<GenericValue> queryPagedList(int viewIndex, int viewSize) {
-        try {
-            return super.queryPagedList(viewIndex, viewSize);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error in queryPagedList(): " + e.getMessage(), module);
-            return null;
-        }
+        return queryPagedListSafe(viewIndex, viewSize);
     }
 }

@@ -13,6 +13,9 @@
 ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]]</b></em><#t/>
 </#macro>
 
+test: ${delegator.from("Product").where("productId", "PC-1000").queryOne().productId}
+test: ${delegator.querySafe().from("Product").where("productIds", "PC-1000").queryOne()!"test"}
+
 <#--<@nav type="magellan">
     <@mli arrival="breadcrumbs"><a href="#breadcrumbs">Breadcrumbs</a></@mli>
     <@mli arrival="grid"><a href="#grid">Grid</a></@mli>

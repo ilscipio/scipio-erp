@@ -704,7 +704,8 @@ public class EntityQuery {
         }
     }
 
-    public <T> List<T> getFieldList(final String fieldName) throws GenericEntityException {select(fieldName);
+    public <T> List<T> getFieldList(final String fieldName) throws GenericEntityException {
+        select(fieldName);
         try (EntityListIterator genericValueEli = queryIterator()) {
             if (Boolean.TRUE.equals(this.distinct)) {
                 Set<T> distinctSet = new HashSet<T>();
@@ -732,16 +733,119 @@ public class EntityQuery {
     }
 
     /**
+     * Query paged list.
      * @param viewIndex
      * @param viewSize
      * @return PagedList object with a subset of data items
      * @throws GenericEntityException
      * @see EntityUtil#getPagedList
      */
-    public PagedList<GenericValue> queryPagedList(final int viewIndex, final int viewSize) throws GenericEntityException {
+    public PagedList<GenericValue> queryPagedList(int viewIndex, int viewSize) throws GenericEntityException {
         try (EntityListIterator genericValueEli = queryIterator()) {
             return EntityUtil.getPagedList(genericValueEli, viewIndex, viewSize);
         }
     }
 
+    /** SCIPIO: Executes the EntityQuery and returns a list of results; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     *
+     * @return Returns a List of GenericValues representing the results of the query
+     */
+    public List<GenericValue> queryListSafe() {
+        try {
+            return queryList();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryList: " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    /** SCIPIO: Executes the EntityQuery and returns an EntityListIterator representing the result of the query; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     *
+     * NOTE:  THAT THIS MUST BE CLOSED (preferably in a finally block) WHEN YOU
+     *        ARE DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT
+     *        WILL MAINTAIN A DATABASE CONNECTION.
+     *
+     * @return Returns an EntityListIterator representing the result of the query
+     */
+    public EntityListIterator queryIteratorSafe() {
+        try {
+            return queryIterator();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryIterator: " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    /** SCIPIO: Executes the EntityQuery and returns the first result; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     *
+     * @return GenericValue representing the first result record from the query
+     */
+    public GenericValue queryFirstSafe() {
+        try {
+            return queryFirst();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryFirst: " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    /** SCIPIO: Executes the EntityQuery and a single result record; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     *
+     * @return GenericValue representing the only result record from the query
+     */
+    public GenericValue queryOneSafe() {
+        try {
+            return queryOne();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryOne: " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    /** SCIPIO: Executes the EntityQuery and returns the result count; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     *
+     * If the query generates more than a single result then zero is returned.
+     *
+     * @return GenericValue representing the only result record from the query
+     */
+    public long queryCountSafe() {
+        try {
+            return queryCount();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryCount: " + e.getMessage(), module);
+            return 0;
+        }
+    }
+
+    public <T> List<T> getFieldListSafe(String fieldName) { // SCIPIO
+        try {
+            return getFieldList(fieldName);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    /**
+     * SCIPIO: Query paged list; returns null if GenericEntityException.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     * @param viewIndex
+     * @param viewSize
+     * @return PagedList object with a subset of data items
+     * @throws GenericEntityException
+     * @see EntityUtil#getPagedList
+     */
+    public PagedList<GenericValue> queryPagedListSafe(int viewIndex, int viewSize) {
+        try {
+            return queryPagedList(viewIndex, viewSize);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryPagedList(): " + e.getMessage(), module);
+            return null;
+        }
+    }
 }

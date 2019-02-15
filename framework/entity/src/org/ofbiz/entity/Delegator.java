@@ -1000,9 +1000,12 @@ public interface Delegator {
     /**
      * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator,
      * equivalent to: <code>EntityQuerySafe.use(delegator)</code>.
-     * This is the same as {@link #query()} except this EntityQuery does not throw GenericEntityExceptions.
+     * <p>
+     * This is the same as {@link #query()} except this EntityQuery's <code>queryXxx</code> methods
+     * do not throw GenericEntityExceptions, instead they behave exactly as the <code>queryXxxSafe</code> methods.
+     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
      */
-    default EntityQuery querySafe() {
+    default EntityQuerySafe querySafe() {
         return EntityQuerySafe.use(this);
     }
 

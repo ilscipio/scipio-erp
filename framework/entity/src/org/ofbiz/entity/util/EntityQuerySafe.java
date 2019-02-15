@@ -16,7 +16,8 @@ import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
 
 /**
- * SCIPIO: A version of EntityQuery that avoids throwing exceptions.
+ * SCIPIO: A version of EntityQuery that avoids throwing GenericEntityException,
+ * though it <em>may</em> still throw programming-related unchecked exceptions.
  */
 public class EntityQuerySafe extends EntityQuery {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

@@ -80,7 +80,7 @@ def partyId = null;
 
 // get the logo partyId from order or invoice - note that it is better to do comparisons this way in case the there are null values
 if (orderHeader) {
-    orh = new OrderReadHelper(orderHeader);
+    orh = new OrderReadHelper(dispatcher, context.locale, orderHeader); // SCIPIO: Added dispatcher
     // for sales order, the logo party is the "BILL_FROM_VENDOR" of the order.  If that's not available, we'll use the OrderHeader's ProductStore's payToPartyId
     if ("SALES_ORDER".equals(orderHeader.orderTypeId)) {
         if (orh.getBillFromParty()) {

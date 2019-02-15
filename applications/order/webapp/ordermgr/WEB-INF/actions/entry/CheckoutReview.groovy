@@ -123,7 +123,7 @@ context.shipAfterDate = cart.getShipAfterDate();
 shipmentMethodType = from("ShipmentMethodType").where("shipmentMethodTypeId", cart.getShipmentMethodTypeId()).queryOne();
 if (shipmentMethodType) context.shipMethDescription = shipmentMethodType.description;
 
-orh = new OrderReadHelper(orderAdjustments, orderItems);
+orh = new OrderReadHelper(dispatcher, locale, orderAdjustments, orderItems); // SCIPIO: Added dispatcher
 context.localOrderReadHelper = orh;
 
 shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);

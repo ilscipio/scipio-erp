@@ -53,9 +53,12 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.config.ProductConfigWorker;
+import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
+import org.ofbiz.service.LocalDispatcher;
 
 /**
  * Utility class for easily extracting important information from orders
@@ -99,10 +102,15 @@ public class OrderReadHelper {
     protected List<GenericValue> orderReturnItems = null;
     protected Map<GenericValue, List<GenericValue>> orderSubscriptionItems = null; // SCIPIO
     protected BigDecimal totalPrice = null;
+    protected LocalDispatcher dispatcher; // SCIPIO: Optional dispatcher
+    protected Locale locale; // SCIPIO: Optional locale
 
     protected OrderReadHelper() {}
 
-    public OrderReadHelper(GenericValue orderHeader, List<GenericValue> adjustments, List<GenericValue> orderItems) {
+    // SCIPIO: Added dispatcher overload
+    public OrderReadHelper(LocalDispatcher dispatcher, Locale locale, GenericValue orderHeader, List<GenericValue> adjustments, List<GenericValue> orderItems) {
+        this.dispatcher = dispatcher; // SCIPIO
+        this.locale = locale;
         this.orderHeader = orderHeader;
         this.adjustments = adjustments;
         this.orderItems = orderItems;
@@ -131,16 +139,32 @@ public class OrderReadHelper {
         }
     }
 
+    public OrderReadHelper(GenericValue orderHeader, List<GenericValue> adjustments, List<GenericValue> orderItems) {
+        this(null, null, orderHeader, adjustments, orderItems); // SCIPIO: delegating
+    }
+
+    public OrderReadHelper(LocalDispatcher dispatcher, Locale locale, GenericValue orderHeader) { // SCIPIO: Added dispatcher overload
+        this(dispatcher, locale, orderHeader, null, null);
+    }
+
     public OrderReadHelper(GenericValue orderHeader) {
         this(orderHeader, null, null);
     }
 
-    public OrderReadHelper(List<GenericValue> adjustments, List<GenericValue> orderItems) {
+    public OrderReadHelper(LocalDispatcher dispatcher, Locale locale, List<GenericValue> adjustments, List<GenericValue> orderItems) { // SCIPIO: Added dispatcher overload
+        this.dispatcher = dispatcher;
+        this.locale = locale;
         this.adjustments = adjustments;
         this.orderItems = orderItems;
     }
 
-    public OrderReadHelper(Delegator delegator, String orderId) {
+    public OrderReadHelper(List<GenericValue> adjustments, List<GenericValue> orderItems) {
+        this((LocalDispatcher) null, (Locale) null, adjustments, orderItems); // SCIPIO: delegating
+    }
+
+    public OrderReadHelper(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String orderId) { // SCIPIO: Added dispatcher overload
+        this.dispatcher = dispatcher;
+        this.locale = locale;
         try {
             this.orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
         } catch (GenericEntityException e) {
@@ -151,6 +175,28 @@ public class OrderReadHelper {
         if (this.orderHeader == null) {
             throw new IllegalArgumentException("Order not found with orderId [" + orderId + "]");
         }
+    }
+
+    public OrderReadHelper(Delegator delegator, String orderId) {
+        this(delegator, null, null, orderId); // SCIPIO: delegating
+    }
+
+    // ==========================================
+    // ========== Generic Methods (SCIPIO) ======
+    // ==========================================
+
+    /**
+     * SCIPIO: Returns the delegator (for the order header).
+     */
+    protected Delegator getDelegator() {
+        return orderHeader.getDelegator();
+    }
+
+    /**
+     * SCIPIO: Returns the dispatcher IF present (may be null!).
+     */
+    protected LocalDispatcher getDispatcher() {
+        return dispatcher;
     }
 
     // ==========================================
@@ -185,7 +231,7 @@ public class OrderReadHelper {
         if (webSiteId == null) {
             String productStoreId = getProductStoreId();
             if (productStoreId != null) {
-                webSiteId = ProductStoreWorker.getStoreDefaultWebSiteId(orderHeader.getDelegator(), 
+                webSiteId = ProductStoreWorker.getStoreDefaultWebSiteId(orderHeader.getDelegator(),
                         productStoreId, true);
             }
         }
@@ -3272,5 +3318,39 @@ public class OrderReadHelper {
      */
     public static Set<String> getWebSiteSalesChannelIds(Delegator delegator) {
         return webSiteSalesChannelIds;
+    }
+
+    public ProductConfigWrapper getProductConfigWrapperForOrderItem(GenericValue orderItem) { // SCIPIO
+        try {
+            GenericValue product = orderItem.getRelatedOne("Product");
+            if (ProductWorker.isConfigProductConfig(product)) {
+                String configurableProductId = ProductWorker.getInstanceAggregatedId(getDelegator(), product.getString("productId"));
+                if (configurableProductId != null) {
+                    return ProductConfigWorker.loadProductConfigWrapper(getDelegator(), getDispatcher(), product.getString("configId"),
+                            configurableProductId, getOrderHeader().getString("productStoreId"), orderItem.getString("prodCatalogId"),
+                            getOrderHeader().getString("webSiteId"), getOrderHeader().getString("currencyUom"), locale, null);
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return null;
+    }
+
+    public Map<String, ProductConfigWrapper> getProductConfigWrappersByOrderItemSeqId(Collection<GenericValue> orderItems) { // SCIPIO
+        Map<String, ProductConfigWrapper> pcwMap = new HashMap<>();
+        if (orderItems != null) {
+            for(GenericValue orderItem : orderItems) {
+                ProductConfigWrapper pcw = getProductConfigWrapperForOrderItem(orderItem);
+                if (pcw != null) {
+                    pcwMap.put(orderItem.getString("orderItemSeqId"), pcw);
+                }
+            }
+        }
+        return pcwMap;
+    }
+
+    public Map<String, ProductConfigWrapper> getProductConfigWrappersByOrderItemSeqId() { // SCIPIO
+        return getProductConfigWrappersByOrderItemSeqId(getOrderItems());
     }
 }

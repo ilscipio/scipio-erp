@@ -46,7 +46,7 @@ code package.
                 </ul>
               </#if>
             </#if>
-            <#if orderItemProdCfgMap??>
+            <#if orderItemAttrMap??>
               <#local orderItemAttributes = orderItemAttrMap[orderItemSeqId]!/>
             <#else>
               <#local orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>

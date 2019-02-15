@@ -67,7 +67,7 @@ if (orderHeader) {
     context.hasPermission = true;
     context.canViewInternalDetails = true;
 
-    orderReadHelper = new OrderReadHelper(orderHeader);
+    orderReadHelper = new OrderReadHelper(dispatcher, context.locale, orderHeader); // SCIPIO: Added dispatcher
     orderItems = orderReadHelper.getOrderItems();
     orderAdjustments = orderReadHelper.getAdjustments();
     orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
@@ -557,3 +557,9 @@ orderAdjustments.each { orderAdjustment ->
     }
 }
 context.orderAdjustmentId = orderAdjustmentId;
+
+// SCIPIO: OrderItemAttributes and ProductConfigWrappers
+if (orderHeader) {
+    orderItemProdCfgMap = orderReadHelper.getProductConfigWrappersByOrderItemSeqId(orderItems);
+    context.orderItemProdCfgMap = orderItemProdCfgMap;
+}

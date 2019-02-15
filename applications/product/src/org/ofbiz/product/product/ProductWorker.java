@@ -1873,4 +1873,25 @@ nextProd:
     public static String getOriginalProductId(String productId, Delegator delegator) {
         return getOriginalProductId(productId, delegator, true);
     }
+
+    /**
+     * SCIPIO: Returns true if the product is a configurable product (productTypeId AGGREGATED or AGGREGATED_SERVICE).
+     */
+    public static boolean isConfigProduct(GenericValue product) {
+        return (product != null) && ("AGGREGATED".equals(product.get("productTypeId")) || "AGGREGATED_SERVICE".equals(product.get("productTypeId")));
+    }
+
+    /**
+     * SCIPIO: Returns true if the product is a configurable product configuration (productTypeId AGGREGATED_CONF or AGGREGATEDSERV_CONF).
+     */
+    public static boolean isConfigProductConfig(GenericValue product) {
+        return (product != null) && ("AGGREGATED_CONF".equals(product.get("productTypeId")) || "AGGREGATEDSERV_CONF".equals(product.get("productTypeId")));
+    }
+
+    /**
+     * SCIPIO: Returns true if the product is a configurable product OR configuration (productTypeId AGGREGATED, AGGREGATED_SERVICE, AGGREGATED_CONF, AGGREGATEDSERV_CONF).
+     */
+    public static boolean isConfigProductOrConfig(GenericValue product) {
+        return isConfigProduct(product) || isConfigProductConfig(product);
+    }
 }

@@ -114,7 +114,7 @@ if (orderHeader) {
     productStore = orderHeader.getRelatedOne("ProductStore", true);
     if (productStore) isDemoStore = !"N".equals(productStore.isDemoStore);
 
-    orderReadHelper = new OrderReadHelper(orderHeader);
+    orderReadHelper = new OrderReadHelper(dispatcher, context.locale, orderHeader); // SCIPIO: Added dispatcher
     orderItems = orderReadHelper.getOrderItems();
     orderAdjustments = orderReadHelper.getAdjustments();
     

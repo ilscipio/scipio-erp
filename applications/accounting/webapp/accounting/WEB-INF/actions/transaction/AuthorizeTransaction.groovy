@@ -31,7 +31,7 @@ if (orderId) {
 }
 
 if (orderHeader) {
-   orh = new OrderReadHelper(orderHeader);
+   orh = new OrderReadHelper(dispatcher, context.locale, orderHeader); // SCIPIO: Added dispatcher
    context.orh = orh;
    context.overrideAmount = orh.getOrderGrandTotal();
 }

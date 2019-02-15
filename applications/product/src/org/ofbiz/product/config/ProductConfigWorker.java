@@ -436,5 +436,11 @@ public final class ProductConfigWorker {
         return configWrapper;
     }
 
+    /**
+     * SCIPIO: Returns true if the product is a config product (productTypeId AGGREGATED or AGGREGATED_SERVICE).
+     */
+    public static boolean isConfigProduct(GenericValue product) {
+        return ProductWorker.isConfigProduct(product);
+    }
 }
 

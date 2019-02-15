@@ -35,7 +35,7 @@ orderItems = cart.makeOrderItems();
 orderAdjustments = cart.makeAllAdjustments();
 
 // SCIPIO: Instancing here the OrderReadHelper so it is available for the entire script 
-orh = new OrderReadHelper(orderAdjustments, orderItems);
+orh = new OrderReadHelper(dispatcher, context.locale, orderAdjustments, orderItems); // SCIPIO: Added dispatcher
 orderItemShipGroupInfo = cart.makeAllShipGroupInfos();
 if (orderItemShipGroupInfo) {
     orderItemShipGroupInfo.each { valueObj ->

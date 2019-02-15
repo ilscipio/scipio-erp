@@ -2107,24 +2107,24 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
        usually done by screen html auto-escaping.
     </em></p>
     <ul>
-      <li>${escapeVal(makeContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping - <strong>NOTE: this is the best way (post-escaping)</strong>, compared to others below that do pre-escaping)</em></li>
-      <li><@contentUrl uri=demoScreenContentUri escapeAs='html'/> <em>(no pre-escaping (rawString implicit), html post-escaping - this is equivalent to the previous, but slightly shorter.</em></li>
+      <li>${escapeVal(makeContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (raw implicit), html post-escaping - <strong>NOTE: this is the best way (post-escaping)</strong>, compared to others below that do pre-escaping)</em></li>
+      <li><@contentUrl uri=demoScreenContentUri escapeAs='html'/> <em>(no pre-escaping (raw implicit), html post-escaping - this is equivalent to the previous, but slightly shorter.</em></li>
       <li>
-        <#assign urlContent><@contentUrl strict=true>${rawString(demoScreenContentUri)}</@contentUrl></#assign>
-        ${escapeVal(urlContent, 'html')} <em>(no pre-escaping (rawString explicit, strict true explicit), html post-escaping - NOTE: This is a more verbose and clumsy version (but still correct and strict) of the previous, but technically valid)</em>
+        <#assign urlContent><@contentUrl strict=true>${raw(demoScreenContentUri)}</@contentUrl></#assign>
+        ${escapeVal(urlContent, 'html')} <em>(no pre-escaping (raw explicit, strict true explicit), html post-escaping - NOTE: This is a more verbose and clumsy version (but still correct and strict) of the previous, but technically valid)</em>
       </li>
       <li><@contentUrl>${demoScreenContentUri}</@contentUrl> <em>(has html pre-escaping)</em></li>
       <li><@contentUrl uri=demoScreenContentUri /> <em>(has html pre-escaping)</em></li>
-      <li>${escapeVal(makeContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
-      <li>${escapeVal(makeContentUrl({"uri":demoScreenContentUri}), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
+      <li>${escapeVal(makeContentUrl(demoScreenContentUri), 'html')} <em>(no pre-escaping (raw implicit), html post-escaping)</em></li>
+      <li>${escapeVal(makeContentUrl({"uri":demoScreenContentUri}), 'html')} <em>(no pre-escaping (raw implicit), html post-escaping)</em></li>
       <li><@contentUrl ctxPrefix=true>${demoScreenContentUri}</@contentUrl> <em>(partial html pre-escaping)</em></li>
       <li><@contentUrl uri=demoScreenContentUri ctxPrefix=true/> <em>(partial html pre-escaping)</em></li>
-      <li>${escapeVal(makeContentCtxPrefixUrl(demoScreenContentUri), 'html')} (no pre-escaping <em>(rawString implicit), html post-escaping)</em></li>
-      <li>${escapeVal(makeContentUrl({"uri":demoScreenContentUri, "ctxPrefix":true}), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
+      <li>${escapeVal(makeContentCtxPrefixUrl(demoScreenContentUri), 'html')} (no pre-escaping <em>(raw implicit), html post-escaping)</em></li>
+      <li>${escapeVal(makeContentUrl({"uri":demoScreenContentUri, "ctxPrefix":true}), 'html')} <em>(no pre-escaping (raw implicit), html post-escaping)</em></li>
       <#assign manualPrefix = "https://ilscipio.com/images/"><#-- extra slash -->
       <li><@contentUrl ctxPrefix=manualPrefix>${demoScreenContentUri}</@contentUrl> <em>(partial html pre-escaping)</em></li>
       <li><@contentUrl uri=demoScreenContentUri ctxPrefix=manualPrefix/> <em>(partial html pre-escaping)</em></li>
-      <li>${escapeVal(makeContentUrl({"uri":demoScreenContentUri, "ctxPrefix":manualPrefix}), 'html')} <em>(no pre-escaping (rawString implicit), html post-escaping)</em></li>
+      <li>${escapeVal(makeContentUrl({"uri":demoScreenContentUri, "ctxPrefix":manualPrefix}), 'html')} <em>(no pre-escaping (raw implicit), html post-escaping)</em></li>
       <li><@contentUrl uri=escapeVal(demoScreenContentUri,'js-html') ctxPrefix=escapeVal(contentPathPrefix, 'js-html')/> <em>(js-html pre-escaping)</em></li>
       <li><@contentUrl uri=escapeVal(demoScreenContentUri,'js-html') ctxPrefix=escapeVal(manualPrefix, 'js-html')/> <em>(js-html pre-escaping)</em></li>
       <li><@contentUrl uri=escapeVal(demoScreenContentUri,'js-html') ctxPrefix=escapeVal(manualPrefix, 'js-html') strict=true/> <em>(<strong>USAGE ERROR:</strong> js-html pre-escaping - should contain an error (doubled slash), because we passed strict true which means the js-html pre-escaping doesn't get handled properly)</em></li>
@@ -2235,7 +2235,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
             <li>UtilMisc (+ auto-html-escaping test): ${UtilMisc.toMap("key1", "value1", "key2", "//&value2;!@#$%^&*()").key2!"ERROR"}</li>
             <li>UtilNumber: ${UtilNumber.safeAdd(1, 2)!"ERROR"}</li>
             <li>StringUtil: ${StringUtil.wrapString(rewrapString("/a string that should not be html-escaped"))!"ERROR"}
-                (NOTE: usually you use #rawString instead of StringUtil, but StringUtil also provides additional helpers)</li>
+                (NOTE: usually you use #raw instead of StringUtil, but StringUtil also provides additional helpers)</li>
         </ul>
     </@section>
 
@@ -2267,7 +2267,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   </@section>
   <@section title="Filtered/validating/partial escaping">
       <#assign testMarkup>This is <span class="escapespantestclass">"test"</span> <em class="someclass">markup</em>! Here is a script <@script>$(document).load(function(){$('.escapespantestclass').addClass('${styles.color_red!}');});</@script>, have fun!</#assign>
-      <#assign testMarkup = rewrapString(testMarkup)><#-- make sure the rawString works -->
+      <#assign testMarkup = rewrapString(testMarkup)><#-- make sure the raw works -->
       <ul>
         <li>htmlmarkup allow none: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'none'})/></li>
         <li>htmlmarkup allow external: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'external'})/></li>
@@ -2306,19 +2306,19 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       </div>
     </@section>
   </@section>
-  <@section title="Screen html auto-escaping bypass (rawString)">
+  <@section title="Screen html auto-escaping bypass (raw)">
       <p><em>The current renderer implementation automatically html-escapes strings as soon as they
-        are output or interpolated using $\{} or ?string. The function #rawString prevents this.
+        are output or interpolated using $\{} or ?string. The function #raw prevents this.
         The advanced function #rewrapString can be seen as re-enabling the escaping (undoing the
-        #rawString bypass).</em></p>
+        #raw bypass).</em></p>
       <ul>
         <#assign autoEscString1 = rewrapString("<em>1234^&;\"'343</em>")>
         <#assign autoEscString2 = rewrapString("<i>123532^&;\"'3443343</i>")>
         <li>Auto-escaped string: "${autoEscString1} - ${autoEscString2}"</li>
         <li>Auto-escaped string: "${autoEscString1 + " - " + autoEscString2}"</li>
-        <li>rawString: "${rawString(autoEscString1)} - ${rawString(autoEscString2)}"</li>
-        <li>rawString: "${rawString(autoEscString1) + " - " + rawString(autoEscString2)}"</li>
-        <li>rawString: "${rawString(autoEscString1, " - ", autoEscString2)}"</li>
+        <li>raw: "${raw(autoEscString1)} - ${raw(autoEscString2)}"</li>
+        <li>raw: "${raw(autoEscString1) + " - " + raw(autoEscString2)}"</li>
+        <li>raw: "${raw(autoEscString1, " - ", autoEscString2)}"</li>
         
         <!-- Whole maps bypassing the auto-escaping by rewrapping them in non-escaping models
             NOTE: at current time (2016-10-20) these may be inefficient -->
@@ -2641,10 +2641,10 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
         ${ftlSections.render("top-column")}
       </@section>
       <@section title="asString output:">
-        ${rawString(ftlSections.render("left-column", true))}
-        ${rawString(ftlSections.render("right-column", true))}
-        ${rawString(ftlSections.render("main-column", true))}
-        ${rawString(ftlSections.render("top-column", true))}
+        ${raw(ftlSections.render("left-column", true))}
+        ${raw(ftlSections.render("right-column", true))}
+        ${raw(ftlSections.render("main-column", true))}
+        ${raw(ftlSections.render("top-column", true))}
       </@section>
     </@section>
 </@section>

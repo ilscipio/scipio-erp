@@ -634,7 +634,6 @@ public abstract class ScipioFtlWrappers {
      **************************************************************
      */
 
-
     /**
      * Reads freemarkerWrapperFactories.properties files, with entries in the format:
      * factoryName.class=org.ofbiz...

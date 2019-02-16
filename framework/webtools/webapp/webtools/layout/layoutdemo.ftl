@@ -13,9 +13,6 @@
 ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]]</b></em><#t/>
 </#macro>
 
-test: ${delegator.from("Product").where("productId", "PC-1000").queryOne().productId}
-test: ${delegator.querySafe().from("Product").where("productIds", "PC-1000").queryOne()!"test"}
-
 <#--<@nav type="magellan">
     <@mli arrival="breadcrumbs"><a href="#breadcrumbs">Breadcrumbs</a></@mli>
     <@mli arrival="grid"><a href="#grid">Grid</a></@mli>
@@ -2149,7 +2146,7 @@ test: ${delegator.querySafe().from("Product").where("productIds", "PC-1000").que
   
   <@section title="Content Alt URLs (@ofbizContentAltUrl)">
       <#macro ofbizContentAltUrlTests altUrlCntId>
-        <#if delegator.findOne("Content", {"contentId":altUrlCntId}, false)?has_content>
+        <#if delegator.from("Content").where("contentId", altUrlCntId).queryOne()?has_content>
         <ul>
           <li><@ofbizContentAltUrl contentId=altUrlCntId/></li>
           <li><@ofbizContentAltUrl contentId=altUrlCntId params="extraParam1=val1&extraParams2=val2"/></li>
@@ -2164,6 +2161,24 @@ test: ${delegator.querySafe().from("Product").where("productIds", "PC-1000").que
 <#else>
   <p>WARNING: No WebSite in system available to use for link tests</p>
 </#if>
+  
+  <@section title="Entity Tests">
+      <#assign altUrlCntId = "TESTCNT1000">
+      <@section title="EntityQuery.use(delegator), Delegator.query()">
+        <em> NOTE: Most of these are not used in real code and are very redundant; they're mainly here as tests.</em>
+        <ul>
+          <li>delegator.query(): ${(delegator.query().select("contentId").from("Content").where("contentId", altUrlCntId).queryOne().contentId)!"ERROR"}</li>
+          <li>delegator.queryUnsafe(): ${(delegator.queryUnsafe().select("contentId").from("Content").where("contentId", altUrlCntId).queryOne().contentId)!"ERROR"}</li>
+          <li>delegator.querySafe(): ${(delegator.querySafe().select("contentId").from("Content").where("contentId", altUrlCntId).queryOne().contentId)!"ERROR"}</li>
+          <li>delegator.select: ${(delegator.select("contentId").from("Content").where("contentId", altUrlCntId).queryOne().contentId)!"ERROR"}</li>
+          <li>delegator.selectUnsafe: ${(delegator.selectUnsafe("contentId").from("Content").where("contentId", altUrlCntId).queryOne().contentId)!"ERROR"}</li>
+          <li>delegator.selectSafe: ${(delegator.selectSafe("contentId").from("Content").where("contentId", altUrlCntId).queryOne().contentId)!"ERROR"}</li>
+          <li>delegator.from: ${(delegator.from("Content").where("contentId", altUrlCntId).queryOne().contentId)!"ERROR"}</li>
+          <li>delegator.fromUnsafe: ${(delegator.fromUnsafe("Content").where("contentId", altUrlCntId).queryOne().contentId)!"ERROR"}</li>
+          <li>delegator.fromSafe: ${(delegator.fromSafe("Content").where("contentId", altUrlCntId).queryOne().contentId)!"ERROR"}</li>
+        </ul>
+      </@section>
+  </@section>
   
   <@section title="Misc URL tests">
     <ul>

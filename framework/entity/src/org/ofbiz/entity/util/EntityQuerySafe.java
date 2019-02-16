@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.collections.PagedList;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityJoinOperator;
@@ -21,7 +23,7 @@ import org.ofbiz.entity.model.DynamicViewEntity;
  * thus offers an alternative to calling the queryXxxSafe methods manually.
  */
 public class EntityQuerySafe extends EntityQuery {
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public EntityQuerySafe(Delegator delegator) {
         super(delegator);
@@ -196,36 +198,71 @@ public class EntityQuerySafe extends EntityQuery {
 
     @Override
     public List<GenericValue> queryList() {
-        return queryListSafe();
+        try {
+            return super.queryList();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryList: " + e.getMessage(), module);
+            return null;
+        }
     }
 
     @Override
     public EntityListIterator queryIterator() {
-        return queryIteratorSafe();
+        try {
+            return super.queryIterator();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryIterator: " + e.getMessage(), module);
+            return null;
+        }
     }
 
     @Override
     public GenericValue queryFirst() {
-        return queryFirstSafe();
+        try {
+            return super.queryFirst();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryFirst: " + e.getMessage(), module);
+            return null;
+        }
     }
 
     @Override
     public GenericValue queryOne() {
-        return queryOneSafe();
+        try {
+            return super.queryOne();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryOne: " + e.getMessage(), module);
+            return null;
+        }
     }
 
     @Override
     public long queryCount() {
-        return queryCountSafe();
+        try {
+            return super.queryCount();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryCount: " + e.getMessage(), module);
+            return 0;
+        }
     }
 
     @Override
     public <T> List<T> getFieldList(String fieldName) {
-        return getFieldListSafe(fieldName);
+        try {
+            return super.getFieldList(fieldName);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in getFieldList(): " + e.getMessage(), module);
+            return null;
+        }
     }
 
     @Override
     public PagedList<GenericValue> queryPagedList(int viewIndex, int viewSize) {
-        return queryPagedListSafe(viewIndex, viewSize);
+        try {
+            return super.queryPagedList(viewIndex, viewSize);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error in queryPagedList(): " + e.getMessage(), module);
+            return null;
+        }
     }
 }

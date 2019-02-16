@@ -230,14 +230,14 @@ public interface Delegator {
      * In most cases this does not cause any issues.
      * <p>
      * If allowPartial is false and the target entity fields cannot be fully populated from the view-entity fields, throws
-     * an exception; if true, fields are partially populated. It is up to the caller to ensure that the original 
+     * an exception; if true, fields are partially populated. It is up to the caller to ensure that the original
      * view-entity definition aliases all the fields needed to populate the member.
      * <p>
      * If nullForAbsentOptViewLink is true, the method will <em>attempt</em> to return null for optional view-links
      * that did not match any records.
-     * <strong>WARN:</strong> This optional view-link check is a best-effort attempt and depends on the view-entity definition; 
+     * <strong>WARN:</strong> This optional view-link check is a best-effort attempt and depends on the view-entity definition;
      * it may only work properly if the view-link aliases the primary key for the optional entity redundantly to a second alias,
-     * which will be null if the optional entity was not found. The most popular strategy is this: if your view-entity has rel-optional="true", 
+     * which will be null if the optional entity was not found. The most popular strategy is this: if your view-entity has rel-optional="true",
      * you can use "alias-all" with a field prefix on the optional entity and <em>not</em> "exclude" the PK fields.
      * The PK field from the referring non-optional entity will still be populated but the prefixed one will not, allowing this check to work properly.
      * <p>
@@ -957,88 +957,134 @@ public interface Delegator {
         return (getModelReader().getModelEntityNoCheck(entityName) != null);
     }
 
+    /*
+     * SCIPIO: EntityQuery alias methods
+     * The abstracted methods query(), from(...) and select(...) delegate to either xxxUnsafe when called from java, groovy, xml, etc.,
+     * or xxxSafe when invoked from FreeMarker *.ftl templates; switched by {@link org.ofbiz.entity.ftl.DelegatorWrapperModel#get(String)}).
+     */
+
     /**
-     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator,
-     * equivalent to: <code>EntityQuery.use(delegator)</code>.
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, equivalent to:
+     * <code>EntityQuery(Safe).use(delegator)</code>; this is an alias for {@link #queryUnsafe()} for most languages,
+     * <strong>except</strong> for FreeMarker templates (*.ftl) for which {@link #querySafe()} is invoked instead.
      */
     default EntityQuery query() {
         return EntityQuery.use(this);
     }
 
     /**
-     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to query the specified entity,
-     * equivalent to: <code>EntityQuery.use(delegator).from(entityName)</code>.
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, equivalent to:
+     * <code>EntityQuery.use(delegator)</code>, whose query methods may throw GenericEntityException.
+     */
+    default EntityQuery queryUnsafe() {
+        return EntityQuery.use(this);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, equivalent to:
+     * <code>EntityQuerySafe.use(delegator)</code>, whose query methods do not throw GenericEntityException.
+     */
+    default EntityQuerySafe querySafe() {
+        return EntityQuerySafe.use(this);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuery(Safe).use(delegator).from(entityName)</code>; this is an alias for {@link #fromUnsafe()} for
+     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #fromSafe()} is invoked instead.
      */
     default EntityQuery from(String entityName) {
         return query().from(entityName);
     }
 
     /**
-     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to query the specified entity,
-     * equivalent to: <code>EntityQuery.use(delegator).from(entityName)</code>.
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuery(Safe).use(delegator).from(dynamicViewEntity)</code>; this is an alias for {@link #fromUnsafe()} for
+     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #fromSafe()} is invoked instead.
      */
     default EntityQuery from(DynamicViewEntity dynamicViewEntity) {
         return query().from(dynamicViewEntity);
     }
 
     /**
-     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to select the specific fields,
-     * equivalent to: <code>EntityQuery.use(delegator).select(fieldsToSelect)</code>.
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to select the specified fields,
+     * equivalent to: <code>EntityQuery(Safe).use(delegator).select(fieldsToSelect)</code>; this is an alias for {@link #selectUnsafe()} for
+     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #selectSafe()} is invoked instead.
      */
     default EntityQuery select(Set<String> fieldsToSelect) {
         return query().select(fieldsToSelect);
     }
 
     /**
-     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to select the specific fields,
-     * equivalent to: <code>EntityQuery.use(delegator).select(fieldsToSelect)</code>.
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to select the specified fields,
+     * equivalent to: <code>EntityQuery(Safe).use(delegator).select(fieldsToSelect)</code>; this is an alias for {@link #selectUnsafe()} for
+     * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #selectSafe()} is invoked instead.
      */
     default EntityQuery select(String... fieldsToSelect) {
         return query().select(fieldsToSelect);
     }
 
     /**
-     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator,
-     * equivalent to: <code>EntityQuerySafe.use(delegator)</code>.
-     * <p>
-     * This is the same as {@link #query()} except this EntityQuery's <code>queryXxx</code> methods
-     * do not throw GenericEntityExceptions, instead they behave exactly as the <code>queryXxxSafe</code> methods.
-     * NOTE: Unchecked exceptions representing programming errors may still be thrown.
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuery.use(delegator).from(entityName)</code>, whose query methods may throw GenericEntityException.
      */
-    default EntityQuerySafe querySafe() {
-        return EntityQuerySafe.use(this);
+    default EntityQuery fromUnsafe(String entityName) {
+        return queryUnsafe().from(entityName);
     }
 
-    // SCIPIO: TODO: REVIEW: These are uglier, thus not supported for the time being - use querySafe() instead.
-//    /**
-//     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to query the specified entity,
-//     * equivalent to: <code>EntityQuery.use(delegator).from(entityName)</code>.
-//     */
-//    default EntityQuery fromSafe(String entityName) {
-//        return querySafe().from(entityName);
-//    }
-//
-//    /**
-//     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to query the specified entity,
-//     * equivalent to: <code>EntityQuery.use(delegator).from(entityName)</code>.
-//     */
-//    default EntityQuery fromSafe(DynamicViewEntity dynamicViewEntity) {
-//        return querySafe().from(dynamicViewEntity);
-//    }
-//
-//    /**
-//     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to select the specific fields,
-//     * equivalent to: <code>EntityQuery.use(delegator).select(fieldsToSelect)</code>.
-//     */
-//    default EntityQuery selectSafe(Set<String> fieldsToSelect) {
-//        return querySafe().select(fieldsToSelect);
-//    }
-//
-//    /**
-//     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to select the specific fields,
-//     * equivalent to: <code>EntityQuery.use(delegator).select(fieldsToSelect)</code>.
-//     */
-//    default EntityQuery selectSafe(String... fieldsToSelect) {
-//        return querySafe().select(fieldsToSelect);
-//    }
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuery.use(delegator).from(dynamicViewEntity)</code>, whose query methods may throw GenericEntityException.
+     */
+    default EntityQuery fromUnsafe(DynamicViewEntity dynamicViewEntity) {
+        return queryUnsafe().from(dynamicViewEntity);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to select the specified fields,
+     * equivalent to: <code>EntityQuery.use(delegator).select(fieldsToSelect)</code>, whose query methods may throw GenericEntityException.
+     */
+    default EntityQuery selectUnsafe(Set<String> fieldsToSelect) {
+        return queryUnsafe().select(fieldsToSelect);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to select the specified fields,
+     * equivalent to: <code>EntityQuery.use(delegator).select(fieldsToSelect)</code>, whose query methods may throw GenericEntityException.
+     */
+    default EntityQuery selectUnsafe(String... fieldsToSelect) {
+        return queryUnsafe().select(fieldsToSelect);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuerySafe.use(delegator).from(entityName)</code>, whose query methods do not throw GenericEntityException.
+     */
+    default EntityQuery fromSafe(String entityName) {
+        return querySafe().from(entityName);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to query the specified entity,
+     * equivalent to: <code>EntityQuerySafe.use(delegator).from(dynamicViewEntity)</code>, whose query methods do not throw GenericEntityException.
+     */
+    default EntityQuery fromSafe(DynamicViewEntity dynamicViewEntity) {
+        return querySafe().from(dynamicViewEntity);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to select the specified fields,
+     * equivalent to: <code>EntityQuerySafe.use(delegator).select(fieldsToSelect)</code>, whose query methods do not throw GenericEntityException.
+     */
+    default EntityQuery selectSafe(Set<String> fieldsToSelect) {
+        return querySafe().select(fieldsToSelect);
+    }
+
+    /**
+     * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to select the specified fields,
+     * equivalent to: <code>EntityQuerySafe.use(delegator).select(fieldsToSelect)</code>, whose query methods do not throw GenericEntityException.
+     */
+    default EntityQuery selectSafe(String... fieldsToSelect) {
+        return querySafe().select(fieldsToSelect);
+    }
 }

@@ -167,7 +167,9 @@ public final class FreeMarkerWorker {
         TemplateHashModel staticModels = wrapper.getStaticModels();
         newConfig.setSharedVariable("Static", staticModels);
         try {
-            newConfig.setSharedVariable("EntityQuery", staticModels.get("org.ofbiz.entity.util.EntityQuery"));
+            // SCIPIO: 2019-02-16: Use EntityQuerySafe to avoid exceptions in FreeMarker files
+            //newConfig.setSharedVariable("EntityQuery", staticModels.get("org.ofbiz.entity.util.EntityQuery"));
+            newConfig.setSharedVariable("EntityQuery", staticModels.get("org.ofbiz.entity.util.EntityQuerySafe"));
         } catch (TemplateModelException e) {
             Debug.logError(e, module);
         }

@@ -520,8 +520,8 @@ public class EntitySaxReader extends DefaultHandler {
                     BufferedReader templateReader = new BufferedReader(new InputStreamReader(templateUrl.openStream(), UtilIO.getUtf8()));
 
                     StringWriter outWriter = new StringWriter();
-                    Configuration config = FreeMarkerWorker.newConfiguration();
-                    config.setObjectWrapper(FreeMarkerWorker.getDefaultOfbizWrapper());
+                    // SCIPIO (2019-18-02): Fixes the errors caused by missing Statics because newConfiguration didn't load them
+                    Configuration config = FreeMarkerWorker.makeConfiguration(FreeMarkerWorker.getDefaultOfbizWrapper());
                     config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
 
                     Template template = new Template("FMImportFilter", templateReader, config);

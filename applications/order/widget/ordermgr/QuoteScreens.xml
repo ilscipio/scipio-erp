@@ -20,7 +20,7 @@ code package.
                 <decorator-screen name="CommonQuoteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditQuote" text="${uiLabelMap.OrderfromQzCreateOrderQuote}" style="${styles.link_nav} ${styles.action_add}"/>
+                            <link target="EditQuote" text="${uiLabelMap.OrderNewQuote}" style="${styles.link_nav} ${styles.action_add}"/>
                         </container>
                         <screenlet>
                             <include-form name="FindQuotes" location="component://order/widget/ordermgr/QuoteForms.xml"/>

@@ -76,10 +76,10 @@ code package.
         <@tr>
           <@td class="${styles.grid_large!}3">${uiLabelMap.CommonName}</@td>
           <@td colspan="3">
-                <#if partyId?? && displayParty?has_content>
+                <#if displayParty?has_content>
                     <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
                     <a href="${customerDetailLink}${partyId}${rawString(externalKeyParam)}" target="partymgr" class="">${displayPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}</a>
-                    <#else>
+                <#elseif partyId?has_content>
                     <a href="${customerDetailLink}${partyId}${rawString(externalKeyParam)}" target="partymgr" class="">${partyId}</a>
                 </#if>
                 <#--

@@ -272,13 +272,14 @@ code package.
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
+                <set field="stepLabelId" value="AccountingPayment"/>
 
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutPayment.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderAppDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonOrderCheckoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/checkoutpayment.ftl"/></html></platform-specific>
                     </decorator-section>

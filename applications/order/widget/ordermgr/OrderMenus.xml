@@ -590,12 +590,15 @@ code package.
     
     <menu name="QuoteItemsSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="+${styles.menu_buttonstyle_alt2}">
+        <!-- SCIPIO (2019-02-20): I really don't understand what's the purpose of this. Likely to be removed, commenting out for now -->
+        <!--
         <menu-item name="AddAllToCart" title="${uiLabelMap.OrderAddAllToCart}" widget-style="+${styles.action_run_session} ${styles.action_add}">
             <condition>
                 <if-compare field="maySelectItems" operator="not-equals" value="N" />
             </condition>
             <link target="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" url-mode="plain"/>
         </menu-item>
+        -->
     </menu>
     
     <menu name="RequestTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

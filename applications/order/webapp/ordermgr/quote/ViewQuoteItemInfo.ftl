@@ -4,11 +4,14 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <#macro menuContent menuArgs={}>
+  <#-- SCIPIO (2019-02-20): I really don't understand what's the purpose of this. Likely to be removed, commenting out for now -->
+  <#--
   <@menu args=menuArgs>
   <#if (maySelectItems!"N") == "Y">
     <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" text=uiLabelMap.OrderAddAllToCart class="+${styles.action_run_session!} ${styles.action_add!}" />
   </#if>
   </@menu>
+  -->
 </#macro>
 
 <@section title=uiLabelMap.OrderOrderQuoteItems menuContent=menuContent>

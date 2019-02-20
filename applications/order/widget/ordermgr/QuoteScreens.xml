@@ -587,10 +587,13 @@ code package.
                 <label text="${note}"/>
                 <include-screen name="ViewQuoteInfo"/>
                 <container style="clear"/>
+                <include-screen name="ViewQuoteItemInfo"/>
+                <!-- SCIPIO (2019-02-20): I really don't understand what's the purpose of this. Likely to be removed, commenting out for now -->
+                <!-- 
                 <screenlet title="${uiLabelMap.CommonItems}">
                     <include-menu location="component://order/widget/ordermgr/OrderMenus.xml" name="QuoteItemsSubTabBar"/>
-                    <include-screen name="ViewQuoteItemInfo"/>
                 </screenlet>
+                -->
             </widgets>
             <fail-widgets>
                 <label style="common-msg-error">${uiLabelMap.OrderNoQuoteFound}</label>

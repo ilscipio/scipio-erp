@@ -4,6 +4,9 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <#include "component://order/webapp/ordermgr/common/common.ftl">
+
+<#-- SCIPIO: DEPRECATED TEMPLATE -->
+
 <@script>
 function shipBillAddr() {
     if (document.checkoutsetupform.useShipAddr.checked) {

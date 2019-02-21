@@ -52,6 +52,7 @@ function submitForm(form, mode, value) {
     }
 }
 
+<#-- 
 $(document).ready(function(){
 var issuerId = "";
     if ($('#checkOutPaymentId_IDEAL').attr('checked') == true) {
@@ -77,143 +78,87 @@ var issuerId = "";
         $('#issuerId').val(issuerId);
     });
 });
+ -->
 </@script>
 
  
 <#assign cart = shoppingCart! />
 
-<@section title="${rawLabel('OrderHowShallYouPay')}?"><#-- SCIPIO: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
-
-    <form method="post" id="checkoutInfoForm" name="checkoutInfoForm" action="">
+<@section title="${rawLabel('AccountingPayment')}"><#-- SCIPIO: No numbers for multi-page checkouts, make checkout too rigid: 3) ${uiLabelMap.OrderHowShallYouPay}? -->
+      <#-- FIXME?: There is no real verification of correctness of exclusivity of the payment methods here... -->
+  <#assign selectedCheckOutPaymentId = parameters.checkOutPaymentId!checkOutPaymentIdList!"">
+  <#if selectedCheckOutPaymentId?has_content>
+    <#if selectedCheckOutPaymentId?is_enumerable>
+      <#assign selectedCheckOutPaymentIdList = selectedCheckOutPaymentId>
+    <#else>
+      <#assign selectedCheckOutPaymentIdList = [selectedCheckOutPaymentId?string]>
+    </#if>
+  <#else>
+    <#assign selectedCheckOutPaymentIdList = []>
+  </#if>
+  <#assign selectedBillingAccountId = (parameters.billingAccountId!selectedBillingAccountId!"")?string>
+  
+    <form method="post" id="checkoutsetupform" name="checkoutsetupform" action="<@pageUrl>finalizeOrder</@pageUrl>">
         <input type="hidden" name="checkoutpage" value="payment" />
+        <input type="hidden" name="finalizeMode" value="payment"/>
         <input type="hidden" name="BACK_PAGE" value="checkoutoptions" />
         <input type="hidden" name="issuerId" id="issuerId" value="" />
-            <#-- Payment Method Selection -->
-
-            <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
-              <#macro payMethContent args={}><label for="checkOutPaymentId_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label></#macro><#-- SCIPIO: Use full so clearer: OrderMoneyOrder -->
-              <@orderlib.checkoutInvField type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" checked=("EXT_OFFLINE" == checkOutPaymentId) labelContent=payMethContent/>
-            </#if>
-            <#if productStorePaymentMethodTypeIdMap.EXT_COD??>
-              <#macro payMethContent args={}><label for="checkOutPaymentId_COD">${uiLabelMap.OrderCOD}</label></#macro>
-              <@orderlib.checkoutInvField type="radio" type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" checked=("EXT_COD" == checkOutPaymentId) labelContent=payMethContent />
-            </#if>
-            <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY??>
-              <#macro payMethContent args={}><label for="checkOutPaymentId_WORLDPAY">${uiLabelMap.AccountingPayWithWorldPay}</label></#macro>
-              <@orderlib.checkoutInvField type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" checked=("EXT_WORLDPAY" == checkOutPaymentId) labelContent=payMethContent/>
-            </#if>
-            <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
-              <#macro payMethContent args={}><label for="checkOutPaymentId_PAYPAL">${uiLabelMap.AccountingPayWithPayPal}</label></#macro>
-              <@orderlib.checkoutInvField type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" checked=("EXT_PAYPAL" == checkOutPaymentId) labelContent=payMethContent />
-            </#if>
-            <#if productStorePaymentMethodTypeIdMap.EXT_LIGHTNING??>
-              <#macro payMethContent args={}><label for="checkOutPaymentId_PAYPAL">${uiLabelMap.AccountingPayWithBitcoinl}</label></#macro>
-              <@orderlib.checkoutInvField type="radio" id="checkOutPaymentId_LIGHTNING" name="checkOutPaymentId" value="EXT_LIGHTNING" checked=("EXT_LIGHTNING" == checkOutPaymentId) labelContent=payMethContent />
-            </#if>
-            <#if productStorePaymentMethodTypeIdMap.EXT_IDEAL??>
-              <#macro payMethContent args={}>
-                <label for="checkOutPaymentId_IDEAL">${uiLabelMap.AccountingPayWithiDEAL}</label>
-                <div id="issuers">
-                  <#if issuerList?has_content>
-                    <@field type="select" name="issuer" id="issuer" label=uiLabelMap.AccountingBank>
-                      <#list issuerList as issuer>
-                        <option value="${issuer.getIssuerID()}" >${issuer.getIssuerName()}</option>
-                      </#list>
-                    </@field>
-                  </#if>
+        <#-- Payment Method Selection -->
+        <div id="paymethselection" class="pay-meth-selection">
+            <@section containerId="paymeth_primary" containerClass="+pay-meth-options-all-content pay-meth-primary">
+                <div id="paymethselect_primary" class="pay-meth-options">
+                  <#assign fieldLabel><strong>${uiLabelMap.AccountingPaymentMethod}</strong></#assign>
+                  <@field type="generic" label=wrapAsRaw(fieldLabel, 'htmlmarkup') required=true>
+                    <@paymentMethodContent showPrimary=true showSelect=true />
+                  </@field>
                 </div>
-              </#macro>
-              <@orderlib.checkoutInvField type="radio" id="checkOutPaymentId_IDEAL" name="checkOutPaymentId" value="EXT_IDEAL" checked=("EXT_IDEAL" == checkOutPaymentId) labelContent=payMethContent />
-            </#if>
-
-            <#if !paymentMethodList?has_content>
-              <@alert type="warning">${uiLabelMap.AccountingNoPaymentMethods}.</@alert>
-            <#else>
-              <#list paymentMethodList as paymentMethodLocal>
-                <#-- SCIPIO: workaround for access from macros -->
-                <#assign paymentMethod = paymentMethodLocal>
-              
-                <#if paymentMethod.paymentMethodTypeId == "GIFT_CARD">
-                 <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-                  <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)! />
-                  <#assign giftCardNumber = acctlib.getPayMethDisplayNumber(giftCard, paymentMethod)!/><#-- SCIPIO: Refactored using function -->
-
-                  <#macro payMethContent args={}>
-                    <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}: ${giftCardNumber}</label>
-                    <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
-                    <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                    <#assign fieldValue><#if ((cart.getPaymentAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
-                    <@field type="input" label=uiLabelMap.OrderBillUpTo size="5" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue />
-                  </#macro>
-                  <@orderlib.checkoutInvField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=payMethContent />
-                 </#if>
-                <#elseif paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
-                  <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
-                    <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false) />
-                    <#macro payMethContent args={}>
-                      <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingCreditCard}: ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</label>
-                      <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
-                      <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                      <#assign fieldValue><#if ((cart.getPaymentAmount(paymentMethod.paymentMethodId)!0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if></#assign>
-                      <@field type="input" label=uiLabelMap.OrderBillUpTo size="5" id="amount_${paymentMethod.paymentMethodId}" name="amount_${paymentMethod.paymentMethodId}" value=fieldValue />
-                    </#macro>
-                    <@orderlib.checkoutInvField type="checkbox" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=cart.isPaymentSelected(paymentMethod.paymentMethodId) labelContent=payMethContent/>
-                  </#if>
-                <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
-                  <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
-                    <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false) />
-                    <#macro payMethContent args={}>
-                      <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingEFTAccount}: ${eftAccount.bankName!}: ${eftAccount.accountNumber!}</label>
-                      <#if paymentMethod.description?has_content><p>(${paymentMethod.description})</p></#if>
-                      <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                    </#macro>
-                    <@orderlib.checkoutInvField type="radio" id="checkOutPayment_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" checked=(paymentMethod.paymentMethodId == checkOutPaymentId) labelContent=payMethContent/>
-                  </#if>
-                </#if>
-              </#list>
-            </#if>
-
-            <#-- special billing account functionality to allow use w/ a payment method -->
-            <#if productStorePaymentMethodTypeIdMap.EXT_BILLACT??>
-              <#if billingAccountList?has_content>
-                <@field type="select" name="billingAccountId" id="billingAccountId" label=uiLabelMap.FormFieldTitle_billingAccountId>
-                  <option value=""></option>
-                    <#list billingAccountList as billingAccount>
-                      <#assign availableAmount = billingAccount.accountBalance>
-                      <#assign accountLimit = billingAccount.accountLimit>
-                      <option value="${billingAccount.billingAccountId}"<#if billingAccount.billingAccountId == (selectedBillingAccountId!"")> selected="selected"</#if>>${billingAccount.description!""} [${billingAccount.billingAccountId}] ${uiLabelMap.EcommerceAvailable} <@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> ${uiLabelMap.EcommerceLimit} <@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
-                    </#list>
-                </@field>
-                <@field type="input" size="5" id="billingAccountAmount" name="billingAccountAmount" value="" label=uiLabelMap.OrderBillUpTo/>
-              </#if>
-            </#if>
-            <#-- end of special billing account functionality -->
-
-            <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-              <input type="hidden" name="singleUseGiftCard" value="Y" />
-              <#macro payMethContent args={}>
-                <label for="addGiftCard">${uiLabelMap.AccountingUseGiftCardNotOnFile}</label>
-                <@field type="input" size="15" id="giftCardNumber" name="giftCardNumber" value=((requestParameters.giftCardNumber)!) onFocus="document.getElementById('addGiftCard').checked=true;" label=uiLabelMap.AccountingNumber/>
-                <#if cart.isPinRequiredForGC(delegator)>
-                  <@field type="input" size="10" id="giftCardPin" name="giftCardPin" value=((requestParameters.giftCardPin)!) onFocus="document.getElementById('addGiftCard').checked=true;" label=uiLabelMap.AccountingPIN/>
-                </#if>
-                <@field type="input" size="6" id="giftCardAmount" name="giftCardAmount" value=((requestParameters.giftCardAmount)!) onFocus="document.getElementById('addGiftCard').checked=true;" label=uiLabelMap.AccountingAmount/>
-              </#macro>
-              <@orderlib.checkoutInvField type="checkbox" id="addGiftCard" name="addGiftCard" value="Y" labelContent=payMethContent/>
-            </#if>
-
-            <@menu type="button">
-                <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??><@menuitem type="link" href=makePageUrl("setBilling?paymentMethodType=CC&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseCreditCard /></#if>
-                <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??><@menuitem type="link"  href=makePageUrl("setBilling?paymentMethodType=GC&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseGiftCard /></#if>
-                <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??><@menuitem type="link" href=makePageUrl("setBilling?paymentMethodType=EFT&singleUsePayment=Y") class="+${styles.action_run_session!} ${styles.action_update!}" text=uiLabelMap.AccountingSingleUseEFTAccount /></#if>
-            </@menu>
-
-            <#-- End Payment Method Selection -->
+                <@section containerId="paymethcontent_primary" containerClass="+pay-meth-all-content">
+                  <@paymentMethodContent showPrimary=true showDetails=true />
+                </@section>
+            </@section>
+            <@section containerId="paymeth_supplemental" containerClass="+pay-meth-options-all-content pay-meth-supplemental"><#-- always show now: style="display:none;" -->
+                <div id="paymethselect_supplemental" class="pay-meth-options">
+                  <#assign fieldLabel><strong>${uiLabelMap.AccountingAdditionalPaymentMethods}</strong></#assign>
+                  <@field type="generic" label=wrapAsRaw(fieldLabel, 'htmlmarkup')>
+                    <@paymentMethodContent showSupplemental=true showSelect=true />
+                  </@field>
+                </div>
+                <@section containerId="paymethcontent_supplemental" containerClass="+pay-meth-all-content">
+                    <@paymentMethodContent showSupplemental=true showDetails=true />
+                </@section>
+            </@section>
+        </div>
     </form>
 </@section>
 
-<@menu type="button">
-  <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'CS', '');" class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.OrderBacktoShoppingCart />
-  <@menuitem type="link" href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'DN', '');" class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderContinueToFinalOrderReview />
-</@menu>
+<@script>
+    <#-- SCIPIO: Enable JS-based content reveal for pay methods -->
+    <@initItemSelectionWithContentFormScript itemFieldClass="pay-select-field" 
+        contentItems=fieldContentIdMapList updateCallbackPostVisibJs=updateCallbackPostVisibJs />
+
+    jQuery(document).ready(function() {
+        var allPrimaryItems = getScipioFieldCheckElemsByClass('pay-select-radio');
+        var allSupplItems = getScipioFieldCheckElemsByClass('pay-select-checkbox');
+    
+        <#-- Special case: if any of the supplemental payment method checkboxes are checked and no other radios
+            are selected, then select the "additional payment methods" radio so the HTML makes sense -->  
+        var updateAdditionalRadio = function() {
+            if (jQuery(this).is(":checked")) {
+                var radioChecked = false;
+                allPrimaryItems.each(function(i, obj) {
+                    if (jQuery(obj).is(":checked")) {
+                        radioChecked = true;
+                    }
+                });
+                if (!radioChecked) {
+                    jQuery('#supplPayMeth').prop('checked', true);
+                }
+            }
+        };
+        allSupplItems.each(function(i, e) {
+            updateAdditionalRadio.call(e);
+        });
+        allSupplItems.change(updateAdditionalRadio);
+    });
+</@script>
 

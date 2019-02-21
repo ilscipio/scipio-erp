@@ -275,6 +275,7 @@ code package.
                 <set field="stepLabelId" value="AccountingPayment"/>
 
                 <set field="titleProperty" value="PageTitleCheckoutOptions"/>
+                <set field="layoutSettings.javaScriptsFooter[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutPayment.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>
             </actions>

@@ -18,7 +18,7 @@ code package.
         <#if layoutSettings.topLines?has_content>
           <#list layoutSettings.topLines as topLine>
             <#if topLine.text??>
-              <li>${topLine.text}<a href="${rawString(topLine.url!)}${rawString(externalKeyParam)}">${topLine.urlText!}</a></li>
+              <li>${topLine.text}<a href="${raw(topLine.url!)}${raw(externalKeyParam)}">${topLine.urlText!}</a></li>
             <#elseif topLine.dropDownList??>
               <li><#include "component://common/webcommon/includes/insertDropDown.ftl"/></li>
             <#else>
@@ -35,8 +35,8 @@ code package.
     <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
         <#include "component://common/webcommon/includes/helplink.ftl" />
     <#else>
-        <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${rawString(parameters.portalPageId!)}</#if></#assign>
-        <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makePageUrl("showHelp?helpTopic=${rawString(helpTopic!)}${portalPageParamStr}")></@modal></li> 
+        <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${raw(parameters.portalPageId!)}</#if></#assign>
+        <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makePageUrl("showHelp?helpTopic=${raw(helpTopic!)}${portalPageParamStr}")></@modal></li> 
     </#if>
     <#if userLogin??>
         <li class="divider"></li>
@@ -56,7 +56,7 @@ code package.
           <#assign selected = true>
         </#if>
         <#assign servletPath = Static["org.ofbiz.webapp.WebAppUtil"].getControlServletPathSafeSlash(display)!"">
-        <#assign thisURL = rawString(servletPath)>
+        <#assign thisURL = raw(servletPath)>
         <#if thisApp != "/">
           <#if servletPath?has_content>
             <#assign thisURL = thisURL + "main">
@@ -68,7 +68,7 @@ code package.
           <#-- do not display this component-->
         <#else>
             <li<#if selected> class="active"</#if>>
-                <a href="${thisURL}${rawString(externalKeyParam)}"<#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
+                <a href="${thisURL}${raw(externalKeyParam)}"<#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
             </li>
             <#assign appCount = appCount + 1>
         </#if>
@@ -85,7 +85,7 @@ code package.
           <#assign selected = true>
         </#if>
           <#assign servletPath = Static["org.ofbiz.webapp.WebAppUtil"].getControlServletPathSafeSlash(display)!"">
-          <#assign thisURL = rawString(servletPath)>
+          <#assign thisURL = raw(servletPath)>
           <#if thisApp != "/">
             <#if servletPath?has_content>
               <#assign thisURL = thisURL + "main">
@@ -94,7 +94,7 @@ code package.
             </#if>
           </#if>
           <li<#if selected> class="active"</#if>>      
-            <a href="${thisURL}${rawString(externalKeyParam)}"<#if selected> class="active"</#if><#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
+            <a href="${thisURL}${raw(externalKeyParam)}"<#if selected> class="active"</#if><#if uiLabelMap??> title="${uiLabelMap[display.description]}">${uiLabelMap[display.title]}<#else> title="${display.description}">${display.title}</#if></a>
             <#assign appCount = appCount + 1>
           </li>
     </#list>
@@ -147,8 +147,8 @@ code package.
     </#if>
     <#if headerImageUrl??>
         <#if organizationLogoLinkURL?has_content>
-            <#if hasLink><a href="<@pageUrl>${logoLinkURL}</@pageUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@contentUrl>${rawString(organizationLogoLinkURL)}</@contentUrl>"/><span class="logo-text">${applicationTitle!}</span><#if hasLink></a></#if>
-            <#else><#if hasLink><a href="<@pageUrl>${logoLinkURL}</@pageUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@contentUrl>${rawString(headerImageUrl)}</@contentUrl>"/><span class="logo-text">${applicationTitle!}</span><#if hasLink></a></#if>
+            <#if hasLink><a href="<@pageUrl>${logoLinkURL}</@pageUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@contentUrl>${raw(organizationLogoLinkURL)}</@contentUrl>"/><span class="logo-text">${applicationTitle!}</span><#if hasLink></a></#if>
+            <#else><#if hasLink><a href="<@pageUrl>${logoLinkURL}</@pageUrl>"></#if><img alt="${layoutSettings.companyName}" src="<@contentUrl>${raw(headerImageUrl)}</@contentUrl>"/><span class="logo-text">${applicationTitle!}</span><#if hasLink></a></#if>
         </#if>
         <#else>
         <a href="<@pageUrl>${logoLinkURL!""}</@pageUrl>"><img alt="${layoutSettings.companyName}" src="<@contentUrl>/images/scipio/<#if isSmall>scipio-logo-small.png<#else>scipio-logo.svg</#if></@contentUrl>"/><span class="logo-text">${applicationTitle!}</span></a>
@@ -192,29 +192,29 @@ code package.
       <#assign shortcutIcon = layoutSettings.VT_SHORTCUT_ICON.get(0)/>
     </#if>
     <#if shortcutIcon?has_content>
-      <link rel="shortcut icon" href="<@contentUrl>${rawString(shortcutIcon)}</@contentUrl>" />
+      <link rel="shortcut icon" href="<@contentUrl>${raw(shortcutIcon)}</@contentUrl>" />
     </#if>
     
     <#if layoutSettings.styleSheets?has_content>
         <#--layoutSettings.styleSheets is a list of style sheets. So, you can have a user-specified "main" style sheet, AND a component style sheet.-->
         <#list layoutSettings.styleSheets as styleSheet>
-            <link rel="stylesheet" href="<@contentUrl>${rawString(styleSheet)}</@contentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_STYLESHEET?has_content>
         <#list layoutSettings.VT_STYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@contentUrl>${rawString(styleSheet)}</@contentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.rtlStyleSheets?has_content && langDir == "rtl">
         <#--layoutSettings.rtlStyleSheets is a list of rtl style sheets.-->
         <#list layoutSettings.rtlStyleSheets as styleSheet>
-            <link rel="stylesheet" href="<@contentUrl>${rawString(styleSheet)}</@contentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_RTL_STYLESHEET?has_content && langDir == "rtl">
         <#list layoutSettings.VT_RTL_STYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@contentUrl>${rawString(styleSheet)}</@contentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     
@@ -268,7 +268,7 @@ code package.
     <#if layoutSettings.WEB_ANALYTICS?has_content>
       <@script>
         <#list layoutSettings.WEB_ANALYTICS as webAnalyticsConfig>
-          ${rawString(webAnalyticsConfig.webAnalyticsCode!)}
+          ${raw(webAnalyticsConfig.webAnalyticsCode!)}
         </#list>
       </@script>
     </#if>
@@ -376,8 +376,8 @@ code package.
                     <aside class="right-off-canvas-menu">
                         <ul class="off-canvas-list">
                           <@generalMenu />
-                          <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${rawString(parameters.portalPageId!)}</#if></#assign>
-                          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makePageUrl("showHelp?helpTopic=${rawString(helpTopic!)}${portalPageParamStr}")></@modal></li>  
+                          <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${raw(parameters.portalPageId!)}</#if></#assign>
+                          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makePageUrl("showHelp?helpTopic=${raw(helpTopic!)}${portalPageParamStr}")></@modal></li>  
                         </ul>
                     </aside>
                     

@@ -24,29 +24,29 @@ code package.
       <#assign shortcutIcon = layoutSettings.VT_SHORTCUT_ICON.get(0)/>
     </#if>
     <#if shortcutIcon?has_content>
-      <link rel="shortcut icon" href="<@contentUrl>${rawString(shortcutIcon)}</@contentUrl>" />
+      <link rel="shortcut icon" href="<@contentUrl>${raw(shortcutIcon)}</@contentUrl>" />
     </#if>
     
     <#if layoutSettings.styleSheets?has_content>
         <#--layoutSettings.styleSheets is a list of style sheets. So, you can have a user-specified "main" style sheet, AND a component style sheet.-->
         <#list layoutSettings.styleSheets as styleSheet>
-            <link rel="stylesheet" href="<@contentUrl>${rawString(styleSheet)}</@contentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_STYLESHEET?has_content>
         <#list layoutSettings.VT_STYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@contentUrl>${rawString(styleSheet)}</@contentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.rtlStyleSheets?has_content && langDir == "rtl">
         <#--layoutSettings.rtlStyleSheets is a list of rtl style sheets.-->
         <#list layoutSettings.rtlStyleSheets as styleSheet>
-            <link rel="stylesheet" href="<@contentUrl>${rawString(styleSheet)}</@contentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_RTL_STYLESHEET?has_content && langDir == "rtl">
         <#list layoutSettings.VT_RTL_STYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@contentUrl>${rawString(styleSheet)}</@contentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     
@@ -100,7 +100,7 @@ code package.
     <#if layoutSettings.WEB_ANALYTICS?has_content>
       <@script>
         <#list layoutSettings.WEB_ANALYTICS as webAnalyticsConfig>
-          ${rawString(webAnalyticsConfig.webAnalyticsCode!)}
+          ${raw(webAnalyticsConfig.webAnalyticsCode!)}
         </#list>
       </@script>
     </#if>
@@ -121,8 +121,8 @@ code package.
         <!-- whatever you want goes here -->
         <ul class="off-canvas-list">
           <@generalMenu />
-          <#-- <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${rawString(parameters.portalPageId!)}</#if></#assign>
-          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makePageUrl("showHelp?helpTopic=${rawString(helpTopic!)}${portalPageParamStr}")></@modal></li>
+          <#-- <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${raw(parameters.portalPageId!)}</#if></#assign>
+          <li class="has-form"><@modal label=uiLabelMap.CommonHelp id="help" href=makePageUrl("showHelp?helpTopic=${raw(helpTopic!)}${portalPageParamStr}")></@modal></li>
           -->
         </ul>
     </aside>

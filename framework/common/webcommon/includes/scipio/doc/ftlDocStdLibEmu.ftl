@@ -12,6 +12,12 @@
 <#function rawString vals...>
   <#return vals?join("")>
 </#function>
+<#function raw vals...>
+  <#return vals?join("")>
+</#function>
+<#function toRawString vals...>
+  <#return vals?join("")>
+</#function>
 
 <#-- WARN: DUPLICATION -->
 <#function escapeVal value lang opts={}>

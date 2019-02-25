@@ -2242,7 +2242,7 @@ NOTE: 2019-02-14: This is very similar to the FreeMarker 2.3.27+ built-in, {{{?n
     Enhanced for 1.14.5.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
-<#function toRawString value...>
+<#function raw value...>
 </#function>
 -->
 

@@ -22,7 +22,7 @@ code package.
     <#assign productCategory = catInfo.productCategory!"">
     <#assign contentCategoryName = catInfo.categoryName!"">
     <#assign contentCategoryDesc = catInfo.description!"">
-    <#assign isOnCurrentCatPath = urlContainsPathPart(rawString(currentCategoryPath!""), productCategoryId)>
+    <#assign isOnCurrentCatPath = urlContainsPathPart(raw(currentCategoryPath!""), productCategoryId)>
     <#assign active = false>
     <#if (curCategoryId?has_content && curCategoryId == productCategoryId) || isOnCurrentCatPath>
       <#assign active = true>
@@ -32,7 +32,7 @@ code package.
       <#assign activeTarget = true>
     </#if>
     <#assign categoryUrl><@catalogUrl rawParams=true currentCategoryId=productCategoryId previousCategoryId=previousCategoryId/></#assign>
-    <#assign linkText>${rawString(catInfo.displayName!"")} <#if (count?number > 0)>(${count})</#if></#assign>
+    <#assign linkText>${raw(catInfo.displayName!"")} <#if (count?number > 0)>(${count})</#if></#assign>
     <#local class = addClassArg(class, "menu-${level}")>
     <@menuitem type="link" href=categoryUrl text=linkText class=class active=active activeTarget=activeTarget>
       <#if isMultiLevel>
@@ -72,8 +72,8 @@ code package.
               <#if Static["org.ofbiz.product.category.CategoryWorker"].isCategoryChildOf(delegator, dispatcher, baseCategoryId, catInfo.productCategoryId)>
                 <@categoryList catInfo=catInfo productCategoryId=item.catId level=0 isMultiLevel=true path=item.path!"" count=item.count previousCategoryId=baseCategoryId!""/>
               <#else>
-                <#assign dummy = Debug.logWarning("Scipio: WARN: Side deep category " + rawString(item.catId!) + 
-                    " not child of base category " + rawString(baseCategoryId!"") + "; discarding", "sidedeepcategory.ftl")!>
+                <#assign dummy = Debug.logWarning("Scipio: WARN: Side deep category " + raw(item.catId!) + 
+                    " not child of base category " + raw(baseCategoryId!"") + "; discarding", "sidedeepcategory.ftl")!>
               </#if>
           </#list>
         <#elseif topLevelList?has_content><#-- SCIPIO: Fallback for empty categories / catalogs -->

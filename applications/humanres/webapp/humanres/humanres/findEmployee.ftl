@@ -14,9 +14,9 @@ code package.
     <@menuitem type="link" href=makePageUrl("NewEmployee") text=uiLabelMap.HumanResNewEmployeeApplicant class="+${styles.action_nav!} ${styles.action_add!}"/>
     <#if findEmplQueryRan>
        <#if (parameters.hideFields!"N") == "Y">
-         <@menuitem type="link" href=makePageUrl("findEmployees?hideFields=N&doFindQuery=Y${rawString(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}"/>
+         <@menuitem type="link" href=makePageUrl("findEmployees?hideFields=N&doFindQuery=Y${raw(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}"/>
        <#else>
-         <@menuitem type="link" href=makePageUrl("findEmployees?hideFields=Y&doFindQuery=Y${rawString(paramList)}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}"/>
+         <@menuitem type="link" href=makePageUrl("findEmployees?hideFields=Y&doFindQuery=Y${raw(paramList)}") text=uiLabelMap.CommonHideFields class="+${styles.action_run_sys!} ${styles.action_hide!}"/>
        </#if>
     </#if>
   </@menu>
@@ -93,7 +93,7 @@ code package.
         <@commonMsg type="error">${lookupErrorMessage}</@commonMsg>
     </#if>
     <#if partyList?has_content>
-      <#assign paramStr = addParamsToStr(rawString(paramList!""), {"hideFields": parameters.hideFields!"N"}, "&", false)>
+      <#assign paramStr = addParamsToStr(raw(paramList!""), {"hideFields": parameters.hideFields!"N"}, "&", false)>
       <@paginate mode="content" url=makePageUrl("findEmployees") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=partyListSize!0>
         <@table type="data-list" autoAltRows=true>
           <@thead>

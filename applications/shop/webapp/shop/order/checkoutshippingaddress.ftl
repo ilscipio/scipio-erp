@@ -249,7 +249,7 @@ function toggleBillingAccount(box) {
                 <#list agreements as agreement>
                   <#-- SCIPIO: I don't know why this was the condition: checked=checkThisAddress -->
                   <#assign fieldLabel>${agreement.description!} will be used for this order. 
-                    <@modal id="agreement_info_${rawString(agreement.agreementId!)}" label=uiLabelMap.CommonClickHereDetails>
+                    <@modal id="agreement_info_${raw(agreement.agreementId!)}" label=uiLabelMap.CommonClickHereDetails>
                         <#-- SCIPIO: TODO: This needs to go through the agreement terms. In stock data there is little text to show. -->
                         ${agreement.description!}
                     </@modal>

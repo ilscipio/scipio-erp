@@ -92,7 +92,7 @@ function lookupShipments() {
 <#if shipmentList??>
   <@section id="findOrders_2" title=uiLabelMap.ProductShipments>
     <#if shipmentList?has_content>  
-      <#assign paramStr = addParamsToStr(rawString(paramList!""), {"lookupFlag": "Y"}, "&amp;", false)>
+      <#assign paramStr = addParamsToStr(raw(paramList!""), {"lookupFlag": "Y"}, "&amp;", false)>
       <@paginate mode="content" url=makePageUrl("FindShipment") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=shipmentList?size>
    
         <@table type="data-list" autoAltRows=true>

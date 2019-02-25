@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<#--<#include rawString("component://widget/templates/htmlScreenMacroLibrary.ftl")>--> 
+<#--<#include raw("component://widget/templates/htmlScreenMacroLibrary.ftl")>--> 
 
 <#assign contentMsgContentClass = "content-message-content"><#-- SCIPIO: especially used by JS, cannot put in global styles unless do same in JS -->
 
@@ -82,7 +82,7 @@ code package.
               unfortunately still misses parsing library to achieve this at this time -->
       <#if infoMessage?has_content>
         <@alert type="info">
-          ${rawString(infoMessage)}
+          ${raw(infoMessage)}
         </@alert>
       </#if>
   </div>

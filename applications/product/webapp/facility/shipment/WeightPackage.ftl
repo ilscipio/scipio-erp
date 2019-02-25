@@ -6,7 +6,7 @@ code package.
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", request)>
   <#if !(showWarningForm)>
-    <@section title="${rawLabel('ProductWeighPackageOnly')} ${rawLabel('CommonIn')} ${facility.facilityName!} [${rawString((facility.facilityId)!)}]">
+    <@section title="${rawLabel('ProductWeighPackageOnly')} ${rawLabel('CommonIn')} ${facility.facilityName!} [${raw((facility.facilityId)!)}]">
         <#if invoiceIds?has_content>
           <div>
             ${uiLabelMap.CommonView} <a href="<@pageUrl>PackingSlip.pdf?shipmentId=${shipmentId}</@pageUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
@@ -18,8 +18,8 @@ code package.
               <@menu type="button">
                 <#list invoiceIds as invoiceId>
                   <@menuitem type="generic">
-                    ${uiLabelMap.CommonNbr} <a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
-                    (<a href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
+                    ${uiLabelMap.CommonNbr} <a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
+                    (<a href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
                   </@menuitem>
                 </#list>
               </@menu>

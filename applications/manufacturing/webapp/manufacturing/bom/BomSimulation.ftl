@@ -97,7 +97,7 @@ code package.
           <#list productsData as productData>
             <#assign node = productData.node>
             <@tr valign="middle">
-              <@td><a href="<@serverUrl>/catalog/control/ViewProduct?productId=${node.product.productId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!} ${styles.action_update!}">${node.product.productId}</a></@td>
+              <@td><a href="<@serverUrl>/catalog/control/ViewProduct?productId=${node.product.productId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!} ${styles.action_update!}">${node.product.productId}</a></@td>
               <@td>${node.product.internalName?default("&nbsp;")}</@td>
               <@td align="right">${node.quantity}</@td>
               <@td align="right">${productData.qoh!}</@td>
@@ -105,7 +105,7 @@ code package.
               <#if productData.unitCost?? && (productData.unitCost > 0)>
               <@td align="right">${productData.unitCost!}</@td>
               <#else>
-              <@td align="right"><a href="<@serverUrl>/catalog/control/EditProductCosts?productId=${node.product.productId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav!} ${styles.action_update!}">NA</a></@td>
+              <@td align="right"><a href="<@serverUrl>/catalog/control/EditProductCosts?productId=${node.product.productId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav!} ${styles.action_update!}">NA</a></@td>
               </#if>
               <@td align="right">${productData.totalCost!}</@td>
             </@tr>

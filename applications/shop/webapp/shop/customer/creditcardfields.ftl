@@ -55,7 +55,7 @@ code package.
         <@render resource="component://common/widget/CommonScreens.xml#cctypes" />
     </@field>
    
-    <#assign cardNumber = rawString(ccfParams["${fieldNamePrefix}cardNumber"]!(creditCard.cardNumber)!(ccfFallbacks.cardNumber)!)>
+    <#assign cardNumber = raw(ccfParams["${fieldNamePrefix}cardNumber"]!(creditCard.cardNumber)!(ccfFallbacks.cardNumber)!)>
     <#if cardNumber?has_content>
         <#if cardNumberMinDisplay?has_content>
             <#-- create a display version of the card where all but the last four digits are * -->

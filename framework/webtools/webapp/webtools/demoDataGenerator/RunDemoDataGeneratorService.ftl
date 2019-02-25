@@ -2,7 +2,7 @@
 
 <#macro demoDataServiceFields serviceParameters params={} exclude={}>
   <#list serviceParameters as serviceParameter>
-  	<#local rawName = rawString(serviceParameter.name)>
+  	<#local rawName = raw(serviceParameter.name)>
   	<#local fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if defaultValStr?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${defaultValStr}</em>)</#if></#local>
   	<#if rawName?has_content && rawName == "dataGeneratorProviderId">
       	 <@field type="select" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name="dataGeneratorProviderId">
@@ -15,13 +15,13 @@
 
   <#list serviceParameters as serviceParameter>
     <#-- WARN: watch out for screen auto-escaping on serviceParameter -->
-    <#local rawName = rawString(serviceParameter.name)>
+    <#local rawName = raw(serviceParameter.name)>
     <#if (rawName?has_content && rawName != "dataGeneratorProviderId")>
 	    <#if (exclude[rawName]!false) != true && (rawName?has_content && rawName != "dataGeneratorProvider")>
 	      <#local defaultValue = serviceParameter.defaultValue!>
 	      <#local defaultValStr = defaultValue?string><#-- NOTE: forced html escaping - do not pass to macro params -->
 	      <#local fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if defaultValStr?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${defaultValStr}</em>)</#if></#local>
-	      <#local rawType = rawString(serviceParameter.type)>
+	      <#local rawType = raw(serviceParameter.type)>
 	      <#local required = (serviceParameter.optional == "N")>
 	      <#local value = params[rawName]!serviceParameter.value!>
 	      <#if rawType == "Boolean" || rawType == "java.lang.Boolean">
@@ -50,7 +50,7 @@
   </#list>
 </#macro>
 
-<#assign sectionTitle = rawLabel('WebtoolsServiceName') + " - " + rawString(parameters.SERVICE_NAME!)>
+<#assign sectionTitle = rawLabel('WebtoolsServiceName') + " - " + raw(parameters.SERVICE_NAME!)>
 <@section title=sectionTitle>
 	<form name="demoDataGeneratorForm" method="post" action="<@pageUrl>DemoDataGeneratorResult?_RUN_SYNC_=Y</@pageUrl>">
 		

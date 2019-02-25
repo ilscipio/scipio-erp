@@ -8,7 +8,7 @@ code package.
     <@menuitem type="link" href=makePageUrl("CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text=uiLabelMap.ProductCreateNewFeature class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${rawLabel('ProductEditFeaturesForFeatureCategory')} \"${rawString((curProductFeatureCategory.description)!)}\"" menuContent=menuContent>
+<@section title="${rawLabel('ProductEditFeaturesForFeatureCategory')} \"${raw((curProductFeatureCategory.description)!)}\"" menuContent=menuContent>
     <form action="<@pageUrl>QuickAddProductFeatures</@pageUrl>" method="post">
       <div>
         ${uiLabelMap.CommonAdd}

@@ -78,9 +78,9 @@ code package.
           <@td colspan="3">
                 <#if displayParty?has_content>
                     <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
-                    <a href="${customerDetailLink}${partyId}${rawString(externalKeyParam)}" target="partymgr" class="">${displayPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}</a>
+                    <a href="${customerDetailLink}${partyId}${raw(externalKeyParam)}" target="partymgr" class="">${displayPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}</a>
                 <#elseif partyId?has_content>
-                    <a href="${customerDetailLink}${partyId}${rawString(externalKeyParam)}" target="partymgr" class="">${partyId}</a>
+                    <a href="${customerDetailLink}${partyId}${raw(externalKeyParam)}" target="partymgr" class="">${partyId}</a>
                 </#if>
                 <#--
                 <#if (orderHeader.salesChannelEnumId)?? && orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL">
@@ -105,8 +105,8 @@ code package.
                     <#list shipGroupShipments as shipment>
                           <@row>
                             <@cell columns=6>
-                          ${uiLabelMap.CommonNbr} <a href="<@serverUrl>/facility/control/EditShipment?shipmentId=${shipment.shipmentId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
-                                                          (<a target="_BLANK" href="<@serverUrl>/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>)
+                          ${uiLabelMap.CommonNbr} <a href="<@serverUrl>/facility/control/EditShipment?shipmentId=${shipment.shipmentId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
+                                                          (<a target="_BLANK" href="<@serverUrl>/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>)
                           </@cell>
                         </@row>
                         <#if "SALES_ORDER" == orderHeader.orderTypeId && "ORDER_COMPLETED" == orderHeader.statusId>

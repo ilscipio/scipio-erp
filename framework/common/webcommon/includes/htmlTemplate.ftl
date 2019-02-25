@@ -14,9 +14,9 @@ code package.
 <#include "component://widget/templates/htmlScreenMacroLibrary.ftl"> 
 <#include "component://widget/templates/htmlMenuMacroLibrary.ftl">
 ... and use ones with caching of the directives so only interpreted once per request
-<@('<#include "' + (rawString(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '">')?interpret />
-<@('<#include "' + (rawString(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '">')?interpret />
-<@('<#include "' + (rawString(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '">')?interpret />-->
+<@('<#include "' + (raw(formMacroLibraryPath!'')!'component://widget/templates/htmlFormMacroLibrary.ftl') + '">')?interpret />
+<@('<#include "' + (raw(screenMacroLibraryPath!'')!'component://widget/templates/htmlScreenMacroLibrary.ftl') + '">')?interpret />
+<@('<#include "' + (raw(menuMacroLibraryPath!'')!'component://widget/templates/htmlMenuMacroLibrary.ftl') + '">')?interpret />-->
 
 <#assign formMacroLibIncludeDirective = getRequestVar("formMacroLibIncludeDirective")!"">
 
@@ -25,9 +25,9 @@ code package.
     <#assign menuMacroLibIncludeDirective = getRequestVar("menuMacroLibIncludeDirective")!"">
 <#else>
     <#-- note: getMacroLibraryPath only available since scipio renderer mod -->
-    <#assign formMacroLibraryPath = rawString((formStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlFormMacroLibrary.ftl')>
-    <#assign screenMacroLibraryPath = rawString((screens.getScreenStringRenderer().getMacroLibraryPath())!'component://widget/templates/htmlScreenMacroLibrary.ftl')>
-    <#assign menuMacroLibraryPath = rawString((menuStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlMenuMacroLibrary.ftl')>
+    <#assign formMacroLibraryPath = raw((formStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlFormMacroLibrary.ftl')>
+    <#assign screenMacroLibraryPath = raw((screens.getScreenStringRenderer().getMacroLibraryPath())!'component://widget/templates/htmlScreenMacroLibrary.ftl')>
+    <#assign menuMacroLibraryPath = raw((menuStringRenderer.getMacroLibraryPath())!'component://widget/templates/htmlMenuMacroLibrary.ftl')>
 
     <#assign formMacroLibIncludeDirective = ('<#include "' + formMacroLibraryPath + '">')?interpret>
     <#assign screenMacroLibIncludeDirective = ('<#include "' + screenMacroLibraryPath + '">')?interpret>

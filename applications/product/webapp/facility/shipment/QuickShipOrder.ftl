@@ -19,7 +19,7 @@ function setWeight(weight) {
     </#if>
   </@menu>
 </#macro>
-<@section title="${rawLabel('ProductQuickShipOrderFrom')} ${rawString(facility.facilityName!)} [${rawLabel('CommonId')}:${rawString(facilityId!)}]">
+<@section title="${rawLabel('ProductQuickShipOrderFrom')} ${raw(facility.facilityName!)} [${rawLabel('CommonId')}:${raw(facilityId!)}]">
 
   <#if shipment??>
     <#if 1 < shipmentPackages.size()>
@@ -110,7 +110,7 @@ function setWeight(weight) {
             <input type="hidden" name="facilityId" value="${facilityId!}"/>
             <input type="hidden" name="shipmentId" value="${shipmentPackage.shipmentId}"/>
             <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
-              <@field type="generic" label="${rawLabel('ProductPackage')} ${rawString(shipmentPackage.shipmentPackageSeqId)} ${rawLabel('ProductWeight')}">
+              <@field type="generic" label="${rawLabel('ProductPackage')} ${raw(shipmentPackage.shipmentPackageSeqId)} ${rawLabel('ProductWeight')}">
                   <@field type="input" name="weight" />
                   <@field type="select" name="weightUomId">
                     <#if weightUom?has_content>

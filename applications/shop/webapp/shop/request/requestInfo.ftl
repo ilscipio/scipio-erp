@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<@section title="${rawLabel('OrderRequest')} ${rawString(custRequest.custRequestId)} ${rawLabel('CommonInformation')}">
+<@section title="${rawLabel('OrderRequest')} ${raw(custRequest.custRequestId)} ${rawLabel('CommonInformation')}">
         <@table type="fields" class="${styles.table_basic!}" cellspacing="0">
             <#-- request header information -->
             <@tr>

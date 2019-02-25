@@ -2,7 +2,7 @@
 
 <#assign pageId = pvmsPageId!pageId>
 <#assign webSiteId = pvmsWebSiteId!webSiteId>
-<#assign editPageUrl = rawString(pvmsEditPageUrl!editPageUrl)>
+<#assign editPageUrl = raw(pvmsEditPageUrl!editPageUrl)>
 <#assign pvmsTreeId = pvmsTreeId!"page-view-mappings-select">
 
 <#assign pluginSettings={"three_state": false }/><#-- this seems too sketchy: "tie_selection": false -->
@@ -104,7 +104,7 @@ function addRemovePageViewMappings(treeId) {
 <@treemenu type="lib-basic" plugins=treePlugin id=pvmsTreeId> <#-- events=treeEvent -->
   <#list viewMaps.keySet() as key>
     <#if key?has_content && key != "noWebSiteId">
-        <#assign currWebsite = viewMaps[rawString(key)]/>
+        <#assign currWebsite = viewMaps[raw(key)]/>
         <#-- Add website -->
         <@treeitem text=key state=toSimpleMap(currWebsite.state!{}) id=(currWebsite.id!key) parent=(currWebsite.parent!"#") attribs={"data":{"type":"website","websiteid":currWebsite.webSiteId!""}} icon="${styles.text_color_secondary} ${styles.icon!} ${styles.icon_prefix!}folder"/>
         <#if currWebsite.views?has_content>

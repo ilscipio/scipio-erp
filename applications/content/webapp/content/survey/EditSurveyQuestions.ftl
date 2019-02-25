@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<@section title="${rawLabel('PageTitleEditSurveyQuestions')} ${rawLabel('ContentSurveySurveyId')} ${rawString(surveyId)}">
+<@section title="${rawLabel('PageTitleEditSurveyQuestions')} ${rawLabel('ContentSurveySurveyId')} ${raw(surveyId)}">
       <@table type="data-list" autoAltRows=true>
         <@thead>
         <@tr class="header-row">
@@ -115,7 +115,7 @@ code package.
 </@section>
 <#-- apply question from category -->
 <#if surveyQuestionCategory?has_content>
-    <@section title="${rawLabel('ContentSurveyApplyQuestionFromCategory')} - ${rawString(surveyQuestionCategory.description!)} [${rawString(surveyQuestionCategory.surveyQuestionCategoryId)}]">
+    <@section title="${rawLabel('ContentSurveyApplyQuestionFromCategory')} - ${raw(surveyQuestionCategory.description!)} [${raw(surveyQuestionCategory.surveyQuestionCategoryId)}]">
         <a name="appl">
         <@table type="data-list" autoAltRows=true>
           <@thead>
@@ -232,7 +232,7 @@ code package.
 </@section>
 
 <#if (surveyQuestion?has_content && (surveyQuestion.surveyQuestionTypeId!"") == "OPTION")>
-  <@section title="${rawLabel('ContentSurveyOptions')} - ${rawLabel('CommonId')}) ${rawString(surveyQuestion.surveyQuestionId!)}">
+  <@section title="${rawLabel('ContentSurveyOptions')} - ${rawLabel('CommonId')}) ${raw(surveyQuestion.surveyQuestionId!)}">
     <@table type="data-list" autoAltRows=true>
      <@thead>
       <@tr class="header-row">

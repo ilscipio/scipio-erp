@@ -257,14 +257,14 @@ code package.
             <#assign orderProduct = oiasga.getRelatedOne("OrderItem", false).getRelatedOne("Product", false)!>
             <#assign product = oiasga.getRelatedOne("InventoryItem", false).getRelatedOne("Product", false)!>
             <@tr valign="middle">
-              <@td><a href="<@serverUrl>/ordermgr/control/orderview?orderId=${oiasga.orderId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}" target="_blank">${oiasga.orderId}</a></@td>
+              <@td><a href="<@serverUrl>/ordermgr/control/orderview?orderId=${oiasga.orderId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}" target="_blank">${oiasga.orderId}</a></@td>
               <@td>${header.orderDate?string}</@td>
               <@td>${(channel.description)!}</@td>
               <@td>${oiasga.orderItemSeqId}</@td>
               <@td>
-                <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${orderProduct.productId!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
+                <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${orderProduct.productId!}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
                 <#if orderProduct.productId != product.productId>
-                  &nbsp;[<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
+                  &nbsp;[<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId!}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
                 </#if>
               </@td>
               <@td>${oiasga.shipGroupSeqId}</@td>

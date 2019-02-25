@@ -10,7 +10,7 @@ code package.
 <#elseif layoutSettings.VT_HDR_IMAGE_URL??>
     <#assign headerImageUrl = layoutSettings.VT_HDR_IMAGE_URL.get(0)>
 </#if>
-<#assign logo><img src="<@contentUrl escapeAs='html'><#if headerImageUrl?has_content>${rawString(headerImageUrl)}<#else>/images/scipio/scipio-logo-small.png</#if></@contentUrl>" style="height:32px;"/></#assign>
+<#assign logo><img src="<@contentUrl escapeAs='html'><#if headerImageUrl?has_content>${raw(headerImageUrl)}<#else>/images/scipio/scipio-logo-small.png</#if></@contentUrl>" style="height:32px;"/></#assign>
 <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
 <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
 <#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>

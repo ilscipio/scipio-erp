@@ -57,7 +57,7 @@
     </#if>
     <#list fieldsInfo.typeNames as typeName>
       <#local fieldName = fieldsInfo.fieldNames[typeName?index]>
-      <#local typeInfoMap = (fieldsInfo.typeInfoMap[rawString(typeName)])!{}>
+      <#local typeInfoMap = (fieldsInfo.typeInfoMap[raw(typeName)])!{}>
       <#local inputType = "input">
       <#if "LONG_TEXT" == (typeInfoMap.inputType)!>
         <#local inputType = "textarea">

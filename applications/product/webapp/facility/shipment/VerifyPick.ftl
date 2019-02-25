@@ -97,8 +97,8 @@ code package.
                         <@menu type="button">
                             <#list invoiceIds as invoiceId>
                               <@menuitem type="generic">
-                                    ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
-                                    (<a href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
+                                    ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
+                                    (<a href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
                               </@menuitem>
                             </#list>
                         </@menu>
@@ -175,7 +175,7 @@ code package.
                                     <@td>${orderItemSeqId!}</@td>
                                     <@td>${product.productId!(uiLabelMap.CommonNA)}</@td>
                                     <@td>
-                                        <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>
+                                        <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId!}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>
                                     </@td>
                                     <@td>
                                         <@field type="select" name="geo_o_${orderItem_index}">                                            

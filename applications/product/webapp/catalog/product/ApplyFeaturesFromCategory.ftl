@@ -8,7 +8,7 @@ code package.
 <#if curProductFeatureCategory??>
   <@menuitem type="link" href=makePageUrl("EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text=uiLabelMap.ProductCreateNewFeature class="+${styles.action_nav!} ${styles.action_add!}" />
 <#elseif productFeatureGroup??>
-  <@menuitem type="link" href=makePageUrl("EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}") text="${rawLabel('CommonEdit')} ${rawString(productFeatureGroup.description!)}" class="+${styles.action_nav!} ${styles.action_add!}"/>
+  <@menuitem type="link" href=makePageUrl("EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}") text="${rawLabel('CommonEdit')} ${raw(productFeatureGroup.description!)}" class="+${styles.action_nav!} ${styles.action_add!}"/>
 </#if>
 <#if productId?has_content>
   <@menuitem type="link" href=makePageUrl("EditProduct?productId=${productId}") text=uiLabelMap.ProductReturnToEditProduct class="+${styles.action_nav!} ${styles.action_cancel!}" />

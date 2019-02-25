@@ -62,8 +62,8 @@
     </#if>
     <#local stepParams = toSimpleMap(stepState.stepParams!{})>
     <#list stepParams?keys as paramName>
-      <#if !exclude?seq_contains(rawString(paramName))>
-        <@field type="hidden" name=paramName value=stepParams[rawString(paramName)]!/>
+      <#if !exclude?seq_contains(raw(paramName))>
+        <@field type="hidden" name=paramName value=stepParams[raw(paramName)]!/>
       </#if>
     </#list>
   </#if>
@@ -281,7 +281,7 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
   <#local res = []>
   <#list purposes as purpose>
     <#local purposeType = delegator.findOne("ContactMechPurposeType", {"contactMechPurposeTypeId":purpose}, true)!>
-    <#local res = res + [rawString(purposeType.get("description", locale)!purposeType.contactMechPurposeTypeId!)]>
+    <#local res = res + [raw(purposeType.get("description", locale)!purposeType.contactMechPurposeTypeId!)]>
   </#list>
   <#return res>
 </#function>

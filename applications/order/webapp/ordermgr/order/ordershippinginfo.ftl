@@ -177,7 +177,7 @@ code package.
          </#if>
        </@menu>
     </#macro>
-    <@section title="${rawLabel('OrderShipmentInformation')} - ${rawString(shipGroup.shipGroupSeqId)}" menuContent=menuContent>
+    <@section title="${rawLabel('OrderShipmentInformation')} - ${raw(shipGroup.shipGroupSeqId)}" menuContent=menuContent>
         <@fields type="default-manual">
             <@table type="fields">
                     <form name="updateOrderItemShipGroup" method="post" action="<@pageUrl>updateShipGroupShipInfo</@pageUrl>">
@@ -384,7 +384,7 @@ code package.
                           UPS&nbsp;${shippingRate.shipmentMethodDescription!}
                           <#if (shippingRate.rate > -1)>
                             <@ofbizCurrency amount=shippingRate.rate isoCode=orderReadHelper.getCurrency()/>
-                          <#elseif rawString(shippingRate.shipmentMethodTypeId!) != "NO_SHIPPING"><#-- SCIPIO: NO_SHIPPING check -->
+                          <#elseif raw(shippingRate.shipmentMethodTypeId!) != "NO_SHIPPING"><#-- SCIPIO: NO_SHIPPING check -->
                             ${uiLabelMap.OrderCalculatedOffline}
                           </#if>
                         </@td>
@@ -559,7 +559,7 @@ code package.
              <#if orderHeader.orderTypeId == "SALES_ORDER">
                <#if !shipGroup.supplierPartyId?has_content>
                  <#if orderHeader.statusId == "ORDER_APPROVED">
-                 <a href="<@serverUrl>/facility/control/PackOrder?facilityId=${storeFacilityId!}&amp;orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderPackShipmentForShipGroup}</a>
+                 <a href="<@serverUrl>/facility/control/PackOrder?facilityId=${storeFacilityId!}&amp;orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderPackShipmentForShipGroup}</a>
                  <br />
                  </#if>
                  <a href="javascript:document.createShipment_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderNewShipmentForShipGroup}</a>

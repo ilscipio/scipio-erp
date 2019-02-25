@@ -59,13 +59,13 @@ code package.
     <#if returnHeader?has_content>
       <#if returnHeader.destinationFacilityId?has_content && returnHeader.statusId == "RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId?starts_with("CUSTOMER_")>
         <#list returnShipmentIds as returnShipmentId>
-          <@menuitem type="link" href=makeServerUrl("/facility/control/EditShipment?shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text="${rawLabel('ProductShipmentId')} ${rawString(returnShipmentId.shipmentId)}" class="+${styles.action_nav!} ${styles.action_view!}" />
-          <@menuitem type="link" href=makeServerUrl("/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId!}&shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text=uiLabelMap.OrderReceiveReturn class="+${styles.action_nav!} ${styles.action_receive!}" />
+          <@menuitem type="link" href=makeServerUrl("/facility/control/EditShipment?shipmentId=${returnShipmentId.shipmentId}${raw(externalKeyParam)}") text="${rawLabel('ProductShipmentId')} ${raw(returnShipmentId.shipmentId)}" class="+${styles.action_nav!} ${styles.action_view!}" />
+          <@menuitem type="link" href=makeServerUrl("/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId!}&shipmentId=${returnShipmentId.shipmentId}${raw(externalKeyParam)}") text=uiLabelMap.OrderReceiveReturn class="+${styles.action_nav!} ${styles.action_receive!}" />
         </#list>
       <#elseif returnHeader.statusId == "SUP_RETURN_ACCEPTED" && returnHeader.returnHeaderTypeId == "VENDOR_RETURN">
          <#if returnShipmentIds?has_content>
            <#list returnShipmentIds as returnShipmentId>
-             <@menuitem type="link" href=makeServerUrl("/facility/control/EditShipment?shipmentId=${returnShipmentId.shipmentId}${rawString(externalKeyParam)}") text="${rawLabel('ProductShipmentId')} ${rawString(returnShipmentId.shipmentId)}" class="+${styles.action_nav!} ${styles.action_view!}" />
+             <@menuitem type="link" href=makeServerUrl("/facility/control/EditShipment?shipmentId=${returnShipmentId.shipmentId}${raw(externalKeyParam)}") text="${rawLabel('ProductShipmentId')} ${raw(returnShipmentId.shipmentId)}" class="+${styles.action_nav!} ${styles.action_view!}" />
            </#list>
          <#else>
            <@menuitem type="link" href=makeServerUrl("/facility/control/EditShipment?primaryReturnId=${returnHeader.returnId}&partyIdTo=${toPartyId}&statusId=SHIPMENT_INPUT&shipmentTypeId=PURCHASE_RETURN") text=uiLabelMap.OrderCreateReturnShipment class="+${styles.action_nav!} ${styles.action_add!}" />
@@ -225,11 +225,11 @@ code package.
                     <#assign itemResp = item.getRelatedOne("ReturnItemResponse", false)!>
                     <#if itemResp?has_content>
                       <#if itemResp.paymentId?has_content>
-                        <div>${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/paymentOverview?paymentId=${itemResp.paymentId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${itemResp.paymentId}</a></div>
+                        <div>${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/paymentOverview?paymentId=${itemResp.paymentId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${itemResp.paymentId}</a></div>
                       <#elseif itemResp.replacementOrderId?has_content>
                         <div>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}<a href="<@pageUrl>orderview?orderId=${itemResp.replacementOrderId}</@pageUrl>" class="${styles.link_nav_info_id!}">${itemResp.replacementOrderId}</a></div>
                       <#elseif itemResp.billingAccountId?has_content>
-                        <div>${uiLabelMap.AccountingAccountId} ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${itemResp.billingAccountId}</a></div>
+                        <div>${uiLabelMap.AccountingAccountId} ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/EditBillingAccount?billingAccountId=${itemResp.billingAccountId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${itemResp.billingAccountId}</a></div>
                       </#if>
                     <#else>
                       <div>${uiLabelMap.CommonNone}</div>
@@ -332,7 +332,7 @@ code package.
               </@field>
             <#else>
               <@tr>
-                <@td colspan="4" nowrap="nowrap">${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId!('_NA_')}${rawString(externalKeyParam!)}" class="${styles.link_nav_info_id!}">${partyId?default('[null]')}</a></@td>
+                <@td colspan="4" nowrap="nowrap">${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId!('_NA_')}${raw(externalKeyParam!)}" class="${styles.link_nav_info_id!}">${partyId?default('[null]')}</a></@td>
               </@tr>
               <@field type="input" label=uiLabelMap.OrderOrderId tooltip=uiLabelMap.OrderReturnLoadItems name="orderId" size="20" maxlength="20" />
             </#if>

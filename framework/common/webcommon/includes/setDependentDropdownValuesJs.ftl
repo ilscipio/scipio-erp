@@ -8,10 +8,10 @@ code package.
 jQuery(document).ready(function() {
     <#-- SCIPIO: added depFormFieldPrefix as workaround for some form name issues -->
     <#if !depFormFieldPrefix??>
-      <#assign depFormFieldPrefix = rawString(dependentForm) + "_">
+      <#assign depFormFieldPrefix = raw(dependentForm) + "_">
     </#if>
-    <#assign mainIdFull = rawString(depFormFieldPrefix) + rawString(mainId)>
-    <#assign depIdFull = rawString(depFormFieldPrefix) + rawString(dependentId)>
+    <#assign mainIdFull = raw(depFormFieldPrefix) + raw(mainId)>
+    <#assign depIdFull = raw(depFormFieldPrefix) + raw(dependentId)>
     if (jQuery('#${escapeVal(dependentForm, 'js')}').length && jQuery('#${escapeVal(mainIdFull, 'js')}').length) {
       jQuery('#${escapeVal(mainIdFull, 'js')}').change(function(e, data) {
           getDependentDropdownValues('${escapeVal(requestName, 'js')}', 

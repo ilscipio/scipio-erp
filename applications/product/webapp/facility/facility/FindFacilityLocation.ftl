@@ -32,7 +32,7 @@ code package.
     </form>
 
     <#if foundLocations??>
-      <#assign sectionTitle>${rawLabel('CommonFound')}: ${foundLocations.size()} ${rawLabel('ProductLocationsFor')} <#if facility??>${rawString((facility.facilityName)!)}</#if> [${rawString(facilityId!)}]</#assign>
+      <#assign sectionTitle>${rawLabel('CommonFound')}: ${foundLocations.size()} ${rawLabel('ProductLocationsFor')} <#if facility??>${raw((facility.facilityName)!)}</#if> [${raw(facilityId!)}]</#assign>
       <@section title=sectionTitle>
         <@table type="data-list" autoAltRows=true>
         <@thead>

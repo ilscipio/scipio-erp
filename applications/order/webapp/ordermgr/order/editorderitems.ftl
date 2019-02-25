@@ -32,7 +32,7 @@ code package.
         <@menuitem type="link" href="javascript:submitUpdateItemInfoForm('${escapeFullUrl(makePageUrl('updateOrderItems'), 'js')}');" text=uiLabelMap.OrderUpdateItems class="+${styles.action_run_sys!} ${styles.action_update!}"/>
         <@menuitem type="link" href="javascript:submitUpdateItemInfoForm('${escapeFullUrl(makePageUrl('cancelSelectedOrderItems'), 'js')}');" text=uiLabelMap.OrderCancelSelectedItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
         <@menuitem type="link" href="javascript:submitUpdateItemInfoForm('${escapeFullUrl(makePageUrl('cancelOrderItem'), 'js')}');" text=uiLabelMap.OrderCancelAllItems class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
-        <@menuitem type="link" href=makePageUrl("orderview?${rawString(paramString)}") text=uiLabelMap.OrderViewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
+        <@menuitem type="link" href=makePageUrl("orderview?${raw(paramString)}") text=uiLabelMap.OrderViewOrder class="+${styles.action_nav!} ${styles.action_view!}" />
       </#if>
     </#if>
     </@menu>
@@ -118,7 +118,7 @@ code package.
                                       WARN: if uncomment this, please unhardcode the links - see getPropertyValue below
                                   <#if productId??>
                                   <div>
-                                      <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
+                                      <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
                                       <#- SCIPIO: Now points to shop ->
                                       <a href="<@serverUrl>/shop/control/product?product_id=${productId}</@serverUrl>" class="${styles.link_nav!}" target="_blank">${getLabel("Shop", "ShopUiLabels")}</a>
                                       <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
@@ -265,17 +265,17 @@ code package.
                                             <@menuitem type="link" href=makeServerUrl("/content/control/ViewSimpleContent?contentId=${escapeVal(downloadContent.contentId, 'url')}") text=uiLabelMap.ContentDownload target="_blank" class="+${styles.action_run_sys!} ${styles.action_export!}" />
                                           </#list>
                                           -->
-                                          <@modal id="${rawString(orderId)}_${rawString(orderItem.orderItemSeqId)}_downloads" label=uiLabelMap.ContentDownload linkClass="${styles.link_nav!} ${styles.action_export!}">
+                                          <@modal id="${raw(orderId)}_${raw(orderItem.orderItemSeqId)}_downloads" label=uiLabelMap.ContentDownload linkClass="${styles.link_nav!} ${styles.action_export!}">
                                               <@heading relLevel=+1>${getLabel("EcommerceDownloadsAvailableTitle", "EcommerceUiLabels")}</@heading>
                                               <ol>
                                               <#list downloadContents as downloadContent>
-                                                    <li><a href="<@serverUrl>/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}${rawString(externalKeyParam)}</@serverUrl>"<#rt/>
+                                                    <li><a href="<@serverUrl>/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}${raw(externalKeyParam)}</@serverUrl>"<#rt/>
                                                         <#lt/> target="_blank" class="${styles.link_run_sys_inline!} ${styles.action_export!}">${downloadContent.contentName!downloadContent.contentId!}</a>
                                               </#list>
                                               </ol>
                                           </@modal>
                                         </#if>
-                                        <@menuitem type="link" href=makeServerUrl("/catalog/control/ViewProduct?productId=${escapeVal(productId, 'url')}${rawString(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
+                                        <@menuitem type="link" href=makeServerUrl("/catalog/control/ViewProduct?productId=${escapeVal(productId, 'url')}${raw(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
                                         <@cataloglib.productShopPageUrlMenuItem productId=productId!/>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
                                             <@menuitem type="link" href=makePageUrl("viewimage?orderId=${escapeVal(orderId, 'url')}&orderItemSeqId=${escapeVal(orderItem.orderItemSeqId, 'url')}&orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />

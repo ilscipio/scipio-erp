@@ -65,7 +65,7 @@ code package.
                 </@td>
                 <@td class="button-col">
                   <#if security.hasEntityPermission("MANUAL", "_PAYMENT", request)>
-                    <a href="<@serverUrl>/accounting/control/manualETx?paymentMethodId=${paymentMethod.paymentMethodId}${rawString(externalKeyParam)}</@serverUrl>">${uiLabelMap.PartyManualTx}</a>
+                    <a href="<@serverUrl>/accounting/control/manualETx?paymentMethodId=${paymentMethod.paymentMethodId}${raw(externalKeyParam)}</@serverUrl>">${uiLabelMap.PartyManualTx}</a>
                   </#if>
                   <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", request) || security.hasEntityPermission("ACCOUNTING", "_UPDATE", request)>
                     <a href="<@pageUrl>editcreditcard?partyId=${partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}</@pageUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>

@@ -1,5 +1,5 @@
 
 <@alert type="info">
-    ${rawString(uiLabelMap.MarketingTrackingCodeDesc)}
+    ${raw(uiLabelMap.MarketingTrackingCodeDesc)}
 </@alert>
 

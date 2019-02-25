@@ -77,7 +77,7 @@
           <@tr>
             <@td>Data Status</@td>
             <@td>
-              <#assign solrDataOk = ("SOLR_DATA_OK" == rawString(solrDataStatus.dataStatusId!))>
+              <#assign solrDataOk = ("SOLR_DATA_OK" == raw(solrDataStatus.dataStatusId!))>
               <@prettyResult testExpr=solrDataOk trueVal=(solrDataStatus.dataStatusId!) falseVal=(solrDataStatus.dataStatusId!)/>
             </@td>
             <@td>
@@ -89,7 +89,7 @@
           <@tr>
             <@td>Data Config Version</@td>
             <@td>
-              <#assign configVerOk = (rawString(solrDataStatus.dataCfgVersion!) == rawString(solrConfigVersion!))>
+              <#assign configVerOk = (raw(solrDataStatus.dataCfgVersion!) == raw(solrConfigVersion!))>
               <@prettyResult testExpr=configVerOk trueVal=(solrDataStatus.dataCfgVersion!) falseVal=(solrDataStatus.dataCfgVersion!) />
             </@td>
             <@td>

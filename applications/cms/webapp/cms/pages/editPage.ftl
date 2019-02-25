@@ -20,13 +20,13 @@
           <#local maxLength = ""/>
         </#if>
         <#local labelDetail = ""/>
-        <#local tooltip = rawString(fieldObj.help!"")/>
+        <#local tooltip = raw(fieldObj.help!"")/>
         <#local defaultExpandLang = Static["com.ilscipio.scipio.cms.template.AttributeExpander$ExpandLang"].getDefaultExpandLang()!>
         <#local expandLang = fieldObj.expandLang!defaultExpandLang>
         <#if expandLang?has_content && expandLang != "NONE">
           <#local expandLang = Static["com.ilscipio.scipio.cms.template.AttributeExpander$ExpandLang"].fromStringSafe(expandLang?string)!><#-- make sure we have the enum not just the string -->
           <#if expandLang?has_content>
-            <#local supportedLangStr = "${rawString(uiLabelMap.CmsSupportedLang)}: ${rawString(expandLang.getDescriptionWithExample(locale)!)}"/>
+            <#local supportedLangStr = "${raw(uiLabelMap.CmsSupportedLang)}: ${raw(expandLang.getDescriptionWithExample(locale)!)}"/>
             <#if expandLangVisible>
               <#local labelDetail = supportedLangStr>
             <#else>
@@ -34,7 +34,7 @@
             </#if>
           <#else>
             <#-- ERROR: invalid db value; always report -->
-            <#local dummy = Debug.logError("Cms: @pageAttrField: Error: Attribute '" + rawString(fieldObj.id!"") + "' has invalid expandLang (" + expandLang + ")", "editPage.ftl")!>
+            <#local dummy = Debug.logError("Cms: @pageAttrField: Error: Attribute '" + raw(fieldObj.id!"") + "' has invalid expandLang (" + expandLang + ")", "editPage.ftl")!>
           </#if>
         </#if>
         <#if fieldObj.targetType?has_content>
@@ -50,7 +50,7 @@
             instead just put a tooltip on the label, using hackish method -->
           <#if tooltip?has_content>
             <#local fieldLabelWithTooltip><a href="javascript:void(0);" class="${styles.tooltip!}" title="${tooltip}">${fieldLabel}</a></#local>
-            <#local fieldLabel = wrapAsRaw({'raw':rawString(fieldLabel), 'htmlmarkup':fieldLabelWithTooltip})>
+            <#local fieldLabel = wrapAsRaw({'raw':raw(fieldLabel), 'htmlmarkup':fieldLabelWithTooltip})>
           </#if>
           <#local tooltip = false>
         </#if>
@@ -124,13 +124,13 @@
           * cmsAccessToken should also be passed to live link - whether works without depends on website
         * see CmsGetPage.groovy for the secure and extLoginKey logic
         * preview and live support explicit access token param:
-            rawString(webSiteConfig.accessTokenParamName)+"="+rawString(accessToken!)
+            raw(webSiteConfig.accessTokenParamName)+"="+raw(accessToken!)
           but for preview mode can be inlined into the preview mode toggle param (done like that below, to lower URL length)
       -->
     <#assign previewUrl = makeServerUrl({"controller":false, "secure":useSecurePreviewLink, "webSiteId":webSiteId, "extLoginKey": useLinkExtLoginKey, 
-        "uri":(rawString(pagePrimaryPathExpanded!)+"?"+rawString(webSiteConfig.previewModeParamName)+"="+rawString(accessToken!)+"&cmsPageVersionId="+rawString(versionId!""))})/>
+        "uri":(raw(pagePrimaryPathExpanded!)+"?"+raw(webSiteConfig.previewModeParamName)+"="+raw(accessToken!)+"&cmsPageVersionId="+raw(versionId!""))})/>
     <#assign liveUrl = makeServerUrl({"controller":false, "secure":useSecureLiveLink, "webSiteId":webSiteId, "extLoginKey": useLinkExtLoginKey,
-        "uri":(rawString(pagePrimaryPathExpanded!)+(requireLiveAccessToken?then("?"+rawString(webSiteConfig.accessTokenParamName)+"="+rawString(accessToken!),"")))})/>
+        "uri":(raw(pagePrimaryPathExpanded!)+(requireLiveAccessToken?then("?"+raw(webSiteConfig.accessTokenParamName)+"="+raw(accessToken!),"")))})/>
     
     <#-- Javascript functions -->
     <@script>
@@ -442,7 +442,7 @@
     <@section menuContent=menuContent class="+cms-edit-elem cms-edit-page"><#-- FIXME: get these classes on <body> instead... -->
             <@row>
                 <@cell columns=12>
-                    <a href="${escapeFullUrl(previewUrl, 'html')}" target="_blank"<#if (meta.description)?has_content> class="${styles.tooltip!}" title="${meta.description}"</#if>><@heading level=1><@serverUrl uri=rawString(pagePrimaryPathExpanded!'') controller=false webSiteId=webSiteId escapeAs='html'/></@heading></a>
+                    <a href="${escapeFullUrl(previewUrl, 'html')}" target="_blank"<#if (meta.description)?has_content> class="${styles.tooltip!}" title="${meta.description}"</#if>><@heading level=1><@serverUrl uri=raw(pagePrimaryPathExpanded!'') controller=false webSiteId=webSiteId escapeAs='html'/></@heading></a>
                 </@cell>
             </@row>
             <@row>
@@ -462,7 +462,7 @@
                                     <@section title=((asset.assoc.displayName)!asset.name!"") containerClass="+editorAttribGroup editorAsset" containerAttribs={"scipio-id":asset.importName}>
                                         <#list asset.attributes as attribute>
                                             <#-- NOTE: because of the way the ofbiz renderer implements auto escaping, must use rawString when indexing here -->
-                                            <@pageAttrField namePrefix=(asset.importName+"_") fieldObj=attribute value=(content[rawString(asset.importName!)][rawString(attribute.name!)])!/>
+                                            <@pageAttrField namePrefix=(asset.importName+"_") fieldObj=attribute value=(content[raw(asset.importName!)][raw(attribute.name!)])!/>
                                         </#list>
                                     </@section>
                                     <#assign isFirstAsset = false>
@@ -476,7 +476,7 @@
                                 <#list template.attributes as attribute>
                                   <#if (attribute.type!) == "LONG_TEXT">
                                     <#-- NOTE: because of the way the ofbiz renderer implements auto escaping, must use rawString when indexing here -->
-                                    <@pageAttrField fieldObj=attribute value=content[rawString(attribute.name!)]!/>
+                                    <@pageAttrField fieldObj=attribute value=content[raw(attribute.name!)]!/>
                                   </#if>                          
                                 </#list>
                               </@section>
@@ -513,7 +513,7 @@
                                            <@td><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_user!}" style="font-size:16px;margin:4px;"></i></@td>
                                            <@td> ${version.createdBy!"Anonymous"}</@td>
                                            <#assign verLinkMkrp><@pageUrl escapeAs="html">editPage?pageId=${escapeVal(pageId!, 'url')}&versionId=${escapeVal(version.id!, 'url')}</@pageUrl></#assign>
-                                           <@td><#if version.date?has_content><a href="${verLinkMkrp}">${rawString(version.date)?datetime}</a></#if></@td>
+                                           <@td><#if version.date?has_content><a href="${verLinkMkrp}">${raw(version.date)?datetime}</a></#if></@td>
                                            <@td><#if version.comment?has_content>${version.comment!""}</#if></@td>
                                            <@td><a href="${verLinkMkrp}"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></@td>
                                            <@td><#if version.active==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"></i></#if></@td>
@@ -564,14 +564,14 @@
                                
                                  <@field label=uiLabelMap.CommonPath type="input" name="primaryPath" value=(meta.primaryPath!"") required=true/>
                                  <#-- TODO: unhardcode this -->
-                                 <#assign primaryTargetPath = rawString(meta.primaryTargetPath!"")>
+                                 <#assign primaryTargetPath = raw(meta.primaryTargetPath!"")>
 
                                  <@field type="select" name="primaryTargetPath" id="primaryTargetPath" items=primaryTargetPathOptions currentValue=primaryTargetPath label="${rawLabel('CommonPath')} ${rawLabel('CommonSettings')}" required=false />
 
                                  <#if meta.pageTemplateId?has_content>
                                    <#assign pgTmplLabel>${uiLabelMap.CmsTemplate} <#t>
                                      <#-- DEV NOTE: I left out the target="_blank" because template changes require reloading this page afterward anyway, so fewer tab-related errors? --><#t/>
-                                     <a href="<@pageUrl uri='editTemplate?pageTemplateId='+rawString(meta.pageTemplateId)/>"><#t><#-- target="_blank" -->
+                                     <a href="<@pageUrl uri='editTemplate?pageTemplateId='+raw(meta.pageTemplateId)/>"><#t><#-- target="_blank" -->
                                      <i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></#assign>
                                  <#else>
                                    <#assign pgTmplLabel>${uiLabelMap.CmsTemplate}</#assign>
@@ -581,7 +581,7 @@
                                    <#assign pageTmplSelOpts>
                                      <#if availableTemplates?has_content>
                                        <#list availableTemplates as tmpl>
-                                         <#assign pageTmplSelected = (rawString(tmpl.pageTemplateId!"") == rawString(meta.pageTemplateId!""))>
+                                         <#assign pageTmplSelected = (raw(tmpl.pageTemplateId!"") == raw(meta.pageTemplateId!""))>
                                          <#if pageTmplSelected>
                                            <#assign pageTmplFoundInSelect = true>
                                          </#if>
@@ -638,7 +638,7 @@
                                   <#-- 2017-03-17: DO NOT render the LONG_TEXT attributes here - there's no space! -->
                                   <#if (attribute.type!) != "LONG_TEXT">
                                     <#-- NOTE: because of the way the ofbiz renderer implements auto escaping, must use rawString when indexing here -->
-                                    <@pageAttrField fieldObj=attribute expandLangVisible=false value=(content[rawString(attribute.name!)])!/>
+                                    <@pageAttrField fieldObj=attribute expandLangVisible=false value=(content[raw(attribute.name!)])!/>
                                   </#if>                          
                                 </#list>
                               </@fields>

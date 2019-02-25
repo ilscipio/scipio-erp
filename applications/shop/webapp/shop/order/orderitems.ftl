@@ -85,7 +85,7 @@ code package.
         <@tbody>
         <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
         <#macro orderItemAttrInfo orderItem>
-            <#local orderItemSeqId = rawString(orderItem.orderItemSeqId!)>
+            <#local orderItemSeqId = raw(orderItem.orderItemSeqId!)>
             <#if orderItemProdCfgMap??>
               <#local cfgWrp = (orderItemProdCfgMap[orderItemSeqId])!false>
             <#else>
@@ -149,13 +149,13 @@ code package.
                 <#-- SCIPIO: FIXME: -->
                 <@alert type="warning">${uiLabelMap.CommonWarning}: Cancel may fail for some payment methods</@alert>
                 
-                <@field type="select" name="irm_${rawString(orderItem.orderItemSeqId)}" label=uiLabelMap.OrderReturnReason>
+                <@field type="select" name="irm_${raw(orderItem.orderItemSeqId)}" label=uiLabelMap.OrderReturnReason>
                   <#-- SCIPIO: Usually stores want a reason...<option value=""></option>-->
                   <#list orderItemChangeReasons as reason>
                     <option value="${reason.enumId}"<#if (parameters["irm_${orderItem.orderItemSeqId}"]!) == reason.enumId> selected="selected"</#if>>${reason.get("description",locale)!(reason.enumId)}</option>
                   </#list>
                 </@field>
-                <@field type="text" name="icm_${rawString(orderItem.orderItemSeqId)}" value=(parameters["icm_${rawString(orderItem.orderItemSeqId)}"]!) size="30" maxlength="60" label=uiLabelMap.CommonComments/>
+                <@field type="text" name="icm_${raw(orderItem.orderItemSeqId)}" value=(parameters["icm_${raw(orderItem.orderItemSeqId)}"]!) size="30" maxlength="60" label=uiLabelMap.CommonComments/>
                 <br/><@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makePageUrl('cancelOrderItem')?js_string}';document.addCommonToCartForm.submit()" 
                     class="${styles.link_run_sys!} ${styles.action_terminate!}" text=cancelItemLabel />
                 <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
@@ -167,7 +167,7 @@ code package.
               <#-- SCIPIO: NOTE: Originally this was going to be a modal, but it does not work easily as the fields no longer fall within the <form> when they are in a modal and call fails -->
               <a href="javascript:jQuery('#row_orderitem_cancel_${escapeVal(orderItem.orderItemSeqId, 'js-html')}').toggle(); void(0);" class="${styles.link_nav_inline!}">[${cancelItemLabel}]</a>
               <#--<@modal id="row_orderitem_cancel_${orderItem.orderItemSeqId}" label="[${cancelItemLabel}]">
-                <@section title="${rawString(cancelItemLabel)}: ${rawString(orderItem.itemDescription!)}">
+                <@section title="${raw(cancelItemLabel)}: ${raw(orderItem.itemDescription!)}">
                   <@cancelItemForm />
                 </@section>
               </@modal>-->

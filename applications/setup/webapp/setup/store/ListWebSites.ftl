@@ -14,7 +14,7 @@
       <@tbody>
         <#list webSiteList as currWebSite>
           <@tr>
-            <@td><@setupExtAppLink uri="/catalog/control/EditWebSite?webSiteId=${rawString(currWebSite.webSiteId)}" text=currWebSite.webSiteId/></@td>
+            <@td><@setupExtAppLink uri="/catalog/control/EditWebSite?webSiteId=${raw(currWebSite.webSiteId)}" text=currWebSite.webSiteId/></@td>
             <@td>${currWebSite.siteName!}</@td>
             <@td>${currWebSite.isStoreDefault!}</@td>
             <@td>

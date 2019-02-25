@@ -13,9 +13,9 @@ function lookupBom() {
 </@script>
 <#-- NOTE: this is a little different: we "create"/add even if have existing product... it's presence of association that determine if we create or add -->
 <#if productAssoc??>
-  <#assign sectionTitle>${rawLabel('PageTitleEditProductBom')}<#if product??>: ${(rawString(product.internalName)!)} [${rawLabel('CommonId')} ${rawString(productId!)}]</#if></#assign>
+  <#assign sectionTitle>${rawLabel('PageTitleEditProductBom')}<#if product??>: ${(raw(product.internalName)!)} [${rawLabel('CommonId')} ${raw(productId!)}]</#if></#assign>
 <#else>
-  <#assign sectionTitle>${rawLabel('ManufacturingCreateProductBom')}<#if product??>: ${(rawString(product.internalName)!)} [${rawLabel('CommonId')} ${rawString(productId!)}]</#if></#assign>
+  <#assign sectionTitle>${rawLabel('ManufacturingCreateProductBom')}<#if product??>: ${(raw(product.internalName)!)} [${rawLabel('CommonId')} ${raw(productId!)}]</#if></#assign>
 </#if>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>

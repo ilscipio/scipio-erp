@@ -54,7 +54,7 @@
       	<#if formActionType != "new">    	
 	      	<@field type="display" label=uiLabelMap.FormFieldTitle_parentPeriodId><#rt/>      		 
 	            <span class="acctg-managefield acctg-managefield-for-parentTimePeriodDesc">
-	            	<@setupExtAppLink uri="/accounting/control/EditCustomTimePeriod?organizationPartyId=${rawString(params.orgPartyId!)}&customTimePeriodId=${rawString(params.parentPeriodId!)}" text=params.parentTimePeriodDesc!"_NA_"/>
+	            	<@setupExtAppLink uri="/accounting/control/EditCustomTimePeriod?organizationPartyId=${raw(params.orgPartyId!)}&customTimePeriodId=${raw(params.parentPeriodId!)}" text=params.parentTimePeriodDesc!"_NA_"/>
 	           	</span>--<#t/>           	
 	        </@field><#lt/>
 	        <@field type="hidden" name="parentPeriodId" value=(params.parentPeriodId!) class="+acctg-inputfield"/>
@@ -84,7 +84,7 @@
 	    <#if formActionType == "edit">
 	        <@field type="display" label=uiLabelMap.FormFieldTitle_customTimePeriodId><#rt/>
 	            <span class="acctg-managefield acctg-managefield-for-customTimePeriodId">
-	            	<@setupExtAppLink uri="/accounting/control/EditCustomTimePeriod?organizationPartyId=${rawString(params.orgPartyId!)}&customTimePeriodId=${rawString(params.customTimePeriodId!)}" text=params.customTimePeriodId!/>
+	            	<@setupExtAppLink uri="/accounting/control/EditCustomTimePeriod?organizationPartyId=${raw(params.orgPartyId!)}&customTimePeriodId=${raw(params.customTimePeriodId!)}" text=params.customTimePeriodId!/>
 	            </span><#t/>
 	        </@field><#lt/>
 	        <@field type="hidden" name="customTimePeriodId" value=(params.customTimePeriodId!) class="+acctg-inputfield"/>
@@ -99,7 +99,7 @@
 	    <@field type="select" name="periodTypeId" label=uiLabelMap.CommonType class="+acctg-inputfield">
 	      <option value="" disabled="disabled"></option>
 	      <#list periodTypes as periodType>
-	        <#assign selected = (rawString(params.periodTypeId!) == (periodType.periodTypeId!))>
+	        <#assign selected = (raw(params.periodTypeId!) == (periodType.periodTypeId!))>
 	        <option value="${periodType.periodTypeId!}"<#if selected> selected="selected"</#if>>${periodType.description!}</option>
 	      </#list>
 	    </@field>

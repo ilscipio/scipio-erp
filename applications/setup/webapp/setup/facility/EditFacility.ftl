@@ -26,7 +26,7 @@
         
       <#if facilityInfo??>
         <@field type="display" label=uiLabelMap.FormFieldTitle_facilityId tooltip=uiLabelMap.ProductNotModificationRecrationFacility><#rt/>
-            <@setupExtAppLink uri="/facility/control/EditFacility?facilityId=${rawString(params.facilityId!)}" text=(params.facilityId!)/><#t/>
+            <@setupExtAppLink uri="/facility/control/EditFacility?facilityId=${raw(params.facilityId!)}" text=(params.facilityId!)/><#t/>
         </@field><#lt/>
         <@field type="hidden" name="facilityId" value=(params.facilityId!)/> 
       <#else>
@@ -53,7 +53,7 @@
         <@field type="hidden" name="partyId" value=(partyId!)/>
         
         <#if facilityInfo??>
-          <#assign addressManageUri = "/facility/control/settings?facilityId=${rawString(params.facilityId!)}">
+          <#assign addressManageUri = "/facility/control/settings?facilityId=${raw(params.facilityId!)}">
           <#assign addressLabelDetail>
             <@formattedContactMechPurposeDescs (shipAddressContactMechPurposes![]) ; description><b>${escapeVal(description, 'html')}</b><br/></@formattedContactMechPurposeDescs>
             (<@setupExtAppLink uri=addressManageUri text=uiLabelMap.CommonManage/>)
@@ -139,7 +139,7 @@
                     <#list srcPostalAddressList as postalAddress>
                       <div class="setup-addressentry" style="inline-block;">
                         <@formattedAddressBasic address=postalAddress 
-                            purposes=(srcContactMechPurposeMap[rawString(postalAddress.contactMechId)]!)
+                            purposes=(srcContactMechPurposeMap[raw(postalAddress.contactMechId)]!)
                             emphasis=true/><br/>
                         <a href="javascript:setFacilityShipAddress(srcPostalAddressList[${postalAddress?index}]);editFacilityAddrCloseModal('#modal_setupFacility-selectShipAddr');void(0);"<#rt/> 
                             <#lt/> class="${styles.link_run_local!} ${styles.action_select!}">${uiLabelMap.CommonSelect}</a>

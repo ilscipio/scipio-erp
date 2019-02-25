@@ -66,12 +66,12 @@ code package.
       </@tfoot>-->
       
       <#-- SCIPIO: support simple wildcard regexp -->
-      <#assign labelKeyRegex = rawString(parameters.labelKeyRegex!)>
+      <#assign labelKeyRegex = raw(parameters.labelKeyRegex!)>
       
       <#list labelsList as labelList>
         <#assign label = labels.get(labelList)>
         <#assign labelKey = label.labelKey>
-        <#assign labelKeyRaw = rawString(labelKey)><#-- SCIPIO -->
+        <#assign labelKeyRaw = raw(labelKey)><#-- SCIPIO -->
         <#assign totalLabels = totalLabels + 1>
         <#if references??>
           <#assign referenceNum = 0>

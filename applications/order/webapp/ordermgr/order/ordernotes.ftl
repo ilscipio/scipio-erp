@@ -9,7 +9,7 @@ code package.
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
     <#if security.hasEntityPermission("ORDERMGR", "_NOTE", request)>
-      <@menuitem type="link" href=makePageUrl("createnewnote?${rawString(paramString)}") text=uiLabelMap.OrderNotesCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
+      <@menuitem type="link" href=makePageUrl("createnewnote?${raw(paramString)}") text=uiLabelMap.OrderNotesCreateNew class="+${styles.action_nav!} ${styles.action_add!}" />
     </#if>
     </@menu>
   </#macro>

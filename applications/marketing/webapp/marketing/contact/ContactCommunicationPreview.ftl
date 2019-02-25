@@ -14,7 +14,7 @@ code package.
             Subject: ${(communicationEvent.subject)!}
         </pre>
         <hr />
-        ${rawString(communicationEvent.content)!}
+        ${raw(communicationEvent.content)!}
 
     </body>
 </html>

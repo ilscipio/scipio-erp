@@ -85,7 +85,7 @@ code package.
     <#macro addrContent args={}>
         <div>
           <@formattedAddress usePanel=true address=postalAddress emphasis=false 
-            updateLink=(useUpdate?string(rawString(updateLink!)?replace('_CONTACT_MECH_ID_', contactMech.contactMechId),"")) 
+            updateLink=(useUpdate?string(raw(updateLink!)?replace('_CONTACT_MECH_ID_', contactMech.contactMechId),"")) 
             partyContactMechPurposes=partyContactMechPurposes>
             <#if showVerbose>
               <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(partyContactMech.fromDate.toString())!})</div>

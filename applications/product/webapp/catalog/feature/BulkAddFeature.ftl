@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<@section title="${rawLabel('ProductAddProductFeatureInBulk')} ${rawLabel('CommonFor')} ${rawString(featureCategory.description)}">
+<@section title="${rawLabel('ProductAddProductFeatureInBulk')} ${rawLabel('CommonFor')} ${raw(featureCategory.description)}">
       <form method="post" action="<@pageUrl>BulkAddProductFeatures</@pageUrl>" name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />

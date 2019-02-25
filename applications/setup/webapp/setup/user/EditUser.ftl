@@ -17,7 +17,7 @@ code package.
     "partyRelationshipTypeId": "OWNER",
     <#-- NOTE: PRODUCT_STORE_ID is now concatenation of "[productStoreId]::[roleTypeId]"; if roleTypeId is omitted,
         assumed to be same as the party relationship to company roleTypeIdTo -->
-    "PRODUCT_STORE_ID": rawString(productStoreId!),
+    "PRODUCT_STORE_ID": raw(productStoreId!),
     "USER_ADDR_PURPOSE": ["GENERAL_LOCATION", "SHIPPING_LOCATION"]
 }>
 
@@ -78,7 +78,7 @@ code package.
     <@field type="hidden" name="userPartyId" value=((userParty.partyId)!)/>    
     <#if userParty??>
         <@field type="display" name="userPartyId" label=uiLabelMap.PartyPartyId>
-            <@setupExtAppLink uri=("/partymgr/control/viewprofile?partyId="+rawString(userParty.partyId!)) text=(userParty.partyId!)/><#t/>
+            <@setupExtAppLink uri=("/partymgr/control/viewprofile?partyId="+raw(userParty.partyId!)) text=(userParty.partyId!)/><#t/>
         </@field>
     </#if>
 
@@ -120,7 +120,7 @@ code package.
             <@field type="select" name="roleTypeId" id="roleTypeId" label=getLabel('PartyPartyCurrentInTheRoleOf')
                 required=true><#-- SCIPIO: DEV NOTE: DO NOT REMOVE REQUIRED FLAG, service just crash without it... -->
                 <#list userPartyRoles as partyRole>
-                    <#assign selected = (rawString(params.roleTypeId!) == rawString(partyRole.roleTypeId!))>
+                    <#assign selected = (raw(params.roleTypeId!) == raw(partyRole.roleTypeId!))>
                     <option value="${partyRole.roleTypeId}"<#if selected> selected="selected"</#if>>${partyRole.get('description', locale)!partyRole.roleTypeId}</option>
                 </#list>
             </@field>
@@ -136,7 +136,7 @@ code package.
                       Even if could check the 78 database relations to PartyRole, it could still be needed
                       in a secondary purpose by the client for manual use. -->
                   <@alert type="warning">${uiLabelMap.SetupUserRoleChangeWarning}
-                    <@setupExtAppLink uri=("/partymgr/control/viewroles?partyId="+rawString(userParty.partyId!)) text=uiLabelMap.PageTitleViewPartyRole class="${styles.link_nav!} ${styles.action_view!}"/>
+                    <@setupExtAppLink uri=("/partymgr/control/viewroles?partyId="+raw(userParty.partyId!)) text=uiLabelMap.PageTitleViewPartyRole class="${styles.link_nav!} ${styles.action_view!}"/>
                     <br/>
                     <@fields type="default-compact" fieldArgs={"inlineItems":false}>
                       <@field type="checkbox" name="relRoleChgUpdRec" value="true" altValue="false" label=uiLabelMap.SetupUpdateRecordsForNewRole currentValue=(params.relRoleChgUpdRec!) defaultValue="true"/>
@@ -148,10 +148,10 @@ code package.
           </@row>
           <@row>
             <@cell large=6 last=true>
-            <@field type="select" name="partyRelationshipTypeId" id="partyRelationshipTypeId" label=getLabel('SetupIsRelatedToOrgAs', '', {"orgPartyId":rawString(orgPartyId!)}) required=false>
-                <option value=""<#if !rawString(params.partyRelationshipTypeId!)?has_content> selected="selected"</#if>>--</option>
+            <@field type="select" name="partyRelationshipTypeId" id="partyRelationshipTypeId" label=getLabel('SetupIsRelatedToOrgAs', '', {"orgPartyId":raw(orgPartyId!)}) required=false>
+                <option value=""<#if !raw(params.partyRelationshipTypeId!)?has_content> selected="selected"</#if>>--</option>
                 <#list userPartyRelationshipTypes as userPartyRelationshipType>
-                    <#assign selected = (rawString(params.partyRelationshipTypeId!) == rawString(userPartyRelationshipType.partyRelationshipTypeId!))>
+                    <#assign selected = (raw(params.partyRelationshipTypeId!) == raw(userPartyRelationshipType.partyRelationshipTypeId!))>
                     <option value="${userPartyRelationshipType.partyRelationshipTypeId}"<#if selected> selected="selected"</#if>>${userPartyRelationshipType.get('partyRelationshipName', locale)!userPartyRelationshipType.partyRelationshipTypeId}</option>
                 </#list>
             </@field>
@@ -170,10 +170,10 @@ code package.
             <@cell large=6>
             <@field type="select" name="PRODUCT_STORE_ID" id="PRODUCT_STORE_ID" label=uiLabelMap.SetupAssociateUserToStore required=false>
                 <#assign storeFound = false>
-                <#assign rawStoreIdPram = rawString(params.PRODUCT_STORE_ID!)>
+                <#assign rawStoreIdPram = raw(params.PRODUCT_STORE_ID!)>
                 <option value=""<#if !rawStoreIdPram?has_content> selected="selected"<#assign storeFound = true></#if>>--</option>
                 <#list productStoreList as store>
-                    <#assign selected = (rawStoreIdPram == rawString(store.productStoreId!))>
+                    <#assign selected = (rawStoreIdPram == raw(store.productStoreId!))>
                     <#if selected>
                       <#assign storeFound = true>
                     </#if>
@@ -206,15 +206,15 @@ code package.
             <@cell large=6>
                 <#if extraProductStoreRole??>
                   <@alert type="info">${uiLabelMap.SetupUserStoreRoleMultiInfo}
-                    <@setupExtAppLink uri=(("/catalog/control/FindProductStoreRoles?productStoreId="+rawString(extraProductStoreRole.productStoreId)+"&partyId="+rawString(extraProductStoreRole.partyId))) text=uiLabelMap.PageTitleFindProductStoreRoles class="${styles.link_nav!} ${styles.action_view!}"/>
+                    <@setupExtAppLink uri=(("/catalog/control/FindProductStoreRoles?productStoreId="+raw(extraProductStoreRole.productStoreId)+"&partyId="+raw(extraProductStoreRole.partyId))) text=uiLabelMap.PageTitleFindProductStoreRoles class="${styles.link_nav!} ${styles.action_view!}"/>
                   </@alert>
                 <#elseif userProductStoreRole??>
                   <@alert type="info">${uiLabelMap.SetupUserStoreRoleAssocInfo}
-                    <@setupExtAppLink uri=(("/catalog/control/FindProductStoreRoles?productStoreId="+rawString(userProductStoreRole.productStoreId)+"&partyId="+rawString(userProductStoreRole.partyId))) text=uiLabelMap.PageTitleFindProductStoreRoles class="${styles.link_nav!} ${styles.action_view!}"/>
+                    <@setupExtAppLink uri=(("/catalog/control/FindProductStoreRoles?productStoreId="+raw(userProductStoreRole.productStoreId)+"&partyId="+raw(userProductStoreRole.partyId))) text=uiLabelMap.PageTitleFindProductStoreRoles class="${styles.link_nav!} ${styles.action_view!}"/>
                   </@alert>
                 <#elseif userParty??>
                   <@alert type="info">${uiLabelMap.SetupUserStoreRoleAssocInfo}
-                    <@setupExtAppLink uri=(("/catalog/control/FindProductStoreRoles?productStoreId="+rawString(productStoreId!)+"&partyId="+rawString(userParty.partyId))) text=uiLabelMap.PageTitleFindProductStoreRoles class="${styles.link_nav!} ${styles.action_view!}"/>
+                    <@setupExtAppLink uri=(("/catalog/control/FindProductStoreRoles?productStoreId="+raw(productStoreId!)+"&partyId="+raw(userParty.partyId))) text=uiLabelMap.PageTitleFindProductStoreRoles class="${styles.link_nav!} ${styles.action_view!}"/>
                   </@alert>
                 </#if>
             </@cell>
@@ -232,7 +232,7 @@ code package.
     <hr/>
 
     <#if userInfo??>
-      <#assign addressManageUri = "/partymgr/control/viewprofile?partyId=${rawString(userPartyId!)}">
+      <#assign addressManageUri = "/partymgr/control/viewprofile?partyId=${raw(userPartyId!)}">
       <#assign fieldLabelDetail><@formattedContactMechPurposeDescs (generalAddressContactMechPurposes![]) ; description><b>${escapeVal(description, 'html')}</b><br/></@formattedContactMechPurposeDescs>
       </#assign>
     <#else>
@@ -277,7 +277,7 @@ code package.
             <@field type="generic" label=uiLabelMap.CommonPurpose ignoreParentField=true fieldsType="default">
               <#list postalPurposeTypeList as purposeType>
                 <@field type="checkbox" name="USER_ADDR_PURPOSE" inlineItems=true value=purposeType.contactMechPurposeTypeId label=(purposeType.get("description")!purposeType.contactMechPurposeTypeId)
-                  checked=((params.USER_ADDR_PURPOSE![])?seq_contains(rawString(purposeType.contactMechPurposeTypeId)))/>
+                  checked=((params.USER_ADDR_PURPOSE![])?seq_contains(raw(purposeType.contactMechPurposeTypeId)))/>
               </#list>
             </@field>
 

@@ -13,23 +13,23 @@ code package.
 <#if selectedServiceMap??>
 
   <#if showWsdl?? && showWsdl == true>
-    <@section title=rawLabel('WebtoolsServiceWSDL')+" - "+rawLabel('WebtoolsService')+" "+rawString(selectedServiceMap.serviceName)>
+    <@section title=rawLabel('WebtoolsServiceWSDL')+" - "+rawLabel('WebtoolsService')+" "+raw(selectedServiceMap.serviceName)>
         <@code type="html">${selectedServiceMap.wsdl}</@code>
         <br />
         <a href="<@pageUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
     </@section>
 
   <#else>
-    <@section title=rawLabel('WebtoolsService')+" "+rawString(selectedServiceMap.serviceName)>
+    <@section title=rawLabel('WebtoolsService')+" "+raw(selectedServiceMap.serviceName)>
         <@menu type="button">
           <@menuitem type="link" href=makePageUrl(url) text=uiLabelMap.CommonListAll class="+${styles.action_run_sys!} ${styles.action_find!}" />
-          <@menuitem type="link" href=makePageUrl("scheduleJob?SERVICE_NAME=${rawString(selectedServiceMap.serviceName)}") text=uiLabelMap.WebtoolsSchedule class="+${styles.action_nav!} ${styles.action_configure!}" />
-          <@menuitem type="link" href=makePageUrl("setSyncServiceParameters?SERVICE_NAME=${rawString(selectedServiceMap.serviceName)}&POOL_NAME=pool&_RUN_SYNC_=Y") text=uiLabelMap.PageTitleRunService class="+${styles.action_nav!} ${styles.action_begin!}" />
+          <@menuitem type="link" href=makePageUrl("scheduleJob?SERVICE_NAME=${raw(selectedServiceMap.serviceName)}") text=uiLabelMap.WebtoolsSchedule class="+${styles.action_nav!} ${styles.action_configure!}" />
+          <@menuitem type="link" href=makePageUrl("setSyncServiceParameters?SERVICE_NAME=${raw(selectedServiceMap.serviceName)}&POOL_NAME=pool&_RUN_SYNC_=Y") text=uiLabelMap.PageTitleRunService class="+${styles.action_nav!} ${styles.action_begin!}" />
         </@menu>
 
         <#if selectedServiceMap.deprecatedUseInstead?has_content>
           <@section title=rawLabel('WebtoolsWarningLogLevel')?upper_case+": "+rawLabel('WebtoolsDeprecated')>
-            <@field type="display" label=uiLabelMap.WebtoolsDeprecatedUseInstead><#if rawString(selectedServiceMap.deprecatedUseInstead)?lower_case == "none">${uiLabelMap.CommonNone}<#else><#rt/>
+            <@field type="display" label=uiLabelMap.WebtoolsDeprecatedUseInstead><#if raw(selectedServiceMap.deprecatedUseInstead)?lower_case == "none">${uiLabelMap.CommonNone}<#else><#rt/>
                 <a href="<@pageUrl>ServiceList?sel_service_name=${selectedServiceMap.deprecatedUseInstead}</@pageUrl>">${selectedServiceMap.deprecatedUseInstead}</a></#if></@field><#lt/>
             <@field type="display" label=uiLabelMap.CommonSince>${selectedServiceMap.deprecatedSince!}</@field>
             <@field type="display" label=uiLabelMap.CommonReason>${selectedServiceMap.deprecatedReason!}</@field>

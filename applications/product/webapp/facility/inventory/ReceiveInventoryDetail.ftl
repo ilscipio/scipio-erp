@@ -5,7 +5,7 @@
 
     <#-- Receiving Results -->
     <#if receivedItems?has_content>
-        <@section title="${rawLabel('ProductReceiptPurchaseOrder')} ${rawString(purchaseOrder.orderId)}">
+        <@section title="${rawLabel('ProductReceiptPurchaseOrder')} ${raw(purchaseOrder.orderId)}">
             <@table type="data-list">
                 <@thead>
                     <@tr class="header-row">
@@ -214,9 +214,9 @@
     <#-- Multi-Item PO Receiving -->
     <#elseif purchaseOrder?has_content>
         <#if shipment?has_content>
-            <#assign sectionTitle>${rawLabel('ProductReceivePurchaseOrder')} #${rawString(purchaseOrder.orderId)} / ${rawLabel('ProductShipmentId')} #${rawString(shipment.shipmentId)}</#assign>
+            <#assign sectionTitle>${rawLabel('ProductReceivePurchaseOrder')} #${raw(purchaseOrder.orderId)} / ${rawLabel('ProductShipmentId')} #${raw(shipment.shipmentId)}</#assign>
         <#else>
-            <#assign sectionTitle>${rawLabel('ProductReceivePurchaseOrder')} #${rawString(purchaseOrder.orderId)}</#assign>
+            <#assign sectionTitle>${rawLabel('ProductReceivePurchaseOrder')} #${raw(purchaseOrder.orderId)}</#assign>
         </#if>
         <@section title=sectionTitle>
             <input type="hidden" id="getConvertedPrice" value="<@pageUrl>getConvertedPrice"</@pageUrl> />
@@ -285,8 +285,8 @@
                                             <input type="hidden" name="productId_o_${orderItem_index}" value="${product.productId}"/>                                                            
                                             <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId}${externalKeyParam!}</@serverUrl>" target="catalog" class="${styles.link_nav_info_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a>                                                            
                                         <#else>
-                                            <@field type="input" size="12" name="productId_o_${orderItem_index}" label="${rawString(orderItemType.get('description',locale))} ${rawString(orderItem.itemDescription!)}">
-                                                <a href="<@serverUrl>/catalog/control/ViewProduct?${rawString(externalKeyParam)}</@serverUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
+                                            <@field type="input" size="12" name="productId_o_${orderItem_index}" label="${raw(orderItemType.get('description',locale))} ${raw(orderItem.itemDescription!)}">
+                                                <a href="<@serverUrl>/catalog/control/ViewProduct?${raw(externalKeyParam)}</@serverUrl>" target="catalog" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductCreateProduct}</a>
                                             </@field>
                                         </#if>
                                     </@td>

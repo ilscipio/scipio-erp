@@ -18,7 +18,7 @@ code package.
         <#if returnItems?has_content>
           <#assign orderId = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(returnItems)).getString("orderId")/>
           <#assign partyId = "${(returnHeader.fromPartyId)!}"/>
-          <@menuitem type="link" href=makePageUrl("setOrderCurrencyAgreementShipDates?partyId=${partyId!}&originOrderId=${orderId!}") text="${rawLabel('OrderCreateExchangeOrder')} ${rawLabel('CommonFor')} ${rawString(orderId!)}" class="+${styles.action_run_sys!} ${styles.action_add!}" />
+          <@menuitem type="link" href=makePageUrl("setOrderCurrencyAgreementShipDates?partyId=${partyId!}&originOrderId=${orderId!}") text="${rawLabel('OrderCreateExchangeOrder')} ${rawLabel('CommonFor')} ${raw(orderId!)}" class="+${styles.action_run_sys!} ${styles.action_add!}" />
         </#if>
         <#if "RETURN_ACCEPTED" == returnHeader.statusId>
           <#assign returnItems = delegator.findByAnd("ReturnItem", {"returnId" : returnId}, null, false)/>

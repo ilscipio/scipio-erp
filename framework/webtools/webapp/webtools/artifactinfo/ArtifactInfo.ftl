@@ -144,7 +144,7 @@ code package.
             Description: ${artifactInfo.modelService.description}<br/>
             Run (${artifactInfo.modelService.engineName}): ${artifactInfo.modelService.location} :: ${artifactInfo.modelService.invoke}<br/>
             <#-- SCIPIO: Fixed link; added fallback for java -->
-            <#assign servImplLoc = rawString((artifactInfo.getImplementationLocation())!)>
+            <#assign servImplLoc = raw((artifactInfo.getImplementationLocation())!)>
             Impl Location: 
             <#if servImplLoc?has_content>
               <@artifactInfoFileLink id="ArtifactInfoServImplFile" type=artifactInfo.type location=servImplLoc
@@ -498,5 +498,5 @@ code package.
 <#macro displayArtifactInfoLink type uniqueId displayName>
 <#-- SCIPIO: This hardcoded encoding was probably due to stock hadn't configured the default yet...
 <a href="<@pageUrl>ArtifactInfo?type=${type}&amp;uniqueId=${uniqueId?url('ISO-8859-1')}</@pageUrl>">${displayName}</a>-->
-<a href="<@pageUrl>ArtifactInfo?type=${type}&amp;uniqueId=${rawString(uniqueId)?url}</@pageUrl>">${displayName}</a>
+<a href="<@pageUrl>ArtifactInfo?type=${type}&amp;uniqueId=${raw(uniqueId)?url}</@pageUrl>">${displayName}</a>
 </#macro>

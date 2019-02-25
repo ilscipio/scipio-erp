@@ -231,13 +231,13 @@ function submitFindForm(val){
           <@field type="select" label=uiLabelMap.OrderSelectShippingMethod name="shipmentMethod">
               <#if currentCarrierShipmentMethod?has_content>
                 <#assign currentShipmentMethodType = currentCarrierShipmentMethod.getRelatedOne("ShipmentMethodType", false)>
-                <@field type="option" value="${rawString(currentCarrierShipmentMethod.partyId)}@${rawString(currentCarrierShipmentMethod.shipmentMethodTypeId)}">${currentCarrierShipmentMethod.partyId!} ${currentShipmentMethodType.description!}</@field>
-                <@field type="option" value="${rawString(currentCarrierShipmentMethod.partyId)}@${rawString(currentCarrierShipmentMethod.shipmentMethodTypeId)}">---</@field>
+                <@field type="option" value="${raw(currentCarrierShipmentMethod.partyId)}@${raw(currentCarrierShipmentMethod.shipmentMethodTypeId)}">${currentCarrierShipmentMethod.partyId!} ${currentShipmentMethodType.description!}</@field>
+                <@field type="option" value="${raw(currentCarrierShipmentMethod.partyId)}@${raw(currentCarrierShipmentMethod.shipmentMethodTypeId)}">---</@field>
               </#if>
               <@field type="option" value="">${uiLabelMap.OrderSelectShippingMethod}</@field>
               <#list carrierShipmentMethods as carrierShipmentMethod>
                 <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType", false)>
-                <@field type="option" value="${rawString(carrierShipmentMethod.partyId)}@${rawString(carrierShipmentMethod.shipmentMethodTypeId)}">${carrierShipmentMethod.partyId!} ${shipmentMethodType.description!}</@field>
+                <@field type="option" value="${raw(carrierShipmentMethod.partyId)}@${raw(carrierShipmentMethod.shipmentMethodTypeId)}">${carrierShipmentMethod.partyId!} ${shipmentMethodType.description!}</@field>
               </#list>
           </@field>
           <@field type="select" label=uiLabelMap.OrderViewed name="isViewed">
@@ -319,7 +319,7 @@ document.lookuporder.orderId.focus();
   <#-- note: added this check here for simplicity but haven't removed old code inside; no harm, maybe reuse-->
   <#if orderList?has_content>
   
-    <#assign paramStr = addParamsToStr(rawString(paramList!""), {"showAll": showAll!"", "hideFields": findParams.hideFields!"N", "doFindQuery": "Y"}, "&amp;", false)>
+    <#assign paramStr = addParamsToStr(raw(paramList!""), {"showAll": showAll!"", "hideFields": findParams.hideFields!"N", "doFindQuery": "Y"}, "&amp;", false)>
     <#-- forcePost required because search done from service event with https="true" -->
     <@paginate mode="content" url=makePageUrl("searchorders") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!1 listSize=orderListSize!0 altParam=true forcePost=true viewIndexFirst=1>
    
@@ -339,13 +339,13 @@ document.lookuporder.orderId.focus();
           therefore we have to rely on the user to click "find" again until some sort of 
           workaround is found (controller limitation) -->
       <#--
-      <#assign massParamList = "hideFields=" + rawString(findParams.hideFields!"N")>
+      <#assign massParamList = "hideFields=" + raw(findParams.hideFields!"N")>
       -->
 
       <#-- 2016-08-11: these are now included in form as POST
       <#assign massParamList = "hideFields=" + "N">
       <#if paramList?has_content>
-        <#assign massParamList = massParamList + "&" + rawString(paramList)?replace("&amp;","&")>
+        <#assign massParamList = massParamList + "&" + raw(paramList)?replace("&amp;","&")>
       </#if>
       -->
       <#assign massParamList = "">
@@ -498,7 +498,7 @@ document.lookuporder.orderId.focus();
               <@td>${orderHeader.getString("orderDate")!}</@td>
               <@td>
                 <#if partyId != "_NA_">
-                  <a href="${customerDetailLink}${partyId}${rawString(externalKeyParam)}" class="${styles.link_nav_info_id!}">${partyId}</a>
+                  <a href="${customerDetailLink}${partyId}${raw(externalKeyParam)}" class="${styles.link_nav_info_id!}">${partyId}</a>
                 <#else>
                   ${uiLabelMap.CommonNA}
                 </#if>

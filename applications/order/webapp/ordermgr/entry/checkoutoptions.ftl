@@ -144,9 +144,9 @@ function submitForm(form, mode, value) {
         
                 <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%">
                  <#if shipping == true>
-                  <#assign chosenShippingMethod = rawString(chosenShippingMethod!"N@A")>
+                  <#assign chosenShippingMethod = raw(chosenShippingMethod!"N@A")>
                   <#list carrierShipmentMethodList as carrierShipmentMethod>
-                    <#assign shippingMethod = rawString(carrierShipmentMethod.shipmentMethodTypeId) + "@" + rawString(carrierShipmentMethod.partyId)>
+                    <#assign shippingMethod = raw(carrierShipmentMethod.shipmentMethodTypeId) + "@" + raw(carrierShipmentMethod.partyId)>
                     <@tr>
                       <@td width="1%">
                         <@field type="radio" name="shipping_method" value=shippingMethod checked=(shippingMethod == chosenShippingMethod)/>
@@ -157,7 +157,7 @@ function submitForm(form, mode, value) {
                             <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)!-1>
                           </#if>
                           <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
-                          <#if shippingEst?has_content><#if (shippingEst > -1)> - <@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#elseif rawString(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"> - ${uiLabelMap.OrderCalculatedOffline}</#if></#if><#-- SCIPIO: NO_SHIPPING check -->
+                          <#if shippingEst?has_content><#if (shippingEst > -1)> - <@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#elseif raw(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"> - ${uiLabelMap.OrderCalculatedOffline}</#if></#if><#-- SCIPIO: NO_SHIPPING check -->
                         </@td>
                     </@tr>
                   </#list>
@@ -244,7 +244,7 @@ function submitForm(form, mode, value) {
                       </#list>
                       </b>
                       </div>
-                      <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<#if customerDetailLink??>${customerDetailLink}${shoppingCart.getPartyId()}${rawString(externalKeyParam!)}" target="partymgr"
+                      <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<#if customerDetailLink??>${customerDetailLink}${shoppingCart.getPartyId()}${raw(externalKeyParam!)}" target="partymgr"
                         <#else><@pageUrl>viewprofile?DONE_PAGE=quickcheckout</@pageUrl>"</#if> class="${styles.link_nav!}">${uiLabelMap.PartyProfile}</a>.</div>
                       <br />
                       <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
@@ -346,7 +346,7 @@ function submitForm(form, mode, value) {
                   <#list finAccounts as finAccount>
                       <@tr>
                         <@td width="1%">
-                          <@field type="radio" name="checkOutPaymentId" value="FIN_ACCOUNT|${rawString(finAccount.finAccountId)}" checked=("FIN_ACCOUNT" == checkOutPaymentId)/>
+                          <@field type="radio" name="checkOutPaymentId" value="FIN_ACCOUNT|${raw(finAccount.finAccountId)}" checked=("FIN_ACCOUNT" == checkOutPaymentId)/>
                         </@td>
                         <@td width="50%">${uiLabelMap.AccountingFinAccount} #${finAccount.finAccountId}
                         </@td>
@@ -373,7 +373,7 @@ function submitForm(form, mode, value) {
                           <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${escapeVal(paymentMethod.paymentMethodId, 'js-html')}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                           <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
                           <@fields type=subFieldType ignoreParentField=true>
-                            <@field type="input" label=uiLabelMap.OrderCardSecurityCode size="5" maxlength="10" name="securityCode_${rawString(paymentMethod.paymentMethodId)}" value=""/>
+                            <@field type="input" label=uiLabelMap.OrderCardSecurityCode size="5" maxlength="10" name="securityCode_${raw(paymentMethod.paymentMethodId)}" value=""/>
                           </@fields>
                         </@td>
                       </@tr>

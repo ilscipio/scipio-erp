@@ -54,18 +54,18 @@ function ShowTab(lname) {
               <#local editLabel = uiLabelMap.CommonRecreate>
               <#local editClass = styles.action_add!>
             </#if>
-            <@menuitem type="link" href=makePageUrl("ViewGeneric?${rawString(curFindString)}&enableEdit=true") text=editLabel class=("+${styles.action_nav!} " + editClass) />
+            <@menuitem type="link" href=makePageUrl("ViewGeneric?${raw(curFindString)}&enableEdit=true") text=editLabel class=("+${styles.action_nav!} " + editClass) />
           </#if>
         </#if>
         <#if value?has_content && (deleteSuccess!false) != true>
           <#if hasDeletePermission>
-            <@menuitem type="link" href=makePageUrl("UpdateGeneric?UPDATE_MODE=DELETE&${rawString(curFindString)}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
+            <@menuitem type="link" href=makePageUrl("UpdateGeneric?UPDATE_MODE=DELETE&${raw(curFindString)}") text=uiLabelMap.WebtoolsDeleteThisValue class="+${styles.action_run_sys!} ${styles.action_remove!}" />
           </#if>
         </#if>
     </@menu>
 </#macro>
 
-<@section menuContent=menuContent><#-- redundant:  title="${rawLabel('WebtoolsViewValue')} ${rawLabel('WebtoolsForEntity')} ${rawString(entityName)}" -->
+<@section menuContent=menuContent><#-- redundant:  title="${rawLabel('WebtoolsViewValue')} ${rawLabel('WebtoolsForEntity')} ${raw(entityName)}" -->
   <#if modelEntity??>
     <@nav type="magellan">
         <#if value?has_content><@mli arrival="xml-view"><a href="#xml-view">${uiLabelMap.WebtoolsEntityXMLRepresentation}</a></@mli></#if>
@@ -233,7 +233,7 @@ function ShowTab(lname) {
                             <#assign button = uiLabelMap.CommonCreate>
                           </#if>
                           <@field type="submit" name="Update" text="${button}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
-                          <@field type="submit" submitType="link" href=makePageUrl("ViewGeneric?${rawString(curFindString)}") class="+${styles.link_nav_cancel!}" text=uiLabelMap.CommonCancel/>
+                          <@field type="submit" submitType="link" href=makePageUrl("ViewGeneric?${raw(curFindString)}") class="+${styles.link_nav_cancel!}" text=uiLabelMap.CommonCancel/>
                       </@field>
                     </@td>
                   </@tr>

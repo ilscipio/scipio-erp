@@ -38,14 +38,14 @@
 		        <@field type="select" name="taxFormId" value=(params.taxFormId!) label=uiLabelMap.FormFieldTitle_taxFormId>
 		    		<option value=""></option>
 			    	<#list taxForms as taxForm>
-			    		<#assign selected = (rawString(taxForm.enumId) == rawString(params.taxFormId!))>
+			    		<#assign selected = (raw(taxForm.enumId) == raw(params.taxFormId!))>
 			    		<option value="${taxForm.enumId}"<#if selected> selected="selected"</#if>>${taxForm.description}</option>
 			    	</#list>
 		    	</@field>
 		    	<@field type="select" name="cogsMethodId" value=(params.cogsMethodId!) label=uiLabelMap.FormFieldTitle_cogsMethodId>
 		    		<option value=""></option>
 			    	<#list cogsMethods as cogsMethod>
-			    		<#assign selected = (rawString(cogsMethod.enumId) == rawString(params.cogsMethodId!))>
+			    		<#assign selected = (raw(cogsMethod.enumId) == raw(params.cogsMethodId!))>
 			    		<option value="${cogsMethod.enumId}"<#if selected> selected="selected"</#if>>${cogsMethod.description}</option>
 			    	</#list>
 		    	</@field>
@@ -89,7 +89,7 @@
 				<@field type="select" name="baseCurrencyUomId" value=(params.baseCurrencyUomId!) label=uiLabelMap.FormFieldTitle_baseCurrencyUomId>
 		    		<option value=""></option>
 			    	<#list currencyUoms as currencyUom>
-			    		<#assign selected = (rawString(params.baseCurrencyUomId!) == rawString(currencyUom.uomId!))>
+			    		<#assign selected = (raw(params.baseCurrencyUomId!) == raw(currencyUom.uomId!))>
 			    		<option value="${currencyUom.uomId}"<#if selected> selected="selected"</#if>>${currencyUom.description} - ${currencyUom.abbreviation}</option>
 			    	</#list>
 		    	</@field>
@@ -101,7 +101,7 @@
 	    	<@field type="select" name="invoiceSeqCustMethId" value=(params.invoiceSeqCustMethId!) label=uiLabelMap.FormFieldTitle_invoiceSequenceEnumId>
 	    		<option value=""></option>
 		    	<#list invoiceCustomMethods as invoiceCustomMethod>
-		    		<#assign selected = (rawString(invoiceCustomMethod.customMethodId) == rawString(params.invoiceSeqCustMethId!))>
+		    		<#assign selected = (raw(invoiceCustomMethod.customMethodId) == raw(params.invoiceSeqCustMethId!))>
 		    		<option value="${invoiceCustomMethod.customMethodId}"<#if selected> selected="selected"</#if>>${invoiceCustomMethod.description}</option>
 		    	</#list>
 	    	</@field>
@@ -121,7 +121,7 @@
 	    	<@field type="select" name="orderSeqCustMethId" value=(params.orderSeqCustMethId!) label=uiLabelMap.FormFieldTitle_orderSequenceEnumId>
 	    		<option value=""></option>
 		    	<#list orderCustomMethods as orderCustomMethod>
-		    		<#assign selected = (rawString(orderCustomMethod.customMethodId) == rawString(params.orderSeqCustMethId!))>
+		    		<#assign selected = (raw(orderCustomMethod.customMethodId) == raw(params.orderSeqCustMethId!))>
 		    		<option value="${orderCustomMethod.customMethodId}"<#if selected> selected="selected"</#if>>${orderCustomMethod.description}</option>
 		    	</#list>
 	    	</@field>
@@ -137,7 +137,7 @@
 	    	<@field type="select" name="quoteSeqCustMethId" value=(params.quoteSeqCustMethId!) label=uiLabelMap.FormFieldTitle_quoteSequenceEnumId>
 	    		<option value=""></option>
 		    	<#list quoteCustomMethods as quoteCustomMethod>
-		    		<#assign selected = (rawString(quoteCustomMethod.customMethodId) == rawString(params.quoteSeqCustMethId!))>
+		    		<#assign selected = (raw(quoteCustomMethod.customMethodId) == raw(params.quoteSeqCustMethId!))>
 		    		<option value="${quoteCustomMethod.customMethodId}"<#if selected> selected="selected"</#if>>${quoteCustomMethod.description}</option>
 		    	</#list>
 	    	</@field>

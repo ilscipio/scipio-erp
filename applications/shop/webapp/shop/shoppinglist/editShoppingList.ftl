@@ -118,7 +118,7 @@ code package.
       <@menuitem type="link" href="javascript:document.updateList.submit();" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave />
     </@menu>
   </#macro>
-  <@section title="${rawLabel('EcommerceShoppingListDetail')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
+  <@section title="${rawLabel('EcommerceShoppingListDetail')} - ${raw(shoppingList.listName)}" menuContent=menuContent>
         <form name="updateList" method="post" action="<@pageUrl>updateShoppingList</@pageUrl>">
             <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}"/>
             <input type="hidden" name="partyId" value="${shoppingList.partyId!}"/>
@@ -271,10 +271,10 @@ code package.
                   <select name="shippingMethodString">
                     <option value="">${uiLabelMap.OrderSelectShippingMethod}</option>
                     <#if carrierShipMethods?has_content>
-                      <#assign chosenShippingMethod = rawString(chosenShippingMethod!"N@A")>
+                      <#assign chosenShippingMethod = raw(chosenShippingMethod!"N@A")>
                       <#list carrierShipMethods as shipMeth>
                         <#assign shippingEst = shippingEstWpr.getShippingEstimate(shipMeth)?default(-1)>
-                        <#assign shippingMethod = rawString(shipMeth.shipmentMethodTypeId) + "@" + rawString(shipMeth.partyId)>
+                        <#assign shippingMethod = raw(shipMeth.shipmentMethodTypeId) + "@" + raw(shipMeth.partyId)>
                         <option value="${escapeVal(shippingMethod, 'html')}"<#if shippingMethod == chosenShippingMethod> selected="selected"</#if>>
                           <#if shipMeth.partyId != "_NA_">
                             ${shipMeth.partyId!}&nbsp;
@@ -283,7 +283,7 @@ code package.
                           <#if shippingEst?has_content>
                             <#if (shippingEst > -1)>
                               &nbsp;-&nbsp;<@ofbizCurrency amount=shippingEst isoCode=listCart.getCurrency()/>
-                            <#elseif rawString(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"><#-- SCIPIO: NO_SHIPPING check -->
+                            <#elseif raw(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"><#-- SCIPIO: NO_SHIPPING check -->
                               &nbsp;-&nbsp;${uiLabelMap.OrderCalculatedOffline}
                             </#if>
                           </#if>
@@ -364,7 +364,7 @@ code package.
       <@menuitem type="link" href=makePageUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.EcommerceAddChildListsToCart />
     </@menu>
   </#macro>
-  <@section title="${rawLabel('EcommerceChildShoppingList')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
+  <@section title="${rawLabel('EcommerceChildShoppingList')} - ${raw(shoppingList.listName)}" menuContent=menuContent>
     <@table type="data-complex">
       <@tr>
         <@td><b>${uiLabelMap.EcommerceListName}</b></@td>
@@ -405,7 +405,7 @@ code package.
       <@menuitem type="link" href=makePageUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}") class="+${styles.action_run_session!} ${styles.action_add!}" text=uiLabelMap.EcommerceAddListToCart />
     </@menu>
   </#macro>
-  <@section title="${rawLabel('EcommerceListItems')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
+  <@section title="${rawLabel('EcommerceListItems')} - ${raw(shoppingList.listName)}" menuContent=menuContent>
     <#if shoppingListItemDatas?has_content>
         <#-- Pagination -->
         <@paginationControls/>
@@ -531,7 +531,7 @@ code package.
     </#if>
   </@section>
 
-  <@section title="${rawLabel('EcommerceShoppingListPriceTotals')} - ${rawString(shoppingList.listName)}">
+  <@section title="${rawLabel('EcommerceShoppingListPriceTotals')} - ${raw(shoppingList.listName)}">
       <@table type="fields">
         <@tr>
           <@td width="5%" nowrap="nowrap">${uiLabelMap.EcommerceChildListTotalPrice}

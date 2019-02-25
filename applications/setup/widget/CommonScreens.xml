@@ -265,7 +265,7 @@
                                 <platform-specific>
                                     <html>
                                         <html-template><![CDATA[
-                                          <@heading>${uiLabelMap[rawString(settingUpLabelProp)]}: ${orgPartyGroup.groupName} [${uiLabelMap.CommonPartyId}: ${orgPartyGroup.partyId}]<#t/>
+                                          <@heading>${uiLabelMap[raw(settingUpLabelProp)]}: ${orgPartyGroup.groupName} [${uiLabelMap.CommonPartyId}: ${orgPartyGroup.partyId}]<#t/>
                                             <#t/><#if productStore?has_content> - ${productStore.storeName!productStore.productStoreId}</#if></@heading>
                                         ]]></html-template>
                                     </html>

@@ -31,7 +31,7 @@
               <ul class="no-bullet">
                 <li>${currentStatus.get("description",locale)}</li>
               </ul>
-              <@commonMsg type="info"><em>${uiLabelMap.CommonNote}: ${getLabel('AccountingNoteInvoiceMissingStatusRecords', '', {"invoiceId":rawString(invoice.invoiceId)})}</em></@commonMsg>
+              <@commonMsg type="info"><em>${uiLabelMap.CommonNote}: ${getLabel('AccountingNoteInvoiceMissingStatusRecords', '', {"invoiceId":raw(invoice.invoiceId)})}</em></@commonMsg>
             </#if>
             </@modal>
           </#if>

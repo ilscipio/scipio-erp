@@ -36,7 +36,7 @@
 </#function>
 
 <#function makeShortCmsDesc desc>
-  <#local desc = rawString(desc)>
+  <#local desc = raw(desc)>
   <#if (desc?length > CMS_SHORTDESC_DISPLAY_MAX_SIZE)>
     <#local desc = (desc[0..<CMS_SHORTDESC_DISPLAY_MAX_SIZE]) + "...">
   </#if>
@@ -434,7 +434,7 @@
 <#macro cmsScriptTemplateSelectFormEditFields scriptTmpl>
         <#local nameMarkup>${scriptTmpl.templateName!scriptTmpl.id} <#t/>
             (<a href="<@pageUrl>editScript?scriptTemplateId=${scriptTmpl.id}</@pageUrl>">${scriptTmpl.id}</a>)</#local>
-        <@field type="display" label=uiLabelMap.CmsScriptName name="scriptName" value=wrapAsRaw({'raw':rawString(scriptTmpl.templateName!scriptTmpl.id), 'htmlmarkup':nameMarkup})/>
+        <@field type="display" label=uiLabelMap.CmsScriptName name="scriptName" value=wrapAsRaw({'raw':raw(scriptTmpl.templateName!scriptTmpl.id), 'htmlmarkup':nameMarkup})/>
         <@field type="display" label=uiLabelMap.CommonWebsite name="webSiteId" value=(scriptTmpl.webSiteId!"-")/>
         <@field type="display" label=uiLabelMap.CmsQualifiedName name="qualifiedName" value=(scriptTmpl.qualifiedName!"")/>
         <@field type="text" label=uiLabelMap.CmsInvokeName size="30" name="invokeName" required=false tooltip=uiLabelMap.CmsScriptInvokeNameDescription value=scriptTmpl.invokeName!/>
@@ -456,7 +456,7 @@
                 </@tr>
             </@thead>
             <#list scriptTemplates as scriptTmpl><#-- NOTE: should be already sorted by LinkedHashMap -->
-                <#local editUrlHtml = escapeVal(makePageUrl("editScript?scriptTemplateId="+rawString(scriptTmpl.id)), "html")>
+                <#local editUrlHtml = escapeVal(makePageUrl("editScript?scriptTemplateId="+raw(scriptTmpl.id)), "html")>
                 <@tr>
                    <@td>${scriptTmpl.inputPosition!}</@td>
                    <@td><a href="${editUrlHtml}">${scriptTmpl.id!}</a></@td>
@@ -489,7 +489,7 @@
     <#if scriptTemplates?has_content>
       <#if updateAction?has_content>
         <#list scriptTemplates as scriptTmpl>
-          <@modal id="edit_script_${rawString(scriptTmpl.assocId)}">
+          <@modal id="edit_script_${raw(scriptTmpl.assocId)}">
             <@heading>${uiLabelMap.CmsEditScript}</@heading>
             <form method="post" action="<@pageUrl>${updateAction}</@pageUrl>" id="edit-script-form-${escapeVal(scriptTmpl.assocId, 'html')}">
             <@fields type="default-compact">

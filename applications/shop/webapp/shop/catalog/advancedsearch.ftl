@@ -37,7 +37,7 @@ code package.
         <#local cat = catEntry.value>
         <#local catName = getProductCategoryDisplayName(cat)>
         <#local selStr = "">
-        <#local catId = rawString(cat.productCategoryId!)>
+        <#local catId = raw(cat.productCategoryId!)>
         <#if selCatId?seq_contains(catId)>
           <#assign selCatFound = true><#-- NOTE: this isn't very useful anymore, since this is now a list... -->
           <#local selStr = " selected=selected">
@@ -60,7 +60,7 @@ code package.
           <#if searchCategoryIdSel?is_sequence>
             <#assign selCatId = rewrapObject(searchCategoryIdSel, 'raw-simple')>
           <#else>
-            <#assign selCatId = [rawString(searchCategoryIdSel)]>
+            <#assign selCatId = [raw(searchCategoryIdSel)]>
           </#if>
         <#else>
           <#assign selCatId = []>
@@ -73,7 +73,7 @@ code package.
         </#assign>
       <#-- SCIPIO: FIXME: REMOVED: NOT PROPERLY CHECK FOR BELONGING TO CATALOG (SECURITY)
         <#if !searchCatFound && searchCategory?has_content>
-          <@field type="option" value=(searchCategoryId!) selected=(rawString(searchCategoryIdSel!)==rawString(searchCategoryId!) || (!showSearchAnyCat && !searchCategoryIdSel?has_content))
+          <@field type="option" value=(searchCategoryId!) selected=(raw(searchCategoryIdSel!)==raw(searchCategoryId!) || (!showSearchAnyCat && !searchCategoryIdSel?has_content))
             >${escapeVal(Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(searchCategory, "CATEGORY_NAME", locale, dispatcher, "raw")!, 'html')}</@field>
         </#if>
       -->

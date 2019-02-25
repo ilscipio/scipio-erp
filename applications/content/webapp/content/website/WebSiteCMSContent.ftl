@@ -375,7 +375,7 @@
                 <div id="editorcontainer" class="nocolumns">
                     <div id="cmseditor" style="margin: 0; width: 100%; border: 1px solid black;">
                     <#if (dataText?has_content)>
-                      ${rawString(dataText.textData!)} 
+                      ${raw(dataText.textData!)} 
                     </#if>
                     </div>
                 </div>

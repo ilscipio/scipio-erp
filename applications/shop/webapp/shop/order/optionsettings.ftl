@@ -11,16 +11,16 @@ code package.
   <form id="shipOptionsAndShippingInstructions" method="post" action="<@pageUrl>processShipOptions</@pageUrl>" name="${parameters.formNameValue}">
       <input type="hidden" name="finalizeMode" value="options"/>
       <@field type="generic" label=uiLabelMap.OrderSelectShippingMethod>
-      <#assign chosenShippingMethod = rawString(chosenShippingMethod!"N@A")>
+      <#assign chosenShippingMethod = raw(chosenShippingMethod!"N@A")>
       <#list carrierShipmentMethodList as carrierShipmentMethod>
           <#assign shippingEst = ""><#-- SCIPIO: Var init -->
           <#if shoppingCart.getShippingContactMechId()??>
             <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)!(-1)>
           </#if>
-          <#assign shippingMethod = rawString(carrierShipmentMethod.shipmentMethodTypeId) + "@" + rawString(carrierShipmentMethod.partyId)>
+          <#assign shippingMethod = raw(carrierShipmentMethod.shipmentMethodTypeId) + "@" + raw(carrierShipmentMethod.partyId)>
           <#assign fieldLabel>
             <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
-              <#if shippingEst?has_content><#if (shippingEst > -1)> - <@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#elseif rawString(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"> - ${uiLabelMap.OrderCalculatedOffline}</#if><#-- SCIPIO: NO_SHIPPING check -->
+              <#if shippingEst?has_content><#if (shippingEst > -1)> - <@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#elseif raw(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"> - ${uiLabelMap.OrderCalculatedOffline}</#if><#-- SCIPIO: NO_SHIPPING check -->
             </#if>
           </#assign>
           <@field type="radio" inlineItems=false id="shipping_method_${shippingMethod}" name="shipping_method" value=(shippingMethod) checked=(shippingMethod == chosenShippingMethod) label=wrapAsRaw(fieldLabel, 'htmlmarkup')/>

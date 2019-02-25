@@ -24,7 +24,7 @@ code package.
         <option value=""></option>
       <#list workEffortStatusList as weStatus>
         <option value="${weStatus.statusId}"<#rt/>
-            <#lt/><#if rawString(workEffort.currentStatusId!) == rawString(weStatus.statusId!)> selected="selected"</#if>>${weStatus.get("description", locale)!weStatus.statusId}</option>
+            <#lt/><#if raw(workEffort.currentStatusId!) == raw(weStatus.statusId!)> selected="selected"</#if>>${weStatus.get("description", locale)!weStatus.statusId}</option>
       </#list>
     </@field>
     <@field type="submit" class="${styles.link_run_sys!} ${styles.action_copy!}" text=uiLabelMap.CommonDuplicate/>

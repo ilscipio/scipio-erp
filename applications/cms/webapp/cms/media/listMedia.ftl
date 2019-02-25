@@ -33,7 +33,7 @@
         </@cell>
         <@cell columns=6 class="+${styles.text_right!}">
           <@form method="post" action=makePageUrl("media")>
-            <@field type="input" inline=true name="simpleSearchText" value=(parameters.simpleSearchText!) placeholder="${rawString(uiLabelMap.CommonSearch)}..."/>
+            <@field type="input" inline=true name="simpleSearchText" value=(parameters.simpleSearchText!) placeholder="${raw(uiLabelMap.CommonSearch)}..."/>
             <@field type="submit" inline=true text=uiLabelMap.CommonFind />
           </@form>
         </@cell>
@@ -48,7 +48,7 @@
                     <input type="hidden" name="VIEW_INDEX" value="${viewIndex!}"/>    
                     <@grid type="tiles">                                
                         <#list mediaFiles as mediaFile>
-                            <#assign editMediaUrl = makeAppUrl("/control/editMedia?contentId=" + rawString(mediaFile.contentId)) /><#--  + "&dataResourceTypeId=" + mediaFile.dataResourceTypeId -->
+                            <#assign editMediaUrl = makeAppUrl("/control/editMedia?contentId=" + raw(mediaFile.contentId)) /><#--  + "&dataResourceTypeId=" + mediaFile.dataResourceTypeId -->
                             <#if mediaFile.dataResourceTypeId == "IMAGE_OBJECT">
                                 <#assign mediaUrl = makeAppUrl("/media?contentId=" + mediaFile.contentId + "&dataResourceTypeId=" + mediaFile.dataResourceTypeId) />
                                 <@tile image=mediaUrl icon="${styles.icon} ${styles.icon_prefix}camera ${styles.icon_prefix}picture-o" link=editMediaUrl title=mediaFile.contentName!mediaFile.contentId!"" />

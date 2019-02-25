@@ -19,7 +19,7 @@
                         <input type="hidden" name="prodCatalogId" value="${prodCatalogId}"/>      
                     <#else>                        
                         <#if parameters.prodCatalogId?has_content>
-                            <#assign tooltip>${rawLabel('ProductCouldNotFindProductCatalogWithId')} [${rawString(prodCatalogId)}]</#assign>
+                            <#assign tooltip>${rawLabel('ProductCouldNotFindProductCatalogWithId')} [${raw(prodCatalogId)}]</#assign>
                         </#if>
                         <@field type="input" name="prodCatalogId" label=uiLabelMap.CommonId tooltip=((tooltip)!) />
                     </#if>

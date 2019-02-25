@@ -100,11 +100,11 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#if !(showProgress?is_boolean && showProgress == false) && 
      ((showProgress?is_boolean && showProgress == true) ||
       ((formInfo.formType)! == "upload" && (formInfo.showProgress)! == true))>
-    <#local baseId = rawString(formInfo.name!"") + "_scipiouplprogform">       
+    <#local baseId = raw(formInfo.name!"") + "_scipiouplprogform">       
     <#local progressOptions = {
-      "formSel" : "form[name=${rawString(formInfo.name)}]",<#-- NOTE: escaped later -->
-      "progBarId" : "${rawString(baseId)}_progbar",
-      "progTextBoxId" : "${rawString(baseId)}_textbox",
+      "formSel" : "form[name=${raw(formInfo.name)}]",<#-- NOTE: escaped later -->
+      "progBarId" : "${raw(baseId)}_progbar",
+      "progTextBoxId" : "${raw(baseId)}_textbox",
       
       "expectedResultContainerSel" : "#main-content",
       "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
@@ -504,7 +504,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#-- SCIPIO: TODO: form widgets currently only support left-position grid-like label arrangement; @field supports much more;
       not currently sure if easy way to reuse the stuff in @field here -->
   <@cell open=true close=false class=outerClasses />
-    <@row open=true close=false class=("+form-field-entry " + rawString(fieldEntryTypeClass)) />
+    <@row open=true close=false class=("+form-field-entry " + raw(fieldEntryTypeClass)) />
     
   <#-- SCIPIO: get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
   <#local absColSizes = getAbsContainerSizeFactors()>
@@ -521,7 +521,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <#local titleAreaClass = renderFieldTitleCurrentAreaStyle!>
-      <#local titleAreaClass = addClassArg(titleAreaClass, "${styles.grid_cell!} field-entry-title ${rawString(fieldEntryTypeClass)}")>
+      <#local titleAreaClass = addClassArg(titleAreaClass, "${styles.grid_cell!} field-entry-title ${raw(fieldEntryTypeClass)}")>
       <#local titleAreaClassDefault = defaultGridStyles.labelArea>
       <#-- NOTE: using explicit version for compatibility! -->
       <div<@compiledClassAttribStrExplicit class=titleAreaClass defaultVal=titleAreaClassDefault />>
@@ -537,7 +537,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
       </div>
   </#if>
   <#local innerClass = style>
-  <#local innerClass = addClassArg(innerClass, "field-entry-widget ${rawString(fieldEntryTypeClass)}")>
+  <#local innerClass = addClassArg(innerClass, "field-entry-widget ${raw(fieldEntryTypeClass)}")>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <#local innerClassDefault = defaultGridStyles.widgetPostfixArea>
@@ -549,7 +549,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
       <@cell open=true close=false class=compileClassArgExplicit(innerClass, innerClassDefault) />
         <#if extraContainerStyles?has_content>
           <#list extraContainerStyles as containerEntry>
-            <#local parts = rawString(containerEntry)?trim?split(":")>
+            <#local parts = raw(containerEntry)?trim?split(":")>
             <#local elem = parts[0]?trim>
             <#if elem?has_content>
               <#if elem == "container">
@@ -907,7 +907,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <form method="post" action="${escapeFullUrl(targetUrl, 'html')}"<#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}"</#if><#rt/>
     <#lt/> onsubmit="javascript:submitFormDisableSubmits(this);" name="${escapeVal(hiddenFormName, 'html')}">
     <#list params?keys as paramName>
-      <input type="hidden" name="${escapeVal(paramName, 'html')}" value="${escapeVal(params[rawString(paramName)], 'html')}" />
+      <input type="hidden" name="${escapeVal(paramName, 'html')}" value="${escapeVal(params[raw(paramName)], 'html')}" />
     </#list>
     <#if useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
@@ -921,7 +921,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#macro renderFormPageScripts pageScripts=[] extraArgs...>
   <@script>
     <#list pageScripts as pageScript>
-      ${rawString(pageScript)}
+      ${raw(pageScript)}
     </#list>
   </@script>
 </#macro>

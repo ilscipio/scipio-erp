@@ -6,7 +6,7 @@ code package.
 
 <#if resultPartialList?has_content>
   <#--WARN: TODO: REVIEW for security issues-->
-  <#assign paramStr = "${rawString(curFindString)}&amp;searchOptions_collapsed=${(parameters.searchOptions_collapsed)!(\"false\")}"/>
+  <#assign paramStr = "${raw(curFindString)}&amp;searchOptions_collapsed=${(parameters.searchOptions_collapsed)!(\"false\")}"/>
   <@paginate mode="content" url=makePageUrl("FindGeneric") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=arraySize!0>
     <@table type="data-list" autoAltRows=true scrollable=true fixedColumnsLeft=1 fixedColumnsRight=1>
       <@thead>
@@ -28,7 +28,7 @@ code package.
                         <@td>
                             <#-- FIXME?: Maybe this may cause unexpected issue so let's keep an eye on it 
                                2017-05-25: TODO?: REVIEW: if this is an issue, shouldn't it occur on other pages as well? -->
-                            <#assign fieldValue = (record.fields[rawString(field.name)])! />
+                            <#assign fieldValue = (record.fields[raw(field.name)])! />
                             <#if fieldValue?has_content>
                                 <#if (isObjectType("string", fieldValue) || fieldValue?is_date || fieldValue?is_number || fieldValue?is_boolean)>
                                     ${fieldValue?string}

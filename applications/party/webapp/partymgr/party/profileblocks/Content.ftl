@@ -18,13 +18,13 @@ code package.
         <#if pcntExtraParams?has_content>
           <#assign pcntExtraParams = toSimpleMap(pcntExtraParams)>
           <#list pcntExtraParams?keys as paramName>
-            <input type="hidden" name="${paramName}" value="${escapeVal(pcntExtraParams[rawString(paramName)]!, 'html')}"/>
+            <input type="hidden" name="${paramName}" value="${escapeVal(pcntExtraParams[raw(paramName)]!, 'html')}"/>
           </#list>
         </#if>
 
         <@field type="file" label=uiLabelMap.PartyAttachFile name="uploadedFile" required=true class="+error" size=25 />
         
-        <#assign pcntDefPartyContentTypeId = rawString(pcntDefPartyContentTypeId!"INTERNAL")> 
+        <#assign pcntDefPartyContentTypeId = raw(pcntDefPartyContentTypeId!"INTERNAL")> 
        
       <#if pcntPartyContentTypeId?has_content>
         <input type="hidden" name="partyContentTypeId" value="${pcntPartyContentTypeId}"/>
@@ -33,7 +33,7 @@ code package.
           <#-- preselect "INTERNAL"
           <option value="">${uiLabelMap.PartySelectPurpose}</option>-->
           <#list partyContentTypes as partyContentType>
-            <option value="${partyContentType.partyContentTypeId}"<#if pcntDefPartyContentTypeId==rawString(partyContentType.partyContentTypeId)> selected="selected"</#if>>${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>
+            <option value="${partyContentType.partyContentTypeId}"<#if pcntDefPartyContentTypeId==raw(partyContentType.partyContentTypeId)> selected="selected"</#if>>${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>
           </#list>
         </@field>
       </#if>

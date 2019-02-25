@@ -24,7 +24,7 @@
         
       <#if organizationInfo??>
         <@field type="display" name="partyId" label=uiLabelMap.PartyPartyId><#rt/>
-            <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}" text=(params.partyId!)/><#t/>
+            <@setupExtAppLink uri="/partymgr/control/viewprofile?partyId=${raw(params.partyId!)}" text=(params.partyId!)/><#t/>
         </@field><#lt/>
         <@field type="hidden" name="partyId" value=(params.partyId!)/> 
       <#else>
@@ -39,7 +39,7 @@
       <#assign fieldsRequired = true>
         
         <#if organizationInfo??>
-          <#assign addressManageUri = "/partymgr/control/viewprofile?partyId=${rawString(params.partyId!)}">
+          <#assign addressManageUri = "/partymgr/control/viewprofile?partyId=${raw(params.partyId!)}">
           <#assign fieldLabelDetail><@formattedContactMechPurposeDescs (generalAddressContactMechPurposes![]) ; description><b>${escapeVal(description, 'html')}</b><br/></@formattedContactMechPurposeDescs>
           </#assign>
         <#else>

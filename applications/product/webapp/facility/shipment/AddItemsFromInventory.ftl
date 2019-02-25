@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<@section title="${rawLabel('ProductIssueInventoryItemsToShipment')}: [${rawString(shipmentId!)}]">
+<@section title="${rawLabel('ProductIssueInventoryItemsToShipment')}: [${raw(shipmentId!)}]">
   <@fields type="default-manual">
     <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}">
      <@thead>

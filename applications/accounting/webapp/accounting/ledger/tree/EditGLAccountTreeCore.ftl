@@ -1,5 +1,5 @@
 <#if !egltTreeId?has_content>
-  <#assign egltTreeId = "egltTree_" + rawString(topGlAccountId!)>
+  <#assign egltTreeId = "egltTree_" + raw(topGlAccountId!)>
 </#if>
 <#assign egltActionProps = toSimpleMap(egltActionProps!{})>
 
@@ -58,7 +58,7 @@
             <#-- DEV NOTE: supports <form class="ect-dialogopts-form"><input...>...</form> inside the modal for extra options -->
             <#local props = actionMap["remove"]!{}>
             <#if props.confirmMsg?has_content>
-                <@modal id="${args.idPrefix}${rawString(objectType)}-remove" class="+eglt-dialogmodal">
+                <@modal id="${args.idPrefix}${raw(objectType)}-remove" class="+eglt-dialogmodal">
                     <@heading>${uiLabelMap.CommonWarning}</@heading>
                     <div class="eglt-dialogmsg"></div>
                     <@egltDefActionConfirmMsgBtn/>

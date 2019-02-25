@@ -118,7 +118,7 @@ code package.
                     <#if cartLine.getAttribute("surveyResponses")?has_content>
                         <br />Surveys:
                        <#list cartLine.getAttribute("surveyResponses") as surveyResponseId>
-                        <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>
+                        <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>
                        </#list>
                     </#if>
             </@td></@tr>

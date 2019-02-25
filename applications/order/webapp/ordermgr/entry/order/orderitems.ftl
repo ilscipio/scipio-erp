@@ -30,7 +30,7 @@ code package.
           </@thead>
         <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
         <#macro orderItemAttrInfo orderItem>
-            <#local orderItemSeqId = rawString(orderItem.orderItemSeqId!)>
+            <#local orderItemSeqId = raw(orderItem.orderItemSeqId!)>
             <#if orderItemProdCfgMap??>
               <#local cfgWrp = (orderItemProdCfgMap[orderItemSeqId])!false>
             <#else>

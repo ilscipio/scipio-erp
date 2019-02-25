@@ -83,7 +83,7 @@ code package.
       <@field type="select" label=uiLabelMap.FormFieldTitle_webSiteId name="cartWebSiteId" tooltip=uiLabelMap.OrderEntryPlacingWebSiteInfo>
           <option value="">(${uiLabelMap.OrderEntryWebSiteNoneNoEmails})</option>
         <#list (webSiteList![]) as webSite>
-          <option value="${webSite.webSiteId}"<#if rawString(selectedWebSiteId!'') == rawString(webSite.webSiteId)> selected="selected"</#if>><#rt/>
+          <option value="${webSite.webSiteId}"<#if raw(selectedWebSiteId!'') == raw(webSite.webSiteId)> selected="selected"</#if>><#rt/>
             <#if webSite.siteName?has_content>${webSite.siteName} [${webSite.webSiteId}]<#else>${webSite.webSiteId}</#if><#t/>
             <#if (webSite.isStoreDefault!) == "Y"> (${uiLabelMap.CommonDefault})</#if></option><#lt/>
         </#list>

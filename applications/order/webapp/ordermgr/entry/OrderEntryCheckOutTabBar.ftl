@@ -8,7 +8,7 @@ code package.
     <#assign stepTitle = uiLabelMap[stepTitleId]>
 </#if>
 
-<@section title=rawLabel((shoppingCart.getOrderType() == "PURCHASE_ORDER")?then('OrderPurchaseOrder', 'OrderSalesOrder'))+": "+rawString(stepTitle!)>
+<@section title=rawLabel((shoppingCart.getOrderType() == "PURCHASE_ORDER")?then('OrderPurchaseOrder', 'OrderSalesOrder'))+": "+raw(stepTitle!)>
     <@menu type="button">
       <#-- SCIPIO: Why reverse this? Silly
       <#list checkoutSteps?reverse as checkoutStep>-->

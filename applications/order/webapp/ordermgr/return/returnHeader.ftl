@@ -91,7 +91,7 @@ code package.
                 <@field type="input" size="20" name="paymentMethodId" value=((returnHeader.paymentMethodId)!)/>
               </#if>
               <#if (returnHeader.fromPartyId)?has_content>
-                <a href="<@serverUrl>/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${rawString(externalKeyParam)}</@serverUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
+                <a href="<@serverUrl>/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${raw(externalKeyParam)}</@serverUrl>" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
           </@field>
           <@field type="select" label=uiLabelMap.OrderReturnNeedsAutoReceive name="needsInventoryReceive">

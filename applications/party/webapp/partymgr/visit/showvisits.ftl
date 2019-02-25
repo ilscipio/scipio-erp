@@ -19,7 +19,7 @@ code package.
   </#if>
   </@menu>
 </#macro>
-<@section title="${rawString(sectionTitleParty)} ${rawLabel('PartyVisitListing')}" menuContent=menuContent>
+<@section title="${raw(sectionTitleParty)} ${rawLabel('PartyVisitListing')}" menuContent=menuContent>
   <#if visitList?has_content>
     
     <#assign paramStr = addParamsToStr("", {"sort": sort!, "partyId": partyId!, "showAll": showAll!}, "&amp;", false)>

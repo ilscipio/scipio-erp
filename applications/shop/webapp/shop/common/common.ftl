@@ -200,9 +200,9 @@ jQuery(document).ready(function() {
                     fieldIdHideMap[eid] = e;
                 }
             }
-            ${rawString(updateCallbackPerElemJs)}
+            ${raw(updateCallbackPerElemJs)}
         });
-        ${rawString(updateCallbackPreVisibJs)}
+        ${raw(updateCallbackPreVisibJs)}
         jQuery.each(contentIdHideMap, function(k, v) {
             if (v && v.is(':visible')) {
                 v.fadeOut('fast');
@@ -233,7 +233,7 @@ jQuery(document).ready(function() {
             }
         }
         -->
-        ${rawString(updateCallbackPostVisibJs)}
+        ${raw(updateCallbackPostVisibJs)}
     };
 
     updateItemVisibility(); <#-- Needed for page refreshes to work and to set initial visibility (if FTL doesn't do it) -->

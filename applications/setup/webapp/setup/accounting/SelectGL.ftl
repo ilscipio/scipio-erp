@@ -55,7 +55,7 @@
 	            <#-- <option value="">[${uiLabelMap.SetupAccountingCreateNewStandard}]</option> -->
 	            <option value=""<#if accountingGLs?has_content> selected="selected"</#if>>--</option>            
 		        <#list accountingGLs as accountingGL>
-		          <#assign selected = (rawString(accountingGL.glAccountId) == rawString(topGlAccountId!))>
+		          <#assign selected = (raw(accountingGL.glAccountId) == raw(topGlAccountId!))>
 		          <option value="${accountingGL.glAccountId!}"<#if selected> selected="selected"</#if>>${accountingGL.accountCode!} [${accountingGL.glAccountId!}]</option>
 		        </#list>
 	        </@field>

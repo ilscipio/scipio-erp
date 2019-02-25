@@ -40,8 +40,8 @@ code package.
                         <@menu type="button">
                             <#list invoiceIds as invoiceId>
                                 <@menuitem type="generic">
-                                    ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
-                                    (<a href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${rawString(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
+                                    ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
+                                    (<a href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
                                 </@menuitem>
                             </#list>
                         </@menu>
@@ -209,9 +209,9 @@ code package.
                                                 </#if>
                                             </@td>
                                             <@td>
-                                                <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${orderProduct.productId!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
+                                                <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${orderProduct.productId!}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
                                                 <#if orderProduct.productId != product.productId>
-                                                    &nbsp;[<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
+                                                    &nbsp;[<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId!}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
                                                 </#if>
                                             </@td>
                                             <@td>${orderItemQuantity}</@td>
@@ -295,7 +295,7 @@ code package.
                                 <#list packageSeqIds as packageSeqId>
                                     <@tr>
                                         <@td>
-                                            <#assign packageWeightLabel>${rawLabel('ProductPackage')} ${rawString(packageSeqId)}</#assign>
+                                            <#assign packageWeightLabel>${rawLabel('ProductPackage')} ${raw(packageSeqId)}</#assign>
                                             <@field type="input" size="7" name="packageWeight_${packageSeqId}" value=(packingSession.getPackageWeight(packageSeqId?int)!) label=packageWeightLabel/>
                                             <#if orderItemShipGroup?has_content>
                                                 <input type="hidden" name="shippingContactMechId" value="${orderItemShipGroup.contactMechId!}"/>
@@ -369,7 +369,7 @@ code package.
                                     <@td>${line.getOrderItemSeqId()}</@td>
                                     <@td>${line.getProductId()!(uiLabelMap.CommonNA)}</@td>
                                     <@td>
-                                        <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${line.getProductId()!}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${product.internalName!("[${uiLabelMap.CommonNA}]")}</a>
+                                        <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${line.getProductId()!}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${product.internalName!("[${uiLabelMap.CommonNA}]")}</a>
                                     </@td>
                                     <@td>${line.getInventoryItemId()}</@td>
                                     <@td>${line.getQuantity()}</@td>

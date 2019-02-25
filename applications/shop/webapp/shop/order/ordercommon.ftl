@@ -155,7 +155,7 @@ SCIPIO: Local order template common defs
 
       <#if showPrimary>
         <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
-          <#assign methodLabel>${rawString(getLabel('PaymentMethodType.description.EXT_OFFLINE', 'AccountingEntityLabels'))} (${rawLabel('OrderMoneyOrder')})</#assign>
+          <#assign methodLabel>${raw(getLabel('PaymentMethodType.description.EXT_OFFLINE', 'AccountingEntityLabels'))} (${rawLabel('OrderMoneyOrder')})</#assign>
           <#if showSelect>
             <#-- ${uiLabelMap.OrderPaymentOfflineCheckMoney} -->
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_OFFLINE", "contentId":"content_OFFLINE"})>
@@ -173,7 +173,7 @@ SCIPIO: Local order template common defs
           </#if>
         </#if>
         <#if productStorePaymentMethodTypeIdMap.EXT_COD??>
-          <#assign methodLabel>${rawString(getLabel('PaymentMethodType.description.EXT_COD', 'AccountingEntityLabels'))} (${rawLabel('OrderCOD')})</#assign>
+          <#assign methodLabel>${raw(getLabel('PaymentMethodType.description.EXT_COD', 'AccountingEntityLabels'))} (${rawLabel('OrderCOD')})</#assign>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_COD", "contentId":"content_COD"})>
             <@field type="radio" type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_COD")) 

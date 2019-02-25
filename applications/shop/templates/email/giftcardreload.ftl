@@ -23,7 +23,7 @@ code package.
   <br />
   <#-- SCIPIO: Doubled words and bad localization
   ${uiLabelMap.EcommerceYourGiftCard} ${displayNumber} ${uiLabelMap.EcommerceYourGiftCardReloaded}-->
-  ${getLabel('EcommerceYourGiftCardHasBeenReloaded', {'cardNumber': rawString(displayNumber!)})}
+  ${getLabel('EcommerceYourGiftCardHasBeenReloaded', {'cardNumber': raw(displayNumber!)})}
   <br />
   ${uiLabelMap.EcommerceGiftCardNewBalance}: <@ofbizCurrency amount=(amount!) isoCode=(currencyUomId!)/><#rt/>
     <#lt/> (${uiLabelMap.CommonFrom}: <@ofbizCurrency amount=(previousAmount!) isoCode=(currencyUomId!)/>)

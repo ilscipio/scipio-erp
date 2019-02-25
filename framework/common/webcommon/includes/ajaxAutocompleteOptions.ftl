@@ -30,12 +30,12 @@ var autocomp = [
             <#assign displayString = ""/>
             <#assign returnField = ""/>
             <#list displayFieldsSet as key>
-              <#assign field = rawString(autocompleteOption.get(key)!)>
+              <#assign field = raw(autocompleteOption.get(key)!)>
               <#if field?has_content>
                   <#if (key == context.returnField)>
                       <#assign returnField = field/>
                   <#else>
-                      <#assign displayString = displayString + rawString(field) + " ">
+                      <#assign displayString = displayString + raw(field) + " ">
                   </#if>
               </#if>
             </#list>

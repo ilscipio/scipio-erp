@@ -34,7 +34,7 @@
 </#function>
 
 <#function makeStcLocFieldNamePrefix paramNamePrefix typeName entityFieldName index>
-    <#return rawString(Static["org.ofbiz.content.content.LocalizedContentWorker"].makeLocalizedSimpleTextContentFieldStringParamPrefix(paramNamePrefix, typeName, index))>
+    <#return raw(Static["org.ofbiz.content.content.LocalizedContentWorker"].makeLocalizedSimpleTextContentFieldStringParamPrefix(paramNamePrefix, typeName, index))>
 </#function>
 
 <#-- Outer container markup for @stcLocField
@@ -114,12 +114,12 @@
 <#macro stcLocField typeName paramNamePrefix="contentFields_" entityFieldName=true values=false params={} parsedParamName=""
     label="" tooltip="" mainTooltip="" altTooltip="" inputType="input" wrapperArgs={} inputArgs={} localeOpts={} onAddClick=""
     containerMarkup=false entryMarkup=false namePrefixFunc=false extraArgs...>
-  <#local typeName = rawString(typeName)>
-  <#local paramNamePrefix = rawString(paramNamePrefix)>
+  <#local typeName = raw(typeName)>
+  <#local paramNamePrefix = raw(paramNamePrefix)>
   <#if entityFieldName?is_boolean>
-    <#local entityFieldName = rawString(Static["org.ofbiz.entity.model.ModelUtil"].dbNameToVarName(typeName))>
+    <#local entityFieldName = raw(Static["org.ofbiz.entity.model.ModelUtil"].dbNameToVarName(typeName))>
   <#else>
-    <#local entityFieldName = rawString(entityFieldName)>
+    <#local entityFieldName = raw(entityFieldName)>
   </#if>
   <#if values?is_sequence>
     <#local entryDataList = values>

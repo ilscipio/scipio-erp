@@ -34,7 +34,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     <#if style?has_content>
       <#-- SCIPIO: can pass class and consumeLevel this way: "h2:class;consumeLevel=true" -->
       <#-- don't specify allowedElemTypes because we go through them ourselves below, redundant -->
-      <#local headingArgs = getHeadingElemSpecFromStyleStr(rawString(style), "", "h|heading", true, "container|div", "widget-label")>
+      <#local headingArgs = getHeadingElemSpecFromStyleStr(raw(style), "", "h|heading", true, "container|div", "widget-label")>
       <#local elemType = headingArgs.elemType> <#-- don't translate for macro; not passed; just for us -->
       <#local class = translateStyleStrClassesArg(headingArgs.elemClass!"")!"">
       <#if headingArgs.isHeadingElem>
@@ -46,7 +46,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
       <#else>
           <#-- SCIPIO: Because we didn't specify allowedElemTypes, class here may contain the elemType in some cases (when no ":", which is most cases). Make sure to remove. -->
           <#if !class?is_boolean && class?has_content>
-            <#local class = removeStyleNames(rawString(class), elemType)>
+            <#local class = removeStyleNames(raw(class), elemType)>
           </#if>
           <#-- SCIPIO: Alias for div -->
           <#if elemType == "container">

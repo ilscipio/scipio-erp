@@ -4,14 +4,14 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <#if intervalDates?has_content>
-    <#assign intervalDateTitle = rawString(UtilDateTime.toDateString(intervalDates['dateBegin'])) + 
+    <#assign intervalDateTitle = raw(UtilDateTime.toDateString(intervalDates['dateBegin'])) + 
         " to " + 
-        rawString(UtilDateTime.toDateString(intervalDates['dateEnd']))>
+        raw(UtilDateTime.toDateString(intervalDates['dateEnd']))>
 <#elseif fromDate?has_content>
     <#assign intervalDateTitle = UtilDateTime.toDateString(fromDate)>
 </#if>
 
-<@section title="${rawLabel('OrderOrdersReceivedFrom')} ${rawString(intervalDateTitle!)}">
+<@section title="${rawLabel('OrderOrdersReceivedFrom')} ${raw(intervalDateTitle!)}">
       <#assign listSize = state.getSize()>
       <#-- FIXME: Do we need this? -->
       <#--if (listSize > 10)>

@@ -2,25 +2,25 @@
 <#-- FIXME: NEEDS DEEPER REVIEW (INCOMPLETE?) + PERHAPS GLOBAL UTILITY FOR STR REPR -->
 <#function getServiceParamStrRepr value type>
   <#if isObjectType("string", value)>
-    <#return rawString(value)>
+    <#return raw(value)>
   <#elseif isObjectType("complexobject", value)>
     <#-- COMPLEX BEAN-WRAPPED OBJECTS MUST USE toString() BEFORE ?string/rawString
         OTHERWISE CRASH (in rawString) OR DOUBLE-ESCAPE -->
-    <#return rawString(value.toString())>
+    <#return raw(value.toString())>
   <#else>
-    <#return rawString(value)>
+    <#return raw(value)>
   </#if>
 </#function>
 
 <#macro serviceFields serviceParameters params={} exclude={}>
   <#list serviceParameters as serviceParameter>
     <#-- WARN: watch out for screen auto-escaping on serviceParameter -->
-    <#local rawName = rawString(serviceParameter.name)>
+    <#local rawName = raw(serviceParameter.name)>
     <#if (exclude[rawName]!false) != true>
       <#local defaultValue = serviceParameter.defaultValue!>
       <#local defaultValStr = defaultValue?string><#-- NOTE: forced html escaping - do not pass to macro params -->
       <#local fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if defaultValStr?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${defaultValStr}</em>)</#if></#local>
-      <#local rawType = rawString(serviceParameter.type)>
+      <#local rawType = raw(serviceParameter.type)>
       <#local required = (serviceParameter.optional == "N")>
       <#local value = params[rawName]!serviceParameter.value!>
       <#if rawType == "Boolean" || rawType == "java.lang.Boolean">
@@ -58,7 +58,7 @@
   </#if>
     <@field type="input" name="POOL_NAME" label=uiLabelMap.WebtoolsPool value=(params.POOL_NAME!)/>
     <@field type="select" name="_RUN_SYNC_" label=uiLabelMap.WebtoolsMode>
-      <#local syncVal = rawString(params._RUN_SYNC_!)> 
+      <#local syncVal = raw(params._RUN_SYNC_!)> 
       <option value="Y"<#if "Y" == syncVal> selected="selected"</#if>>Sync</option>
       <option value="ASYNC"<#if "ASYNC" == syncVal> selected="selected"</#if>>Async (${uiLabelMap.WebtoolsOneTimeExecNotPersisted})</option>
     </@field>

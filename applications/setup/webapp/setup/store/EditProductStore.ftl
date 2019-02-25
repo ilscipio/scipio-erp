@@ -92,7 +92,7 @@
             
           <#if productStore??>
             <@field type="display" label=uiLabelMap.FormFieldTitle_productStoreId tooltip=uiLabelMap.ProductNotModificationRecreatingProductStore><#rt/>
-                <@setupExtAppLink uri="/catalog/control/EditProductStore?productStoreId=${rawString(params.productStoreId!)}" text=(params.productStoreId!)/><#t/>
+                <@setupExtAppLink uri="/catalog/control/EditProductStore?productStoreId=${raw(params.productStoreId!)}" text=(params.productStoreId!)/><#t/>
             </@field><#lt/>
             <@field type="hidden" name="productStoreId" value=(params.productStoreId!)/> 
           <#else>
@@ -125,7 +125,7 @@
                 </#if>
                 <#if facilities?has_content>
                   <#list (facilities![]) as currFacility>
-                    <#assign selected = rawString(currFacility.facilityId) == rawString(params.inventoryFacilityId!)>
+                    <#assign selected = raw(currFacility.facilityId) == raw(params.inventoryFacilityId!)>
                     <@facilityOption facility=currFacility selected=selected/>
                   </#list>
                 </#if>
@@ -147,7 +147,7 @@
               <@field type="option" value=""></@field>
               <#list (currencyUomList!) as currencyUom>
                 <@field type="option" value=currencyUom.uomId
-                    selected=(rawString(params.defaultCurrencyUomId!)==rawString(currencyUom.uomId))
+                    selected=(raw(params.defaultCurrencyUomId!)==raw(currencyUom.uomId))
                     >${currencyUom.get("description", locale)!} (${currencyUom.abbreviation!})</@field>
               </#list>
             </@field>
@@ -156,7 +156,7 @@
               <@field type="option" value=""></@field>
               <#list (visualThemeList!) as visualTheme>
                 <@field type="option" value=visualTheme.visualThemeId
-                    selected=(rawString(params.visualThemeId!)==rawString(visualTheme.visualThemeId))
+                    selected=(raw(params.visualThemeId!)==raw(visualTheme.visualThemeId))
                     >${visualTheme.get("description", locale)!} [${visualTheme.visualThemeId!}]</@field>
               </#list>
             </@field>
@@ -330,7 +330,7 @@
             -->
           <#if webSite??>
             <@field type="display" label=uiLabelMap.FormFieldTitle_webSiteId><#rt/>
-                <@setupExtAppLink uri="/catalog/control/EditWebSite?webSiteId=${rawString(params.webSiteId!)}&productStoreId=${rawString(params.productStoreId!)}" text=(params.webSiteId!)/><#t/>
+                <@setupExtAppLink uri="/catalog/control/EditWebSite?webSiteId=${raw(params.webSiteId!)}&productStoreId=${raw(params.productStoreId!)}" text=(params.webSiteId!)/><#t/>
             </@field><#lt/>
             <@field type="hidden" name="webSiteId" value=(params.webSiteId!)/> 
           <#else>

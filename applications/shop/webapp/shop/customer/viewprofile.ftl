@@ -328,9 +328,9 @@ code package.
             <input type="hidden" name="partyId" value="${(userLogin.partyId)!}" />
             <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content>
               <#list carrierShipMethods as shipMeth>
-                <#assign shippingMethod = rawString(shipMeth.shipmentMethodTypeId!) + "@" + rawString(shipMeth.partyId) />
+                <#assign shippingMethod = raw(shipMeth.shipmentMethodTypeId!) + "@" + raw(shipMeth.partyId) />
                 <#assign shippingMethodLabel><#if shipMeth.partyId != "_NA_">${shipMeth.partyId!}&nbsp;</#if>${shipMeth.get("description", locale)!}</#assign>
-                <@field type="radio" name="defaultShipMeth" value=shippingMethod checked=((rawString(profiledefs.defaultShipMeth!)) == shippingMethod) label=wrapAsRaw(shippingMethodLabel, 'htmlmarkup') />
+                <@field type="radio" name="defaultShipMeth" value=shippingMethod checked=((raw(profiledefs.defaultShipMeth!)) == shippingMethod) label=wrapAsRaw(shippingMethodLabel, 'htmlmarkup') />
               </#list>
               <@field type="submit" text=uiLabelMap.EcommerceSetDefault />
             <#else>

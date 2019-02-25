@@ -267,7 +267,7 @@
             <@field type="select" name="parentTypeId" label=uiLabelMap.CommonParent class="+acctg-inputfield">
               <option value=""></option>
               <#list acctgParentTransTypes as acctgParentTransType>
-                <#assign selected = (rawString(params.parentTypeId!) == (acctgParentTransType.parentTypeId!))>
+                <#assign selected = (raw(params.parentTypeId!) == (acctgParentTransType.parentTypeId!))>
                 <option value="${acctgParentTransType.acctgTransTypeId!}"<#if selected> selected="selected"</#if>>${acctgParentTransType.description!}</option>
               </#list>
             </@field>
@@ -303,7 +303,7 @@
             <@field type="select" name="parentTypeId" label=uiLabelMap.CommonParent class="+acctg-inputfield">
               <option value=""></option>
               <#list acctgParentEntryTransTypes as acctgParentTransEntryType>
-                <#assign selected = (rawString(params.parentTypeId!) == (acctgParentTransEntryType.parentTypeId!))>
+                <#assign selected = (raw(params.parentTypeId!) == (acctgParentTransEntryType.parentTypeId!))>
                 <option value="${acctgParentTransEntryType.acctgTransEntryTypeId!}"<#if selected> selected="selected"</#if>>${acctgParentTransEntryType.description!}</option>
               </#list>
             </@field>
@@ -349,7 +349,7 @@
         <#list actionMaps?keys as action>
             <#local props = toSimpleMap(actionMaps[action])>
             <#if props.confirmMsg?has_content>
-                <@modal id="${args.idPrefix}${rawString(objectType)}-${rawString(action)}" class="+eat-dialogmodal">
+                <@modal id="${args.idPrefix}${raw(objectType)}-${raw(action)}" class="+eat-dialogmodal">
                     <@heading>${action} ${objectType}</@heading>
                     <@eatDefActionInnerContent props=props/>
                     <div class="modal-footer ${styles.text_right!}">
@@ -375,14 +375,14 @@
         <#assign actionMaps = toSimpleMap(args.objectTypes[objectType])>        
         <#list actionMaps?keys as action>
             <#assign props = toSimpleMap(actionMaps[action])>    
-            <div style="display:none;" id="${args.idPrefix}${rawString(objectType)}-${rawString(action)}" class="+eat-stats"></div>
+            <div style="display:none;" id="${args.idPrefix}${raw(objectType)}-${raw(action)}" class="+eat-stats"></div>
         </#list>
     </#list>
 </#macro>
 
 <#-- 
 <@alert type"warning">
-    ${rawString("Be advise that this is currently working in progress")}
+    ${raw("Be advise that this is currently working in progress")}
 </@alert>
 --> 
 

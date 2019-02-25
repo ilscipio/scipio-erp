@@ -59,15 +59,15 @@ function onClickShippingMethod(e) {
     <@cell columns=6>
       <div class="errorMessage" id="noShippingMethodSelectedError"></div>
       <@field type="generic" label=uiLabelMap.OrderMethod>
-        <#assign chosenShippingMethod = rawString(chosenShippingMethod!"N@A")>
+        <#assign chosenShippingMethod = raw(chosenShippingMethod!"N@A")>
         <#list carrierShipmentMethodList as carrierShipmentMethod>
            <#assign shippingEst = ""><#-- SCIPIO: Var init -->
            <#if shoppingCart.getShippingContactMechId()??>
                <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
            </#if>
-           <#assign fieldLabel><#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}<#if shippingEst?has_content><#if (shippingEst > -1)> - <@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#elseif rawString(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"> - ${uiLabelMap.OrderCalculatedOffline}</#if></#if></#assign><#-- SCIPIO: NO_SHIPPING check -->
+           <#assign fieldLabel><#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}<#if shippingEst?has_content><#if (shippingEst > -1)> - <@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#elseif raw(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"> - ${uiLabelMap.OrderCalculatedOffline}</#if></#if></#assign><#-- SCIPIO: NO_SHIPPING check -->
            
-           <#assign shippingMethod = rawString(carrierShipmentMethod.shipmentMethodTypeId) + "@" + rawString(carrierShipmentMethod.partyId)>
+           <#assign shippingMethod = raw(carrierShipmentMethod.shipmentMethodTypeId) + "@" + raw(carrierShipmentMethod.partyId)>
            <@field type="radio" onClick="return onClickShippingMethod(event)" name="shipping_method" value=(shippingMethod) checked=(shippingMethod == chosenShippingMethod) label=wrapAsRaw(fieldLabel, 'htmlmarkup')/>
         </#list>
         <#if !carrierShipmentMethodList?? || carrierShipmentMethodList?size == 0>

@@ -24,7 +24,7 @@ code package.
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
         <#-- SCIPIO: 2018-11: now redundant, just click magnifying glass on fields
-        <@menuitem type="link" href=makeServerUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />-->
+        <@menuitem type="link" href=makeServerUrl("/partymgr/control/findparty?${raw(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />-->
         <@menuitem type="link" href="javascript:document.salesentryform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
       </@menu>
     </#macro>
@@ -74,7 +74,7 @@ code package.
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
         <#-- SCIPIO: 2018-11: now redundant, just click magnifying glass on fields
-        <@menuitem type="link" href=makeServerUrl("/partymgr/control/findparty?${rawString(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />-->
+        <@menuitem type="link" href=makeServerUrl("/partymgr/control/findparty?${raw(externalKeyParam)}") text=uiLabelMap.PartyFindParty class="+${styles.action_nav!} ${styles.action_find!}" />-->
         <@menuitem type="link" href="javascript:document.poentryform.submit();" text=uiLabelMap.CommonContinue class="+${styles.action_run_session!} ${styles.action_continue!}" />
       </@menu>
     </#macro>

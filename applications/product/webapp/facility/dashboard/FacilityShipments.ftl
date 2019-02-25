@@ -1,7 +1,7 @@
 <@section title=sectionTitle>
     <#if shipmentList?has_content>
             <@paginate mode="content" url=makePageUrl("main") viewIndex=viewIndex!0 listSize=listSize!0 viewSize=viewSize!1 layout="bottom">
-                <@table type="data-list" role="grid" autoAltRows=true id="${rawString(currentShipmentType.shipmentTypeId)}_shipments">
+                <@table type="data-list" role="grid" autoAltRows=true id="${raw(currentShipmentType.shipmentTypeId)}_shipments">
                     <@thead>
                         <@tr valign="bottom" class="header-row">
                             <@th>${uiLabelMap.CommonId}</@th>

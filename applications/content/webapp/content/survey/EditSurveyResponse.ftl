@@ -11,7 +11,7 @@ code package.
     <#-- pass through the dataResourceId so the response can be associated with it -->
     <input type="hidden" name="dataResourceId" value="${parameters.dataResourceId!}"/>
     <input type="hidden" name="rootContentId" value="${parameters.rootContentId!}"/>
-    ${rawString(surveyString)}
+    ${raw(surveyString)}
   </form>
 <#else>
   <@commonMsg type="error">Problem rendering the survey.</@commonMsg>

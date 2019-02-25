@@ -146,7 +146,7 @@ code package.
         <#assign targetRequest = targetRequestName />
       </#if>
       <#if assocProducts?has_content>
-        <#assign assocTitle>${rawString(beforeName)}<#if showName == "Y">${rawString(productContentWrapper.get("PRODUCT_NAME")!)}</#if>${rawString(afterName)}</#assign>
+        <#assign assocTitle>${raw(beforeName)}<#if showName == "Y">${raw(productContentWrapper.get("PRODUCT_NAME")!)}</#if>${raw(afterName)}</#assign>
         <@section title=assocTitle>
             <@grid columns=5>
                 <#list assocProducts as productAssoc>
@@ -225,7 +225,7 @@ code package.
     <#if !showAdv?is_boolean>
       <#local showAdv = showAdvFields!showAdvDef><#-- CONTEXT field -->
     </#if>
-    <#local sortOrder = rawString(sortOrder)>
+    <#local sortOrder = raw(sortOrder)>
     <#-- SCIPIO: NOTE: removed the high-to-low checkbox in favor of dedicated options, because the box
         is not used in all sorting methods and it takes space -->
   <#if type == "kws">

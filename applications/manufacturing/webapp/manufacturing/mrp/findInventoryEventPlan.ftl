@@ -43,7 +43,7 @@ document.lookupinventory.productId.focus();
         <p class="${styles.float_left!}">${uiLabelMap.CommonElementsFound}</p>
 
     <#-- SCIPIO: FIXME?: I'm not sure this search works properly... -->
-    <#assign paramStr = addParamsToStr(rawString(paramList!""), {"hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
+    <#assign paramStr = addParamsToStr(raw(paramList!""), {"hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
     <@paginate mode="content" url=makePageUrl("FindInventoryEventPlan") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
       <@table type="data-complex" autoAltRows=false>
        <@thead>

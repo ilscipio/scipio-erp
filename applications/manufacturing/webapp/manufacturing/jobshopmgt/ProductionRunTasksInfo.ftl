@@ -8,7 +8,7 @@ code package.
 <#list taskInfos as taskInfo>
   <#assign task = taskInfo.task>
   <#assign taskForm = taskInfo.taskForm>
-  <@section title="${rawString(task.workEffortName!)} [${rawString(task.workEffortId)}]">
+  <@section title="${raw(task.workEffortName!)} [${raw(task.workEffortId)}]">
     ${taskForm.renderFormString(context)}
   </@section>
 </#list>

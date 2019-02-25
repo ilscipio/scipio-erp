@@ -49,7 +49,7 @@ code package.
       <@menuitem type="link" href=makeServerUrl("/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}") text=uiLabelMap.OrderNewOrder class="+${styles.action_run_session!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${rawLabel('PartyShoppingListDetail')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
+<@section title="${rawLabel('PartyShoppingListDetail')} - ${raw(shoppingList.listName)}" menuContent=menuContent>
     <form name="updateList" method="post" action="<@pageUrl>updateShoppingList</@pageUrl>">
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}" />
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
@@ -97,7 +97,7 @@ code package.
     <@menuitem type="link" href=makePageUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes") text=uiLabelMap.PartyAddChildListsToCart class="+${styles.action_run_session!} ${styles.action_add!}" />
   </@menu>
 </#macro>
-<@section title="${rawLabel('PartyChildShoppingList')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
+<@section title="${rawLabel('PartyChildShoppingList')} - ${raw(shoppingList.listName)}" menuContent=menuContent>
     <@table type="data-list" autoAltRows=true>
       <@thead>
         <@tr class="header-row">
@@ -126,7 +126,7 @@ code package.
 <#-- <@menuitem type="link" href=makePageUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}") text=uiLabelMap.PartyAddListToCart class="+${styles.action_run_session!} ${styles.action_add!}" /> -->
   </@menu>
 </#macro>
-<@section title="${rawLabel('PartyListItems')} - ${rawString(shoppingList.listName)}" menuContent=menuContent>
+<@section title="${rawLabel('PartyListItems')} - ${raw(shoppingList.listName)}" menuContent=menuContent>
   <#if shoppingListItemDatas?has_content>
 
     <#assign paramStr = "partyId=" + partyId + "&shoppingListId=" + (shoppingListId!)/>

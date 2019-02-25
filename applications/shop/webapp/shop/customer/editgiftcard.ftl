@@ -54,7 +54,7 @@ function makeExpDate() {<#-- SCIPIO: Copied from ordermgr billsettings.ftl -->
         <#assign expMonth = "">
         <#assign expYear = "">
         <#if (giftCardData.expireDate)??>
-          <#assign expDate = rawString(giftCardData.expireDate)>
+          <#assign expDate = raw(giftCardData.expireDate)>
           <#if (expDate?? && (expDate?index_of("/") > 0))>
             <#assign expMonth = expDate?substring(0, expDate?index_of("/"))>
             <#assign expYear = expDate?substring(expDate?index_of("/")+1)>

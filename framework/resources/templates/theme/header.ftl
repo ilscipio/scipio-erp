@@ -29,7 +29,7 @@
         <#if layoutSettings.topLines?has_content>
           <#list layoutSettings.topLines as topLine>
             <#if topLine.text??>
-              <li class="">${topLine.text}<a href="${rawString(topLine.url!)}${rawString(externalKeyParam)}">${topLine.urlText!}</a></li>
+              <li class="">${topLine.text}<a href="${raw(topLine.url!)}${raw(externalKeyParam)}">${topLine.urlText!}</a></li>
             <#elseif topLine.dropDownList??>
               <li class=""><#include "component://common/webcommon/includes/insertDropDown.ftl"/></li>
             <#else>
@@ -46,9 +46,9 @@
     <#-- Disabled Help function for the time being
     <#if parameters.componentName?? && requestAttributes._CURRENT_VIEW_?? && helpTopic??>
         <#include "component://common/webcommon/includes/helplink.ftl" />
-        <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${rawString(parameters.portalPageId!)}</#if></#assign>
+        <#assign portalPageParamStr><#if parameters.portalPageId?has_content>&portalPageId=${raw(parameters.portalPageId!)}</#if></#assign>
         <li class=""><@modal label=uiLabelMap.CommonHelp id="help" linkClass=""
-            href=makePageUrl("showHelp?helpTopic=${rawString(helpTopic!)}${portalPageParamStr}") icon="${styles.icon!} fa-info"></@modal></li>
+            href=makePageUrl("showHelp?helpTopic=${raw(helpTopic!)}${portalPageParamStr}") icon="${styles.icon!} fa-info"></@modal></li>
     </#if>-->
     <#if userLogin??>
         <li class="active"><a href="<@pageUrl>logout?t=${.now?long}</@pageUrl>" class=""><i class="${styles.icon!} fa-power-off"></i> ${uiLabelMap.CommonLogout}</a></li>
@@ -66,7 +66,7 @@
           <#assign selected = true>
         </#if>
         <#assign servletPath = Static["org.ofbiz.webapp.WebAppUtil"].getControlServletPathSafeSlash(display)!"">
-        <#assign thisURL = rawString(servletPath)>
+        <#assign thisURL = raw(servletPath)>
         <#if thisApp != "/">
           <#if servletPath?has_content>
             <#assign thisURL = thisURL + "main">
@@ -78,7 +78,7 @@
           <#-- do not display this component-->
         <#else>
             <li class="<#if selected> active</#if>">
-                <a href="${thisURL}${rawString(externalKeyParam)}" class="dropdown-item<#if selected> active</#if>"
+                <a href="${thisURL}${raw(externalKeyParam)}" class="dropdown-item<#if selected> active</#if>"
                 <#if uiLabelMap??> title="${uiLabelMap[display.description]}">
                     <#if styles.app_icon[display.name]?has_content><i class="${styles.icon!} ${styles.app_icon[display.name]}"></i> </#if>${uiLabelMap[display.title]}
                 <#else> title="${display.description}">
@@ -100,7 +100,7 @@
           <#assign selected = true>
         </#if>
           <#assign servletPath = Static["org.ofbiz.webapp.WebAppUtil"].getControlServletPathSafeSlash(display)!"">
-          <#assign thisURL = rawString(servletPath)>
+          <#assign thisURL = raw(servletPath)>
           <#if thisApp != "/">
             <#if servletPath?has_content>
               <#assign thisURL = thisURL + "main">
@@ -109,7 +109,7 @@
             </#if>
           </#if>
           <li class="<#if selected> active</#if>">      
-            <a href="${thisURL}${rawString(externalKeyParam)}" class="dropdown-item <#if selected> active</#if>"
+            <a href="${thisURL}${raw(externalKeyParam)}" class="dropdown-item <#if selected> active</#if>"
                 <#if uiLabelMap??> title="${uiLabelMap[display.description]}">
                     <#if styles.app_icon[display.name]?has_content><i class="${styles.icon!} ${styles.app_icon[display.name]}"></i> </#if>${uiLabelMap[display.title]}
                 <#else> title="${display.description}">
@@ -189,29 +189,29 @@ so for now we have to split the screens in half and rely on the menu widget rend
       <#assign shortcutIcon = layoutSettings.VT_SHORTCUT_ICON.get(0)/>
     </#if>
     <#if shortcutIcon?has_content>
-      <link rel="shortcut icon" href="<@contentUrl>${rawString(shortcutIcon)}</@contentUrl>" />
+      <link rel="shortcut icon" href="<@contentUrl>${raw(shortcutIcon)}</@contentUrl>" />
     </#if>
     
     <#if layoutSettings.styleSheets?has_content>
         <#--layoutSettings.styleSheets is a list of style sheets. So, you can have a user-specified "main" style sheet, AND a component style sheet.-->
         <#list layoutSettings.styleSheets as styleSheet>
-            <link rel="stylesheet" href="<@contentUrl>${rawString(styleSheet)}</@contentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_STYLESHEET?has_content>
         <#list layoutSettings.VT_STYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@contentUrl>${rawString(styleSheet)}</@contentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.rtlStyleSheets?has_content && langDir == "rtl">
         <#--layoutSettings.rtlStyleSheets is a list of rtl style sheets.-->
         <#list layoutSettings.rtlStyleSheets as styleSheet>
-            <link rel="stylesheet" href="<@contentUrl>${rawString(styleSheet)}</@contentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     <#if layoutSettings.VT_RTL_STYLESHEET?has_content && langDir == "rtl">
         <#list layoutSettings.VT_RTL_STYLESHEET as styleSheet>
-            <link rel="stylesheet" href="<@contentUrl>${rawString(styleSheet)}</@contentUrl>" type="text/css"/>
+            <link rel="stylesheet" href="<@contentUrl>${raw(styleSheet)}</@contentUrl>" type="text/css"/>
         </#list>
     </#if>
     
@@ -265,7 +265,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
     <#if layoutSettings.WEB_ANALYTICS?has_content>
       <@script>
         <#list layoutSettings.WEB_ANALYTICS as webAnalyticsConfig>
-          ${rawString(webAnalyticsConfig.webAnalyticsCode!)}
+          ${raw(webAnalyticsConfig.webAnalyticsCode!)}
         </#list>
       </@script>
     </#if>

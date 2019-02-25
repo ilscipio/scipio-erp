@@ -6,7 +6,7 @@ code package.
 <#if !mechMap.contactMech??>
   <#-- When creating a new contact mech, first select the type, then actually create -->
   <#if !preContactMechTypeId?has_content>
-    <@section title=(rawLabel('PartyCreateNewContact')+rawString(ecmSecTitleSuffix!))>
+    <@section title=(rawLabel('PartyCreateNewContact')+raw(ecmSecTitleSuffix!))>
       <form method="post" action="<@pageUrl>editcontactmech</@pageUrl>" name="createcontactmechform">
         <input type="hidden" name="partyId" value="${partyId}" />
         <@field type="select" label=uiLabelMap.PartySelectContactType name="preContactMechTypeId">
@@ -22,12 +22,12 @@ code package.
 <#if mechMap.contactMechTypeId?has_content>
 
   <#if !mechMap.contactMech?has_content>
-    <#assign sectionTitle = (rawLabel('PartyCreateNewContact')+rawString(ecmSecTitleSuffix!))/>
+    <#assign sectionTitle = (rawLabel('PartyCreateNewContact')+raw(ecmSecTitleSuffix!))/>
   <#else>
     <#if !ecmSecTitleSuffix?has_content><#-- SCIPIO: if no suffix, this is redundant -->
       <#assign sectionTitle = "">
     <#else>
-      <#assign sectionTitle = (rawLabel('PartyEditContactInformation')+rawString(ecmSecTitleSuffix!))/>
+      <#assign sectionTitle = (rawLabel('PartyEditContactInformation')+raw(ecmSecTitleSuffix!))/>
     </#if>
   </#if>
   <@section title=sectionTitle>

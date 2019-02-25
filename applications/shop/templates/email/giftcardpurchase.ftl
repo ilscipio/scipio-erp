@@ -15,7 +15,7 @@ code package.
 <#-- SCIPIO: Rewrote and unhardcoded
 ${uiLabelMap.EcommerceYouHaveBeenSent} MyCompany.com (FIXME) <#if senderName??> ${uiLabelMap.EcommerceGiftCardFrom} ${senderName}</#if>! -->
 ${getLabel((senderName??)?then('EcommerceYouHaveBeenSentGiftCardFrom', 'EcommerceYouHaveBeenSentGiftCard'),
-    {'storeName': rawString((productStore.storeName)!), 'senderName': senderName!})}
+    {'storeName': raw((productStore.storeName)!), 'senderName': senderName!})}
 <br /><br />
 <#if giftMessage?has_content>
   ${getLabel('OrderGiftMessage')}:

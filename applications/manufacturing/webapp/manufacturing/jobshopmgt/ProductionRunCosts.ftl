@@ -7,7 +7,7 @@ code package.
 <#if taskCosts?has_content>
 <#list taskCosts as taskCost>
   <#assign task = taskCost.task!>
-  <@section title="${rawLabel('ManufacturingActualCosts')} ${rawString(task.workEffortName!)} [${rawString(task.workEffortId)}]">
+  <@section title="${rawLabel('ManufacturingActualCosts')} ${raw(task.workEffortName!)} [${raw(task.workEffortId)}]">
       <#assign costsForm = taskCost.costsForm>
       ${costsForm.renderFormString(context)}
   </@section>

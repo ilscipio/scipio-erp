@@ -47,7 +47,7 @@ code package.
                 <a href="<@pageUrl>stream?contentId=${(content.contentId)!}</@pageUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
                 
               <#if !pcntListReadOnly>
-                <#assign pcntListRemoveUri = pcntListRemoveUri!("removePartyContent/"+rawString(pcntListRemoveDonePage!"viewprofile"))><#-- SCIPIO -->
+                <#assign pcntListRemoveUri = pcntListRemoveUri!("removePartyContent/"+raw(pcntListRemoveDonePage!"viewprofile"))><#-- SCIPIO -->
                 <#-- SCIPIO: TODO: WARN: this only removes the association, not the content itself! -->
                 <form name="removePartyContent_${pContent_index}" method="post" action="<@pageUrl uri=pcntListRemoveUri escapeAs='html'/>">
                   <input type="hidden" name="contentId" value="${pContent.contentId}" />
@@ -57,7 +57,7 @@ code package.
                   <#if pcntListRemoveExtraParams?has_content><#-- SCIPIO -->
                     <#assign pcntListRemoveExtraParams = toSimpleMap(pcntListRemoveExtraParams)>
                     <#list pcntListRemoveExtraParams?keys as paramName>
-                      <input type="hidden" name="${paramName}" value="${escapeVal(pcntListRemoveExtraParams[rawString(paramName)]!, 'html')}"/>
+                      <input type="hidden" name="${paramName}" value="${escapeVal(pcntListRemoveExtraParams[raw(paramName)]!, 'html')}"/>
                     </#list>
                   </#if>
                   <a href="javascript:document.removePartyContent_${pContent_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>

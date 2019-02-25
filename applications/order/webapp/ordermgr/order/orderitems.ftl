@@ -18,7 +18,7 @@ code package.
                 </@thead>
                 <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
                 <#macro orderItemAttrInfo orderItem>
-                    <#local orderItemSeqId = rawString(orderItem.orderItemSeqId!)>
+                    <#local orderItemSeqId = raw(orderItem.orderItemSeqId!)>
                     <#if orderItemProdCfgMap??>
                       <#local cfgWrp = (orderItemProdCfgMap[orderItemSeqId])!false>
                     <#else>
@@ -65,23 +65,23 @@ code package.
                             <#assign productId = orderItem.productId!>
                             <#-- SCIPIO: This product lookup added by us, missing from upstream patch -->
                             <#assign product = orderItem.getRelatedOne("Product", false)!>
-                            <#if rawString(productId) == "shoppingcart.CommentLine">
+                            <#if raw(productId) == "shoppingcart.CommentLine">
                                 <@td> &gt;&gt; ${orderItem.itemDescription}</@td>
                                 <@orderItemAttrInfo orderItem=orderItem/>
                             <#else>
                                 <@td>
                                         <#if orderItem.supplierProductId?has_content>
-                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@serverUrl>">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
+                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
                                         <#elseif productId?has_content>
-                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@serverUrl>">${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}</a>
+                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}</a>
                                             <#if (product.salesDiscontinuationDate)?? && UtilDateTime.nowTimestamp().after(product.salesDiscontinuationDate)>
                                                 <br />
                                                     ${uiLabelMap.OrderItemDiscontinued}: <@formattedDateTime date=product.salesDiscontinuationDate />
                                             </#if>
                                         <#elseif orderItemType??>
-                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@serverUrl>">${orderItemType.description} - ${orderItem.itemDescription!}</a>
+                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItemType.description} - ${orderItem.itemDescription!}</a>
                                         <#else>
-                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@serverUrl>">${orderItem.itemDescription!}</a>
+                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItem.itemDescription!}</a>
                                         </#if>
                                         <@orderItemAttrInfo orderItem=orderItem/>
 
@@ -92,7 +92,7 @@ code package.
                                               <@heading relLevel=+1>${getLabel("EcommerceDownloadsAvailableTitle", "EcommerceUiLabels")}</@heading>
                                               <ol>
                                               <#list downloadContents as downloadContent>
-                                                    <li><a href="<@serverUrl>/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}${rawString(externalKeyParam)}</@serverUrl>"<#rt/>
+                                                    <li><a href="<@serverUrl>/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}${raw(externalKeyParam)}</@serverUrl>"<#rt/>
                                                         <#lt/> target="_blank" class="${styles.link_run_sys_inline!} ${styles.action_export!}">${downloadContent.contentName!downloadContent.contentId!}</a>
                                               </#list>
                                               </ol>
@@ -100,7 +100,7 @@ code package.
                                         </#if>
                                 </@td>
                             </#if>
-                            <#if rawString(productId) == "shoppingcart.CommentLine">
+                            <#if raw(productId) == "shoppingcart.CommentLine">
                                 <@td colspan="6"> &gt;&gt; ${orderItem.itemDescription}</@td>
                             <#else>
                                 <#-- now show status details per line item -->
@@ -147,7 +147,7 @@ code package.
                                         </#if>
                                     </#assign>
                                     <#if productItemStatus?has_content>
-                                        <@modal id="${rawString(productId)}_st" label=(currentItemStatus.get('description',locale)!(currentItemStatus.statusId))>${productItemStatus!}</@modal>
+                                        <@modal id="${raw(productId)}_st" label=(currentItemStatus.get('description',locale)!(currentItemStatus.statusId))>${productItemStatus!}</@modal>
                                     <#else>
                                         ${currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)}
                                     </#if>
@@ -312,7 +312,7 @@ code package.
                                                             <@td style="padding-left: 15px; text-align: left;">${unplannedQuantity}</@td>
                                                         </@tr>
                                                     </@table>
-                                                    <a href="<@serverUrl>/catalog/control/EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y${rawString(externalKeyParam)}</@serverUrl>" 
+                                                    <a href="<@serverUrl>/catalog/control/EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y${raw(externalKeyParam)}</@serverUrl>" 
                                                         class="${styles.link_run_sys!} ${styles.action_view!}" target="_blank">${uiLabelMap.ProductInventory}</a>
                                             </@modal>
                                         </#if>
@@ -347,7 +347,7 @@ code package.
                                     <@td colspan="6">
                                         <#if orderItem.orderItemTypeId != "RENTAL_ORDER_ITEM">
                                             ${uiLabelMap.ManufacturingProductionRun}
-                                            <a href="<@serverUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${workEffort.workEffortId}</a>
+                                            <a href="<@serverUrl>/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${workEffort.workEffortId}</a>
                                             ${uiLabelMap.OrderCurrentStatus}
                                             ${(delegator.findOne("StatusItem", {"statusId":workEffort.getString("currentStatusId")}, true).get("description",locale))!}
                                         <#else>
@@ -433,7 +433,7 @@ code package.
                                             (${orderItemAdjustment.comments!""})
                                         </#if>
                                         <#if orderItemAdjustment.productPromoId?has_content>
-                                            <a href="<@serverUrl>/catalog/control/EditProductPromo?productPromoId=${orderItemAdjustment.productPromoId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}">${orderItemAdjustment.getRelatedOne("ProductPromo", false).getString("promoName")}</a>
+                                            <a href="<@serverUrl>/catalog/control/EditProductPromo?productPromoId=${orderItemAdjustment.productPromoId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}">${orderItemAdjustment.getRelatedOne("ProductPromo", false).getString("promoName")}</a>
                                         </#if>
                                         <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
                                             <#if orderItemAdjustment.primaryGeoId?has_content>
@@ -493,7 +493,7 @@ code package.
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
                                         ${uiLabelMap.CommonSurveys}&nbsp;
-                                        <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${survey.surveyResponseId}&amp;surveyId=${survey.surveyId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${survey.surveyId}</a>
+                                        <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${survey.surveyResponseId}&amp;surveyId=${survey.surveyId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${survey.surveyId}</a>
                                     </@td>
                                     <@td colspan="5">&nbsp;</@td>
                                 </@tr>
@@ -556,7 +556,7 @@ code package.
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
                                         ${uiLabelMap.CommonInventory}&nbsp;
-                                        <a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${orderItemShipGrpInvRes.inventoryItemId}</a>
+                                        <a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${orderItemShipGrpInvRes.inventoryItemId}</a>
                                         ${uiLabelMap.OrderShipGroup}&nbsp;${orderItemShipGrpInvRes.shipGroupSeqId}
                                     </@td>
                                     <@td align="center">
@@ -581,7 +581,7 @@ code package.
                             <#list orderShipments as orderShipment>
                                 <@tr class="${rowColor!}">
                                     <@td colspan="2">
-                                        ${uiLabelMap.OrderPlannedInShipment}&nbsp;<a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${orderShipment.shipmentId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}
+                                        ${uiLabelMap.OrderPlannedInShipment}&nbsp;<a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${orderShipment.shipmentId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${orderShipment.shipmentId}</a>: ${orderShipment.shipmentItemSeqId}
                                     </@td>
                                     <@td align="center">
                                         ${orderShipment.quantity?string.number}&nbsp;
@@ -598,7 +598,7 @@ code package.
                                 <@td colspan="2">
                                     <#if itemIssuance.shipmentId?has_content>
                                         ${uiLabelMap.OrderIssuedToShipmentItem}&nbsp;
-                                        <a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${itemIssuance.shipmentId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.shipmentId}</a>: ${itemIssuance.shipmentItemSeqId!}
+                                        <a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${itemIssuance.shipmentId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.shipmentId}</a>: ${itemIssuance.shipmentItemSeqId!}
                                     <#else>
                                         ${uiLabelMap.OrderIssuedWithoutShipment}
                                     </#if>
@@ -618,7 +618,7 @@ code package.
                                         <#if itemIssuance.inventoryItemId?has_content>
                                             <#assign inventoryItem = itemIssuance.getRelatedOne("InventoryItem", false)/>
                                             ${uiLabelMap.CommonInventory}
-                                            <a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.inventoryItemId}</a>
+                                            <a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${itemIssuance.inventoryItemId}</a>
                                             ${uiLabelMap.OrderShipGroup}&nbsp;${itemIssuance.shipGroupSeqId!}
                                             <#if (inventoryItem.serialNumber?has_content)>
                                                 <br />
@@ -641,11 +641,11 @@ code package.
                                     <@td colspan="2">
                                         <#if shipmentReceipt.shipmentId?has_content>
                                             ${uiLabelMap.OrderShipmentReceived}&nbsp;
-                                            <a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${shipmentReceipt.shipmentId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.shipmentId}</a>: ${shipmentReceipt.shipmentItemSeqId!}
+                                            <a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${shipmentReceipt.shipmentId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.shipmentId}</a>: ${shipmentReceipt.shipmentItemSeqId!}
                                         </#if>
                                         &nbsp;<#if shipmentReceipt.datetimeReceived?has_content><@formattedDateTime date=shipmentReceipt.datetimeReceived /></#if>&nbsp;
                                         ${uiLabelMap.CommonInventory}&nbsp;
-                                        <a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}${rawString(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.inventoryItemId}</a>
+                                        <a href="<@serverUrl>/facility/control/EditInventoryItem?inventoryItemId=${shipmentReceipt.inventoryItemId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}">${shipmentReceipt.inventoryItemId}</a>
                                     </@td>
                                     <@td align="center">
                                         ${shipmentReceipt.quantityAccepted?string.number}&nbsp;/&nbsp;${shipmentReceipt.quantityRejected?default(0)?string.number}

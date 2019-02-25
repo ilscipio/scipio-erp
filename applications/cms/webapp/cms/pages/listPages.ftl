@@ -16,7 +16,7 @@
   </@section>
 
   <#if pages?has_content>
-    <#assign paramStr = addParamsToStr("", {"webSiteId": rawString(webSiteId!"")}, "&", false)>
+    <#assign paramStr = addParamsToStr("", {"webSiteId": raw(webSiteId!"")}, "&", false)>
     <@paginate mode="content" url=makePageUrl("pages") paramStr=paramStr viewSize=(viewSize!50) viewIndex=(viewIndex!0) listSize=(listSize!0)>
         <@table type="data-list" autoAltRows=true>
             <@thead>

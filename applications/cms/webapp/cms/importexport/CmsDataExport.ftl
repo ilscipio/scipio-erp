@@ -378,12 +378,12 @@ code package.
       <#assign entityNamesByPkg = toSimpleMap(entityNamesByPkg)>
       <#assign passedEntityNames = passedEntityNames![]>
       <#list entityNamesByPkg?keys as subPkg>
-        <#assign subEntities = entityNamesByPkg[rawString(subPkg)]>
+        <#assign subEntities = entityNamesByPkg[raw(subPkg)]>
         <#if (subPkg_index > 0)><hr/></#if>
         <@heading relLevel=+1>${subPkg}</@heading>
         <@grid>
           <#list subEntities as entityName>
-            <#assign curEntityName = rawString(entityName)>
+            <#assign curEntityName = raw(entityName)>
             <#assign entCount = entCount + 1>
             <#assign check = checkAll/>
             <#if passedEntityNames?seq_contains(curEntityName)>

@@ -13,7 +13,7 @@ code package.
         <#list 1..shoppingCart.getShipGroupSize() as currIndex>
           <#assign shipGroupIndex = currIndex - 1>
           <#assign supplier = delegator.findOne("PartyGroup", {"partyId":shoppingCart.getSupplierPartyId(shipGroupIndex)!}, false)! />
-          <#assign sectionTitle>${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}<#if supplier?has_content> - ${rawLabel('OrderDropShipped')} - ${rawString(supplier.groupName!supplier.partyId)}</#if></#assign>
+          <#assign sectionTitle>${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}<#if supplier?has_content> - ${rawLabel('OrderDropShipped')} - ${raw(supplier.groupName!supplier.partyId)}</#if></#assign>
           <@section title=sectionTitle>
             <@row>
               <@cell>

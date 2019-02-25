@@ -38,7 +38,7 @@ code package.
             <div id="microCartTotal">   
                 <#assign currencyUomId = (shoppingCart.getCurrency())!false>
                 <#if currencyUomId?is_boolean>
-                  <#assign currencyUomId = rawString(Static["org.ofbiz.product.store.ProductStoreWorker"].getStoreCurrencyUomId(request)!"")>
+                  <#assign currencyUomId = raw(Static["org.ofbiz.product.store.ProductStoreWorker"].getStoreCurrencyUomId(request)!"")>
                 </#if>
                 <@ofbizCurrency amount=((shoppingCart.getDisplayGrandTotal())!0) isoCode=currencyUomId/>
             </div>

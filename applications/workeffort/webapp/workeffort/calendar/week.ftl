@@ -8,7 +8,7 @@ code package.
 <#macro menuContent menuArgs={}>
     <@workefflib.calendarDateSwitcher period="week"/>
 </#macro>
-<@section title="${rawLabel('CommonWeek')} ${rawString(UtilDateTime.timeStampToString(start, 'w', timeZone, locale))}"
+<@section title="${rawLabel('CommonWeek')} ${raw(UtilDateTime.timeStampToString(start, 'w', timeZone, locale))}"
     menuContent=menuContent menuLayoutTitle="inline-title"><#--${uiLabelMap.WorkEffortWeekView}: -->
 
 <#if periods?has_content>

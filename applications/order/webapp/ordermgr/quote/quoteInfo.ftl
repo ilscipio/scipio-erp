@@ -3,7 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<@section title="${rawLabel('OrderOrderQuoteId')} ${rawString(quote.quoteId)} ${rawLabel('CommonInformation')}">
+<@section title="${rawLabel('OrderOrderQuoteId')} ${raw(quote.quoteId)} ${rawLabel('CommonInformation')}">
         <@table type="fields">
             <#-- quote header information -->
             <@tr>

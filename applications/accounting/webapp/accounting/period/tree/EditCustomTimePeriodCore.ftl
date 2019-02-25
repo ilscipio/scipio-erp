@@ -1,5 +1,5 @@
 <#if !efpTreeId?has_content>
-  <#assign efpTreeId = "efpTree_" + rawString(orgPartyId!)>
+  <#assign efpTreeId = "efpTree_" + raw(orgPartyId!)>
 </#if>
 <#assign efpActionProps = toSimpleMap(efpActionProps!{})>
 

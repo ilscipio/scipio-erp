@@ -88,7 +88,7 @@
                             <#if media.dataResourceTypeId == "DOCUMENT_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.CommonDocument></#if>
                             <@field type="hidden" name="contentId" value=media.contentId />
                             <@field type="hidden" name="dataResourceTypeId" value=media.dataResourceTypeId />
-                            <#assign mediaUrl=makeAppUrl({"uri": "/media?contentId=" + rawString(media.contentId!"")}) />
+                            <#assign mediaUrl=makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId!"")}) />
 
                             <@field type="display" label=uiLabelMap.CommonPath><a href="${escapeFullUrl(mediaUrl, 'html')}">${escapeFullUrl(mediaUrl, 'htmlmarkup')}</a></@field>
                             <#-- DEV NOTE: you must submit altValue otherwise the service didn't recognize properly -->
@@ -102,8 +102,8 @@
                             </#if>
                             <@field type="display" label=uiLabelMap.FormFieldTitle_createdDate value=media.createdDate valueType="date" />
                             
-                            <#if previewMediaType?has_content && (rawString(previewMediaType) != rawString(media.mimeTypeId!""))>
-                                <@field type="display" label=uiLabelMap.ContentMimeType value="${rawString(media.mimeTypeId!'')} (${rawString(previewMediaType)})" />
+                            <#if previewMediaType?has_content && (raw(previewMediaType) != raw(media.mimeTypeId!""))>
+                                <@field type="display" label=uiLabelMap.ContentMimeType value="${raw(media.mimeTypeId!'')} (${raw(previewMediaType)})" />
                             <#else>
                                 <@field type="display" label=uiLabelMap.ContentMimeType value=(media.mimeTypeId!"") />
                             </#if>
@@ -112,16 +112,16 @@
                                 <@field type="generic" label=uiLabelMap.CmsMediaResizedVariants>
                                   <#if hasVariantContent>
                                     <#list variantList as variant>
-                                        <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&variant=" + rawString(variant)}) />
+                                        <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId!"") + "&variant=" + raw(variant)}) />
                                         <a href="${escapeFullUrl(variantMediaUrl, 'html')}">${variant}</a> <#t/>
                                     </#list>
                                     <br/><span class="media-resized-urls-label">URLs</span>:
                                     <@fields type="default" ignoreParentField=true>
-                                      <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&variant=" + rawString(variantList[0])}) />
+                                      <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId!"") + "&variant=" + raw(variantList[0])}) />
                                       <@field type="display" label="variant"><a href="${escapeFullUrl(variantMediaUrl, 'html')}">${escapeFullUrl(variantMediaUrl, 'htmlmarkup')}</a></@field>
-                                      <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&autoVariant=min&width=600&height=400"}) />
+                                      <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId!"") + "&autoVariant=min&width=600&height=400"}) />
                                       <@field type="display" label="autoVariant min (css contain)"><a href="${escapeFullUrl(variantMediaUrl, 'html')}">${escapeFullUrl(variantMediaUrl, 'htmlmarkup')}</a></@field>
-                                      <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + rawString(media.contentId!"") + "&autoVariant=max&width=600&height=400"}) />
+                                      <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId!"") + "&autoVariant=max&width=600&height=400"}) />
                                       <@field type="display" label="autoVariant max"><a href="${escapeFullUrl(variantMediaUrl, 'html')}">${escapeFullUrl(variantMediaUrl, 'htmlmarkup')}</a></@field>
                                     </@fields>
                                   <#else>
@@ -269,7 +269,7 @@
             <#if media?has_content>
                 <@cell id="mediaPreview" columns=4>
                     <@section title=uiLabelMap.CmsMediaPreview>
-                        <#assign dataFile = makeAppUrl({"uri": "/media?contentId=" + rawString(media.contentId)})!>
+                        <#assign dataFile = makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId)})!>
                         <#if media.dataResourceTypeId == "IMAGE_OBJECT">
                             <#if responsiveImage?has_content>
                                 <#if responsiveImageViewPortList?has_content>
@@ -296,7 +296,7 @@
                         <#elseif media.dataResourceTypeId == "AUDIO_OBJECT">
                             <#assign audioFile = delegator.findOne("AudioDataResource", false, {"dataResourceId" : media.dataResourceId})!>                    
                             <#if audioFile?has_content>
-                                <#assign mimeTypeId = rawString(media.mimeTypeId!"")>
+                                <#assign mimeTypeId = raw(media.mimeTypeId!"")>
                                 <#-- FIXME: this needs a mime-type translating util: FF doesn't recognize audio/vorbis -->
                                 <#if mimeTypeId == "audio/vorbis">
                                   <#assign mimeTypeId = "audio/ogg">

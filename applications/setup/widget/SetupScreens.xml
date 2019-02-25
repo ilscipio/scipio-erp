@@ -901,7 +901,7 @@
                                 <#-- now part of catalog tree actions menu (less confusing)
                                   <@menu type="button">
                                     <#if !isCreateForm>
-                                      <@menuitem type="link" href=rawString(newCatalogLinkHref) text=uiLabelMap.ProductNewCatalog class="+${styles.action_nav!} ${styles.action_add!}"/>
+                                      <@menuitem type="link" href=raw(newCatalogLinkHref) text=uiLabelMap.ProductNewCatalog class="+${styles.action_nav!} ${styles.action_add!}"/>
                                     </#if>
                                   </@menu>
                                 -->

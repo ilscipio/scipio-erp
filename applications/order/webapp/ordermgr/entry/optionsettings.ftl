@@ -22,11 +22,11 @@ code package.
 
 <#assign chosenShippingMethod = "N@A"><#-- SCIPIO: Always reset vars -->
 <#if cart.getShipmentMethodTypeId(shipGroupIndex)?? && cart.getCarrierPartyId(shipGroupIndex)??>
-    <#assign chosenShippingMethod = rawString(cart.getShipmentMethodTypeId(shipGroupIndex)) + '@' + rawString(cart.getCarrierPartyId(shipGroupIndex))>
+    <#assign chosenShippingMethod = raw(cart.getShipmentMethodTypeId(shipGroupIndex)) + '@' + raw(cart.getCarrierPartyId(shipGroupIndex))>
 </#if>
 <#assign supplierPartyId = cart.getSupplierPartyId(shipGroupIndex)!>
 <#assign supplier =  delegator.findOne("PartyGroup", {"partyId":supplierPartyId}, false)! />
-  <#assign sectionTitle>${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}<#if supplier?has_content> - ${rawString(supplier.groupName!(supplier.partyId))}</#if></#assign>
+  <#assign sectionTitle>${rawLabel('OrderShipGroup')} ${rawLabel('CommonNbr')} ${currIndex}<#if supplier?has_content> - ${raw(supplier.groupName!(supplier.partyId))}</#if></#assign>
   <@section title=sectionTitle>   
     <@row>
         <@cell columns=columns>
@@ -35,7 +35,7 @@ code package.
                 <#assign shipEstimateWrapper = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper"].getWrapper(dispatcher, cart, 0)>
                 <#assign carrierShipmentMethods = shipEstimateWrapper.getShippingMethods()>
                 <#list carrierShipmentMethods as carrierShipmentMethod>
-                    <#assign shippingMethod = rawString(carrierShipmentMethod.shipmentMethodTypeId) + "@" + rawString(carrierShipmentMethod.partyId)>
+                    <#assign shippingMethod = raw(carrierShipmentMethod.shipmentMethodTypeId) + "@" + raw(carrierShipmentMethod.partyId)>
                     <#assign radioText>
                       <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
                       <#if cart.getShippingContactMechId(shipGroupIndex)??>
@@ -43,7 +43,7 @@ code package.
                         <#if shippingEst?has_content>
                           <#if (shippingEst > -1)>
                             &nbsp;-&nbsp;<@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/>
-                          <#elseif rawString(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"><#-- SCIPIO: NO_SHIPPING check -->
+                          <#elseif raw(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"><#-- SCIPIO: NO_SHIPPING check -->
                             &nbsp;-&nbsp;${uiLabelMap.OrderCalculatedOffline}
                           </#if>
                         </#if>

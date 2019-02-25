@@ -387,7 +387,7 @@
                     <xml><html-template trim-lines="false"><![CDATA[
 <#if mimeTypes?has_content>
   <#list mimeTypes as mimeType>
-    <MimeType mimeTypeId="${rawString(mimeType.mimeTypeId)}" description="${rawString(mimeType.description)}"/>
+    <MimeType mimeTypeId="${raw(mimeType.mimeTypeId)}" description="${raw(mimeType.description)}"/>
   </#list>
 </#if>
                     ]]></html-template></xml>

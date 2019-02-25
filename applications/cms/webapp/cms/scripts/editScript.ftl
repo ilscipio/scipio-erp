@@ -57,7 +57,7 @@ NOTES: 2016-12:
     }
     
     <#function normScriptLangValue lang>
-        <#local lang = rawString(lang)>
+        <#local lang = raw(lang)>
         <#if !lang?has_content || lang == "auto">
             <#return "">
         <#else>

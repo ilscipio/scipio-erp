@@ -51,7 +51,7 @@
             <#if parties?has_content>
               <#list parties as partyEntry>
                 <#assign curParty = delegator.findOne("Party", {"partyId": partyEntry.partyIdTo}, true)>
-                <#assign selected = (rawString(partyEntry.partyIdTo) == rawString(userPartyId!))>
+                <#assign selected = (raw(partyEntry.partyIdTo) == raw(userPartyId!))>
                 <option value="${curParty.partyId}"<#if selected> selected="selected"</#if>>[${curParty.partyId}]</option>
               </#list>
             </#if>

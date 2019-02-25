@@ -267,7 +267,7 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     </#if>
     
     <#-- Column: columnCount: ${columnCount}, columnIndex: ${columnIndex}, portalPageGridUsed: ${portalPageGridUsed}, width: ${width} --> 
-    <#local portalPageClasses = "${styles.grid_large!}${columnSize}${rawString(endClassStr)}">
+    <#local portalPageClasses = "${styles.grid_large!}${columnSize}${raw(endClassStr)}">
     <@cell open=true close=false class=portalPageClasses />
     <#if confMode == "true">
       <div class="portal-column-config-title-bar">

@@ -21,7 +21,7 @@
         <#local rawLocale = "false">
       </#if>
     <#else>
-      <#local rawLocale = rawString(currentLocale)>
+      <#local rawLocale = raw(currentLocale)>
       <#if rawLocale == "true">
         <#local currentLocale = "">
       </#if>
@@ -45,7 +45,7 @@
         <#if "ar.iw"?contains(langAttr?substring(0, 2))>
             <#local langDir = "rtl">
         </#if>
-        <#local localeSelected = (rawLocale == rawString(availableLocale.toString()))>
+        <#local localeSelected = (rawLocale == raw(availableLocale.toString()))>
         <#if localeSelected>
           <#local localeFound = true>
         </#if>

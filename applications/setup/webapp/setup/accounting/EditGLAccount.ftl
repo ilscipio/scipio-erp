@@ -53,7 +53,7 @@
       	      	
       	<@field type="display" label=uiLabelMap.FormFieldTitle_parentGlAccountId><#rt/>
             <span class="acctg-managefield acctg-managefield-for-parentGlAccountDesc">            	
-            	<@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${rawString(params.parentGlAccountId!)}" text=params.parentGlAccountDesc!"_NA_"/>
+            	<@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${raw(params.parentGlAccountId!)}" text=params.parentGlAccountDesc!"_NA_"/>
            	</span><#t/>
         </@field><#lt/>
         <@field type="hidden" name="parentGlAccountId" value=(params.parentGlAccountId!) class="+acctg-inputfield"/>
@@ -61,7 +61,7 @@
 		
 	    <#if formActionType == "edit">
 	        <@field type="display" label=uiLabelMap.FormFieldTitle_glAccountId><#rt/>
-	            <span class="acctg-managefield acctg-managefield-for-glAccountId"><@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${rawString(params.glAccountId!)}" text=params.glAccountId!/></span><#t/>
+	            <span class="acctg-managefield acctg-managefield-for-glAccountId"><@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${raw(params.glAccountId!)}" text=params.glAccountId!/></span><#t/>
 	        </@field><#lt/>
 	        <@field type="hidden" name="glAccountId" value=(params.glAccountId!) class="+acctg-inputfield"/>
 	    <#else>
@@ -76,7 +76,7 @@
 	    <@field type="select" name="glAccountTypeId" label=uiLabelMap.CommonType class="+acctg-inputfield">
 	      <option value="" disabled="disabled"></option>
 	      <#list glAccountTypes as glAccountType>
-	        <#assign selected = (rawString(params.glAccountTypeId!) == (glAccountType.glAccountTypeId!))>
+	        <#assign selected = (raw(params.glAccountTypeId!) == (glAccountType.glAccountTypeId!))>
 	        <option value="${glAccountType.glAccountTypeId!}"<#if selected> selected="selected"</#if>>${glAccountType.description!}</option>
 	      </#list>
 	    </@field>
@@ -84,7 +84,7 @@
 	    <@field type="select" name="glAccountClassId" label=uiLabelMap.CommonClass class="+acctg-inputfield">
 	      <option value="" disabled="disabled"></option>
 	      <#list glAccountClasses as glAccountClass>
-	        <#assign selected = (rawString(params.glAccountClassId!) == (glAccountClass.glAccountClassId!))>
+	        <#assign selected = (raw(params.glAccountClassId!) == (glAccountClass.glAccountClassId!))>
 	        <option value="${glAccountClass.glAccountClassId!}"<#if selected> selected="selected"</#if>>${glAccountClass.description!}</option>
 	      </#list>
 	    </@field>
@@ -92,7 +92,7 @@
 	    <@field type="select" name="glResourceTypeId" label=uiLabelMap.CommonResource class="+acctg-inputfield">
 	      <option value="" disabled="disabled"></option>
 	      <#list glResourceTypes as glResourceType>
-	        <#assign selected = (rawString(params.glResourceTypeId!) == (glResourceType.glResourceTypeId!))>
+	        <#assign selected = (raw(params.glResourceTypeId!) == (glResourceType.glResourceTypeId!))>
 	        <option value="${glResourceType.glResourceTypeId!}"<#if selected> selected="selected"</#if>>${glResourceType.description!}</option>
 	      </#list>
 	    </@field>

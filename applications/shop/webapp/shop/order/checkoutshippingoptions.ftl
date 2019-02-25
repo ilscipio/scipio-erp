@@ -51,7 +51,7 @@ function submitForm(form, mode, value) {
 
             <#-- SCIPIO: switched from top-level inverted fields to generic with label because otherwise too inconsistent with
                 everything else on this form and with some other pages -->
-            <#assign selectedShippingMethod = rawString(parameters.shipping_method!chosenShippingMethod!"N@A")>
+            <#assign selectedShippingMethod = raw(parameters.shipping_method!chosenShippingMethod!"N@A")>
             <@field type="generic" label=wrapAsRaw("<strong>${uiLabelMap.OrderShippingMethod}</strong>", 'htmlmarkup') required=true>
             <@fields inlineItems=false>
               <#list carrierShipmentMethodList as carrierShipmentMethod>
@@ -65,10 +65,10 @@ function submitForm(form, mode, value) {
                 <#if shoppingCart.getShippingContactMechId()??>
                   <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
                 </#if>
-                <#assign shippingMethod = rawString(carrierShipmentMethod.shipmentMethodTypeId) + "@" + rawString(carrierShipmentMethod.partyId)>
+                <#assign shippingMethod = raw(carrierShipmentMethod.shipmentMethodTypeId) + "@" + raw(carrierShipmentMethod.partyId)>
                 <#assign labelContent>
                   <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId!}&nbsp;</#if>${carrierShipmentMethod.description!}
-                  <#if shippingEst?has_content><#if (shippingEst > -1)> - <@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#elseif rawString(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"> - ${uiLabelMap.OrderCalculatedOffline}</#if></#if><#-- SCIPIO: NO_SHIPPING check -->
+                  <#if shippingEst?has_content><#if (shippingEst > -1)> - <@ofbizCurrency amount=shippingEst isoCode=shoppingCart.getCurrency()/><#elseif raw(carrierShipmentMethod.shipmentMethodTypeId!) != "NO_SHIPPING"> - ${uiLabelMap.OrderCalculatedOffline}</#if></#if><#-- SCIPIO: NO_SHIPPING check -->
                 </#assign>
                 <#--<@commonInvField type="generic" labelContent=labelContent>-->
                 <@field type="radio" name="shipping_method" value=(shippingMethod!"") checked=(shippingMethod == selectedShippingMethod) label=wrapAsRaw(labelContent, 'htmlmarkup') /><#--inline=true -->

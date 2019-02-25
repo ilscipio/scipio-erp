@@ -1101,7 +1101,7 @@ code package.
                                   <#-- FREEMARKER OUTPUT -->
                                   <#if execTemplate>
                                     <@section title=uiLabelMap.CmsOutput>
-                                      <#assign tmplBodyCode = rawString(templateBody!"")?interpret>
+                                      <#assign tmplBodyCode = raw(templateBody!"")?interpret>
                                       <#assign tmplBodyOut><@tmplBodyCode/></#assign>
                                       ${tmplBodyOut}
                                     </@section>
@@ -1135,7 +1135,7 @@ code package.
             </actions>
             <widgets>
                 <platform-specific><html><html-template><![CDATA[
-                    <form method="post" action="<@pageUrl uri=rawString(vslTargetUri)/>">
+                    <form method="post" action="<@pageUrl uri=raw(vslTargetUri)/>">
                         <@field type="textarea" name="vslPaths" label="Paths" value=(parameters.vslPaths!)/>
                         <@field type="textarea" name="vslClassNames" label="Class names" value=(parameters.vslClassNames!)/>
                         <@field type="submit"/>

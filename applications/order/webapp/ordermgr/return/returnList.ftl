@@ -32,7 +32,7 @@ code package.
         <@td>${returnHeader.entryDate.toString()}</@td>
         <@td>
           <#if returnHeader.fromPartyId??>
-            <a href="${customerDetailLink}${returnHeader.fromPartyId}${rawString(externalKeyParam!)}" class="${styles.link_nav_info_id!}">${returnHeader.fromPartyId}</a>
+            <a href="${customerDetailLink}${returnHeader.fromPartyId}${raw(externalKeyParam!)}" class="${styles.link_nav_info_id!}">${returnHeader.fromPartyId}</a>
           <#else>
             <span>${uiLabelMap.CommonNA}</span>
           </#if>

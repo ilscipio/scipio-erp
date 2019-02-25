@@ -51,7 +51,7 @@ code package.
                     <#list exportList as record>
                         <@tr>
                             <@td width="100">
-                                <#assign exportUrl=makeAppUrl("/export?exportId=" + rawString(record.exportId!)) />
+                                <#assign exportUrl=makeAppUrl("/export?exportId=" + raw(record.exportId!)) />
                                 <a href="${exportUrl!""}" target="_blank">${uiLabelMap.FormFieldTitle_downloadAction}</a>
                             </@td>
                             

@@ -330,7 +330,7 @@
                                     <@td>${assetTmpl.importName!}</@td>
                                     <@td>${(assetTmpl.assoc.displayName)!assetTmpl.name!}</@td>
                                     <@td><a href="<@pageUrl>editAsset?assetTemplateId=${assetTmpl.id}</@pageUrl>">${assetTmpl.name!}</a></@td>
-                                    <#assign assetTmplBody = rawString(assetTmpl.templateBody!"")>
+                                    <#assign assetTmplBody = raw(assetTmpl.templateBody!"")>
                                     <#if (assetTmplBody?length > maxAssetTemplateDisplayLength)>
                                         <#assign assetTmplBody = assetTmplBody?substring(0, maxAssetTemplateDisplayLength)>
                                     </#if>
@@ -351,7 +351,7 @@
                         <#-- FIXME: this hast to be rendered outside table and section because of an issue
                             with styles (.row .row?) -->
                         <#list assetTemplates as assetTmpl>
-                          <@modal id="edit_asset_${rawString(assetTmpl.assocId)}">
+                          <@modal id="edit_asset_${raw(assetTmpl.assocId)}">
                             <@heading>${uiLabelMap.CmsEditAsset}</@heading>
                             <form method="post" action="<@pageUrl>updateTemplateAsset</@pageUrl>" id="edit-attribute-form-${escapeVal(assetTmpl.assocId, 'html')}">
                             <@fields type="default-compact">

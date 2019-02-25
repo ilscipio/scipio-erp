@@ -67,7 +67,7 @@ code package.
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderProductStore}</@td>
       <@td colspan="3">
         <#-- SCIPIO: FIXME: no ViewProductStore available
-        <a href="<@serverUrl>/catalog/control/ViewProductStore?productStoreId=${productStore.productStoreId}${rawString(externalKeyParam)}</@serverUrl>" target="catalogmgr">${productStore.storeName!(productStore.productStoreId!)}</a>--> 
+        <a href="<@serverUrl>/catalog/control/ViewProductStore?productStoreId=${productStore.productStoreId}${raw(externalKeyParam)}</@serverUrl>" target="catalogmgr">${productStore.storeName!(productStore.productStoreId!)}</a>--> 
         ${productStore.storeName!(productStore.productStoreId!)}
         <#if orderHeader.salesChannelEnumId?has_content>
           <#assign channel = orderHeader.getRelatedOne("SalesChannelEnumeration", false)>
@@ -83,7 +83,7 @@ code package.
         <@tr>
           <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderOriginFacility}</@td>
           <@td colspan="3">
-            <a href="<@serverUrl>/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${rawString(externalKeyParam)}</@serverUrl>" target="facilitymgr">${orderHeader.originFacilityId}</a>
+            <a href="<@serverUrl>/facility/control/EditFacility?facilityId=${orderHeader.originFacilityId}${raw(externalKeyParam)}</@serverUrl>" target="facilitymgr">${orderHeader.originFacilityId}</a>
           </@td>
         </@tr>
     </#if>
@@ -93,7 +93,7 @@ code package.
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonCreatedBy}</@td>
       <@td colspan="3">
       <#if orderHeader.createdBy?has_content>
-        <a href="<@serverUrl>/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${rawString(externalKeyParam)}</@serverUrl>" target="partymgr" class="">${orderHeader.createdBy}</a>
+        <a href="<@serverUrl>/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${raw(externalKeyParam)}</@serverUrl>" target="partymgr" class="">${orderHeader.createdBy}</a>
       <#else>
         ${uiLabelMap.CommonNotSet}
       </#if>

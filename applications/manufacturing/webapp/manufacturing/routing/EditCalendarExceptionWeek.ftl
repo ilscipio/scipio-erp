@@ -6,8 +6,8 @@ code package.
 
 <#if techDataCalendar?has_content>
 <#assign sectionTitle>${rawLabel('ManufacturingEditCalendarExceptionWeekFor')} 
-    <#if (techDataCalendar.description)?has_content>"${rawString(techDataCalendar.get("description",locale))}"</#if>
-    [${rawString(techDataCalendar.calendarId!)}]</#assign>
+    <#if (techDataCalendar.description)?has_content>"${raw(techDataCalendar.get("description",locale))}"</#if>
+    [${raw(techDataCalendar.calendarId!)}]</#assign>
 <@section title=sectionTitle>
     ${listCalendarExceptionWeekWrapper.renderFormString(context)}
 </@section>

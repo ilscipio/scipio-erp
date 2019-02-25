@@ -210,7 +210,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
               var commonOfbizUrls = {};
           }
           </#if>
-          commonOfbizUrls["${escapeVal(uri, 'js')}"] = "${escapeVal(makePageUrl(rawString(uri)), 'js')}";
+          commonOfbizUrls["${escapeVal(uri, 'js')}"] = "${escapeVal(makePageUrl(raw(uri)), 'js')}";
           
         </@script>
       <#else>
@@ -235,7 +235,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
       }
   
       <#list requiredScriptOfbizUrls as uri>
-      commonOfbizUrls["${escapeVal(uri, 'js')}"] = "${escapeVal(makePageUrl(rawString(uri)), 'js')}";
+      commonOfbizUrls["${escapeVal(uri, 'js')}"] = "${escapeVal(makePageUrl(raw(uri)), 'js')}";
       </#list>
 
     </@script>

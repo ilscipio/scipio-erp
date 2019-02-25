@@ -249,13 +249,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   </#if>
   <#local inputId = "">
   <#if id?has_content>
-    <#local displayInputId = rawString(id) + "_i18n">
+    <#local displayInputId = raw(id) + "_i18n">
     <#local inputId = id>
   </#if>
   <#local displayInputName = "">
   <#local inputName = "">
   <#if name?has_content>
-    <#local displayInputName = rawString(name) + "_i18n">
+    <#local displayInputName = raw(name) + "_i18n">
     <#local inputName = name>
   </#if>
   <#if !postfix?is_boolean>
@@ -277,8 +277,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         </#if>
         <#-- 2018-02-16: title/tooltip can now start with "+" to indicate prepend to default -->
         <#local titlePrefix = "">
-        <#if rawString(title)?starts_with("+")>
-          <#local titlePrefix = rawString(title)[1..]>
+        <#if raw(title)?starts_with("+")>
+          <#local titlePrefix = raw(title)[1..]>
           <#local title = "">
         </#if>
         <#if !title?has_content>
@@ -289,14 +289,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           <#-- FIXME: as above
           <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateDisplayFormatProp)!"">
           -->
-          <#local dateFormatString = rawString(uiLabelMap.CommonFormat) + ": " + rawString(dateDisplayFormat)>
+          <#local dateFormatString = raw(uiLabelMap.CommonFormat) + ": " + raw(dateDisplayFormat)>
           <#if title == "FORMAT">
             <#local title = dateFormatString>
           <#elseif title == "LABEL">
             <#local title = origLabel>
           <#elseif title == "LABEL+FORMAT">
             <#if origLabel?has_content>
-              <#local title = rawString(origLabel) + " (" + rawString(dateFormatString) + ")">
+              <#local title = raw(origLabel) + " (" + raw(dateFormatString) + ")">
             <#else>
               <#local title = dateFormatString>
             </#if>
@@ -517,18 +517,18 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local displayInputId = "">
   <#local inputId = "">
   <#if id?has_content>
-    <#local displayInputId = rawString(id) + "_i18n">
+    <#local displayInputId = raw(id) + "_i18n">
     <#local inputId = id>
   </#if>
   <#local displayInputName = "">
   <#local inputName = "">
   <#if name?has_content>
-    <#local displayInputName = rawString(name) + "_fld0_i18n">
-    <#local inputName = rawString(name) + "_fld0_value">
+    <#local displayInputName = raw(name) + "_fld0_i18n">
+    <#local inputName = raw(name) + "_fld0_value">
   </#if>
   <#local opSelectName = "">
   <#if name?has_content>
-    <#local opSelectName = rawString(name) + "_fld0_op">
+    <#local opSelectName = raw(name) + "_fld0_op">
   </#if>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, styles.field_datefind_tooltip!styles.field_default_tooltip!"")>
@@ -778,8 +778,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local attribs = (styles.field_lookup_tooltip_attribs!styles.field_default_tooltip_attribs!{}) + attribs>
   </#if>
   <#if (!ajaxUrl?has_content) && ajaxEnabled>
-    <#local ajaxUrl = requestAttributes._REQUEST_HANDLER_.makeLink(request, response, rawString(fieldFormName))/>
-    <#local ajaxUrl = rawString(id) + "," + rawString(ajaxUrl) + ",ajaxLookup=Y" />
+    <#local ajaxUrl = requestAttributes._REQUEST_HANDLER_.makeLink(request, response, raw(fieldFormName))/>
+    <#local ajaxUrl = raw(id) + "," + raw(ajaxUrl) + ",ajaxLookup=Y" />
   </#if>
   <#if (!showDescription?has_content)>
     <#local showDescriptionProp = getPropertyValue("widget", "widget.lookup.showDescription")!"N">
@@ -1154,7 +1154,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </#if>
     </span>
     <#if id?has_content>
-      <#local currentId = rawString(id) + "_" + (item_index + 2)?string>
+      <#local currentId = raw(id) + "_" + (item_index + 2)?string>
     </#if>
   </#list>
   <#if multiMode>
@@ -1296,7 +1296,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local sepClass = addClassArg(sepClass, inlineClass)>
     <br<@fieldClassAttribStr class=sepClass /> /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
     <#if id?has_content>
-      <#local currentId = rawString(id) + "_" + (item_index + 2)?string>
+      <#local currentId = raw(id) + "_" + (item_index + 2)?string>
     </#if>    
   </#list>
   <#if multiMode>

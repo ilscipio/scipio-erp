@@ -1,5 +1,5 @@
 <#--
-* 
+*
 * Utility Functions
 *
 * A set of standalone utility functions and macros, largely devoid of markup and 
@@ -9,7 +9,7 @@
 * Intended as platform-agnostic (html, fo, etc.) though some individually are only applicable for specific platforms.
 * Automatically included at all times, for all themes, independently of theme markup override files.
 *
-* NOTES: 
+* NOTES:
 * * Macros expect to be called using named arguments, except where otherwise noted.
 * * Functions in Freemarker only support positional arguments, but some Scipio functions support
 *   an "args" argument as a map, which emulates named arguments.
@@ -1080,12 +1080,12 @@ The following URI forms are currently interpreted and transformed:
     uri                     = uri to interpret for known formats and, if matching, to produce URL
 -->
 <#function interpretRequestUri uri>
-  <#local uri = rawString(uri)>
+  <#local uri = raw(uri)>
   <#if uri?starts_with("pageUrl://") || uri?starts_with("ofbizUrl://")><#-- 2018-01-28: backward-compat for old name -->
     <#local uriDesc = Static["org.ofbiz.webapp.control.RequestDescriptor"].fromPageUrlUriStringRepr(request!, response!, uri)>
     <#if uriDesc.getType() == "pageUrl">
       <#-- NOTE: although there is uriDesc.getWebUrlString(), should pass through FTL macro version instead, hence all this manual work... -->
-      <#local res><@pageUrl fullPath=(uriDesc.getFullPath()!"") secure=(uriDesc.getSecure()!"") encode=(uriDesc.getEncode()!"")>${rawString(uriDesc.getBaseUriString())}</@pageUrl></#local>
+      <#local res><@pageUrl fullPath=(uriDesc.getFullPath()!"") secure=(uriDesc.getSecure()!"") encode=(uriDesc.getEncode()!"")>${raw(uriDesc.getBaseUriString())}</@pageUrl></#local>
       <#return res>
     </#if>
   </#if>
@@ -1103,7 +1103,7 @@ Adds the external login key to given url
     escape                  = ((boolean), default: true) If true, use escaped param delimiter
 -->
 <#function addExtLoginKey url escape=true>
-  <#return rawString(Static["org.ofbiz.webapp.control.RequestLinkUtil"].checkAddExternalLoginKey(rawString(url), request, escape))>
+  <#return raw(Static["org.ofbiz.webapp.control.RequestLinkUtil"].checkAddExternalLoginKey(raw(url), request, escape))>
 </#function>
 
 <#-- 
@@ -1405,7 +1405,7 @@ and prevents automatic html-escaping on the result (unlike #getLabel).
 
 This is a higher-level, abstracted function for fetching labels, compared to keying the {{{uiLabelMap}}}.
 
-Shorthand for {{{rawString(getLabel(...))}}}. See #getLabel for more information.
+Shorthand for {{{raw(getLabel(...))}}}. See #getLabel for more information.
 
   * Parameters *
     name                    = ((string), required) Label name
@@ -1431,7 +1431,7 @@ Shorthand for {{{rawString(getLabel(...))}}}. See #getLabel for more information
     Added for 1.14.2.
 -->
 <#function rawLabel name resource="" msgArgs=true>
-  <#return rawString(getLabel(name, resource, msgArgs))>
+  <#return raw(getLabel(name, resource, msgArgs))>
 </#function>
 
 <#-- 
@@ -1448,7 +1448,7 @@ so the caller can perform the substitutions instead.
     Added for 1.14.4.
 -->
 <#function rawLabelNoSubst name resource="">
-  <#return rawString(getLabel(name, resource, false))>
+  <#return raw(getLabel(name, resource, false))>
 </#function>
 
 <#-- 
@@ -1474,7 +1474,7 @@ in other words not expected to be printed as HTML.
 <#function getPropertyValue resource name>
   <#local value = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name)>
   <#if value?has_content>
-    <#return rawString(value)>
+    <#return raw(value)>
   </#if> <#- else return nothing (void/null) ->
 </#function>
 -->
@@ -1654,7 +1654,7 @@ NOTE: 2016-01-21: New special case: if paramDelim is "/" or contains "/", treat 
                               Only significant if paramDelim does not contain "/"
 -->
 <#function addParamDelimToUrl url paramDelim="&amp;" paramStarter="?">
-  <#local url = rawString(url)>
+  <#local url = raw(url)>
   <#if paramDelim?contains("/")>
     <#if url?ends_with(paramDelim)>
       <#return url>
@@ -1698,9 +1698,9 @@ Adds parameters from a hash to a URL param string (no full URL logic).
     </#if>
     <#if includeEmpty || paramMap[key]?has_content>
       <#if urlEncode>
-        <#local res = res + key + "=" + rawString(paramMap[key]!"")?url>
+        <#local res = res + key + "=" + raw(paramMap[key]!"")?url>
       <#else>
-        <#local res = res + key + "=" + rawString(paramMap[key]!"")>
+        <#local res = res + key + "=" + raw(paramMap[key]!"")>
       </#if>
     </#if>
   </#list>
@@ -1736,7 +1736,7 @@ where DELIM is specified delimiter (& &amp; , ; etc.).
     paramDelim              = (default: "&amp;") Param delimiter
 -->
 <#function splitStrParams paramStr paramDelim="&amp;">
-  <#return rawString(Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].splitStrParams(paramStr, paramDelim))>
+  <#return raw(Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].splitStrParams(paramStr, paramDelim))>
 <#-- old FTL impl.
   <#local res = {}>
   <#local pairs = paramStr?split(paramDelim)>
@@ -2070,7 +2070,7 @@ TODO: Implement (careful about absolute vs relative)
 Converts camelCase to camel-case.
 -->
 <#function camelCaseToDashLowerName name>
-  <#return rawString(Static["com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil"].camelCaseToDashLowerName(name))>
+  <#return raw(Static["com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil"].camelCaseToDashLowerName(name))>
 </#function>
 
 
@@ -2155,7 +2155,7 @@ NOTES:
 * rawString
 ************
 Returns the given value, bypassing the screen renderer html auto-escaping, as a simple Freemarker string.
-NOTE: 2019-02-14: See also the shorthand alias, #raw.
+NOTE: 2019-02-14: Now available in shorthand form: #raw
 
 This is the same as the java function, {{{StringUtil.wrapString}}}, but further simplifies
 the resulting type into a simple Freemarker string.
@@ -2180,10 +2180,11 @@ NOTE: 2019-02-14: This is very similar to the FreeMarker 2.3.27+ built-in, {{{?n
                                   each is applied the logical #rawString bypass, and
                                   the result is a concatenation of all the parameters.
                                   So
-                                    rawString(var1, " ", var2)
+                                    raw(var1, " ", var2)
                                   is equivalent to
-                                    rawString(var1) + " " + rawString(var2)
+                                    raw(var1) + " " + raw(var2)
                                   except the former is more efficient.
+
   * Related *
     #raw
     #rewrapString  
@@ -2203,7 +2204,7 @@ NOTE: 2019-02-14: This is very similar to the FreeMarker 2.3.27+ built-in, {{{?n
 * raw
 ************
 Returns the given value, bypassing screen renderer html auto-escaping, as a simple Freemarker string.
-Alias for #rawString.
+Shorthand for: #rawString
 
 This is the same as the java function, {{{StringUtil.wrapString}}}, but further simplifies
 the resulting type into a simple Freemarker string.
@@ -2228,9 +2229,9 @@ NOTE: 2019-02-14: This is very similar to the FreeMarker 2.3.27+ built-in, {{{?n
                                   each is applied the logical #rawString bypass, and
                                   the result is a concatenation of all the parameters.
                                   So
-                                    rawString(var1, " ", var2)
+                                    raw(var1, " ", var2)
                                   is equivalent to
-                                    rawString(var1) + " " + rawString(var2)
+                                    raw(var1) + " " + raw(var2)
                                   except the former is more efficient.
 
   * Related *
@@ -2298,7 +2299,7 @@ DEPRECATED: Use #escapeVal with the {{{allow}}} option instead.
     #rawString
 -->
 <#function htmlContentString str>
-  <#return rawString(str)> 
+  <#return raw(str)> 
 </#function>
 
 <#-- 
@@ -2602,7 +2603,7 @@ Widget-related progress success action compile (see widget-form.xsd form element
    progressSuccessAction    = (required) Progress success action
 -->
 <#function compileProgressSuccessAction progressSuccessAction>
-  <#return rawString(Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].compileProgressSuccessAction(progressSuccessAction))>
+  <#return raw(Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].compileProgressSuccessAction(progressSuccessAction))>
 </#function>
 
 <#-- 
@@ -2788,7 +2789,7 @@ TODO: doesn't handle dates (ambiguous?)
 <#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1 rawVal=false>
   <#if (rawVal?is_boolean && rawVal == true)><#-- NOTE: there's a duplicate of this further down for performance reasons -->
     <#if isObjectType("string", object)>
-      ${rawString(object)}<#t>
+      ${raw(object)}<#t>
     <#else>
       ${object?string}<#t>
     </#if>
@@ -2823,7 +2824,7 @@ TODO: doesn't handle dates (ambiguous?)
       <#local object = toSimpleMap(object)><#t>
       <#list object?keys as key>
         <#-- NOTE: must use rawString on the keys because FTL will coerce them to strings (forcing auto-escaping from Ofbiz context) before using them as hash keys! --><#t>
-        <#local rawKey = rawString(key)><#t>
+        <#local rawKey = raw(key)><#t>
           "${escapeScriptString(lang, key, escape)}" : <#if object[rawKey]??><#rt/>
             <#t/><#if !rawVal?is_boolean><#local rawValNext = rawVal[rawKey]!false><#else><#local rawValNext = false></#if>
             <#t/><@objectAsScript lang=lang object=object[rawKey] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) rawVal=rawValNext/>
@@ -2853,7 +2854,7 @@ TODO: doesn't handle dates (ambiguous?)
 <#function escapeScriptString lang val escape=true>
   <#-- 2016-03-21: prevent auto-escaping the screen widget context string variables -->
   <#if isObjectType("string", val)>
-    <#local val = rawString(val)>
+    <#local val = raw(val)>
   <#else>
     <#local val = val?string>
   </#if>
@@ -2989,7 +2990,7 @@ If not applicable, returns void (use default operator, {{{!}}}).
 <#function getRawWrappedForLang object lang="">
   <#local res = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].getValueForLang(object, lang)!false>
   <#if !res?is_boolean>
-    <#return rawString(res)>
+    <#return raw(res)>
   </#if>
 </#function>
 
@@ -3161,9 +3162,9 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
 <#function escapeVal value lang opts={}>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
-    <#local value = rawString(value)><#-- performs coercion to string if needed -->
+    <#local value = raw(value)><#-- performs coercion to string if needed -->
   <#else>
-    <#local value = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
+    <#local value = raw(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
     <#local lang = resolved.lang>
   </#if>
   <#switch lang?lower_case>
@@ -3253,9 +3254,9 @@ DEPRECATED: This was never properly defined or implemented and no longer meaning
 <#function escapeFull value lang opts={}>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
-    <#local value = rawString(value)><#-- performs coercion to string if needed -->
+    <#local value = raw(value)><#-- performs coercion to string if needed -->
   <#else>
-    <#local value = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
+    <#local value = raw(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
     <#local lang = resolved.lang>
   </#if>
   <#if lang == "htmlmarkup">
@@ -3326,9 +3327,9 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
 <#function escapeFullUrl value lang opts={}>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
-    <#local value = rawString(value)><#-- performs coercion to string if needed -->
+    <#local value = raw(value)><#-- performs coercion to string if needed -->
   <#else>
-    <#local value = rawString(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
+    <#local value = raw(resolved.value)><#-- NOTE: this rawString call actually only escapes the ofbiz auto-escaping from the resolveScriptForLang call... obscure -->
     <#local lang = resolved.lang>
   </#if>
   <#if !(opts.strict!false)>
@@ -4526,7 +4527,7 @@ TODO: implement as transform.
   <#if isObjectType("map", attribs)>
     <#-- DEV NOTE: here attribs are auto-unwrapped by Freemarker, but when this is made into transform,
         the unwrap will have to be coded explicitly -->
-    <#t>${rawString(Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
+    <#t>${raw(Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
       emptyValToken, noValToken, exclude, attribNamePrefix, alwaysAddPrefix, attribNamePrefixStrip, attribNameSubstitutes, camelCaseToDashLowerNames, escapeLang))}<#t>
   <#elseif attribs?is_string>
     <#t> ${attribs?string}
@@ -4907,10 +4908,10 @@ NOTE: for performance and other reasons it is usually best to have a groovy scri
     the original value if it matched an item, or void if no item was matched (for use with missing value operator).
 -->
 <#function limitStrValToItems value items key="value">
-  <#local val = rawString(value)>
+  <#local val = raw(value)>
   <#if items?is_sequence>
     <#list items as item>
-      <#if rawString(item[key]!"") == val>
+      <#if raw(item[key]!"") == val>
         <#return value>
       </#if>
     </#list>
@@ -5121,7 +5122,7 @@ html, xml, etc.; best-effort.
 -->
 <#function getRenderPlatformType>
   <#if screens??>
-    <#return rawString(screens.getScreenStringRenderer().getRendererName()!"")>
+    <#return raw(screens.getScreenStringRenderer().getRendererName()!"")>
   </#if>
 </#function>
 
@@ -5186,7 +5187,7 @@ NOTE: "default" is a special map key; should be avoided.
 <#function getMacroLibraryLocationStaticFromResources renderPlatformType resources resourceNames...>
   <#local res = Static["org.ofbiz.widget.renderer.VisualThemeWorker"].getMacroLibraryLocationStaticFromResources(renderPlatformType, rendererVisualThemeResources!, resourceNames)!"">
   <#if res?has_content>
-    <#return rawString(res)>
+    <#return raw(res)>
   </#if>
 </#function>
 

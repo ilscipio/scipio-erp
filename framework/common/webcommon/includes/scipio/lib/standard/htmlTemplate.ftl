@@ -162,10 +162,10 @@
 *     <#assign macroValue>${screenVar1}: ${screenVar2}</#assign> <#- bad ->
 *     <@somemacro value=macroValue/>
 *   then double-escaping will occur because the coercion causes escaping to happen before the macro receives the value, and all type information is lost. 
-*   The caller must prevent this using #rawString (or equivalent):
-*     <@somemacro value="${rawString(screenVar1)}: ${rawString(screenVar2)}"/> <#- good ->
-*     <@somemacro value=rawString(screenVar1)?string/> <#- works, but do not use; completely redundant ->
-*     <#assign macroValue>${rawString(screenVar1)}: ${rawString(screenVar2)}</#assign> <#- good ->
+*   The caller must prevent this using #raw (#rawString) (or equivalent):
+*     <@somemacro value="${raw(screenVar1)}: ${raw(screenVar2)}"/> <#- good ->
+*     <@somemacro value=raw(screenVar1)?string/> <#- works, but do not use; completely redundant ->
+*     <#assign macroValue>${raw(screenVar1)}: ${raw(screenVar2)}</#assign> <#- good ->
 *     <@somemacro value=macroValue/>
 *   Note that none of these constructs will allow passing html markup; it is all escaped by the macro (unrelated to #rawString).
 * * ''Bypassing and markup'': If the caller needs to pass preformed html markup to an escaped parameter, then #wrapAsRaw can be used.
@@ -175,7 +175,7 @@
 *   so that the macro can select the most appropriate variant as needed, which future-proofs it (e.g. against switch to javascript or javascript additions):
 *     <@somemacro value=wrapAsRaw({
 *       "htmlmarkup": "<strong>${screenVar1}</strong>: <em>${screenVar2}</em>",
-*       "raw": "${rawString(screenVar1)}: ${rawString(screenVar2)}"
+*       "raw": "${raw(screenVar1)}: ${raw(screenVar2)}"
 *     })/>
 *   Practical example (login.ftl):
 *     <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
@@ -194,7 +194,7 @@
 * * {{{attribs/inlineAttribs}}}: Macros that accept extra arbitrary attribs will automatically escape the values for html attributes.
 *   ''However'', if the attribs contain any javascript, the macros cannot be aware of this, and the caller must escape the javascript.
 *     <@somemacro attribs={"somejsattrib": "javascript:someFunction('${escapeVal(screenVar1, 'js')}');"}/> <#- (recommended) ->
-*     <@somemacro attribs={"somejsattrib": "javascript:someFunction('${rawString(screenVar1)?js_string}');"}/> <#- (also works, but not recommended) ->
+*     <@somemacro attribs={"somejsattrib": "javascript:someFunction('${raw(screenVar1)?js_string}');"}/> <#- (also works, but not recommended) ->
 *   This also applies to javascript html attributes in general, such as events.
 * * ''Javascript'': Note that escaping javascript typically means escaping the values inserted as string literals, and never the whole javascript code or html attribute (e.g. events).
 *   Arbitrary javascript code ''cannot'' be escaped safely; only strings and text within string literals ({{{""}}} {{{''}}}) can be. 

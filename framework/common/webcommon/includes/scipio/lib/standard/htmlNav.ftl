@@ -1190,8 +1190,8 @@ functionality.
       <#local viewIndexPrevious = viewIndex>
     </#if>
   
-    <#local origUrl = rawString(url)>
-    <#local origParamStr = rawString(paramStr)>
+    <#local origUrl = raw(url)>
+    <#local origParamStr = raw(paramStr)>
   
     <#-- SPECIAL CASE: if paramDelim=="/" and url contains ";" or "?" we must strip the non-dir params and reappend them later 
          WARN: we can ignore paramStr to simplify; assume caller followed his own conventions... -->
@@ -1203,9 +1203,9 @@ functionality.
       </#if>
     </#if>
 
-    <#local commonUrl = addParamDelimToUrl(rawString(url), paramDelim)>
+    <#local commonUrl = addParamDelimToUrl(raw(url), paramDelim)>
     <#if paramStr?has_content>
-      <#local commonUrl = commonUrl + trimParamStrDelims(rawString(paramStr), paramDelim) + paramDelim>
+      <#local commonUrl = commonUrl + trimParamStrDelims(raw(paramStr), paramDelim) + paramDelim>
     </#if>
     
     <#local firstUrl = "">
@@ -1924,7 +1924,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                 <#if events?has_content>
                   <#list mapKeys(events) as eventName>
                     .on("${escapeVal(eventName, 'js')}", function (e, data) {
-                      ${events[rawString(eventName)]}
+                      ${events[raw(eventName)]}
                     })
                   </#list>
                 </#if>
@@ -1956,7 +1956,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                 <#if events?has_content>
                   <#list mapKeys(events) as eventName>
                     .on("${escapeVal(eventName, 'js')}", function (e, data) {
-                      ${events[rawString(eventName)]}
+                      ${events[raw(eventName)]}
                     })
                   </#list>
                 </#if>
@@ -2230,16 +2230,16 @@ It may be used in combination with cms menus:
                         <#list menuJson as item>
                             <#if item["data"]["path"]?has_content>
                                 <#if item["type"]=="link_external">
-                                    <@menuitem type="link" text=item.text!"" href=rawString(item.data.path!"")  target="_blank">
+                                    <@menuitem type="link" text=item.text!"" href=raw(item.data.path!"")  target="_blank">
                                         <@cmsmenu items=item["children"] type=type/>
                                     </@menuitem>
                                 <#else>
                                     <#if item.data.websiteid?has_content>
-                                        <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})>
+                                        <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":raw(item.data.websiteid!""), "uri":(raw(item.data.path!""!))})>
                                             <@cmsmenu items=item["children"] type=type/>
                                         </@menuitem>
                                     <#else>
-                                        <@menuitem type="link" text=item.text!"" href=makePageUrl(rawString(item.data.path!""))>
+                                        <@menuitem type="link" text=item.text!"" href=makePageUrl(raw(item.data.path!""))>
                                             <@cmsmenu items=item["children"] type=type/>
                                         </@menuitem>
                                     </#if>
@@ -2257,16 +2257,16 @@ It may be used in combination with cms menus:
               <#list items as item>
                 <#if item["data"]["path"]?has_content>
                     <#if item["type"]=="link_external">
-                            <@menuitem type="link" text=item.text!"" href=rawString(item.data.path!"")  target="_blank">
+                            <@menuitem type="link" text=item.text!"" href=raw(item.data.path!"")  target="_blank">
                                 <@cmsmenu items=item["children"] type=type/>
                             </@menuitem>
                         <#else>
                             <#if item.data.websiteid?has_content>
-                                <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})>
+                                <@menuitem type="link" text=item.text!"" href=makeServerUrl({"controller":false, "secure":true, "webSiteId":raw(item.data.websiteid!""), "uri":(raw(item.data.path!""!))})>
                                     <@cmsmenu items=item["children"] type=type/>
                                 </@menuitem>
                             <#else>
-                                <@menuitem type="link" text=item.text!"" href=makePageUrl(rawString(item.data.path!""))>
+                                <@menuitem type="link" text=item.text!"" href=makePageUrl(raw(item.data.path!""))>
                                     <@cmsmenu items=item["children"] type=type/>
                                 </@menuitem>
                             </#if>

@@ -53,7 +53,7 @@
 -->
 
 <#-- we MUST define this here, important -->
-<#global baseAbsInterLibUrl = rawString(basePageIntraWebappUri)>
+<#global baseAbsInterLibUrl = raw(basePageIntraWebappUri)>
 
 <#-- WARN: some these could clash with Template API macros currently, TODO checkover... -->
 <#include "ftlDocCommon.ftl">
@@ -104,7 +104,7 @@
       
     <#-- nothing good coming from this, except maybe htmlTemplate? -->
     <#if libName == "standard/htmlTemplate">
-      <#if subtitle?has_content && (rawString(subtitle)?trim != rawString(title)?trim)>
+      <#if subtitle?has_content && (raw(subtitle)?trim != raw(title)?trim)>
         <p><em>${escapeVal(subtitle, 'html')}</em></p>
       </#if>
     </#if>

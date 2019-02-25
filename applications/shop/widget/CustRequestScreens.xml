@@ -85,20 +85,26 @@ code package.
                                         <if-compare-field field="custRequest.fromPartyId" operator="equals" to-field="userLogin.partyId"></if-compare-field>
                                     </condition>
                                     <widgets>
-                                        <container style="${styles.grid_large}6">
-                                            <platform-specific>
-                                                <html><html-template location="component://shop/webapp/shop/request/requestInfo.ftl"/></html>
-                                            </platform-specific>
+                                        <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                                                <platform-specific>
+                                                    <html><html-template location="component://shop/webapp/shop/request/requestInfo.ftl"/></html>
+                                                </platform-specific>
+                                            </container>
+                                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                                                <platform-specific>
+                                                    <html><html-template location="component://order/webapp/ordermgr/request/requestDate.ftl"/></html>
+                                                </platform-specific>
+                                            </container>
+                                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                                                <platform-specific>
+                                                    <html><html-template location="component://order/webapp/ordermgr/request/requestContactMech.ftl"/></html>
+                                                </platform-specific>
+                                            </container>
+                                        </container> 
+                                        <container style="${styles.grid_large}12">
                                             <platform-specific>
                                                 <html><html-template location="component://order/webapp/ordermgr/request/ViewRequestItemInfo.ftl"/></html>
-                                            </platform-specific>
-                                        </container>
-                                        <container style="${styles.grid_large}6">
-                                            <platform-specific>
-                                                <html><html-template location="component://order/webapp/ordermgr/request/requestDate.ftl"/></html>
-                                            </platform-specific>
-                                            <platform-specific>
-                                                <html><html-template location="component://order/webapp/ordermgr/request/requestContactMech.ftl"/></html>
                                             </platform-specific>
                                             <platform-specific>
                                                 <html><html-template location="component://shop/webapp/shop/request/requestRoles.ftl"/></html>

@@ -3,9 +3,11 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<@section title=uiLabelMap.OrderRequestRoles>
+
+<#if requestParties?has_content>
+    <@section title=uiLabelMap.OrderRequestRoles>
         <@table type="generic" class="${styles.table_basic!}" cellspacing="0">
-         <#assign row = 1>
+         <#assign rowCount = 1>
          <#list requestParties as requestParty>
             <#assign roleType = requestParty.getRelatedOne("RoleType", false)>
             <#assign party = requestParty.getRelatedOne("Party", false)>
@@ -18,10 +20,11 @@ code package.
                       ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(party)}
                   </@td>
               </@tr>
-              <#if requestParties.size() != row>
+              <#if requestParties.size() != rowCount>
                 <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
               </#if>
-              <#assign row = row + 1>
+              <#assign rowCount = rowCount + 1>
           </#list>
         </@table>
-</@section>
+    </@section>
+</#if>

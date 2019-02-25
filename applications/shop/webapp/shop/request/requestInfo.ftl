@@ -5,102 +5,67 @@ code package.
 -->
 
 <@section title="${rawLabel('OrderRequest')} ${rawString(custRequest.custRequestId)} ${rawLabel('CommonInformation')}">
-        <@table type="generic" class="${styles.table_basic!}" cellspacing="0">
+        <@table type="fields" class="${styles.table_basic!}" cellspacing="0">
             <#-- request header information -->
             <@tr>
-                <@td align="right" valign="top" width="15%" class="label">
-                    &nbsp;${uiLabelMap.CommonType}
-                </@td>
-                <@td width="5%">&nbsp;</@td>
-                <@td valign="top" width="80%">
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonType}</@td>
+                <@td colspan="3">
                     ${(custRequestType.get("description",locale))!(custRequest.custRequestTypeId)!}
                 </@td>
             </@tr>
-            <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
             <#-- request status information -->
             <@tr>
-                <@td align="right" valign="top" width="15%" class="label">
-                    &nbsp;${uiLabelMap.CommonStatus}
-                </@td>
-                <@td width="5%">&nbsp;</@td>
-                <@td valign="top" width="80%">
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonStatus}</@td>
+                <@td colspan="3">
                     ${(statusItem.get("description", locale))!(custRequest.statusId)!}
                 </@td>
             </@tr>
             <#-- party -->
-            <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
             <@tr>
-                 <@td align="right" valign="top" width="15%" class="label">
-                     &nbsp;${uiLabelMap.PartyPartyId}
-                 </@td>
-                 <@td width="5%">&nbsp;</@td>
-                 <@td valign="top" width="80%">
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.PartyPartyId}</@td>
+                <@td colspan="3">
                     ${custRequest.fromPartyId!}
-                 </@td>
+                </@td>
             </@tr>
             <#-- request name -->
-            <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
             <@tr>
-                <@td align="right" valign="top" width="15%" class="label">
-                    &nbsp;${uiLabelMap.CommonName}
-                </@td>
-                <@td width="5%">&nbsp;</@td>
-                <@td valign="top" width="80%">
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonName}</@td>
+                <@td colspan="3">
                     ${custRequest.custRequestName!}
                 </@td>
             </@tr>
             <#-- request description -->
-            <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
             <@tr>
-                <@td align="right" valign="top" width="15%" class="label">
-                    &nbsp;${uiLabelMap.CommonDescription}
-                </@td>
-                <@td width="5%">&nbsp;</@td>
-                <@td valign="top" width="80%">
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonDescription}</@td>
+                <@td colspan="3">
                     ${custRequest.description!}
                 </@td>
             </@tr>
             <#-- request currency -->
-            <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
             <@tr>
-                <@td align="right" valign="top" width="15%" class="label">
-                    &nbsp;${uiLabelMap.CommonCurrency}
-                </@td>
-                <@td width="5%">&nbsp;</@td>
-                <@td valign="top" width="80%">
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonCurrency}</@td>
+                <@td colspan="3">
                     <#if currency??>${currency.get("description", locale)?default(custRequest.maximumAmountUomId!)}</#if>
                 </@td>
             </@tr>
             <#-- request currency -->
-            <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
             <@tr>
-                <@td align="right" valign="top" width="15%" class="label">
-                    &nbsp;${uiLabelMap.ProductStore}
-                </@td>
-                <@td width="5%">&nbsp;</@td>
-                <@td valign="top" width="80%">
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.ProductStore}</@td>
+                <@td colspan="3">
                     <#if store??>${store.storeName!(custRequest.productStoreId!)}</#if>
                 </@td>
             </@tr>
             <#-- request comment -->
-            <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
             <@tr>
-                <@td align="right" valign="top" width="15%" class="label">
-                    &nbsp;${uiLabelMap.CommonInternalComment}
-                </@td>
-                <@td width="5%">&nbsp;</@td>
-                <@td valign="top" width="80%">
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonInternalComment}</@td>
+                <@td colspan="3">
                     ${custRequest.internalComment!}
                 </@td>
             </@tr>
             <#-- request reason -->
-            <@tr type="util"><@td colspan="7"><hr /></@td></@tr>
             <@tr>
-                <@td align="right" valign="top" width="15%" class="label">
-                    &nbsp;${uiLabelMap.CommonReason}
-                </@td>
-                <@td width="5%">&nbsp;</@td>
-                <@td valign="top" width="80%">
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonReason}</@td>
+                <@td colspan="3">
                     ${custRequest.reason!}
                 </@td>
             </@tr>

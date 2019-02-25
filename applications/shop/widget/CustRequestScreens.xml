@@ -53,6 +53,80 @@ code package.
             </widgets>
         </section>
     </screen>
+    
+    <!-- FIXME: SCIPIO (2019-02-25): This may be merged with ViewRequest at some point -->
+    <screen name="NewRequest">
+        <section>
+            <actions>
+                <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="rightonly"/>
+
+                <set field="titleProperty" value="PageTitleViewRequest"/>
+                <!--<set field="activeMainMenuItem" value="Shopping List"/>-->
+                <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <entity-one entity-name="CustRequest" value-field="custRequest"/>
+                <get-related-one value-field="custRequest" relation-name="CustRequestType" to-value-field="custRequestType"/>
+                <get-related-one value-field="custRequest" relation-name="StatusItem" to-value-field="statusItem"/>
+                <get-related-one value-field="custRequest" relation-name="CurrencyUom" to-value-field="currency"/>
+                <get-related-one value-field="custRequest" relation-name="ProductStore" to-value-field="store"/>
+
+                <get-related value-field="custRequest" relation-name="CustRequestItem" list="requestItems"/>
+                <get-related value-field="custRequest" relation-name="CustRequestParty" list="requestParties"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonRequestDecorator">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-true field="userHasAccount" />
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <if-compare-field field="custRequest.fromPartyId" operator="equals" to-field="userLogin.partyId"></if-compare-field>
+                                    </condition>
+                                    <widgets>
+                                        <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                                                <platform-specific>
+                                                    <html><html-template location="component://shop/webapp/shop/request/requestInfo.ftl"/></html>
+                                                </platform-specific>
+                                            </container>
+                                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                                                <platform-specific>
+                                                    <html><html-template location="component://order/webapp/ordermgr/request/requestDate.ftl"/></html>
+                                                </platform-specific>
+                                            </container>
+                                            <container style="${styles.grid_large}4 ${styles.grid_cell}">
+                                                <platform-specific>
+                                                    <html><html-template location="component://order/webapp/ordermgr/request/requestContactMech.ftl"/></html>
+                                                </platform-specific>
+                                            </container>
+                                        </container> 
+                                        <container style="${styles.grid_large}12">
+                                            <platform-specific>
+                                                <html><html-template location="component://order/webapp/ordermgr/request/ViewRequestItemInfo.ftl"/></html>
+                                            </platform-specific>
+                                            <platform-specific>
+                                                <html><html-template location="component://shop/webapp/shop/request/requestRoles.ftl"/></html>
+                                            </platform-specific>
+                                        </container>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label>${uiLabelMap.OrderNoRequestFound}</label>
+                                    </fail-widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="ViewRequest">
         <section>
             <actions>
@@ -70,7 +144,6 @@ code package.
 
                 <get-related value-field="custRequest" relation-name="CustRequestItem" list="requestItems"/>
                 <get-related value-field="custRequest" relation-name="CustRequestParty" list="requestParties"/>
-
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator">

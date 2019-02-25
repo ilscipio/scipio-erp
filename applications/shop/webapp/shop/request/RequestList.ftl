@@ -3,8 +3,18 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
+<#include "component://shop/webapp/shop/common/common.ftl">
 
-<@section title=uiLabelMap.EcommerceRequestHistory>
+<#assign shoppingCart = getShoppingCart()!>
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <#if shoppingCart?? && shoppingCart.items()?has_content>
+            <@menuitem type="link" href=makePageUrl("createCustRequestFromCart") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.OrderCreateCustRequestFromCart />
+        </#if>
+        <@menuitem type="link" href=makePageUrl("createCustRequest") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.OrderCreateCustRequest />
+    </@menu>
+</#macro>
+<@section title=uiLabelMap.EcommerceRequestHistory menuContent=menuContent>
     <#if requestList?has_content>
         <@table type="data-list">
             <@thead>

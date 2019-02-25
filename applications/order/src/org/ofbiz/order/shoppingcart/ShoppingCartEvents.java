@@ -2107,6 +2107,35 @@ public class ShoppingCartEvents {
         return "success";
     }
 
+    /**
+     * SCIPIO (2019-02-25): Create customer requests. This works along createCustRequestFromCart but for the rest of requests types (not RfQ)
+     * @param request
+     * @param response
+     * @return
+     */
+    public static String createCustRequest(HttpServletRequest request, HttpServletResponse response) {
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+
+        Map<String, Object> result = null;
+        String custRequestId = null;
+        try {
+            result = dispatcher.runSync("createCustRequest", UtilMisc.toMap("userLogin", userLogin));
+            custRequestId = (String) result.get("custRequestId");
+        } catch (GenericServiceException exc) {
+            request.setAttribute("_ERROR_MESSAGE_", exc.getMessage());
+            return "error";
+        }
+        if (ServiceUtil.isError(result)) {
+            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
+            return "error";
+        }
+        request.setAttribute("custRequestId", custRequestId);
+
+        return "success";
+    }
+
     public static String createCustRequestFromCart(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession();

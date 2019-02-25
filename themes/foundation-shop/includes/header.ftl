@@ -43,8 +43,8 @@ code package.
         -->
         <li><a href="<@pageUrl>orderhistory</@pageUrl>">${uiLabelMap.CommonOrders}</a></li><#--uiLabelMap.EcommerceOrderHistory-->
         <#-- TODO: Ofbiz/ecommerce supports more (above are bare essentials only):
-        <li><a href="<@pageUrl>messagelist</@pageUrl>">${uiLabelMap.CommonMessages}</a></li>
-        <li><a href="<@pageUrl>ListQuotes</@pageUrl>">${uiLabelMap.OrderOrderQuotes}</a></li>-->
+        <li><a href="<@pageUrl>messagelist</@pageUrl>">${uiLabelMap.CommonMessages}</a></li>-->
+        <li><a href="<@pageUrl>ListQuotes</@pageUrl>">${uiLabelMap.OrderOrderQuotes}</a></li>
         <li><a href="<@pageUrl>ListRequests</@pageUrl>">${uiLabelMap.OrderRequests}</a></li>
         <#-- <li><a href="<@pageUrl>editShoppingList</@pageUrl>">${uiLabelMap.EcommerceShoppingLists}</a></li>-->
         <li><a href="<@pageUrl>viewprofile</@pageUrl>">${uiLabelMap.CommonProfile}</a></li>

@@ -1504,17 +1504,27 @@ code package.
         <response name="success" type="view" value="billsetting"/>
     </request-map>
     <request-map uri="ListRequests">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="ListRequests"/>
+        <security https="true" auth="true" />
+        <response name="success" type="view" value="ListRequests" save-last-view="true"/>
     </request-map>
     <request-map uri="ViewRequest">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewRequest"/>
     </request-map>
+    <request-map uri="NewCustRequest">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewRequest"/>
+    </request-map>
+    <request-map uri="createCustRequest">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="createCustRequest"/>
+        <response name="success" type="view-last"/>
+        <response name="error" type="view" value="ListRequests"/>
+    </request-map>
     <request-map uri="createCustRequestFromCart">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="createCustRequestFromCart"/>
-        <response name="success" type="request" value="showcart"/>
+        <response name="success" type="view-last" />
         <response name="error" type="request" value="showcart"/>
     </request-map>
     <request-map uri="createQuoteFromCart">
@@ -1969,6 +1979,7 @@ code package.
     <!-- Request Views -->
     <view-map name="ListRequests" type="screen" page="component://shop/widget/CustRequestScreens.xml#ListRequests"/>
     <view-map name="ViewRequest" type="screen" page="component://shop/widget/CustRequestScreens.xml#ViewRequest"/>
+    <view-map name="NewRequest" type="screen" page="component://shop/widget/CustRequestScreens.xml#NewRequest"/>
 
     <!-- PDFs -->
     <view-map name="OrderPDF" type="screenfop" page="component://shop/widget/OrderPrintScreens.xml#OrderPDF" content-type="application/pdf" encoding="none"/>

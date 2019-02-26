@@ -51,34 +51,6 @@ function submitForm(form, mode, value) {
         form.submit();
     }
 }
-
-<#-- 
-$(document).ready(function(){
-var issuerId = "";
-    if ($('#checkOutPaymentId_IDEAL').attr('checked') == true) {
-        $('#issuers').show();
-        issuerId = $('#issuer').val();
-        $('#issuerId').val(issuerId);
-    } else {
-        $('#issuers').hide();
-        $('#issuerId').val('');
-    }
-    $('input:radio').click(function(){
-        if ($(this).val() == "EXT_IDEAL") {
-            $('#issuers').show();
-            issuerId = $('#issuer').val();
-            $('#issuerId').val(issuerId);
-        } else {
-            $('#issuers').hide();
-            $('#issuerId').val('');
-        }
-    });
-    $('#issuer').change(function(){
-        issuerId = $(this).val();
-        $('#issuerId').val(issuerId);
-    });
-});
- -->
 </@script>
 
  
@@ -109,22 +81,22 @@ var issuerId = "";
                 <div id="paymethselect_primary" class="pay-meth-options">
                   <#assign fieldLabel><strong>${uiLabelMap.AccountingPaymentMethod}</strong></#assign>
                   <@field type="generic" label=wrapAsRaw(fieldLabel, 'htmlmarkup') required=true>
-                    <@paymentMethodContent showPrimary=true showSelect=true />
+                    <@orderlib.paymentMethodContent showPrimary=true showSelect=true cart=cart />
                   </@field>
                 </div>
                 <@section containerId="paymethcontent_primary" containerClass="+pay-meth-all-content">
-                  <@paymentMethodContent showPrimary=true showDetails=true />
+                  <@orderlib.paymentMethodContent showPrimary=true showDetails=true cart=cart />
                 </@section>
             </@section>
             <@section containerId="paymeth_supplemental" containerClass="+pay-meth-options-all-content pay-meth-supplemental"><#-- always show now: style="display:none;" -->
                 <div id="paymethselect_supplemental" class="pay-meth-options">
                   <#assign fieldLabel><strong>${uiLabelMap.AccountingAdditionalPaymentMethods}</strong></#assign>
                   <@field type="generic" label=wrapAsRaw(fieldLabel, 'htmlmarkup')>
-                    <@paymentMethodContent showSupplemental=true showSelect=true />
+                    <@orderlib.paymentMethodContent showSupplemental=true showSelect=true cart=cart />
                   </@field>
                 </div>
                 <@section containerId="paymethcontent_supplemental" containerClass="+pay-meth-all-content">
-                    <@paymentMethodContent showSupplemental=true showDetails=true />
+                    <@orderlib.paymentMethodContent showSupplemental=true showDetails=true cart=cart />
                 </@section>
             </@section>
         </div>

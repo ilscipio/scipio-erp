@@ -17,6 +17,7 @@ code package.
                 <set field="stepLabelId" value="PageTitleCheckoutOptions"/><!-- SCIPIO -->
                 <set field="stepTitleId" value="PageTitleCheckoutOptions"/><!-- SCIPIO -->
                 <set field="checkoutType" value="quick"/><!-- SCIPIO -->
+                <set field="layoutSettings.javaScriptsFooter[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutPayment.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/CheckoutOptions.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/StorePaymentOptions.groovy"/>

@@ -79,7 +79,10 @@
   <#--<br/>-->
 </#macro>
 
-<#macro payMethAmountField type="pay-meth" payMethId="" params=true id=true name=true>
+<#macro payMethAmountField type="pay-meth" payMethId="" params=true id=true name=true cart=false>
+      <#if cart?is_boolean>
+        <#local cart = getShoppingCart()>
+      </#if>
       <#if params?is_boolean>
         <#local params = parameters>
       </#if>
@@ -137,7 +140,10 @@
         This pattern allows to avoid duplicating the control/loop/ordering logic and keeps the definitions for each pay method together so easier to follow alongside the original.
         The macro is invoked in steps with a different type each time. 
         WARN: Freemarker language limits use of this because can't define nested macros. Only for this page. -->
-<#macro paymentMethodContent showPrimary=false showSupplemental=false showSelect=false showDetails=false>
+<#macro paymentMethodContent showPrimary=false showSupplemental=false showSelect=false showDetails=false cart=false>
+      <#if cart?is_boolean>
+        <#local cart = getShoppingCart()>
+      </#if>
       <#local detailHeadingArgs = {}><#-- current is good: {"relLevel":+1} -->
 
       <#local primSupplSuffix = "">

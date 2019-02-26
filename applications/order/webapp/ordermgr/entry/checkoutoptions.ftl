@@ -257,230 +257,43 @@ function submitForm(form, mode, value) {
 
     <@section title="3) ${rawLabel('OrderHowShallYouPay')}?">
         <#assign subFieldType = "default"><#-- SCIPIO: for sub-fields --><#-- "default-compact" -->
-        <@fields type="default-manual">
-                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
-                  <@tr>
-                    <@td colspan="2">
-                      <span>${uiLabelMap.CommonAdd}:</span>
-                      <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
-                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.AccountingCreditCard}</a>
-                      </#if>
-                      <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
-                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.AccountingEFTAccount}</a>
-                      </#if>
-                    </@td>
-                  </@tr>
-                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
-                  <@tr>
-                    <@td colspan="2" align="center">
-                      <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.AccountingSplitPayment}</a>
-                    </@td>
-                  </@tr>
-                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
-                  <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
-                  <@tr>
-                    <@td width="1%">
-                      <@field type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" checked=("EXT_OFFLINE" == checkOutPaymentId)/>
-                    </@td>
-                    <@td width="50%">${uiLabelMap.OrderPaymentOfflineCheckMoney}
-                    </@td>
-                  </@tr>
-                  </#if>
-                  <#if productStorePaymentMethodTypeIdMap.EXT_COD??>
-                  <@tr>
-                    <@td width="1%">
-                      <@field type="radio" name="checkOutPaymentId" value="EXT_COD" checked=("EXT_COD" == checkOutPaymentId)/>
-                    </@td>
-                    <@td width="50%">${uiLabelMap.OrderCOD}
-                    </@td>
-                  </@tr>
-                  </#if>
-                  <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY??>
-                  <@tr>
-                    <@td width="1%">
-                      <@field type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" checked=("EXT_WORLDPAY" == checkOutPaymentId)/>
-                    </@td>
-                    <@td width="50%">${uiLabelMap.AccountingPayWithWorldPay}
-                    </@td>
-                  </@tr>
-                  </#if>
-                  <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
-                  <@tr>
-                    <@td width="1%">
-                      <@field type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" checked=("EXT_PAYPAL" == checkOutPaymentId)/>
-                    </@td>
-                    <@td width="50%">${uiLabelMap.AccountingPayWithPayPal}
-                    </@td>
-                  </@tr>
-                  </#if>
-                  <#if productStorePaymentMethodTypeIdMap.EXT_LIGHTNING??>
-                  <@tr>
-                    <@td width="1%">
-                      <@field type="radio" name="checkOutPaymentId" value="EXT_LIGHTNING" checked=("EXT_LIGHTNING" == checkOutPaymentId)/>
-                    </@td>
-                    <@td width="50%">${uiLabelMap.AccountingPayWithBitcoin}
-                    </@td>
-                  </@tr>
-                  </#if>
-                  <#if productStorePaymentMethodTypeIdMap.EXT_STRIPE??>
-                  <@tr>
-                    <@td width="1%">
-                      <@field type="radio" name="checkOutPaymentId" value="EXT_STRIPE" checked=("EXT_STRIPE" == checkOutPaymentId)/>
-                    </@td>
-                    <@td width="50%">${uiLabelMap.AccountingPayWithStripe}
-                    </@td>
-                  </@tr>
-                  </#if>
-                  <#if productStorePaymentMethodTypeIdMap.EXT_REDSYS??>
-                  <@tr>
-                    <@td width="1%">
-                      <@field type="radio" name="checkOutPaymentId" value="EXT_REDSYS" checked=("EXT_REDSYS" == checkOutPaymentId)/>
-                    </@td>
-                    <@td width="50%">${uiLabelMap.AccountingPayWithRedsys}
-                    </@td>
-                  </@tr>
-                  </#if>
-                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
 
-                  <#-- financial accounts -->
-                  <#list finAccounts as finAccount>
-                      <@tr>
-                        <@td width="1%">
-                          <@field type="radio" name="checkOutPaymentId" value="FIN_ACCOUNT|${raw(finAccount.finAccountId)}" checked=("FIN_ACCOUNT" == checkOutPaymentId)/>
-                        </@td>
-                        <@td width="50%">${uiLabelMap.AccountingFinAccount} #${finAccount.finAccountId}
-                        </@td>
-                      </@tr>
-                  </#list>
-
-                  <#if !paymentMethodList?has_content>
-                    <#if (!finAccounts?has_content)>
-                      <@tr>
-                        <@td colspan="2"><b>${uiLabelMap.AccountingNoPaymentMethods}</b></@td>
-                      </@tr>
-                    </#if>
-                  <#else>
-                  <#list paymentMethodList as paymentMethod>
-                    <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
-                     <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
-                      <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)!>
-                      <@tr>
-                        <@td width="1%">
-                          <@field type="radio" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(shoppingCart.isPaymentSelected(paymentMethod.paymentMethodId))/>
-                        </@td>
-                        <@td width="50%">
-                          <span>CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${escapeVal(paymentMethod.paymentMethodId, 'js-html')}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                          <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
-                          <@fields type=subFieldType ignoreParentField=true>
-                            <@field type="input" label=uiLabelMap.OrderCardSecurityCode size="5" maxlength="10" name="securityCode_${raw(paymentMethod.paymentMethodId)}" value=""/>
-                          </@fields>
-                        </@td>
-                      </@tr>
-                     </#if>
-                    <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
-                     <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??>
-                      <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)!>
-                      <@tr>
-                        <@td width="1%">
-                          <@field type="radio" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(shoppingCart.isPaymentSelected(paymentMethod.paymentMethodId))/>
-                        </@td>
-                        <@td width="50%">
-                          <span>${uiLabelMap.AccountingEFTAccount}:&nbsp;${eftAccount.bankName!}: ${eftAccount.accountNumber!}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${escapeVal(paymentMethod.paymentMethodId, 'js-html')}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                          <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
-                        </@td>
-                      </@tr>
-                     </#if>
-                    <#elseif paymentMethod.paymentMethodTypeId == "GIFT_CARD">
-                     <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-                      <#assign giftCard = paymentMethod.getRelatedOne("GiftCard", false)!>
-                      <#assign giftCardNumber = acctlib.getPayMethDisplayNumber(giftCard, paymentMethod)!><#-- SCIPIO: Refactored -->
-                      <@tr>
-                        <@td width="1%">
-                          <@field type="radio" name="checkOutPaymentId" value=paymentMethod.paymentMethodId checked=(shoppingCart.isPaymentSelected(paymentMethod.paymentMethodId))/>
-                        </@td>
-                        <@td width="50%">
-                          <span>${uiLabelMap.AccountingGift}:&nbsp;${giftCardNumber}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${escapeVal(paymentMethod.paymentMethodId, 'js-html')}');" class="${styles.link_run_session!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>
-                          <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
-                        </@td>
-                      </@tr>
-                     </#if>
-                    </#if>
-                  </#list>
-                  </#if>
-
-                <#-- special billing account functionality to allow use w/ a payment method -->
-                <#if productStorePaymentMethodTypeIdMap.EXT_BILLACT??>
-                  <#if billingAccountList?has_content>
-                    <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
-                    <@tr>
-                      <@td width="1%">
-                        <@field type="select" name="billingAccountId">
-                          <option value=""></option>
-                            <#list billingAccountList as billingAccount>
-                              <#assign availableAmount = billingAccount.accountBalance?double>
-                              <#assign accountLimit = billingAccount.accountLimit?double>
-                              <option value="${billingAccount.billingAccountId}" <#if billingAccount.billingAccountId == (selectedBillingAccountId!"")>selected="selected"</#if>>${billingAccount.description!""} [${billingAccount.billingAccountId}] Available: <@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> Limit: <@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
-                            </#list>
-                        </@field>
-                      </@td>
-                      <@td width="50%">${uiLabelMap.FormFieldTitle_billingAccountId}
-                      </@td>
-                    </@tr>
-                    <@tr>
-                      <@td width="1%" align="right">
-                        <@field type="input" size="5" name="billingAccountAmount" value=""/>
-                      </@td>
-                      <@td width="50%">
-                        ${uiLabelMap.OrderBillUpTo}
-                      </@td>
-                    </@tr>
-                  </#if>
-                </#if>
-                <#-- end of special billing account functionality -->
-
-                <#if productStorePaymentMethodTypeIdMap.GIFT_CARD??>
-                  <#--<@tr type="util"><@td colspan="2"><hr /></@td></@tr>-->
-                  <@tr>
-                    <@td width="1%">
-                      <@field type="checkbox" name="addGiftCard" value="Y" checkboxType="simple-standard"/>
-                    </@td>
-                    <@td width="50%">${uiLabelMap.AccountingUseGiftCardNotOnFile}
-                    </@td>
-                  </@tr>
-                  <@tr>
-                    <@td width="1%"></@td>
-                    <@td width="50%">
-                      <@fields type=subFieldType ignoreParentField=true>
-                        <@field type="input" label=uiLabelMap.AccountingNumber size="15" name="giftCardNumber" value=((requestParameters.giftCardNumber)!) onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
-                      </@fields>
-                    </@td>
-                  </@tr>
-                  <#if shoppingCart.isPinRequiredForGC(delegator)>
-                  <@tr>
-                    <@td width="1%"></@td>
-                    <@td width="50%">
-                      <@fields type=subFieldType ignoreParentField=true>
-                        <@field type="input" label=uiLabelMap.AccountingPIN type="text" size="10" name="giftCardPin" value=((requestParameters.giftCardPin)!) onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
-                      </@fields>
-                    </@td>
-                  </@tr>
-                  </#if>
-                  <@tr>
-                    <@td width="1%"></@td>
-                    <@td width="50%">
-                      <@fields type=subFieldType ignoreParentField=true>
-                        <@field type="input" label=uiLabelMap.AccountingAmount size="6" name="giftCardAmount" value=((requestParameters.giftCardAmount)!) onFocus="document.checkoutInfoForm.addGiftCard.checked=true;"/>
-                      </@fields>
-                    </@td>
-                  </@tr>
-                </#if>
-            </@table>
-        </@fields>
-    </@section>                    
-            
+        <#assign selectedCheckOutPaymentId = parameters.checkOutPaymentId!checkOutPaymentIdList!"">
+        <#if selectedCheckOutPaymentId?has_content>
+            <#if selectedCheckOutPaymentId?is_enumerable>
+                <#assign selectedCheckOutPaymentIdList = selectedCheckOutPaymentId>
+            <#else>
+                <#assign selectedCheckOutPaymentIdList = [selectedCheckOutPaymentId?string]>
+            </#if>
+        <#else>
+            <#assign selectedCheckOutPaymentIdList = []>
+        </#if>
+        <#assign selectedBillingAccountId = (parameters.billingAccountId!selectedBillingAccountId!"")?string>
+        <div id="paymethselection" class="pay-meth-selection">
+            <@section containerId="paymeth_primary" containerClass="+pay-meth-options-all-content pay-meth-primary">
+                <div id="paymethselect_primary" class="pay-meth-options">
+                  <#assign fieldLabel><strong>${uiLabelMap.AccountingPaymentMethod}</strong></#assign>
+                  <@field type="generic" label=wrapAsRaw(fieldLabel, 'htmlmarkup') required=true>
+                    <@orderlib.paymentMethodContent showPrimary=true showSelect=true cart=shoppingCart />
+                  </@field>
+                </div>
+                <@section containerId="paymethcontent_primary" containerClass="+pay-meth-all-content">
+                  <@orderlib.paymentMethodContent showPrimary=true showDetails=true cart=shoppingCart />
+                </@section>
+            </@section>
+            <@section containerId="paymeth_supplemental" containerClass="+pay-meth-options-all-content pay-meth-supplemental"><#-- always show now: style="display:none;" -->
+                <div id="paymethselect_supplemental" class="pay-meth-options">
+                  <#assign fieldLabel><strong>${uiLabelMap.AccountingAdditionalPaymentMethods}</strong></#assign>
+                  <@field type="generic" label=wrapAsRaw(fieldLabel, 'htmlmarkup')>
+                    <@orderlib.paymentMethodContent showSupplemental=true showSelect=true cart=shoppingCart />
+                  </@field>
+                </div>
+                <@section containerId="paymethcontent_supplemental" containerClass="+pay-meth-all-content">
+                    <@orderlib.paymentMethodContent showSupplemental=true showDetails=true cart=shoppingCart />
+                </@section>
+            </@section>
+        </div>
+    </@section>
 </form>
 
 <#-- SCIPIO: NOTE: we still need this because the page is long so it's too annoying for user to scroll way back up to click "continue" -->
@@ -493,4 +306,35 @@ function submitForm(form, mode, value) {
     </@menu>
   </@cell>
 </@row>
+
+<@script>
+    <#-- SCIPIO: Enable JS-based content reveal for pay methods -->
+    <@orderlib.initItemSelectionWithContentFormScript itemFieldClass="pay-select-field" 
+        contentItems=fieldContentIdMapList updateCallbackPostVisibJs=updateCallbackPostVisibJs />
+
+    jQuery(document).ready(function() {
+        var allPrimaryItems = getScipioFieldCheckElemsByClass('pay-select-radio');
+        var allSupplItems = getScipioFieldCheckElemsByClass('pay-select-checkbox');
+    
+        <#-- Special case: if any of the supplemental payment method checkboxes are checked and no other radios
+            are selected, then select the "additional payment methods" radio so the HTML makes sense -->  
+        var updateAdditionalRadio = function() {
+            if (jQuery(this).is(":checked")) {
+                var radioChecked = false;
+                allPrimaryItems.each(function(i, obj) {
+                    if (jQuery(obj).is(":checked")) {
+                        radioChecked = true;
+                    }
+                });
+                if (!radioChecked) {
+                    jQuery('#supplPayMeth').prop('checked', true);
+                }
+            }
+        };
+        allSupplItems.each(function(i, e) {
+            updateAdditionalRadio.call(e);
+        });
+        allSupplItems.change(updateAdditionalRadio);
+    });
+</@script>
 

@@ -1518,7 +1518,7 @@ code package.
     <request-map uri="createCustRequest">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="createCustRequest"/>
-        <response name="success" type="view-last"/>
+        <response name="success" type="view" value="ListRequests"/>
         <response name="error" type="view" value="ListRequests"/>
     </request-map>
     <request-map uri="createCustRequestFromCart">

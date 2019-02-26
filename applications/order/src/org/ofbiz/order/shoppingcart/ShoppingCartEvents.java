@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -62,6 +63,7 @@ import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.store.ProductStoreSurveyWrapper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
+import org.ofbiz.service.GeneralServiceException;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -2117,13 +2119,21 @@ public class ShoppingCartEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        TimeZone timeZone = (TimeZone) request.getAttribute("timeZone");
+        Locale locale = (Locale) request.getAttribute("locale");
+        Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
 
         Map<String, Object> result = null;
         String custRequestId = null;
         try {
-            result = dispatcher.runSync("createCustRequest", UtilMisc.toMap("userLogin", userLogin));
+            Map<String, Object> createCustRequestCtx = ServiceUtil.setServiceFields(dispatcher, "createCustRequest", paramMap, userLogin, timeZone, locale);
+            createCustRequestCtx.put("statusId", "CRQ_SUBMITTED");
+            createCustRequestCtx.put("fromPartyId", userLogin.getString("partyId"));
+            createCustRequestCtx.put("salesChannelEnumId", "WEB_SALES_CHANNEL");
+            createCustRequestCtx.put("openDateTime", UtilDateTime.nowAsString());
+            result = dispatcher.runSync("createCustRequest", createCustRequestCtx);
             custRequestId = (String) result.get("custRequestId");
-        } catch (GenericServiceException exc) {
+        } catch (Exception exc) {
             request.setAttribute("_ERROR_MESSAGE_", exc.getMessage());
             return "error";
         }

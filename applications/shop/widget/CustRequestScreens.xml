@@ -53,31 +53,25 @@ code package.
             </widgets>
         </section>
     </screen>
-    
-    <!-- FIXME: SCIPIO (2019-02-25): This may be merged with ViewRequest at some point -->
+
     <screen name="NewRequest">
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
                 <set field="MainColumnStyle" value="rightonly"/>
-
-                <set field="titleProperty" value="PageTitleViewRequest"/>
-                <!--<set field="activeMainMenuItem" value="Shopping List"/>-->
-                <set field="custRequestId" from-field="parameters.custRequestId"/>
-                <entity-one entity-name="CustRequest" value-field="custRequest"/>
-                <get-related-one value-field="custRequest" relation-name="CustRequestType" to-value-field="custRequestType"/>
-                <get-related-one value-field="custRequest" relation-name="StatusItem" to-value-field="statusItem"/>
-                <get-related-one value-field="custRequest" relation-name="CurrencyUom" to-value-field="currency"/>
-                <get-related-one value-field="custRequest" relation-name="ProductStore" to-value-field="store"/>
-
-                <get-related value-field="custRequest" relation-name="CustRequestItem" list="requestItems"/>
-                <get-related value-field="custRequest" relation-name="CustRequestParty" list="requestParties"/>
+                <set field="titleProperty" value="PageTitleNewRequest"/>
+                <script lang="groovy" location="component://shop/webapp/shop/WEB-INF/actions/request/CustRequest.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator">
                     <decorator-section name="body">
                         <section>
-                            <condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://shop/webapp/shop/request/requestInfo.ftl"/></html>
+                                </platform-specific>
+                            </widgets>
+                            <!-- <condition>
                                 <if-true field="userHasAccount" />
                             </condition>
                             <widgets>
@@ -119,7 +113,7 @@ code package.
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm" text="${uiLabelMap.ShopViewPermissionError}"/>
-                            </fail-widgets>
+                            </fail-widgets> -->
                         </section>
                     </decorator-section>
                 </decorator-screen>

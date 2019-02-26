@@ -9,9 +9,9 @@ code package.
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <#if shoppingCart?? && shoppingCart.items()?has_content>
-            <@menuitem type="link" href=makePageUrl("createCustRequestFromCart") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.OrderCreateCustRequestFromCart />
+            <@menuitem type="link" href=makePageUrl("createCustRequestFromCart") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.EcommerceNewCustRequest />
         </#if>
-        <@menuitem type="link" href=makePageUrl("createCustRequest") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.OrderCreateCustRequest />
+        <@menuitem type="link" href=makePageUrl("NewCustRequest") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.OrderCreateCustRequest />
     </@menu>
 </#macro>
 <@section title=uiLabelMap.EcommerceRequestHistory menuContent=menuContent>

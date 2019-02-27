@@ -828,7 +828,8 @@ public class OrderReadHelper {
                         GenericValue party = EntityQuery.use(delegator).from("Party").where("partyId", orderRole.getString("partyId")).queryOne();
                         if (party != null) {
                             Debug.logWarning("getPartyFromRole: Party '" + orderRole.getString("partyId")
-                                + "' (from orderId '" + getOrderId() + "', roleTypeId '" + roleTypeId + "') has no Person or PartyGroup"
+                                + "' (from orderId '" + getOrderId() + "', roleTypeId '" + roleTypeId + "', partyTypeId '"
+                                + party.get("partyTypeId") + "') has no Person or PartyGroup"
                                 + " (unsupported configuration); returning null", module);
                         } else {
                             Debug.logError("getPartyFromRole: Party '" + orderRole.getString("partyId")

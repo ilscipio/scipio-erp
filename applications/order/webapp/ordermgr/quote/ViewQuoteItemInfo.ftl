@@ -27,15 +27,16 @@ code package.
                 <@th width="10%" class="align-right">${uiLabelMap.OrderOrderQuoteUnitPrice}</@th>
                 <@th width="10%" class="align-right">${uiLabelMap.OrderAdjustments}</@th>
                 <@th width="10%" class="align-right">${uiLabelMap.CommonSubtotal}</@th>
-            </@tr>
-            <@tr valign="bottom" class="header-row">
+                <#-- 
                 <@th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderOrderTermType}</@th>
                 <@th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderOrderTermValue}</@th>
                 <@th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderOrderTermDays}</@th>
                 <@th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${uiLabelMap.OrderQuoteTermDescription}</@th>
+                
                 <@th></@th>
                 <@th></@th>
                 <@th></@th>
+                 -->
                 <@th align="right">&nbsp;</@th>
             </@tr>
           </@thead>
@@ -88,6 +89,7 @@ code package.
                     <@td class="amount"><@ofbizCurrency amount=totalQuoteItemAdjustmentAmount isoCode=quote.currencyUomId/></@td>
                     <@td class="amount"><@ofbizCurrency amount=totalQuoteItemAmount isoCode=quote.currencyUomId/></@td>
                 </@tr>
+                <#-- 
                 <#if quoteTerms?has_content>
                     <#list quoteTerms as quoteTerm>
                     <#assign termDescription = delegator.findOne("TermType",{"termTypeId":quoteTerm.termTypeId}, false)>
@@ -103,7 +105,9 @@ code package.
                     </@tr>
                     </#list>
                 </#if>
+                 -->
                 <#-- now show adjustment details per line item -->
+                <#-- 
                 <#list quoteItemAdjustments as quoteItemAdjustment>
                     <#assign adjustmentType = quoteItemAdjustment.getRelatedOne("OrderAdjustmentType", false)>
                     <@tr groupLast=true>
@@ -112,6 +116,7 @@ code package.
                         <@td>&nbsp;</@td>
                     </@tr>
                 </#list>
+                -->
             </#list>
             <@tr type="util" useAlt=false><@td colspan="10"><hr /></@td></@tr>
             <@tr useAlt=false>

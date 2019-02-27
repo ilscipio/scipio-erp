@@ -27,6 +27,8 @@ import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 
+final module = "OrderStatus.groovy"; // SCIPIO
+
 userLogin = context.userLogin; // SCIPIO: Make sure variable exists
 
 orderId = parameters.orderId;
@@ -105,7 +107,14 @@ if (orderId) {
         if (!userLogin || !orderRole) {
             context.remove("orderHeader");
             orderHeader = null;
-            Debug.logWarning("Warning: in OrderStatus.groovy before getting order detail info: role not found or user not logged in; partyId=[" + partyId + "], userLoginId=[" + (userLogin == null ? "null" : userLogin.get("userLoginId")) + "]", "orderstatus");
+            // SCIPIO: 2019-02-27: Not helpful for debugging
+            //Debug.logWarning("Warning: in OrderStatus.groovy before getting order detail info: role not found or user not logged in; partyId=[" + partyId + "], userLoginId=[" + (userLogin == null ? "null" : userLogin.get("userLoginId")) + "]", module);
+            if (!userLogin) {
+                Debug.logWarning("Warning: in OrderStatus.groovy before getting order detail info: user not logged in (context.userLogin==null); partyId=[" + partyId + "], userLoginId=[" + (userLogin == null ? "null" : userLogin.get("userLoginId")) + "]", module); 
+            }
+            if (!orderRole) {
+                Debug.logWarning("Warning: in OrderStatus.groovy before getting order detail info: role not found; partyId=[" + partyId + "], userLoginId=[" + (userLogin == null ? "null" : userLogin.get("userLoginId")) + "]", module);
+            }
         }
     }
 }
@@ -133,14 +142,14 @@ if (orderHeader) {
             List<GenericValue> subscriptionAdjustments = [];
             orderItemRemoved = orderItems.remove(subscription);
             for (GenericValue orderAdjustment : orderAdjustments) {
-                Debug.log("Adjustment orderItemSeqId ===> " + orderAdjustment.getString("orderItemSeqId") + "   Order item orderItemSeqId ===> " + subscription.getString("orderItemSeqId"));
+                Debug.log("Adjustment orderItemSeqId ===> " + orderAdjustment.getString("orderItemSeqId") + "   Order item orderItemSeqId ===> " + subscription.getString("orderItemSeqId"), module);
                 if (orderAdjustment.getString("orderItemSeqId").equals(subscription.getString("orderItemSeqId"))) {
                     orderAdjustments.remove(orderAdjustment);
                     subscriptionAdjustments.add(orderAdjustment);
                 }
             }
             orderSubscriptionAdjustments.put(subscription, subscriptionAdjustments);
-            Debug.log("Subscription " + [subscription.getString("orderItemSeqId")] + " removed from order items? " + orderItemRemoved);
+            Debug.log("Subscription " + [subscription.getString("orderItemSeqId")] + " removed from order items? " + orderItemRemoved, module);
         }
         context.orderSubscriptionAdjustments = orderSubscriptionAdjustments;
     }

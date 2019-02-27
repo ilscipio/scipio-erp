@@ -15,7 +15,7 @@ code package.
     <#if note??><p>${note}</p></#if>
     <#if orderHeader??>
     <@render resource="component://shop/widget/EmailOrderScreens.xml#orderheader" />
-    <br /><@printVars var=screens />
+    <br />
     <@render resource="component://shop/widget/EmailOrderScreens.xml#orderitems" />
     <#else>
     <h1>Order not found with ID [${orderId!}], or not allowed to view.</h1>

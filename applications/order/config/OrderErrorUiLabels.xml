@@ -5128,7 +5128,7 @@
     <property key="cart.addToCart.configureProductBeforeAddingToCart">
         <value xml:lang="ar">اضبط السلعة قبل الإضافة إلى العربة</value>
         <value xml:lang="de">Produkt Konfigurieren vor dem Hinzufügen zum Warenkorb</value>
-        <value xml:lang="en">Configure Product Before Adding to Cart</value>
+        <value xml:lang="en">Configure product before adding to cart</value>
         <value xml:lang="es">Configure el producto antes de añadir al carro</value>
         <value xml:lang="fr">Configurer l'article avant de l'ajouter au panier</value>
         <value xml:lang="it">Configura prodotto prima di aggiungerlo al carrello</value>

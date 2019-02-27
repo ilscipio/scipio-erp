@@ -480,7 +480,9 @@ code package.
                                     </@td>
                                     <@td>&nbsp;</@td>
                                     <@td class="${styles.text_right!}">
+                                      <#if orderItemPriceInfo.modifyAmount??>
                                         <@ofbizCurrency amount=orderItemPriceInfo.modifyAmount isoCode=currencyUomId/>
+                                      </#if>
                                     </@td>
                                     <@td colspan="3">&nbsp;</@td>
                                 </@tr>

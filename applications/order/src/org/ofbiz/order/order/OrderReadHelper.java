@@ -821,6 +821,20 @@ public class OrderReadHelper {
 
                 if (partyObject == null) {
                     partyObject = EntityQuery.use(delegator).from("PartyGroup").where("partyId", orderRole.getString("partyId")).queryOne();
+                    // SCIPIO: 2019-02-27: WARN: when no Person or PartyGroup, most likely the entity data is not appropriate
+                    // for use by (callers of) this method; alternatively, the data may be incomplete.
+                    if (partyObject == null) { 
+                        GenericValue party = EntityQuery.use(delegator).from("Party").where("partyId", orderRole.getString("partyId")).queryOne();
+                        if (party != null) {
+                            Debug.logWarning("getPartyFromRole: Party '" + orderRole.getString("partyId")
+                                + "' (from orderId '" + getOrderId() + "', roleTypeId '" + roleTypeId + "') has no Person or PartyGroup"
+                                + "; returning null", module);
+                        } else {
+                            Debug.logError("getPartyFromRole: Party '" + orderRole.getString("partyId")
+                                + "' (from orderId '" + getOrderId() + "', roleTypeId '" + roleTypeId + "') does not exist (bad partyId)"
+                                + "; returning null", module);
+                        }
+                    }
                 }
             }
         } catch (GenericEntityException e) {

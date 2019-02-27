@@ -810,6 +810,54 @@ public class OrderReadHelper {
         return this.getPartyFromRole("SUPPLIER_AGENT");
     }
 
+    /**
+     * SCIPIO: Returns party from OrderRole of BILL_TO_CUSTOMER.
+     * NOTE: Unlike {@link #getPartyFromRole}, this will return a partyId regardless of party type.
+     */
+    public String getBillToPartyId() {
+        return this.getPartyIdFromRole("BILL_TO_CUSTOMER");
+    }
+
+    /**
+     * SCIPIO: Returns partyId from OrderRole of BILL_FROM_VENDOR.
+     * NOTE: Unlike {@link #getPartyFromRole}, this will return a partyId regardless of party type.
+     */
+    public String getBillFromPartyId() {
+        return this.getPartyIdFromRole("BILL_FROM_VENDOR");
+    }
+
+    /**
+     * SCIPIO: Returns partyId from OrderRole of SHIP_TO_CUSTOMER.
+     * NOTE: Unlike {@link #getPartyFromRole}, this will return a partyId regardless of party type.
+     */
+    public String getShipToPartyId() {
+        return this.getPartyIdFromRole("SHIP_TO_CUSTOMER");
+    }
+
+    /**
+     * SCIPIO: Returns partyId from OrderRole of PLACING_CUSTOMER.
+     * NOTE: Unlike {@link #getPartyFromRole}, this will return a partyId regardless of party type.
+     */
+    public String getPlacingPartyId() {
+        return this.getPartyIdFromRole("PLACING_CUSTOMER");
+    }
+
+    /**
+     * SCIPIO: Returns partyId from OrderRole of END_USER_CUSTOMER.
+     * NOTE: Unlike {@link #getPartyFromRole}, this will return a partyId regardless of party type.
+     */
+    public String getEndUserPartyId() {
+        return this.getPartyIdFromRole("END_USER_CUSTOMER");
+    }
+
+    /**
+     * SCIPIO: Returns partyId from OrderRole of SUPPLIER_AGENT.
+     * NOTE: Unlike {@link #getPartyFromRole}, this will return a partyId regardless of party type.
+     */
+    public String getSupplierAgentPartyId() {
+        return this.getPartyIdFromRole("SUPPLIER_AGENT");
+    }
+    
     public GenericValue getPartyFromRole(String roleTypeId) {
         Delegator delegator = orderHeader.getDelegator();
         GenericValue partyObject = null;
@@ -843,6 +891,23 @@ public class OrderReadHelper {
             Debug.logError(e, module);
         }
         return partyObject;
+    }
+
+    /**
+     * SCIPIO: Returns the partyId from the specified OrderRole for the order.
+     * NOTE: Unlike {@link #getPartyFromRole}, this will return a partyId regardless of party type.
+     */
+    public String getPartyIdFromRole(String roleTypeId) { // SCIPIO: Added 2019-02
+        try {
+            GenericValue orderRole = EntityUtil.getFirst(orderHeader.getRelated("OrderRole", UtilMisc.toMap("roleTypeId", roleTypeId), null, false));
+
+            if (orderRole != null) {
+                return orderRole.getString("partyId");
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return null;
     }
 
     public String getDistributorId() {

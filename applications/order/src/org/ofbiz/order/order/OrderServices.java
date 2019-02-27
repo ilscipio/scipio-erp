@@ -2775,6 +2775,25 @@ public class OrderServices {
             placingUserLogin = temporaryAnonymousUserLogin;
         }
 
+        /*
+         * SCIPIO: 2019-02-27: If placingUserLogin is null, warn because some things might not work,
+         * notably getPartyNameForDate service (e.g. in orderheader.ftl) - help detect these corner cases.
+         *
+         * IMPORTANT: The bodyParameters.userLogin is basically the login for the person receiving the email.
+         *
+         * So for now must *not* set the userLogin received in the service context;
+         * the bodyParameters.userLogin and incoming service context userLogin are unrelated;
+         * the service context userLogin may be the "system" account, which we cannot pass to the templates
+         * because they *might* customize the email based on the userLogin (TODO: REVIEW: how often is this true?).
+         *
+         * TODO: REVIEW: we *could* lookup and use temporaryAnonymousUserLogin as fallback,
+         * but unclear if this makes sense for non-sales orders, and might interfere with the individual cases.
+         */
+        if (placingUserLogin == null) {
+            Debug.logWarning("No userLogin available for order email render for orderId '" + orderId
+                    + "' - some elements may not display (if there are unwanted display/rendering issues, please report this case)", module);
+        }
+
         GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(orderHeader);
         if (locale == null && productStore != null) {
             String localeString = productStore.getString("defaultLocaleString");

@@ -474,7 +474,7 @@ public class EmailServices {
         // TODO?: In future, switch this to verbose when confidence is higher there are no more issues left from this.
         if (Debug.infoOn()) {
             GenericValue paramsUserLogin = (GenericValue) bodyParameters.get("userLogin");
-            Debug.logInfo("sendMailFromScreen: "
+            Debug.logInfo("sendMailFromScreen:"
                     + " [sendTo=" + serviceContext.get("sendTo")
                     + ", partyId=" + partyId
                     + ", bodyScreenUri=" + bodyScreenUri
@@ -485,6 +485,8 @@ public class EmailServices {
                     + ", bodyParameters.orderId=" + bodyParameters.get("orderId")
                     + ", locale=" + locale
                     + ", bodyParameters.userLogin(Id)=" + (paramsUserLogin != null ? paramsUserLogin.get("userLoginId") : null)
+                    + ", bodyParameters.partyId=" + bodyParameters.get("partyId")
+                    + ", serviceContext.partyId=" + serviceContext.get("partyId")
                     + "]", module);
         }
 

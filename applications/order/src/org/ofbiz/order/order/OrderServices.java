@@ -2764,10 +2764,15 @@ public class OrderServices {
         // or if not available then from ProductStore.defaultLocaleString
         // or if not available then the system Locale
         Locale locale = null;
-        GenericValue placingParty = orh.getPlacingParty();
-        GenericValue placingUserLogin = placingParty == null ? null : PartyWorker.findPartyLatestUserLogin(placingParty.getString("partyId"), delegator);
-        if (placingParty != null) {
-            locale = PartyWorker.findPartyLastLocale(placingParty.getString("partyId"), delegator);
+        // SCIPIO: 2019-02-27: Get the partyId with no condition on its type
+        // NOTE: This is inconsistent with various other code, but because this is a very generic method,
+        // it is better not to place unnecessary restrictions. If anything crashes because of this change,
+        // it is better to fix those cases.
+        //GenericValue placingParty = orh.getPlacingParty();
+        String placingPartyId = orh.getPlacingPartyId();
+        GenericValue placingUserLogin = placingPartyId == null ? null : PartyWorker.findPartyLatestUserLogin(placingPartyId, delegator);
+        if (placingPartyId != null) {
+            locale = PartyWorker.findPartyLastLocale(placingPartyId, delegator);
         }
 
         // for anonymous orders, use the temporaryAnonymousUserLogin as the placingUserLogin will be null
@@ -2806,8 +2811,8 @@ public class OrderServices {
         }
 
         Map<String, Object> bodyParameters = UtilMisc.<String, Object>toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "userLogin", placingUserLogin, "locale", locale);
-        if (placingParty!= null) {
-            bodyParameters.put("partyId", placingParty.get("partyId"));
+        if (placingPartyId != null) { // SCIPIO: 2019-02-27: now using placingPartyId instead of placingParty
+            bodyParameters.put("partyId", placingPartyId);
         }
         bodyParameters.put("note", note);
         sendMap.put("bodyParameters", bodyParameters);

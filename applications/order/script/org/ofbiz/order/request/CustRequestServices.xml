@@ -76,12 +76,13 @@ code package.
         <!-- create also the item if key fields are provided -->
         <if>
             <condition>
-                <or>
+                <!-- SCIPIO (2019-02-27): Doesn't make much sense to create items if one of these is not empty. -->
+                <and>
                     <not><if-empty field="parameters.productId"/></not>
-                    <not><if-empty field="parameters.reservStart"/></not>
+                    <!-- <not><if-empty field="parameters.reservStart"/></not>
                     <not><if-empty field="parameters.story"/></not>
-                    <not><if-empty field="parameters.description"/></not>
-                </or>
+                    <not><if-empty field="parameters.description"/></not> -->
+                </and>
             </condition>
             <then>
                 <set-service-fields service-name="createCustRequestItem" map="parameters" to-map="createItem"/>

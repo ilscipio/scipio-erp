@@ -16388,9 +16388,13 @@
         <value xml:lang="zh">为送货分拆明细</value>
         <value xml:lang="zh-TW">為送貨分拆細項</value>
     </property>
-    <property key="PageTitleViewRequest">
+    <property key="PageTitleNewRequest">
         <value xml:lang="en">New Request</value>
         <value xml:lang="es">Nueva petición</value>
+        <value xml:lang="de">Neue Anfrage</value>
+        <value xml:lang="fr">Nouvelle requête</value>
+        <value xml:lang="it">Nuova richiesta</value>
+        <value xml:lang="pt">Novo pedido</value>
     </property>
     <property key="PageTitleViewRequest">
         <value xml:lang="ar">مشاهدة الطلب</value>

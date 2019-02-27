@@ -4,9 +4,9 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#assign title = titleProperty!>
+<#assign title = rawLabel(titleProperty!)>
 <#if custRequest?has_content>
-    <#assign title = rawLabel('OrderRequest') +  raw(custRequest.custRequestId) + rawLabel('CommonInformation')>
+    <#assign title = rawLabel('OrderRequest') + " " +  raw(custRequest.custRequestId) + " " + rawLabel('CommonInformation')>
 </#if>
 
 <@section title=title>
@@ -85,21 +85,9 @@ code package.
                     <option value="${custRequestType.custRequestTypeId}">${custRequestType.description!}</option>
                 </#list>
             </@field>
-            <#-- 
-            <@field type="select" name="statusId" label=uiLabelMap.CommonStatus value="">
-                <option value="">--</option>
-                <#list custRequestStatuses as custRequestStatus>
-                    <option value="${custRequestType.custRequestStatusId}">${custRequestType.description!}</option>
-                </#list>
-            </@field>
-             -->
-            <#-- <@field type="text" name="fromPartyId" label=uiLabelMap.PartyPartyId value="" /> -->
             <@field type="text" name="custRequestName" label=uiLabelMap.CommonName  />
             <@field type="textarea" name="description" label=uiLabelMap.CommonDescription />
             <@field type="textarea" name="reason" label=uiLabelMap.CommonReason />
-            <@field type="textarea" name="internalComment" label=uiLabelMap.CommonInternalComment />
-            
-            
             <@field type="submitarea">
               <@field type="submit" submitType="link" href=makePageUrl("ListRequests") text=uiLabelMap.CommonGoBack class="+${styles.link_nav_cancel!}" />
               <@field type="submit" submitType="link" href="javascript:document.newRequestFrom.submit()" text=uiLabelMap.CommonSave class="+${styles.link_run_sys!} ${styles.action_update!}" />

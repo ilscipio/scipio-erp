@@ -2122,6 +2122,7 @@ public class ShoppingCartEvents {
         TimeZone timeZone = (TimeZone) request.getAttribute("timeZone");
         Locale locale = (Locale) request.getAttribute("locale");
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
+        String productStoreId = ProductStoreWorker.getProductStoreId(request);
 
         Map<String, Object> result = null;
         String custRequestId = null;
@@ -2130,7 +2131,8 @@ public class ShoppingCartEvents {
             createCustRequestCtx.put("statusId", "CRQ_SUBMITTED");
             createCustRequestCtx.put("fromPartyId", userLogin.getString("partyId"));
             createCustRequestCtx.put("salesChannelEnumId", "WEB_SALES_CHANNEL");
-            createCustRequestCtx.put("openDateTime", UtilDateTime.nowAsString());
+            createCustRequestCtx.put("openDateTime", UtilDateTime.nowTimestamp());
+            createCustRequestCtx.put("productStoreId", productStoreId);
             result = dispatcher.runSync("createCustRequest", createCustRequestCtx);
             custRequestId = (String) result.get("custRequestId");
         } catch (Exception exc) {

@@ -259,6 +259,7 @@ if (orderHeader) {
     
     // SCIPIO: Get placing party
     context.placingParty = orderReadHelper.getPlacingParty();
+    context.placingPartyId = orderReadHelper.getPlacingPartyId();
     
     // SCIPIO: Get order date
     context.orderDate = orderHeader.orderDate;

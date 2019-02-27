@@ -76,9 +76,9 @@ code package.
         <@tr>
           <@td class="${styles.grid_large!}3">${uiLabelMap.CommonName}</@td>
           <@td colspan="3">
-                <#if displayParty?has_content>
+                <#if displayParty?has_content && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
                     <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
-                    <a href="${customerDetailLink}${partyId}${raw(externalKeyParam)}" target="partymgr" class="">${displayPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}</a>
+                    <a href="${customerDetailLink}${partyId}${raw(externalKeyParam)}" target="partymgr" class="">${displayPartyNameResult.fullName!("[${uiLabelMap.OrderPartyNameNotFound}]")}</a>
                 <#elseif partyId?has_content>
                     <a href="${customerDetailLink}${partyId}${raw(externalKeyParam)}" target="partymgr" class="">${partyId}</a>
                 </#if>

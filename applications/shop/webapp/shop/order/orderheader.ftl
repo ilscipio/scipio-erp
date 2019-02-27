@@ -60,13 +60,15 @@ code package.
         <@cell columns=4>
             <@section title=uiLabelMap.CommonOverview containerClass="+${styles.email_callout_table!'callout'}" cellClass="+${styles.email_callout_table_cell!'callout-inner secondary'}">
                 <@table type="fields">
-                  <#if placingParty?has_content && orderDate?has_content>
+                  <#assign placingPartyId = placingPartyId!(placingParty.partyId)!""><#-- SCIPIO -->
+                  <#if placingPartyId?has_content && orderDate?has_content>
                     <#-- SCIPIO: screen finds it -->
                     <#--<#assign displayParty = localOrderReadHelper.getPlacingParty()!/>-->
-                    <#assign displayParty = placingParty/>
-                    <#assign displayPartyNameResult = {}/>
-                    <#if displayParty?has_content>
-                        <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":(displayParty.partyId!), "compareDate":(orderDate!), "userLogin":userLogin!})/>
+                    <#assign displayPartyId = placingPartyId/>
+                    <#if displayPartyId?has_content && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
+                        <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayPartyId, "compareDate":(orderDate!), "userLogin":userLogin!})/>
+                    <#else>
+                        <#assign displayPartyNameResult = {}/>
                     </#if>
                     <#if displayPartyNameResult?has_content>
                         <@tr>
@@ -75,7 +77,7 @@ code package.
                         </@tr>
                     </#if>
                   </#if>
-                    <#-- SCIPIO: Show the emails (from placing party + additional, combined due to schema) -->
+                  <#-- SCIPIO: Show the emails (from placing party + additional, combined due to schema) -->
                   <#if orderEmailList?has_content>
                     <@tr>
                       <@td class="${styles.grid_large!}2">${uiLabelMap.CommonEmail}</@td>
@@ -105,22 +107,22 @@ code package.
                       </@td>
                     </@tr>
                   </#if>
-                  <#if distributorId??>
+                  <#if distributorId?? && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
                     <@tr>
                       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDistributor}</@td>
                       <@td colspan="3">
                          <#assign distPartyNameResult = runService("getPartyNameForDate", {"partyId":distributorId, "compareDate":orderHeader.orderDate, "userLogin":userLogin!})/>
-                         ${distPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
+                         ${distPartyNameResult.fullName!("[${uiLabelMap.OrderPartyNameNotFound}]")}
                       </@td>
                     </@tr>
                   </#if>
 
-                  <#if affiliateId??>
+                  <#if affiliateId?? && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
                     <@tr>
                       <@td>${uiLabelMap.OrderAffiliate}</@td>
                       <@td colspan="3">
                         <#assign affPartyNameResult = runService("getPartyNameForDate", {"partyId":affiliateId, "compareDate":orderHeader.orderDate, "userLogin":userLogin!})/>
-                        ${affPartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}
+                        ${affPartyNameResult.fullName!("[${uiLabelMap.OrderPartyNameNotFound}]")}
                       </@td>
                     </@tr>
                   </#if>

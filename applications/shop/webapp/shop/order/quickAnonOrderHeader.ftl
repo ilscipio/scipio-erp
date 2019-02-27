@@ -26,7 +26,7 @@ code package.
             <#-- placing customer information -->
             <#if localOrderReadHelper?? && orderHeader?has_content>
               <#assign displayParty = localOrderReadHelper.getPlacingParty()!/>
-              <#if displayParty?has_content>
+              <#if displayParty?has_content && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
                   <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
               </#if>
               <@tr>

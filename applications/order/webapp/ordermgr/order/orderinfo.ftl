@@ -109,7 +109,7 @@ code package.
     </@tr>
   </#if>
 
-  <#if distributorId??>
+  <#if distributorId?? && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderDistributor}</@td>
       <@td colspan="3">
@@ -119,7 +119,7 @@ code package.
     </@tr>
   </#if>
 
-  <#if affiliateId??>
+  <#if affiliateId?? && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
     <@tr>
       <@td>${uiLabelMap.OrderAffiliate}</@td>
       <@td colspan="3">

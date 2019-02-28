@@ -3434,4 +3434,21 @@ public class OrderReadHelper {
     public Map<String, ProductConfigWrapper> getProductConfigWrappersByOrderItemSeqId() { // SCIPIO
         return getProductConfigWrappersByOrderItemSeqId(getOrderItems());
     }
+
+    public Map<String, ProductConfigWrapper> getProductConfigWrappersByProductId() { // SCIPIO
+        Map<String, ProductConfigWrapper> pcwMap = new HashMap<>();
+        if (orderItems != null) {
+            for(GenericValue orderItem : orderItems) {
+                String productId = orderItem.getString("productId");
+                if (pcwMap.get(productId) != null) {
+                    continue;
+                }
+                ProductConfigWrapper pcw = getProductConfigWrapperForOrderItem(orderItem);
+                if (pcw != null) {
+                    pcwMap.put(productId, pcw);
+                }
+            }
+        }
+        return pcwMap;
+    }
 }

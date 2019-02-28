@@ -1832,8 +1832,10 @@ nextProd:
      * Added 2018-08-17.
      */
     public static GenericValue getOriginalProductAssoc(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
-        if (productId == null) {
-            Debug.logWarning("Bad product id", module);
+        if (UtilValidate.isEmpty(productId)) {
+            // Allow empty for convenience
+            //Debug.logWarning("Bad product id", module);
+            return null;
         }
 
         try {

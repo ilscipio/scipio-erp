@@ -1528,6 +1528,19 @@
         <value xml:lang="zh">下载</value>
         <value xml:lang="zh-TW">下載</value>
     </property>
+    <property key="ContentDownloadPending">
+        <value xml:lang="da">Download afventer</value>
+        <value xml:lang="de">Download ausstehend</value>
+        <value xml:lang="en">Download pending</value>
+        <value xml:lang="fr">Téléchargement en attente</value>
+        <value xml:lang="it">Scarica in sospeso</value>
+        <value xml:lang="ja">ダウンロード待ち</value>
+        <value xml:lang="nl">Download in behandeling</value>
+        <value xml:lang="pt">Download pendente</value>
+        <value xml:lang="vi">Đang chờ tải xuống</value>
+        <value xml:lang="zh">下载待定</value>
+        <value xml:lang="zh-TW">下載待定</value>
+    </property>
     <property key="ContentEditProductStore">
         <value xml:lang="ar">تحرير مخزن المنتوج</value>
         <value xml:lang="da">Redigér varelager</value>

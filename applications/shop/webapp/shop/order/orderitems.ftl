@@ -198,7 +198,7 @@ code package.
                   <#if (productDownloads[orderItem.productId!])?has_content><#-- implied?: (product.productType!) == "DIGITAL_GOOD" && -->
                     <#assign dlAvail = ((orderHeader.statusId!) == "ORDER_COMPLETED")>
                     <a href="<#if dlAvail><@pageUrl uri="orderdownloads" /><#else>javascript:void(0);</#if>" class="${styles.link_nav_inline!} ${styles.action_export!}<#if !dlAvail> ${styles.disabled!} ${styles.tooltip!}</#if>"<#rt/>
-                        <#if !dlAvail> title="${uiLabelMap.ShopDownloadsAvailableOnceOrderCompleted}"</#if>>[${uiLabelMap.ContentDownload}]</a><#lt/>
+                        <#if !dlAvail> title="${uiLabelMap.ShopDownloadsAvailableOnceOrderCompleted}"</#if>>[<#if dlAvail>${uiLabelMap.ContentDownload}<#else>${uiLabelMap.ContentDownloadPending}</#if>]</a><#lt/>
                   </#if>
                 </#if>
                 <@orderItemAttrInfo orderItem=orderItem/>

@@ -673,6 +673,10 @@ public final class ProductPromoWorker {
         }
         List<String> partyClassificationsIncluded = new ArrayList<>();
         List<String> partyClassificationsExcluded = new ArrayList<>();
+
+        String andLabel = UtilProperties.getMessage("CommonUiLabels", "CommonAnd", locale);
+        String orLabel = UtilProperties.getMessage("CommonUiLabels", "CommonOr", locale);
+
         StringBuilder promoDescBuf = new StringBuilder();
         List<GenericValue> productPromoRules = productPromo.getRelated("ProductPromoRule", null, null, true);
         Iterator<GenericValue> promoRulesIter = productPromoRules.iterator();
@@ -714,7 +718,7 @@ public final class ProductPromoWorker {
                     promoDescBuf.append(" ");
 
                     if (promoRulesIter.hasNext()) {
-                        promoDescBuf.append(" and ");
+                        promoDescBuf.append(" " + andLabel + " ");
                     }
                 }
             }
@@ -745,12 +749,12 @@ public final class ProductPromoWorker {
                 promoDescBuf.append(" ");
 
                 if (promoRulesIter.hasNext()) {
-                    promoDescBuf.append(" and ");
+                    promoDescBuf.append(" " + andLabel + " ");
                 }
             }
 
             if (promoRulesIter.hasNext()) {
-                promoDescBuf.append(" or ");
+                promoDescBuf.append(" " + orLabel + " ");
             }
         }
 

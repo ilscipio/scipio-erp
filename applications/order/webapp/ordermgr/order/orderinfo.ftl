@@ -20,6 +20,13 @@ code package.
     </@tr>
   </#if>
   
+    <#-- SCIPIO: Order type -->
+    <@tr>
+      <@td class="${styles.grid_large!}2">${uiLabelMap.OrderOrderType}
+      </@td>
+      <@td colspan="3">${(orderHeader.getRelatedOne("OrderType").get("description", locale))!}</@td>
+    </@tr>
+
     <@tr>
       <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonStatus}</@td>
       <@td colspan="3">

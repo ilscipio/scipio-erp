@@ -10078,7 +10078,18 @@
         <value xml:lang="de">Angebot</value>
         <value xml:lang="en">Quote</value>
         <value xml:lang="nl">Offerte</value>
+        <value xml:lang="fr">Devis</value>
+        <value xml:lang="it">Bilancio</value>
+        <value xml:lang="es">Presupuesto</value>
         <value xml:lang="zh">询价</value>
+    </property>
+    <property key="CommonQuoteAdjustments">
+        <value xml:lang="de">Kursanpassungen</value>
+        <value xml:lang="en">Quote Adjustments</value>
+        <value xml:lang="pt">Ajustes orçamentários</value>
+        <value xml:lang="es">Ajustes del presupuesto</value>
+        <value xml:lang="it">Rettifiche di bilancio</value>
+        <value xml:lang="fr">Ajustements budgétaires</value>
     </property>
     <property key="CommonQuoteTerms">
         <value xml:lang="de">Angebotsbedingungen</value>

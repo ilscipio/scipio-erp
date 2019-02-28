@@ -12,10 +12,9 @@ code package.
     </@menu>
 </#macro>
 
-<@section title=title menuContent=menuContent>
+<@section title=title!rawLabel(titleProperty)! menuContent=menuContent>
     <#if quote?has_content>
         <@table type="fields" class="${styles.table_basic!}" cellspacing="0">
-
             <#-- quote id -->
             <@tr>
                 <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderQuote} ${uiLabelMap.CommonNbr}</@td>
@@ -35,6 +34,14 @@ code package.
                 <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonDescription}</@td>
                 <@td colspan="3">
                     ${quote.description!}
+                </@td>
+            </@tr>
+            <#-- quote status -->
+            <#assign status = quote.getRelatedOne("StatusItem", true)>
+            <@tr>
+                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonStatus}</@td>
+                <@td colspan="3">
+                    ${status.get("description",locale)}
                 </@td>
             </@tr>
             <#-- issue date -->

@@ -187,7 +187,7 @@ code package.
               <#-- product item -->
               <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
               <@td>
-                <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(orderItem.productId, delegator, false)!"">
+                <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getMainProductId(delegator, orderItem.productId, false)!"">
                 <#if !printable>
                     <#-- SCIPIO -->
                     <a href="<@catalogAltUrl productId=origProductId?has_content?then(origProductId, orderItem.productId)/>" class="${styles.link_nav_info_desc!}" target="_blank"><#t/>

@@ -196,7 +196,7 @@ code package.
             </#if>
             <#-- SCIPIO: productIdMarkup (improved) -->
             <#if invoiceItem.productId?has_content>
-              <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(invoiceItem.productId, delegator, false)!"">
+              <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getMainProductId(delegator, invoiceItem.productId, false)!"">
               <#assign productIdMarkup>${invoiceItem.productId}<#if origProductId?has_content> (${origProductId})</#if></#assign>
             <#else>
               <#assign productIdMarkup></#assign>

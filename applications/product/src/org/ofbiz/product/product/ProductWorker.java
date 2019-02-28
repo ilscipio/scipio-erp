@@ -1826,18 +1826,16 @@ nextProd:
     }
 
     /**
-     * SCIPIO: Gets the product's "original" product association. For variant, means its virtual,
-     * for configurable product, means its original unconfigured product.
-     * General, means the "linkable" product.
+     * SCIPIO: Gets the product's "main" or "original" product association; for variant products -> its virtual,
+     * for configurable product -> its original unconfigured product.
      * Added 2018-08-17.
      */
-    public static GenericValue getOriginalProductAssoc(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+    public static GenericValue getMainProductAssoc(Delegator delegator, String productId, boolean useCache) { // SCIPIO: added useCache 2017-09-05
         if (UtilValidate.isEmpty(productId)) {
             // Allow empty for convenience
             //Debug.logWarning("Bad product id", module);
             return null;
         }
-
         try {
             List<EntityCondition> productAssocTypeIdCondList = UtilMisc.toList(
                     EntityCondition.makeCondition("productAssocTypeId", "PRODUCT_VARIANT"),
@@ -1859,10 +1857,15 @@ nextProd:
         return null;
     }
 
-    public static GenericValue getOriginalProduct(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+    /**
+     * SCIPIO: Gets the product's "main" or "original" product; for variant products -> its virtual,
+     * for configurable product -> its original unconfigured product.
+     * Added 2018-08-17.
+     */
+    public static GenericValue getMainProduct(Delegator delegator, String productId, boolean useCache) {
         GenericValue origProduct = null;
         try {
-            GenericValue productAssoc = getOriginalProductAssoc(productId, delegator, useCache);
+            GenericValue productAssoc = getMainProductAssoc(delegator, productId, useCache);
             if (productAssoc != null) {
                 origProduct = productAssoc.getRelatedOne("MainProduct", useCache);
             }
@@ -1872,21 +1875,77 @@ nextProd:
         return origProduct;
     }
 
-    public static GenericValue getOriginalProduct(String productId, Delegator delegator) {
-        return getOriginalProduct(productId, delegator, true);
+    /**
+     * SCIPIO: Gets the product's "main" or "original" product; for variant products -> its virtual,
+     * for configurable product -> its original unconfigured product.
+     * Added 2018-08-17.
+     */
+    public static GenericValue getMainProduct(Delegator delegator, String productId) {
+        return getMainProduct(delegator, productId, true);
     }
 
-    public static String getOriginalProductId(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+    /**
+     * SCIPIO: Gets the product's "main" or "original" product; for variant products -> its virtual,
+     * for configurable product -> its original unconfigured product.
+     * Added 2018-08-17.
+     */
+    public static String getMainProductId(Delegator delegator, String productId, boolean useCache) {
         String origProduct = null;
-        GenericValue productAssoc = getOriginalProductAssoc(productId, delegator, useCache);
+        GenericValue productAssoc = getMainProductAssoc(delegator, productId, useCache);
         if (productAssoc != null) {
             origProduct = productAssoc.getString("productId");
         }
         return origProduct;
     }
 
+    /**
+     * SCIPIO: Gets the product's "main" or "original" product; for variant products -> its virtual,
+     * for configurable product -> its original unconfigured product.
+     * <p>
+     * Added 2018-08-17.
+     */
+    public static String getMainProductId(Delegator delegator, String productId) {
+        return getMainProductId(delegator, productId, true);
+    }
+
+    /**
+     * @deprecated SCIPIO: 2019-02-28: Please use {@link #getMainProductAssoc(Delegator, String, boolean)} instead (name conflict with stock method).
+     */
+    @Deprecated
+    public static GenericValue getOriginalProductAssoc(String productId, Delegator delegator, boolean useCache) {
+        return getMainProductAssoc(delegator, productId, useCache);
+    }
+
+    /**
+     * @deprecated SCIPIO: 2019-02-28: Please use {@link #getMainProduct(Delegator, String, boolean)} instead (name conflict with stock method).
+     */
+    @Deprecated
+    public static GenericValue getOriginalProduct(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+        return getMainProduct(delegator, productId, useCache);
+    }
+
+    /**
+     * @deprecated SCIPIO: 2019-02-28: Please use {@link #getMainProduct(Delegator, String)} instead (name conflict with stock method).
+     */
+    @Deprecated
+    public static GenericValue getOriginalProduct(String productId, Delegator delegator) {
+        return getMainProduct(delegator, productId);
+    }
+
+    /**
+     * @deprecated SCIPIO: 2019-02-28: Please use {@link #getMainProductId(Delegator, String, boolean)} instead (name conflict with stock method).
+     */
+    @Deprecated
+    public static String getOriginalProductId(String productId, Delegator delegator, boolean useCache) { // SCIPIO: added useCache 2017-09-05
+        return getMainProductId(delegator, productId, useCache);
+    }
+
+    /**
+     * @deprecated SCIPIO: 2019-02-28: Please use {@link #getMainProductId(Delegator, String)} instead (name conflict with stock method).
+     */
+    @Deprecated
     public static String getOriginalProductId(String productId, Delegator delegator) {
-        return getOriginalProductId(productId, delegator, true);
+        return getMainProductId(delegator, productId);
     }
 
     /**

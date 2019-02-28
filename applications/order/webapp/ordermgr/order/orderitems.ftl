@@ -71,10 +71,10 @@ code package.
                             <#else>
                                 <@td>
                                         <#if orderItem.supplierProductId?has_content>
-                                            <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(orderItem.supplierProductId, delegator, false)!"">
+                                            <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getMainProductId(delegator, orderItem.supplierProductId, false)!"">
                                             <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItem.supplierProductId}<#if origProductId?has_content> (${origProductId})</#if> - ${orderItem.itemDescription!}</a>
                                         <#elseif productId?has_content>
-                                            <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(productId, delegator, false)!"">
+                                            <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getMainProductId(delegator, productId, false)!"">
                                             <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItem.productId!(uiLabelMap.CommonNA)}<#if origProductId?has_content> (${origProductId})</#if> - ${orderItem.itemDescription!}</a>
                                             <#if (product.salesDiscontinuationDate)?? && UtilDateTime.nowTimestamp().after(product.salesDiscontinuationDate)>
                                                 <br />

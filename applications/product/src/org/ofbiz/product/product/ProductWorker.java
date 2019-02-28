@@ -1325,7 +1325,12 @@ nextProd:
         return isAlternativePacking;
     }
 
-    public static String getOriginalProductId(Delegator delegator, String productId){
+    /**
+     * Returns the original product ID IF the product is as alternative packing.
+     * <p>
+     * SCIPIO: 2019-02-28: Renamed from {@link #getOriginalProductId(Delegator, String)}.
+     */
+    public static String getAlternativePackingOriginalProductId(Delegator delegator, String productId) {
         boolean isAlternativePacking = isAlternativePacking(delegator, null, productId);
         if (isAlternativePacking) {
             List<GenericValue> productAssocs = null;
@@ -1342,8 +1347,16 @@ nextProd:
             return null;
         }
         return null;
-
     }
+
+    /**
+     * Returns the original product ID IF the product is as alternative packing.
+     * @deprecated SCIPIO: 2019-02-28: Please use the non-ambiguous {@link #getAlternativePackingOriginalProductId} instead.
+     */
+    public static String getOriginalProductId(Delegator delegator, String productId) {
+        return getAlternativePackingOriginalProductId(delegator, productId);
+    }
+
     /**
      * worker to test if product can be order with a decimal quantity
      * @param delegator : access to DB

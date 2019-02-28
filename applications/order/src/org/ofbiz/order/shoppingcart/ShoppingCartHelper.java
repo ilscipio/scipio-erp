@@ -429,7 +429,7 @@ public class ShoppingCartHelper {
                     if(ProductWorker.isAlternativePacking(delegator, null , productId)){
                         GenericValue originalProduct = null;
                         originalProductId = productId;
-                        productId = ProductWorker.getOriginalProductId(delegator, productId);
+                        productId = ProductWorker.getAlternativePackingOriginalProductId(delegator, productId); // SCIPIO: 2019-02-28: renamed
                         try {
                             originalProduct = EntityQuery.use(delegator).from("Product").where("productId", originalProductId).queryOne();
                         } catch (GenericEntityException e) {

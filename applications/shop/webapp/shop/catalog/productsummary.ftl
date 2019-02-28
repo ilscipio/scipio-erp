@@ -68,8 +68,10 @@ code package.
             <#else>
                 <#if ((price.price!0) > 0) && ((product.requireAmount!"N") == "N")>
                     <@ofbizCurrency amount=price.price isoCode=price.currencyUsed/>
-                <#else>
+                <#elseif price.listPrice??>
                     <@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
+                <#else>
+                    -
                 </#if>
                 <#if price.listPrice?? && price.price?? && (price.price?double < price.listPrice?double)>
                     <#assign priceSaved = price.listPrice?double - price.price?double>

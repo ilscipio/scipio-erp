@@ -78,7 +78,83 @@ code package.
       </fo:table-row>
     </fo:table-header>
 
-
+    <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
+    <#assign orhCache = orhCache!Static["org.ofbiz.order.order.OrderReadHelper$Cache"].create(dispatcher, locale)>
+    <#macro invoiceItemAttrInfo invoiceItem showCfgOpt=true showItemAttr=true>
+      <#local productId = raw(invoiceItem.productId!)>
+      <#local orh = false>
+      <#local orderItemInfo = false>
+      <#if showCfgOpt>
+        <#local cfgWrp = false>
+        <#if productCfgMap??>
+          <#local cfgWrp = (productCfgMap[productId])!false>
+        <#else>
+          <#local product = invoiceItem.getRelatedOne("Product")!>
+          <#if Static["org.ofbiz.product.product.ProductWorker"].isConfigProductConfig(product)>
+            <#local orderItemInfo = Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemOrderItemInfo(delegator,
+                invoiceItem.invoiceId, invoiceItem.invoiceItemSeqId)!>
+            <#if orderItemInfo.orderItemSeqId??>
+              <#local orderId = raw(orderItemInfo.orderId)>
+              <#local orderItemSeqId = raw(orderItemInfo.orderItemSeqId)>
+              <#local orh = orhCache[orderId]!>
+              <#local cfgWrp = (orh.getProductConfigWrapperForOrderItem(orderItemSeqId))!false>
+            </#if>
+          </#if>
+        </#if>
+        <#if !cfgWrp?is_boolean>
+          <#local selectedOptions = cfgWrp.getSelectedOptions()! />
+          <#if selectedOptions?has_content>
+            <fo:table-row height="8mm" line-height="8mm">
+              <fo:table-cell number-columns-spanned="5">
+                <fo:block text-align="left" font-size="8pt">
+                  <fo:list-block line-height="10pt" start-indent="2mm" provisional-distance-between-starts="3mm" provisional-label-separation="1mm">
+                    <#list selectedOptions as option>
+                      <fo:list-item>
+                        <fo:list-item-label end-indent="label-end()"><fo:block><fo:inline font-family="Symbol">&#x2022;</fo:inline></fo:block></fo:list-item-label>
+                        <fo:list-item-body start-indent="body-start()"><fo:block>${option.getDescription()}</fo:block></fo:list-item-body>
+                      </fo:list-item>
+                    </#list>
+                  </fo:list-block>
+                </fo:block>
+              </fo:table-cell>
+            </fo:table-row>
+          </#if>
+        </#if>
+      </#if>
+      <#if showItemAttr>
+        <#if invoiceItemAttrMap??>
+          <#local orderItemAttributes = invoiceItemAttrMap[raw(invoiceItem.invoiceItemSeqId!)]!/>
+        <#else>
+          <#if orderItemInfo?is_boolean>
+            <#local orderItemInfo = Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemOrderItemInfo(delegator,
+                invoiceItem.invoiceId, invoiceItem.invoiceItemSeqId)!>
+          </#if>
+          <#if orderItemInfo.orderItemSeqId??>
+            <#local orderId = raw(orderItemInfo.orderId)>
+            <#local orderItemSeqId = raw(orderItemInfo.orderItemSeqId)>
+            <#local orderItemAttributes = delegator.from("OrderItemAttribute").where("orderId", orderId, "orderItemSeqId", orderItemSeqId).queryList()/>
+          <#else>
+            <#local orderItemAttributes = {}>
+          </#if>
+        </#if>
+        <#if orderItemAttributes?has_content>
+            <fo:table-row height="8mm" line-height="8mm">
+              <fo:table-cell number-columns-spanned="5">
+                <fo:block text-align="left" font-size="8pt">
+                  <fo:list-block line-height="10pt" start-indent="2mm" provisional-distance-between-starts="3mm" provisional-label-separation="1mm">
+                    <#list orderItemAttributes as orderItemAttribute>
+                      <fo:list-item>
+                        <fo:list-item-label end-indent="label-end()"><fo:block><fo:inline font-family="Symbol">&#x2022;</fo:inline></fo:block></fo:list-item-label>
+                        <fo:list-item-body start-indent="body-start()"><fo:block>${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}</fo:block></fo:list-item-body>
+                      </fo:list-item>
+                    </#list>
+                  </fo:list-block>
+                </fo:block>
+              </fo:table-cell>
+            </fo:table-row>
+        </#if>
+      </#if>
+    </#macro>
     <fo:table-body font-size="10pt" table-layout="fixed" width="100%">
         <#assign currentShipmentId = "">
         <#assign newShipmentId = "">
@@ -136,6 +212,9 @@ code package.
                         <fo:block> <@ofbizCurrency amount=(Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceItemTotal(invoiceItem)) isoCode=(invoice.currencyUomId!)/> </fo:block>
                     </fo:table-cell>
                 </fo:table-row>
+
+                <#-- SCIPIO: NOTE: You may (un)comment or modify this call to control the verbosity -->
+                <@invoiceItemAttrInfo invoiceItem=invoiceItem showCfgOpt=true showItemAttr=true/>  
             <#else>
                 <#if !(invoiceItem.parentInvoiceId?? && invoiceItem.parentInvoiceItemSeqId??)>
                     <fo:table-row>

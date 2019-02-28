@@ -104,7 +104,7 @@ code package.
                   <fo:list-block line-height="10pt" start-indent="2mm" provisional-distance-between-starts="3mm" provisional-label-separation="1mm">
                     <#list orderItemAttributes as orderItemAttribute>
                       <fo:list-item>
-                        <fo:list-item-label end-indent="label-end()"><fo:block><fo:inline font-family="Symbol">&amp;#183;</fo:inline></fo:block></fo:list-item-label>
+                        <fo:list-item-label end-indent="label-end()"><fo:block><fo:inline font-family="Symbol">&#x2022;</fo:inline></fo:block></fo:list-item-label>
                         <fo:list-item-body start-indent="body-start()"><fo:block>${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}</fo:block></fo:list-item-body>
                       </fo:list-item>
                     </#list>

@@ -199,6 +199,13 @@ public class OrderReadHelper {
         return dispatcher;
     }
 
+    /**
+     * SCIPIO: Returns the "current" display locale IF present (may be null!).
+     */
+    protected Locale getLocale() {
+        return locale;
+    }
+
     // ==========================================
     // ========== Order Header Methods ==========
     // ==========================================
@@ -857,7 +864,7 @@ public class OrderReadHelper {
     public String getSupplierAgentPartyId() {
         return this.getPartyIdFromRole("SUPPLIER_AGENT");
     }
-    
+
     public GenericValue getPartyFromRole(String roleTypeId) {
         Delegator delegator = orderHeader.getDelegator();
         GenericValue partyObject = null;
@@ -872,7 +879,7 @@ public class OrderReadHelper {
                     // SCIPIO: 2019-02-27: WARN: when no Person or PartyGroup, most likely the entity data is not appropriate
                     // for use by (callers of) this method; alternatively, the data may be incomplete.
                     // This is clear due to some templates unconditionally falling back to PartyGroup.groupName when no Person record.
-                    if (partyObject == null) { 
+                    if (partyObject == null) {
                         GenericValue party = EntityQuery.use(delegator).from("Party").where("partyId", orderRole.getString("partyId")).queryOne();
                         if (party != null) {
                             Debug.logWarning("getPartyFromRole: Party '" + orderRole.getString("partyId")
@@ -3418,6 +3425,11 @@ public class OrderReadHelper {
         return null;
     }
 
+    public ProductConfigWrapper getProductConfigWrapperForOrderItem(String orderItemSeqId) { // SCIPIO
+        GenericValue orderItem = getOrderItem(orderItemSeqId);
+        return (orderItem != null) ? getProductConfigWrapperForOrderItem(orderItem) : null;
+    }
+
     public Map<String, ProductConfigWrapper> getProductConfigWrappersByOrderItemSeqId(Collection<GenericValue> orderItems) { // SCIPIO
         Map<String, ProductConfigWrapper> pcwMap = new HashMap<>();
         if (orderItems != null) {
@@ -3450,5 +3462,136 @@ public class OrderReadHelper {
             }
         }
         return pcwMap;
+    }
+
+    /**
+     * SCIPIO: Helper map cache that keeps an OrderReadHelper for each orderId
+     * and automatically returns a new OrderReadHelper on {@link #get(Object)} calls
+     * if there is not already one for the given orderId.
+     */
+    public static class Cache implements Map<String, OrderReadHelper> {
+        private final Map<String, OrderReadHelper> orderIdMap = new HashMap<>();
+        private final Delegator delegator;
+        private final LocalDispatcher dispatcher; // SCIPIO: Optional dispatcher
+        private final Locale locale; // SCIPIO: Optional locale
+
+        protected Cache(Delegator delegator, LocalDispatcher dispatcher, Locale locale) {
+            this.delegator = delegator;
+            this.dispatcher = dispatcher;
+            this.locale = locale;
+        }
+
+        public static Cache create(Delegator delegator, LocalDispatcher dispatcher, Locale locale, OrderReadHelper... initialHelpers) {
+            Cache cache = new Cache(delegator, dispatcher, locale);
+            for(OrderReadHelper helper : initialHelpers) {
+                cache.put(helper.getOrderId(), helper);
+            }
+            return cache;
+        }
+
+        public static Cache create(LocalDispatcher dispatcher, Locale locale, OrderReadHelper... initialHelpers) {
+            return create(dispatcher.getDelegator(), dispatcher, locale, initialHelpers);
+        }
+
+        public static Cache create(Delegator delegator, LocalDispatcher dispatcher, Locale locale) {
+            return new Cache(delegator, dispatcher, locale);
+        }
+
+        public static Cache create(LocalDispatcher dispatcher, Locale locale) {
+            return new Cache(dispatcher.getDelegator(), dispatcher, locale);
+        }
+
+        public Delegator getDelegator() {
+            return delegator;
+        }
+
+        public LocalDispatcher getDispatcher() {
+            return dispatcher;
+        }
+
+        public Locale getLocale() {
+            return locale;
+        }
+
+        // Map interface methods
+
+        @Override
+        public OrderReadHelper get(Object key) {
+            OrderReadHelper orh = getIfExists(key);
+            if (orh == null) {
+                orh = new OrderReadHelper(getDelegator(), getDispatcher(), getLocale(), (String) key);
+                put((String) key, orh);
+            }
+            return orh;
+        }
+
+        public OrderReadHelper getIfExists(Object key) {
+            return orderIdMap.get(key);
+        }
+
+        @Override
+        public int size() {
+            return orderIdMap.size();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return orderIdMap.isEmpty();
+        }
+
+        @Override
+        public boolean containsKey(Object key) {
+            return orderIdMap.containsKey(key);
+        }
+
+        @Override
+        public boolean containsValue(Object value) {
+            return orderIdMap.containsValue(value);
+        }
+
+        @Override
+        public OrderReadHelper put(String key, OrderReadHelper value) {
+            return orderIdMap.put(key, value);
+        }
+
+        @Override
+        public OrderReadHelper remove(Object key) {
+            return orderIdMap.remove(key);
+        }
+
+        @Override
+        public void putAll(Map<? extends String, ? extends OrderReadHelper> m) {
+            orderIdMap.putAll(m);
+        }
+
+        @Override
+        public void clear() {
+            orderIdMap.clear();
+        }
+
+        @Override
+        public Set<String> keySet() {
+            return orderIdMap.keySet();
+        }
+
+        @Override
+        public Collection<OrderReadHelper> values() {
+            return orderIdMap.values();
+        }
+
+        @Override
+        public Set<Entry<String, OrderReadHelper>> entrySet() {
+            return orderIdMap.entrySet();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return orderIdMap.equals(o);
+        }
+
+        @Override
+        public int hashCode() {
+            return orderIdMap.hashCode();
+        }
     }
 }

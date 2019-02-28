@@ -27,7 +27,7 @@ code package.
           <@td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom /></@td>
           <@td>${status.get("description",locale)}</@td>
           <#-- invoices -->
-          <#assign invoices = delegator.findByAnd("OrderItemBilling", {"orderId":"${orderHeader.orderId}"}, UtilMisc.toList("invoiceId"), false) />
+          <#assign invoices = delegator.findByAnd("OrderItemBilling", {"orderId":raw(orderHeader.orderId)}, UtilMisc.toList("invoiceId"), false) />
           <#assign distinctInvoiceIds = Static["org.ofbiz.entity.util.EntityUtil"].getFieldListFromEntityList(invoices, "invoiceId", true)>
           <@td>
             <#-- SCIPIO: NOTE: There is more than one kind of invoice, the PDF accessible upon creation, and additional invoices

@@ -40,7 +40,7 @@ code package.
                       <#local orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)!/>
                     </#if>
                     <#if orderItemAttributes?has_content>
-                        <ul>
+                        <ul class="order-item-attrib-list">
                           <#list orderItemAttributes as orderItemAttribute>
                             <li>${orderItemAttribute.attrName} : ${orderItemAttribute.attrValue}</li>
                           </#list>

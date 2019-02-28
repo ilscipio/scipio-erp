@@ -194,10 +194,17 @@ code package.
                 </fo:table-row>
                 <#assign currentShipmentId = newShipmentId>
             </#if>
+            <#-- SCIPIO: productIdMarkup (improved) -->
+            <#if invoiceItem.productId?has_content>
+              <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(invoiceItem.productId, delegator, false)!"">
+              <#assign productIdMarkup>${invoiceItem.productId}<#if origProductId?has_content> (${origProductId})</#if></#assign>
+            <#else>
+              <#assign productIdMarkup></#assign>
+            </#if>
             <#if !isItemAdjustment>
                 <fo:table-row height="8mm" line-height="8mm">
                     <fo:table-cell>
-                        <fo:block text-align="left">${invoiceItem.productId!} </fo:block>
+                        <fo:block text-align="left">${productIdMarkup}</fo:block>
                     </fo:table-cell>
                     <fo:table-cell>
                         <fo:block text-align="left">${description!}</fo:block>
@@ -225,7 +232,7 @@ code package.
                 </#if>
                 <fo:table-row height="8mm" line-height="8mm">
                      <fo:table-cell>
-                        <fo:block text-align="left">${invoiceItem.productId!} </fo:block>
+                        <fo:block text-align="left">${productIdMarkup}</fo:block>
                     </fo:table-cell>
                     <fo:table-cell>
                         <fo:block>${description!}</fo:block>

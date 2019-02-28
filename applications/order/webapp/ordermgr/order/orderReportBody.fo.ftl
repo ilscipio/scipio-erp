@@ -127,9 +127,11 @@ code package.
                 <fo:table-cell>
                     <fo:block text-align="left">
                         <#if orderItem.supplierProductId?has_content>
-                            ${orderItem.supplierProductId}
-                        <#elseif productId??>
-                            ${orderItem.productId!(uiLabelMap.CommonNA)}
+                            <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(orderItem.supplierProductId, delegator, false)!"">
+                            ${orderItem.supplierProductId}<#if origProductId?has_content> (${origProductId})</#if>
+                        <#elseif productId?has_content>
+                            <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(productId, delegator, false)!"">
+                            ${productId}<#if origProductId?has_content> (${origProductId})</#if>
                         <#elseif orderItemType??>
                             ${orderItemType.get("description",locale)}
                         <#else>

@@ -71,17 +71,19 @@ code package.
                             <#else>
                                 <@td>
                                         <#if orderItem.supplierProductId?has_content>
-                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
+                                            <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(orderItem.supplierProductId, delegator, false)!"">
+                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItem.supplierProductId}<#if origProductId?has_content> (${origProductId})</#if> - ${orderItem.itemDescription!}</a>
                                         <#elseif productId?has_content>
-                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}</a>
+                                            <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(productId, delegator, false)!"">
+                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItem.productId!(uiLabelMap.CommonNA)}<#if origProductId?has_content> (${origProductId})</#if> - ${orderItem.itemDescription!}</a>
                                             <#if (product.salesDiscontinuationDate)?? && UtilDateTime.nowTimestamp().after(product.salesDiscontinuationDate)>
                                                 <br />
                                                     ${uiLabelMap.OrderItemDiscontinued}: <@formattedDateTime date=product.salesDiscontinuationDate />
                                             </#if>
-                                        <#elseif orderItemType??>
+                                        <#elseif orderItemType?has_content>
                                             <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItemType.description} - ${orderItem.itemDescription!}</a>
                                         <#else>
-                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${productId}${raw(externalKeyParam)}</@serverUrl>">${orderItem.itemDescription!}</a>
+                                            ${orderItem.itemDescription!}
                                         </#if>
                                         <@orderItemAttrInfo orderItem=orderItem/>
 

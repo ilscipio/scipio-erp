@@ -187,10 +187,11 @@ code package.
               <#-- product item -->
               <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
               <@td>
+                <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(orderItem.productId, delegator, false)!"">
                 <#if !printable>
-                    <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getOriginalProductId(orderItem.productId, delegator)!orderItem.productId><#-- SCIPIO -->
-                    <a href="<@catalogAltUrl productId=origProductId/>" class="${styles.link_nav_info_desc!}" target="_blank"><#t/>
-                </#if><#lt/>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
+                    <#-- SCIPIO -->
+                    <a href="<@catalogAltUrl productId=origProductId?has_content?then(origProductId, orderItem.productId)/>" class="${styles.link_nav_info_desc!}" target="_blank"><#t/>
+                </#if><#lt/>${orderItem.productId}<#if origProductId?has_content> (${origProductId})</#if> - ${orderItem.itemDescription!""}<#if !printable></a></#if>
                 <#-- SCIPIO: Link to downloads to consume -->
                 <#-- TODO: delegate status tests -->
                 <#if !printable && orderHeader?has_content && !["ORDER_REJECTED", "ORDER_CANCELLED"]?seq_contains(orderHeader.statusId!)>

@@ -671,6 +671,8 @@ public final class ProductPromoWorker {
         if (productPromo == null) {
             return "";
         }
+        List<String> partyClassificationsIncluded = new ArrayList<>();
+        List<String> partyClassificationsExcluded = new ArrayList<>();
         StringBuilder promoDescBuf = new StringBuilder();
         List<GenericValue> productPromoRules = productPromo.getRelated("ProductPromoRule", null, null, true);
         Iterator<GenericValue> promoRulesIter = productPromoRules.iterator();
@@ -684,8 +686,8 @@ public final class ProductPromoWorker {
             while (productPromoCondIter != null && productPromoCondIter.hasNext()) {
                 GenericValue productPromoCond = productPromoCondIter.next();
 
-                String equalityOperator = UtilProperties.getMessage("promotext", "operator.equality." + productPromoCond.getString("operatorEnumId"), locale);
-                String quantityOperator = UtilProperties.getMessage("promotext", "operator.quantity." + productPromoCond.getString("operatorEnumId"), locale);
+                String equalityOperator = UtilProperties.getMessage("ProductPromoUiLabels", "ProductPromoOperatorEquality." + productPromoCond.getString("operatorEnumId"), locale);
+                String quantityOperator = UtilProperties.getMessage("ProductPromoUiLabels", "ProductPromoOperatorQuantity." + productPromoCond.getString("operatorEnumId"), locale);
 
                 String condValue = "invalid";
                 if (UtilValidate.isNotEmpty(productPromoCond.getString("condValue"))) {
@@ -693,12 +695,27 @@ public final class ProductPromoWorker {
                 }
 
                 Map<String, Object> messageContext = UtilMisc.<String, Object>toMap("condValue", condValue, "equalityOperator", equalityOperator, "quantityOperator", quantityOperator);
-                String msgProp = UtilProperties.getMessage("promotext", "condition." + productPromoCond.getString("inputParamEnumId"), messageContext, locale);
-                promoDescBuf.append(msgProp);
-                promoDescBuf.append(" ");
 
-                if (promoRulesIter.hasNext()) {
-                    promoDescBuf.append(" and ");
+                if ("PPIP_PARTY_CLASS".equalsIgnoreCase(productPromoCond.getString("inputParamEnumId"))) {
+                    GenericValue partyClassificationGroup = EntityQuery.use(delegator).from("PartyClassificationGroup").where("partyClassificationGroupId", condValue).cache(true).queryOne();
+                    if (partyClassificationGroup != null && UtilValidate.isNotEmpty(partyClassificationGroup.getString("description"))) {
+                        condValue = partyClassificationGroup.getString("description");
+                    }
+
+                    if ("PPC_EQ".equalsIgnoreCase(productPromoCond.getString("operatorEnumId"))) {
+                        partyClassificationsIncluded.add(condValue);
+                    }
+                    if ("PPC_NEQ".equalsIgnoreCase(productPromoCond.getString("operatorEnumId"))) {
+                        partyClassificationsExcluded.add(condValue);
+                    }
+                } else {
+                    String msgProp = UtilProperties.getMessage("ProductPromoUiLabels", "ProductPromoCondition." + productPromoCond.getString("inputParamEnumId"), messageContext, locale);
+                    promoDescBuf.append(msgProp);
+                    promoDescBuf.append(" ");
+
+                    if (promoRulesIter.hasNext()) {
+                        promoDescBuf.append(" and ");
+                    }
                 }
             }
 
@@ -723,7 +740,7 @@ public final class ProductPromoWorker {
                     messageContext.put("productName", ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", locale, null, "raw"));
                 }
 
-                String msgProp = UtilProperties.getMessage("promotext", "action." + productPromoAction.getString("productPromoActionEnumId"), messageContext, locale);
+                String msgProp = UtilProperties.getMessage("ProductPromoUiLabels", "ProductPromoAction." + productPromoAction.getString("productPromoActionEnumId"), messageContext, locale);
                 promoDescBuf.append(msgProp);
                 promoDescBuf.append(" ");
 
@@ -762,6 +779,18 @@ public final class ProductPromoWorker {
         if (productPromo.getLong("useLimitPerPromotion") != null) {
             promoDescBuf.append(UtilProperties.getMessage(resource, "OrderLimitPerPromotion",
                     UtilMisc.toMap("limit", productPromo.getLong("useLimitPerPromotion")), locale));
+        }
+
+        if (UtilValidate.isNotEmpty(partyClassificationsIncluded)) {
+            Map<String, Object> messageContext = UtilMisc.<String, Object>toMap("partyClassificationsIncluded", partyClassificationsIncluded);
+            String msgProp = UtilProperties.getMessage("ProductPromoUiLabels", "ProductPromoCondition.PPIP_PARTY_CLASS.APPLIED", messageContext, locale);
+            promoDescBuf.append("\n" + msgProp);
+        }
+
+        if (UtilValidate.isNotEmpty(partyClassificationsExcluded)) {
+            Map<String, Object> messageContext = UtilMisc.<String, Object>toMap("partyClassificationsExcluded", partyClassificationsExcluded);
+            String msgProp = UtilProperties.getMessage("ProductPromoUiLabels", "ProductPromoCondition.PPIP_PARTY_CLASS.NOT_APPLIED", messageContext, locale);
+            promoDescBuf.append("\n" + msgProp);
         }
 
         return promoDescBuf.toString();

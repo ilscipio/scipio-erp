@@ -92,18 +92,23 @@ if (orderHeader) {
     context.orderType = orderType;
 
     // get the display party
-    displayParty = null;
+    def displayParty;
+    def displayPartyId; // SCIPIO (and switched displayParty to def)
     if ("PURCHASE_ORDER".equals(orderType)) {
         displayParty = orderReadHelper.getSupplierAgent();
+        displayPartyId = orderReadHelper.getSupplierAgentPartyId();
     } else {
         displayParty = orderReadHelper.getPlacingParty();
+        displayPartyId = orderReadHelper.getPlacingPartyId();
     }
-    if (displayParty) {
-        partyId = displayParty.partyId;
+    // SCIPIO: 2019-02-27: if null, fallback on the ID
+    
+    if (displayPartyId) { // SCIPIO: if (displayParty) {
+        partyId = displayPartyId; // SCIPIO: displayParty.partyId;
         context.displayParty = displayParty;
         context.partyId = partyId;
 
-        paymentMethodValueMaps = PaymentWorker.getPartyPaymentMethodValueMaps(delegator, displayParty.partyId, false);
+        paymentMethodValueMaps = PaymentWorker.getPartyPaymentMethodValueMaps(delegator, displayPartyId, false);
         context.paymentMethodValueMaps = paymentMethodValueMaps;
     }
 

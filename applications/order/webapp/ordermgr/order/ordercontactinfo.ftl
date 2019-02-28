@@ -61,7 +61,7 @@ code package.
   </#if>
 </#macro>
 
-<#if displayParty?has_content || orderContactMechValueMaps?has_content>
+<#if displayParty?has_content || orderContactMechValueMaps?has_content || partyId?has_content><#-- SCIPIO: Allow partyId display -->
  <#-- The usefulness of this information is limited. Uncomment and add as menuContent to section in order to add these functions back in
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
@@ -78,7 +78,7 @@ code package.
           <@td colspan="3">
                 <#if displayParty?has_content && userLogin??><#-- SCIPIO: 2019-02-27: Don't run getPartyNameForDate if userLogin missing (see OrderServices.sendOrderNotificationScreen warning) -->
                     <#assign displayPartyNameResult = runService("getPartyNameForDate", {"partyId":displayParty.partyId, "compareDate":orderHeader.orderDate, "userLogin":userLogin})/>
-                    <a href="${customerDetailLink}${partyId}${raw(externalKeyParam)}" target="partymgr" class="">${displayPartyNameResult.fullName!("[${uiLabelMap.OrderPartyNameNotFound}]")}</a>
+                    <a href="${customerDetailLink}${partyId}${raw(externalKeyParam)}" target="partymgr" class="">${displayPartyNameResult.fullName!partyId!}</a><#-- SCIPIO: show ID as fallback: ("[${uiLabelMap.OrderPartyNameNotFound}]") -->
                 <#elseif partyId?has_content>
                     <a href="${customerDetailLink}${partyId}${raw(externalKeyParam)}" target="partymgr" class="">${partyId}</a>
                 </#if>
@@ -132,7 +132,8 @@ code package.
                 </@td>
               </@tr>
            </#if>
-        </#list> 
+        </#list>
+      <#if orderContactMechValueMaps?has_content>
         <#list orderContactMechValueMaps as orderContactMechValueMap>
           <#assign contactMech = orderContactMechValueMap.contactMech>
           <#assign contactMechPurpose = orderContactMechValueMap.contactMechPurposeType>
@@ -182,6 +183,7 @@ code package.
             </@td>
           </@tr>
         </#list>
+      </#if>
       </@table>
   </@section>
 </#if>

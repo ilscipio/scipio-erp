@@ -21,13 +21,14 @@ package org.ofbiz.shipment.shipment;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -46,6 +47,9 @@ public final class ShipmentWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final MathContext generalRounding = new MathContext(10);
+
+    private static final Integer defaultDetailLogLevel = Debug.getLevelFromString(UtilProperties.getPropertyValue("shipment", "shipment.default.pkgSplit.detailLogLevel", "info")); // SCIPIO
+    private static final Integer defaultMaxLogEntries = UtilProperties.getPropertyAsInteger("shipment", "shipment.default.pkgSplit.maxLogEntries", null); // SCIPIO
 
     private ShipmentWorker() {}
 
@@ -110,11 +114,14 @@ public final class ShipmentWorker {
         return value;
     }
 
-    public static List<Map<String, BigDecimal>> getPackageSplit(DispatchContext dctx, List<Map<String, Object>> shippableItemInfo, BigDecimal maxWeight) {
+    public static List<Map<String, BigDecimal>> getPackageSplit(DispatchContext dctx, List<Map<String, Object>> shippableItemInfo, BigDecimal maxWeight,
+            Integer detailLogLevel) { // SCIPIO: Added detailLogLevel
         // create the package list w/ the first package
-        List<Map<String, BigDecimal>> packages = new LinkedList<>();
+        List<Map<String, BigDecimal>> packages = new ArrayList<>(); // SCIPIO: Switched to ArrayList: new LinkedList<>();
 
         if (UtilValidate.isNotEmpty(shippableItemInfo)) {
+            final Integer maxLogEntries = defaultMaxLogEntries; // SCIPIO
+            int logEntries = 0; // SCIPIO
             for (Map<String, Object> itemInfo: shippableItemInfo) {
                 long pieces = (Long) itemInfo.get("piecesIncluded");
                 BigDecimal totalQuantity = (BigDecimal) itemInfo.get("quantity");
@@ -130,20 +137,23 @@ public final class ShipmentWorker {
                     BigDecimal partialQty = pieces > 1 ? BigDecimal.ONE.divide(BigDecimal.valueOf(pieces), generalRounding) : BigDecimal.ONE;
                     for (long x = 0; x < pieces; x++) {
                         if (weight.compareTo(maxWeight) >= 0) {
-                            Map<String, BigDecimal> newPackage = new HashMap<String, BigDecimal>();
+                            Map<String, BigDecimal> newPackage = new HashMap<>();
                             newPackage.put(productId, partialQty);
                             packages.add(newPackage);
                         } else if (totalWeight.compareTo(BigDecimal.ZERO) > 0) {
                             // create the first package
                             if (packages.size() == 0) {
-                                packages.add(new HashMap<String, BigDecimal>());
+                                packages.add(new HashMap<>());
                             }
 
                             // package loop
                             boolean addedToPackage = false;
                             for (Map<String, BigDecimal> packageMap: packages) {
                                 if (!addedToPackage) {
-                                    BigDecimal packageWeight = calcPackageWeight(dctx, packageMap, shippableItemInfo, weight);
+                                    // SCIPIO: Limit log entries to prevent log flooding
+                                    logEntries++;
+                                    BigDecimal packageWeight = calcPackageWeight(dctx, packageMap, shippableItemInfo, weight,
+                                            (maxLogEntries == null || logEntries <= maxLogEntries) ? detailLogLevel : null); // SCIPIO: detailLogLevel
                                     if (packageWeight.compareTo(maxWeight) <= 0) {
                                         BigDecimal qty = packageMap.get(productId);
                                         qty = UtilValidate.isEmpty(qty) ? BigDecimal.ZERO : qty;
@@ -153,7 +163,7 @@ public final class ShipmentWorker {
                                 }
                             }
                             if (!addedToPackage) {
-                                Map<String, BigDecimal> packageMap = new HashMap<String, BigDecimal>();
+                                Map<String, BigDecimal> packageMap = new HashMap<>();
                                 packageMap.put(productId, partialQty);
                                 packages.add(packageMap);
                             }
@@ -161,11 +171,20 @@ public final class ShipmentWorker {
                     }
                 }
             }
+            if (detailLogLevel != null && maxLogEntries != null && Debug.isOn(detailLogLevel) && logEntries > maxLogEntries) { // SCIPIO
+                Debug.log(detailLogLevel, null, "Note: Omitted " + (logEntries - maxLogEntries) + " calcPackageWeight log entries in package split (total results: "
+                        + packages.size() + ") (shipment.properties#shipment.default.pkgSplit.maxLogEntries)", module);
+            }
         }
         return packages;
     }
 
-    public static BigDecimal calcPackageWeight(DispatchContext dctx, Map<String, BigDecimal> packageMap, List<Map<String, Object>> shippableItemInfo, BigDecimal additionalWeight) {
+    public static List<Map<String, BigDecimal>> getPackageSplit(DispatchContext dctx, List<Map<String, Object>> shippableItemInfo, BigDecimal maxWeight) {
+        return getPackageSplit(dctx, shippableItemInfo, maxWeight, defaultDetailLogLevel);
+    }
+    
+    public static BigDecimal calcPackageWeight(DispatchContext dctx, Map<String, BigDecimal> packageMap, List<Map<String, Object>> shippableItemInfo, BigDecimal additionalWeight,
+            Integer detailLogLevel) { // SCIPIO: Added detailLogLevel
 
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
@@ -181,8 +200,8 @@ public final class ShipmentWorker {
 
             String weightUomId = (String) productInfo.get("weightUomId");
 
-            if (Debug.infoOn()) {
-                Debug.logInfo("Product Id : " + productId + " Product Weight : " + String.valueOf(productWeight) + " Product UomId : " + weightUomId + " assuming " + defaultWeightUomId + " if null. Quantity : " + String.valueOf(quantity), module);
+            if (detailLogLevel != null && Debug.isOn(detailLogLevel)) {
+                Debug.log(detailLogLevel, null, "Product Id : " + productId + " Product Weight : " + String.valueOf(productWeight) + " Product UomId : " + weightUomId + " assuming " + defaultWeightUomId + " if null. Quantity : " + String.valueOf(quantity), module);
             }
 
             if (UtilValidate.isEmpty(weightUomId)) {
@@ -209,10 +228,14 @@ public final class ShipmentWorker {
 
             totalWeight = totalWeight.add(productWeight.multiply(quantity));
         }
-        if (Debug.infoOn()) {
-            Debug.logInfo("Package Weight : " + String.valueOf(totalWeight) + " lbs.", module);
+        if (detailLogLevel != null && Debug.isOn(detailLogLevel)) {
+            Debug.log(detailLogLevel, null, "Package Weight : " + String.valueOf(totalWeight) + " lbs.", module);
         }
         return totalWeight.add(additionalWeight);
+    }
+
+    public static BigDecimal calcPackageWeight(DispatchContext dctx, Map<String, BigDecimal> packageMap, List<Map<String, Object>> shippableItemInfo, BigDecimal additionalWeight) {
+        return calcPackageWeight(dctx, packageMap, shippableItemInfo, additionalWeight, defaultDetailLogLevel); // SCIPIO: Delegate old overload
     }
 
     public static Map<String, Object> getProductItemInfo(List<Map<String, Object>> shippableItemInfo, String productId) {

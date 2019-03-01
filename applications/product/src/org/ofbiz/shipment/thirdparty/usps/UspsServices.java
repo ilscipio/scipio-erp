@@ -181,7 +181,7 @@ public class UspsServices {
         for (ListIterator<Map<String, BigDecimal>> li = packages.listIterator(); li.hasNext();) {
             Map<String, BigDecimal> packageMap = li.next();
 
-            BigDecimal packageWeight = isOnePackage ? shippableWeight : ShipmentWorker.calcPackageWeight(dctx, packageMap, shippableItemInfo, BigDecimal.ZERO);
+            BigDecimal packageWeight = isOnePackage ? shippableWeight : ShipmentWorker.calcPackageWeight(dctx, packageMap, shippableItemInfo, BigDecimal.ZERO, null); // SCIPIO: null detailLogLevel to prevent duplicate logging
             if (packageWeight.compareTo(BigDecimal.ZERO) == 0) {
                 continue;
             }
@@ -383,7 +383,7 @@ public class UspsServices {
             Element packageElement = UtilXml.addChildElement(requestDocument.getDocumentElement(), "Package", requestDocument);
             packageElement.setAttribute("ID", String.valueOf(li.nextIndex() - 1)); // use zero-based index (see examples)
 
-            BigDecimal packageWeight = isOnePackage ? shippableWeight : ShipmentWorker.calcPackageWeight(dctx, packageMap, shippableItemInfo, BigDecimal.ZERO);
+            BigDecimal packageWeight = isOnePackage ? shippableWeight : ShipmentWorker.calcPackageWeight(dctx, packageMap, shippableItemInfo, BigDecimal.ZERO, null);  // SCIPIO: null detailLogLevel to prevent duplicate logging
             if (packageWeight.compareTo(BigDecimal.ZERO) == 0) {
                 continue;
             }

@@ -64,7 +64,9 @@ public final class ShipmentWorker {
         List<GenericValue> issuances = null;
         try {
             GenericValue shipmentItem = shipmentPackageContent.getRelatedOne("ShipmentItem", false);
-            issuances = shipmentItem.getRelated("ItemIssuance", null, null, false);
+            if (shipmentItem != null) { // SCIPIO: null check for safety
+                issuances = shipmentItem.getRelated("ItemIssuance", null, null, false);
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
@@ -179,7 +181,9 @@ public final class ShipmentWorker {
 
             String weightUomId = (String) productInfo.get("weightUomId");
 
-            Debug.logInfo("Product Id : " + productId + " Product Weight : " + String.valueOf(productWeight) + " Product UomId : " + weightUomId + " assuming " + defaultWeightUomId + " if null. Quantity : " + String.valueOf(quantity), module);
+            if (Debug.infoOn()) {
+                Debug.logInfo("Product Id : " + productId + " Product Weight : " + String.valueOf(productWeight) + " Product UomId : " + weightUomId + " assuming " + defaultWeightUomId + " if null. Quantity : " + String.valueOf(quantity), module);
+            }
 
             if (UtilValidate.isEmpty(weightUomId)) {
                 weightUomId = defaultWeightUomId;
@@ -205,7 +209,9 @@ public final class ShipmentWorker {
 
             totalWeight = totalWeight.add(productWeight.multiply(quantity));
         }
-        Debug.logInfo("Package Weight : " + String.valueOf(totalWeight) + " lbs.", module);
+        if (Debug.infoOn()) {
+            Debug.logInfo("Package Weight : " + String.valueOf(totalWeight) + " lbs.", module);
+        }
         return totalWeight.add(additionalWeight);
     }
 

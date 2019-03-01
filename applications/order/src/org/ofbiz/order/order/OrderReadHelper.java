@@ -1192,6 +1192,45 @@ public class OrderReadHelper {
         return itemWeight;
     }
 
+    /**
+     * SCIPIO: Returns a map containing "weight" and "weightUomId" keys, or null.
+     * NOTE: This follows {@link #getItemWeight(GenericValue)} and returns null if
+     * shipping does not apply to the product.
+     */
+    public Map<String, Object> getItemWeightInfo(GenericValue item) {
+        Delegator delegator = orderHeader.getDelegator();
+        GenericValue product = null;
+        try {
+            product = item.getRelatedOne("Product", false);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting Product from OrderItem", module);
+            return null;
+        }
+        if (product != null) {
+            if (ProductWorker.shippingApplies(product)) {
+                BigDecimal weight = product.getBigDecimal("weight");
+                String isVariant = product.getString("isVariant");
+                if (weight == null && "Y".equals(isVariant)) {
+                    // get the virtual product and check its weight
+                    try {
+                        String virtualId = ProductWorker.getVariantVirtualId(product);
+                        if (UtilValidate.isNotEmpty(virtualId)) {
+                            GenericValue virtual = EntityQuery.use(delegator).from("Product").where("productId", virtualId).cache().queryOne();
+                            if (virtual != null) {
+                                weight = virtual.getBigDecimal("weight");
+                                product = virtual;
+                            }
+                        }
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Problem getting virtual product");
+                    }
+                }
+                return product;
+            }
+        }
+        return null;
+    }
+
     public List<BigDecimal> getShippableSizes() {
         List<BigDecimal> shippableSizes = new LinkedList<>();
 
@@ -1423,7 +1462,17 @@ public class OrderReadHelper {
         Map<String, Object> itemInfo = new HashMap<>();
         itemInfo.put("productId", item.getString("productId"));
         itemInfo.put("quantity", getOrderItemQuantity(item));
-        itemInfo.put("weight", this.getItemWeight(item));
+        // SCIPIO: 2019-03-01: included weight uom ID
+        //itemInfo.put("weight", this.getItemWeight(item));
+        BigDecimal weight = null;
+        String weightUomId = null;
+        Map<String, Object> weightInfo = this.getItemWeightInfo(item);
+        if (weightInfo != null) {
+            weight = (BigDecimal) weightInfo.get("weight");
+            weightUomId = (String) weightInfo.get("weightUomId");
+        }
+        itemInfo.put("weight", weight != null ? weight : BigDecimal.ZERO);
+        itemInfo.put("weightUomId", weightUomId);
         itemInfo.put("size", this.getItemSize(item));
         itemInfo.put("piecesIncluded", this.getItemPiecesIncluded(item));
         itemInfo.put("featureSet", this.getItemFeatureSet(item));

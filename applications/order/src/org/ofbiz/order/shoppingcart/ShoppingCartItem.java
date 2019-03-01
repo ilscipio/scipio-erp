@@ -2043,6 +2043,26 @@ public class ShoppingCartItem implements java.io.Serializable {
         return BigDecimal.ZERO;
     }
 
+    /** SCIPIO: Returns the item's unit weight info as map containing "weight" and "weightUomId" keys (result or values may be null). */
+    public Map<String, Object> getWeightInfo() {
+        GenericValue product = getProduct();
+        if (product != null) {
+            BigDecimal weight = product.getBigDecimal("weight");
+
+            // if the weight is null, see if there is an associated virtual product and get the weight of that product
+            if (weight == null) {
+                GenericValue parentProduct = this.getParentProduct();
+                if (parentProduct != null) {
+                    weight = parentProduct.getBigDecimal("weight");
+                    if (weight != null) {
+                        return parentProduct;
+                    }
+                }
+            }
+        }
+        return product;
+    }
+
     /** Returns the item's pieces included */
     public long getPiecesIncluded() {
         GenericValue product = getProduct();
@@ -2168,8 +2188,18 @@ public class ShoppingCartItem implements java.io.Serializable {
     public Map<String, Object> getItemProductInfo() {
         Map<String, Object> itemInfo = new HashMap<>();
         itemInfo.put("productId", this.getProductId());
-        itemInfo.put("weight", this.getWeight());
-        itemInfo.put("weightUomId", this.getProduct().getString("weightUomId"));
+        // SCIPIO: 2019-03-01: This weightUomId extraction was flawed
+        //itemInfo.put("weight", this.getWeight());
+        //itemInfo.put("weightUomId", this.getProduct().getString("weightUomId"));
+        BigDecimal weight = null;
+        String weightUomId = null;
+        Map<String, Object> weightInfo = this.getWeightInfo();
+        if (weightInfo != null) {
+            weight = (BigDecimal) weightInfo.get("weight");
+            weightUomId = (String) weightInfo.get("weightUomId");
+        }
+        itemInfo.put("weight", weight != null ? weight : BigDecimal.ZERO);
+        itemInfo.put("weightUomId", weightUomId);
         itemInfo.put("size", this.getSize());
         itemInfo.put("piecesIncluded", this.getPiecesIncluded());
         itemInfo.put("featureSet", this.getFeatureSet());

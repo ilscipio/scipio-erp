@@ -348,6 +348,7 @@ public abstract class CmsMediaServices {
                         GenericValue imageSizeDimension = imageSize.getRelatedOne("ImageSizeDimension", false);
                         imgPropsMap.put(imageSizeDimension.getString("sizeName"),
                                 UtilMisc.toMap("width", imageSizeDimension.getString("dimensionWidth"), "height", imageSizeDimension.getString("dimensionHeight")));
+                        customImageSizes.add(imageSizeDimension);
                     }
                     imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap(imagePreset.getString("presetName"), "", "", imgPropsMap);
                 } else {

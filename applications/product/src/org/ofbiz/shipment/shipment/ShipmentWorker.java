@@ -171,7 +171,7 @@ public final class ShipmentWorker {
                     }
                 }
             }
-            if (detailLogLevel != null && maxLogEntries != null && Debug.isOn(detailLogLevel) && logEntries > maxLogEntries) { // SCIPIO
+            if (detailLogLevel != null && maxLogEntries != null && maxLogEntries > 0 && Debug.isOn(detailLogLevel) && logEntries > maxLogEntries) { // SCIPIO
                 Debug.log(detailLogLevel, null, "Note: Omitted " + (logEntries - maxLogEntries) + " calcPackageWeight log entries in package split (total results: "
                         + packages.size() + ") (shipment.properties#shipment.default.pkgSplit.maxLogEntries)", module);
             }

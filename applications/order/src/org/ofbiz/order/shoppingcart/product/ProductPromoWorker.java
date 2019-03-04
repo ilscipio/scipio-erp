@@ -713,7 +713,14 @@ public final class ProductPromoWorker {
                         partyClassificationsExcluded.add(condValue);
                     }
                 } else {
-                    String msgProp = UtilProperties.getMessage("ProductPromoUiLabels", "ProductPromoCondition." + productPromoCond.getString("inputParamEnumId"), messageContext, locale);
+                    String msgProp = UtilProperties.getMessage("ProductPromoUiLabels", "ProductPromoCondition." + productPromoCond.getString("inputParamEnumId"), messageContext, locale, true);
+                    // SCIPIO (2019-03-04): Fallback to Enumeration description if label is not found
+                    if (UtilValidate.isEmpty(msgProp)) {
+                        GenericValue inputParamEnumeration = productPromoCond.getRelatedOne("InputParamEnumeration");
+                        if (UtilValidate.isNotEmpty(inputParamEnumeration)) {
+                            msgProp = inputParamEnumeration.getString("description");
+                        }
+                    }
                     promoDescBuf.append(msgProp);
                     promoDescBuf.append(" ");
 
@@ -744,7 +751,14 @@ public final class ProductPromoWorker {
                     messageContext.put("productName", ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", locale, null, "raw"));
                 }
 
-                String msgProp = UtilProperties.getMessage("ProductPromoUiLabels", "ProductPromoAction." + productPromoAction.getString("productPromoActionEnumId"), messageContext, locale);
+                String msgProp = UtilProperties.getMessage("ProductPromoUiLabels", "ProductPromoAction." + productPromoAction.getString("productPromoActionEnumId"), messageContext, locale, true);
+                // SCIPIO (2019-03-04): Fallback to Enumeration description if label is not found
+                if (UtilValidate.isEmpty(msgProp)) {
+                    GenericValue actionEnumeration = productPromoAction.getRelatedOne("ActionEnumeration");
+                    if (UtilValidate.isNotEmpty(actionEnumeration)) {
+                        msgProp = actionEnumeration.getString("description");
+                    }
+                }
                 promoDescBuf.append(msgProp);
                 promoDescBuf.append(" ");
 

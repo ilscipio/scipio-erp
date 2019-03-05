@@ -94,6 +94,12 @@
         <value xml:lang="zh">花费 ${quantityOperator} ${condValue}</value>
         <value xml:lang="zh-TW">花費 ${quantityOperator} ${condValue}</value>
     </property>
+    <property key="ProductPromoCondition.PPIP_ORDER_SUBTOTAL">
+        <value xml:lang="de">verbraucht ${quantityOperator} ${condValue}</value>
+        <value xml:lang="en">spend ${quantityOperator} ${condValue}</value>
+        <value xml:lang="zh">花费 ${quantityOperator} ${condValue}</value>
+        <value xml:lang="zh-TW">花費 ${quantityOperator} ${condValue}</value>
+    </property>
     <property key="ProductPromoCondition.PPIP_PARTY_CLASS.APPLIED">
         <value xml:lang="de">Auf Party-Klassifizierung angewendet- ${partyClassificationsIncluded}</value>
         <value xml:lang="en">Applied to party classification - ${partyClassificationsIncluded}</value>

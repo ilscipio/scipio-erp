@@ -3294,6 +3294,36 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
         return itemsTotal;
     }
+    
+    /** SCIPIO (10/28/2018): Gets other adjustments and tax totals */
+    public BigDecimal getOrderOtherAndTaxAdjustmentTotal() {
+        return OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), this.getSubTotal(), true, true, false);
+    }
+    /** SCIPIO (10/28/2018): Returns the total in the cart ((item-total + tax)  - discount). */
+    public BigDecimal getTotalForPromotions() {
+        BigDecimal itemsTotal = BigDecimal.ZERO;
+        for (ShoppingCartItem cartItem : this.cartLines) {
+            GenericValue product = cartItem.getProduct();
+            if (product != null && "N".equals(product.getString("includeInPromotions"))) {
+                // don't include in total if this is the case...
+                continue;
+            }
+            itemsTotal = itemsTotal.add(cartItem.getItemSubTotal());
+        }
+        return itemsTotal.add(this.getOrderOtherAndTaxAdjustmentTotal());
+    }
+    public BigDecimal getTotalForPromotions(Set<String> productIds) {
+        BigDecimal itemsTotal = BigDecimal.ZERO;
+        for (ShoppingCartItem cartItem : this.cartLines) {
+            GenericValue product = cartItem.getProduct();
+            if (product == null || "N".equals(product.getString("includeInPromotions")) || !productIds.contains(cartItem.getProductId())) {
+                // don't include in total if this is the case...
+                continue;
+            }
+            itemsTotal = itemsTotal.add(cartItem.getItemSubTotal());
+        }
+        return itemsTotal.add(this.getOrderOtherAndTaxAdjustmentTotal());
+    }
 
     /**
      * Get the total payment amount by payment type.  Specify null to get amount

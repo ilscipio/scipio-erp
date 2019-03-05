@@ -403,7 +403,8 @@ public final class ProductPromoWorker {
                 .cache(true).queryList();
         for (GenericValue productPromoCond : productPromoConds) {
             String inputParamEnumId = productPromoCond.getString("inputParamEnumId");
-            if ("PPIP_ORDER_TOTAL".equals(inputParamEnumId)) {
+            // SCIPIO (10/28/2018): added new enumId in order to distinguish between totals and subtotals
+            if ("PPIP_ORDER_TOTAL".equals(inputParamEnumId) || "PPIP_ORDER_SUBTOTAL".equals(inputParamEnumId)) {
                 hasOtCond = true;
                 break;
             }
@@ -1142,6 +1143,12 @@ public final class ProductPromoWorker {
                 compareBase = Integer.valueOf(1);
             }
         } else if ("PPIP_ORDER_TOTAL".equals(inputParamEnumId)) {
+            if (UtilValidate.isNotEmpty(condValue)) {
+                BigDecimal orderTotal = cart.getTotalForPromotions();
+                if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderTotal=" + orderTotal, module);
+                compareBase = Integer.valueOf(orderTotal.compareTo(new BigDecimal(condValue)));
+            }
+        } else if ("PPIP_ORDER_SUBTOTAL".equals(inputParamEnumId)) {
             if (UtilValidate.isNotEmpty(condValue)) {
                 BigDecimal orderSubTotal = cart.getSubTotalForPromotions();
                 if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderSubTotal=" + orderSubTotal, module);

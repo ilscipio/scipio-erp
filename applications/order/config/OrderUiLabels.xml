@@ -7134,9 +7134,9 @@
     <property key="OrderNothingToDoHere">
         <value xml:lang="ar">لا يوجد شئ تفعله هنا</value>
         <value xml:lang="de">Nichts zu tun hier.</value>
-        <value xml:lang="en">Nothing To Do Here</value>
-        <value xml:lang="es">Lo sentimos, esta página no tiene uso</value>
-        <value xml:lang="fr">Rien à faire ici</value>
+        <value xml:lang="en">Nothing to do here.</value>
+        <value xml:lang="es">Lo sentimos, esta página no tiene uso.</value>
+        <value xml:lang="fr">Rien à faire ici.</value>
         <value xml:lang="hi-IN">कुछ करने योग्य नहीं. माफ किजीये</value>
         <value xml:lang="it">Niente da fare qui. Questo dovrebbe essere stato un'errore, scusate.</value>
         <value xml:lang="ja">ここにはなにもありません</value>

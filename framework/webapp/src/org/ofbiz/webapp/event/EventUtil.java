@@ -110,46 +110,18 @@ public final class EventUtil {
     }
 
     public static boolean hasEventMsg(HttpServletRequest request) {
-        return UtilValidate.isNotEmpty((String) request.getAttribute(EVENT_MESSAGE)) ||
+        return (request.getAttribute(EVENT_MESSAGE) != null) ||
                 UtilValidate.isNotEmpty((List<?>) request.getAttribute(EVENT_MESSAGE_LIST));
     }
 
     public static boolean hasErrorMsg(HttpServletRequest request) {
-        return UtilValidate.isNotEmpty((String) request.getAttribute(ERROR_MESSAGE)) ||
+        return (request.getAttribute(ERROR_MESSAGE) != null) ||
                 UtilValidate.isNotEmpty((List<?>) request.getAttribute(ERROR_MESSAGE_LIST)) ||
                 UtilValidate.isNotEmpty((Map<?, ?>) request.getAttribute(ERROR_MESSAGE_MAP));
     }
 
     public static boolean hasAnyMsg(HttpServletRequest request) {
         return hasEventMsg(request) || hasErrorMsg(request);
-    }
-
-    public static String getFirstEventMsg(HttpServletRequest request) {
-        String msg = (String) request.getAttribute(EVENT_MESSAGE);
-        if (UtilValidate.isNotEmpty(msg)) {
-            return msg;
-        }
-        List<?> msgList = (List<?>) request.getAttribute(EVENT_MESSAGE_LIST);
-        if (UtilValidate.isNotEmpty(msgList)) {
-            return (String) msgList.get(0);
-        }
-        return msg;
-    }
-
-    public static String getFirstErrorMsg(HttpServletRequest request) {
-        String msg = (String) request.getAttribute(ERROR_MESSAGE);
-        if (UtilValidate.isNotEmpty(msg)) {
-            return msg;
-        }
-        List<?> msgList = (List<?>) request.getAttribute(ERROR_MESSAGE_LIST);
-        if (UtilValidate.isNotEmpty(msgList)) {
-            return (String) msgList.get(0);
-        }
-        Map<?, ?> msgMap = (Map<?, ?>) request.getAttribute(ERROR_MESSAGE_MAP);
-        if (UtilValidate.isNotEmpty(msgMap)) {
-            return (String) msgMap.entrySet().iterator().next().getValue();
-        }
-        return msg;
     }
 
     public static void setServiceMsgsToEventMsgs(Map<String, Object> serviceResult, Map<String, Object> targetAttributes) {

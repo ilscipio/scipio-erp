@@ -11465,6 +11465,8 @@
     <property key="CommonServiceSuccessMessage">
         <value xml:lang="de">Service erfolgreich ausgeführt</value>
         <value xml:lang="en">Operation has been executed successfully</value>
+        <value xml:lang="es">La operación se ha ejecutado con éxito.</value>
+        <value xml:lang="fr">L'opération a été exécutée avec succès</value>
     </property>
     <property key="CommonSessionTimeoutPleaseLogIn">
         <value xml:lang="ar">إنتهت صلاحية الجلسة ويتطلب إعادة تسجيل الدخول. يمكنك تحديث الصفحة أو حفظ البيانات الخاصة بك لتسجيل الدخول</value>

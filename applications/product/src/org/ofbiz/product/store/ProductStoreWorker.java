@@ -509,29 +509,32 @@ public final class ProductStoreWorker {
             storeSurveys = EntityUtil.filterByAnd(storeSurveys, UtilMisc.toMap("groupName", groupName));
         }
 
-         Debug.logInfo("getSurvey for product " + productId,module);
+        if (Debug.infoOn()) {
+            Debug.logInfo("getSurvey for product " + productId, module);
+        }
         // limit by product
         if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(storeSurveys)) {
-            for (GenericValue surveyAppl: storeSurveys) {
-                GenericValue product = null;
-                String virtualProductId = null;
-
-                // if the item is a variant, get its virtual productId
-                try {
-                    product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
-                    if ((product != null) && ("Y".equals(product.get("isVariant")))) {
-                        if (parentProductId != null) {
-                            virtualProductId = parentProductId;
-                        }
-                        else {
-                            virtualProductId = ProductWorker.getVariantVirtualId(product);
-                        }
-                        Debug.logInfo("getSurvey for virtual product " + virtualProductId,module);
+            // SCIPIO: 2019-03-06: Moved the following Product lookup to outside the for loop
+            GenericValue product = null;
+            String virtualProductId = null;
+            // if the item is a variant, get its virtual productId
+            try {
+                product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
+                if ((product != null) && ("Y".equals(product.get("isVariant")))) {
+                    if (parentProductId != null) {
+                        virtualProductId = parentProductId;
+                    } else {
+                        virtualProductId = ProductWorker.getVariantVirtualId(product);
                     }
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Problem finding product from productId " + productId, module);
+                    if (Debug.infoOn()) {
+                        Debug.logInfo("getSurvey for virtual product " + virtualProductId, module);
+                    }
                 }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem finding product from productId " + productId, module);
+            }
 
+            for (GenericValue surveyAppl: storeSurveys) {
                 // use survey if productId or virtualProductId of the variant product is in the ProductStoreSurveyAppl
                 if (surveyAppl.get("productId") != null) {
                     if (surveyAppl.get("productId").equals(productId)) {

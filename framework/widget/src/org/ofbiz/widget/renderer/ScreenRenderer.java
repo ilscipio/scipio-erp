@@ -543,22 +543,22 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         context.put("externalKeyParam", externalKeyParam);
 
         // setup message lists
-        List<String> eventMessageList = UtilGenerics.toList(request.getAttribute("eventMessageList"));
+        List<Object> eventMessageList = UtilGenerics.toList(request.getAttribute("eventMessageList")); // SCIPIO: Switched to Object: List<String>
         if (eventMessageList == null) {
-            eventMessageList = new ArrayList<>(); // SCIPIO: Now ArrayList: = new LinkedList<>();
+            eventMessageList = new ArrayList<>(); // SCIPIO: Switched to ArrayList
         }
-        List<String> errorMessageList = UtilGenerics.toList(request.getAttribute("errorMessageList"));
+        List<Object> errorMessageList = UtilGenerics.toList(request.getAttribute("errorMessageList")); // SCIPIO: Switched to Object: List<String>
         if (errorMessageList == null) {
-            errorMessageList = new ArrayList<>(); // SCIPIO: Now ArrayList: = new LinkedList<>();
+            errorMessageList = new ArrayList<>(); // SCIPIO: Switched to ArrayList
         }
 
         if (request.getAttribute("_EVENT_MESSAGE_") != null) {
             // SCIPIO: 2018-02-27: will now be handled using correct point-of-use escaping (ftl)
             //eventMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_EVENT_MESSAGE_"), "\n", "<br/>"));
-            eventMessageList.add((String) request.getAttribute("_EVENT_MESSAGE_"));
+            eventMessageList.add(request.getAttribute("_EVENT_MESSAGE_")); // SCIPIO: Removed unnecessary cast: (String)
             request.removeAttribute("_EVENT_MESSAGE_");
         }
-        List<String> msgList = UtilGenerics.toList(request.getAttribute("_EVENT_MESSAGE_LIST_"));
+        List<Object> msgList = UtilGenerics.toList(request.getAttribute("_EVENT_MESSAGE_LIST_")); // SCIPIO: Switched to Object: List<String>
         if (msgList != null) {
             eventMessageList.addAll(msgList);
             request.removeAttribute("_EVENT_MESSAGE_LIST_");
@@ -566,13 +566,13 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         if (request.getAttribute("_ERROR_MESSAGE_") != null) {
             // SCIPIO: 2018-02-27: will now be handled using correct point-of-use escaping (ftl)
             //errorMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_ERROR_MESSAGE_"), "\n", "<br/>"));
-            errorMessageList.add((String) request.getAttribute("_ERROR_MESSAGE_"));
+            errorMessageList.add(request.getAttribute("_ERROR_MESSAGE_")); // SCIPIO: Removed unnecessary cast: (String)
             request.removeAttribute("_ERROR_MESSAGE_");
         }
         if (session.getAttribute("_ERROR_MESSAGE_") != null) {
             // SCIPIO: 2018-02-27: will now be handled using correct point-of-use escaping (ftl)
             //errorMessageList.add(UtilFormatOut.replaceString((String) session.getAttribute("_ERROR_MESSAGE_"), "\n", "<br/>"));
-            errorMessageList.add((String) session.getAttribute("_ERROR_MESSAGE_"));
+            errorMessageList.add(session.getAttribute("_ERROR_MESSAGE_")); // SCIPIO: Removed unnecessary cast: (String)
             session.removeAttribute("_ERROR_MESSAGE_");
         }
         msgList = UtilGenerics.toList(request.getAttribute("_ERROR_MESSAGE_LIST_"));

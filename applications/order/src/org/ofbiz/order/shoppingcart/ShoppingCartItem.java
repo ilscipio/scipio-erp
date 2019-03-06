@@ -1344,14 +1344,14 @@ public class ShoppingCartItem implements java.io.Serializable {
                 // check alternative packaging
                 boolean isAlternativePacking = ProductWorker.isAlternativePacking(delegator, this.productId , this.getParentProductId());
                 BigDecimal pieces = BigDecimal.ONE;
-                if(isAlternativePacking && UtilValidate.isNotEmpty(this.getParentProduct())){
+                if (isAlternativePacking && UtilValidate.isNotEmpty(this.getParentProduct())) {
                     GenericValue originalProduct = this.getParentProduct();
                     if (originalProduct != null) {
                         pieces = new BigDecimal(originalProduct.getLong("piecesIncluded"));
                     }
                     priceContext.put("product", originalProduct);
                     this._parentProduct = null;
-                }else{
+                } else {
                     priceContext.put("product", this.getProduct());
                 }
 
@@ -1369,9 +1369,9 @@ public class ShoppingCartItem implements java.io.Serializable {
                         throw new CartItemModifyException("Could not find a valid price for the product with ID [" + this.getProductId() + "] and supplier with ID [" + partyId + "], not adding to cart.");
                     }
 
-                    if(isAlternativePacking){
+                    if (isAlternativePacking) {
                         this.setBasePrice(((BigDecimal) priceResult.get("price")).divide(pieces, RoundingMode.HALF_UP));
-                    }else{
+                    } else {
                         this.setBasePrice(((BigDecimal) priceResult.get("price")));
                     }
 

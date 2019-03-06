@@ -124,6 +124,42 @@ public final class EventUtil {
         return hasEventMsg(request) || hasErrorMsg(request);
     }
 
+    public static List<Object> getEventMessageList(HttpServletRequest request) {
+        List<Object> eventMessageList = UtilGenerics.cast(request.getAttribute(EVENT_MESSAGE_LIST));
+        if (eventMessageList == null) {
+            eventMessageList = new ArrayList<>();
+            request.setAttribute(EVENT_MESSAGE_LIST, eventMessageList);
+        }
+        return eventMessageList;
+    }
+
+    /**
+     * Adds a message to the request event message list attribute.
+     */
+    public static List<Object> addEventMessage(HttpServletRequest request, Object eventMessage) {
+        List<Object> eventMessageList = getEventMessageList(request);
+        eventMessageList.add(eventMessage);
+        return eventMessageList;
+    }
+
+    public static List<Object> getErrorMessageList(HttpServletRequest request) {
+        List<Object> errorMessageList = UtilGenerics.cast(request.getAttribute(ERROR_MESSAGE_LIST));
+        if (errorMessageList == null) {
+            errorMessageList = new ArrayList<>();
+            request.setAttribute(ERROR_MESSAGE_LIST, errorMessageList);
+        }
+        return errorMessageList;
+    }
+
+    /**
+     * Adds a message to the request error message list attribute.
+     */
+    public static List<Object> addErrorMessage(HttpServletRequest request, Object errorMessage) {
+        List<Object> errorMessageList = getErrorMessageList(request);
+        errorMessageList.add(errorMessage);
+        return errorMessageList;
+    }
+
     public static void setServiceMsgsToEventMsgs(Map<String, Object> serviceResult, Map<String, Object> targetAttributes) {
         targetAttributes.put(ERROR_MESSAGE_LIST, serviceResult.get(ModelService.ERROR_MESSAGE_LIST));
         targetAttributes.put(ERROR_MESSAGE_MAP, serviceResult.get(ModelService.ERROR_MESSAGE_MAP));

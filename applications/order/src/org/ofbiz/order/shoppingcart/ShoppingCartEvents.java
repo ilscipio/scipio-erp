@@ -597,7 +597,8 @@ public class ShoppingCartEvents {
                     surveyResponses = UtilMisc.toList(surveyResponseId);
                 } else {
                     String origParamMapId = UtilHttp.stashParameterMap(request);
-                    Map<String, Object> surveyContext = UtilMisc.<String, Object>toMap("_ORIG_PARAM_MAP_ID_", origParamMapId);
+                    Map<String, Object> surveyContext = UtilMisc.<String, Object>toMap("_ORIG_PARAM_MAP_ID_", origParamMapId,
+                            "productStoreSurveyId", survey.get("productStoreSurveyId")); // SCIPIO: 2019-03-06: Added productStoreSurveyId
                     GenericValue userLogin = cart.getUserLogin();
                     String partyId = null;
                     if (userLogin != null) {
@@ -611,6 +612,7 @@ public class ShoppingCartEvents {
                     ProductStoreSurveyWrapper wrapper = new ProductStoreSurveyWrapper(survey, partyId, surveyContext);
                     request.setAttribute("surveyWrapper", wrapper);
                     request.setAttribute("surveyAction", formAction); // will be used as the form action of the survey
+                    request.setAttribute("productStoreSurveyId", survey.get("productStoreSurveyId")); // SCIPIO: 2019-03-06: for backward-compatibility (missing in stock)
                     return "survey";
                 }
             }

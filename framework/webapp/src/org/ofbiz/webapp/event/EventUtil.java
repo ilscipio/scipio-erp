@@ -105,6 +105,53 @@ public final class EventUtil {
         return errorMsgAttrNames.contains(attributeName);
     }
 
+    public static boolean hasError(HttpServletRequest request) {
+        return hasErrorMsg(request);
+    }
+
+    public static boolean hasEventMsg(HttpServletRequest request) {
+        return UtilValidate.isNotEmpty((String) request.getAttribute(EVENT_MESSAGE)) ||
+                UtilValidate.isNotEmpty((List<?>) request.getAttribute(EVENT_MESSAGE_LIST));
+    }
+
+    public static boolean hasErrorMsg(HttpServletRequest request) {
+        return UtilValidate.isNotEmpty((String) request.getAttribute(ERROR_MESSAGE)) ||
+                UtilValidate.isNotEmpty((List<?>) request.getAttribute(ERROR_MESSAGE_LIST)) ||
+                UtilValidate.isNotEmpty((Map<?, ?>) request.getAttribute(ERROR_MESSAGE_MAP));
+    }
+
+    public static boolean hasAnyMsg(HttpServletRequest request) {
+        return hasEventMsg(request) || hasErrorMsg(request);
+    }
+
+    public static String getFirstEventMsg(HttpServletRequest request) {
+        String msg = (String) request.getAttribute(EVENT_MESSAGE);
+        if (UtilValidate.isNotEmpty(msg)) {
+            return msg;
+        }
+        List<?> msgList = (List<?>) request.getAttribute(EVENT_MESSAGE_LIST);
+        if (UtilValidate.isNotEmpty(msgList)) {
+            return (String) msgList.get(0);
+        }
+        return msg;
+    }
+
+    public static String getFirstErrorMsg(HttpServletRequest request) {
+        String msg = (String) request.getAttribute(ERROR_MESSAGE);
+        if (UtilValidate.isNotEmpty(msg)) {
+            return msg;
+        }
+        List<?> msgList = (List<?>) request.getAttribute(ERROR_MESSAGE_LIST);
+        if (UtilValidate.isNotEmpty(msgList)) {
+            return (String) msgList.get(0);
+        }
+        Map<?, ?> msgMap = (Map<?, ?>) request.getAttribute(ERROR_MESSAGE_MAP);
+        if (UtilValidate.isNotEmpty(msgMap)) {
+            return (String) msgMap.entrySet().iterator().next().getValue();
+        }
+        return msg;
+    }
+
     public static void setServiceMsgsToEventMsgs(Map<String, Object> serviceResult, Map<String, Object> targetAttributes) {
         targetAttributes.put(ERROR_MESSAGE_LIST, serviceResult.get(ModelService.ERROR_MESSAGE_LIST));
         targetAttributes.put(ERROR_MESSAGE_MAP, serviceResult.get(ModelService.ERROR_MESSAGE_MAP));
@@ -154,7 +201,7 @@ public final class EventUtil {
      * NOTE: 2019-02-05: Currently skips the multiPartMap (TODO?).
      * Added 2019-02-05.
      */
-    public static Map<String, Object> getServiceEventParamMap(HttpServletRequest request, ModelService model, 
+    public static Map<String, Object> getServiceEventParamMap(HttpServletRequest request, ModelService model,
             boolean validate, List<Object> errorMessages, GenericValue userLogin, Locale locale, TimeZone timeZone) {
         Map<String, Object> multiPartMap = Collections.emptyMap(); // TODO?
         Map<String, Object> rawParametersMap = UtilHttp.getCombinedMap(request);
@@ -248,7 +295,7 @@ public final class EventUtil {
      * NOTE: 2019-02-05: Currently skips the multiPartMap (TODO?).
      * Added 2019-02-05.
      */
-    public static Map<String, Object> getServiceEventParamMap(HttpServletRequest request, String serviceName, 
+    public static Map<String, Object> getServiceEventParamMap(HttpServletRequest request, String serviceName,
             boolean validate, List<Object> errorMessages, GenericValue userLogin, Locale locale, TimeZone timeZone) {
         ModelService model;
         try {
@@ -409,7 +456,7 @@ public final class EventUtil {
      * call the given service with the given context after making it valid, finally returning an appropriate event response.
      * (similar but not equivalent to groovy and ftl's runService function).
      * <p>
-     * This version skips the makeValid call; can be used if the context was already passed through makeValid. 
+     * This version skips the makeValid call; can be used if the context was already passed through makeValid.
      * <p>
      * This is geared toward small events that are basically just service wrappers.
      * <p>
@@ -425,7 +472,7 @@ public final class EventUtil {
      * call the given service with the given context after making it valid, finally returning an appropriate event response.
      * (similar but not equivalent to groovy and ftl's runService function).
      * <p>
-     * This version skips the makeValid call; can be used if the context was already passed through makeValid. 
+     * This version skips the makeValid call; can be used if the context was already passed through makeValid.
      * <p>
      * This is geared toward small events that are basically just service wrappers.
      * <p>

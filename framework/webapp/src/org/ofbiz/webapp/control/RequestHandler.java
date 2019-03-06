@@ -780,6 +780,9 @@ public class RequestHandler {
                 throw new RequestHandlerException(e);
             }
 
+            // SCIPIO: 2019-03-06: Cleanup event messages (e.g. the default service event success message).
+            cleanupEventMessages(request);
+
             // SCIPIO: Use straight ints
             //String responseStatusCode  = nextRequestResponse.statusCode;
             Integer responseStatusCode = nextRequestResponse.getStatusCodeNumber();
@@ -1024,6 +1027,23 @@ public class RequestHandler {
             }
         }
         return "";
+    }
+
+    /**
+     * SCIPIO: 2019-03-06: Cleanup event messages (e.g. the default service event success message).
+     * <p>
+     * If there is a service error and the _DEF_EVENT_MSG_ request attribute is present and equal
+     * to the _EVENT_MESSAGE_ attribute, _EVENT_MESSAGE_ is removed. NOTE: _DEF_EVENT_MSG_ is always removed.
+     * <p>
+     * This is an extra patch for {@link #doRequest} to prevent the default success message when an error occurs.
+     * See {@link org.ofbiz.webapp.event.ServiceEventHandler#invoke} for the code that sets these.
+     */
+    void cleanupEventMessages(HttpServletRequest request) {
+        if (EventUtil.hasErrorMsg(request) && request.getAttribute("_DEF_EVENT_MSG_") != null && 
+                request.getAttribute("_DEF_EVENT_MSG_").equals(request.getAttribute("_EVENT_MESSAGE_"))) {
+            request.removeAttribute("_EVENT_MESSAGE_");
+        }
+        request.removeAttribute("_DEF_EVENT_MSG_"); // Always remove this, to limit its lifespan
     }
 
     /** Find the event handler and invoke an event. */

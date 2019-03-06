@@ -380,9 +380,13 @@ public class ServiceEventHandler implements EventHandler {
 
             // SCIPIO: Some services don't set any result messages, either because they aren't explicitly set in the service logic (minilang, groovy, java...)
             // or because the service is just a direct DB operation
-            if (ModelService.RESPOND_SUCCESS.equals(responseString) && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_LIST_"))
-                    && UtilValidate.isEmpty(request.getAttribute("_EVENT_MESSAGE_"))) {
-                request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage("CommonUiLabels", "CommonServiceSuccessMessage", locale));
+            // 2019-03-06: We now also don't add this if there was already an error message from a prior service.
+            // NOTE: See also org.ofbiz.webapp.control.RequestHandler#cleanupEventMessages for the code that handles _DEF_EVENT_MSG_; it unsets
+            // _EVENT_MESSAGE_ if an error message exists and _EVENT_MESSAGE_ is still set to _DEF_EVENT_MSG_ by the time the events are done.
+            if (ModelService.RESPOND_SUCCESS.equals(responseString) && !EventUtil.hasEventMsg(request) && !EventUtil.hasErrorMsg(request)) {
+                String defSuccessMsg = UtilProperties.getMessage("CommonUiLabels", "CommonServiceSuccessMessage", locale);
+                request.setAttribute("_EVENT_MESSAGE_", defSuccessMsg);
+                request.setAttribute("_DEF_EVENT_MSG_", defSuccessMsg); // See RequestHandler for usage (short lifespan)
             }
 
             // set the results in the request

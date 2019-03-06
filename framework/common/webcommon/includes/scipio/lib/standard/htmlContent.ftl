@@ -1564,12 +1564,13 @@ Slider data entry - a single slide.
     linkTarget              = (|_blank|(boolean)|..., default: -from global styles-, fallback default: -empty-) Target for link element
                               If boolean, false prevents any; true will allow global styles hash lookup.
     image                   = Background image URL
+    responsiveMap           = ((map)) Map of options passed directly to responsive image implementation
 
   * Related *
     @slider
 -->
 <#assign slide_defaultArgs = {
-  "title":"", "class":"", "id":"", "library":"","link":"", "linkTarget":false, "image":"", "passArgs":{}
+  "title":"", "class":"", "id":"", "library":"","link":"", "linkTarget":false, "image":"", "passArgs":{}, "responsiveMap":{}
 }>
 <#macro slide args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.slide_defaultArgs)>
@@ -1596,18 +1597,37 @@ Slider data entry - a single slide.
     <#local id = "slide_${renderSeqNumber!}_${slideIdNum}"/>
   </#if>
   <@slide_markup id=id sliderId=(sliderId!) class=class library=library image=image link=link linkTarget=linkTarget title=title 
-    slideIdNum=slideIdNum sliderLength=sliderLength renderSeqNumber=(renderSeqNumber!) origArgs=origArgs passArgs=passArgs><#nested></@slide_markup>
+    slideIdNum=slideIdNum sliderLength=sliderLength renderSeqNumber=(renderSeqNumber!) responsiveMap=responsiveMap! origArgs=origArgs passArgs=passArgs><#nested></@slide_markup>
 </#macro>
 
 <#-- @slide main markup - theme override -->
-<#macro slide_markup id="" sliderId="" class="" library="" image="" link="" linkTarget="" title="" slideIdNum=0 sliderLength=1 renderSeqNumber="" origArgs={} passArgs={} catchArgs...>
+<#macro slide_markup id="" sliderId="" class="" library="" image="" link="" linkTarget="" title="" slideIdNum=0 sliderLength=1 renderSeqNumber="" responsiveMap={} origArgs={} passArgs={} catchArgs...>
+    <#local srcset = "">
+    <#local sizes = "">
+    <#if responsiveMap?has_content>
+        <#local responsiveKeys = mapKeys(responsiveMap)>
+        <#if responsiveKeys?contains('srcset')>
+            <#local srcsetMap=toSimpleMap(responsiveMap)['srcset']>
+            <#list srcsetMap?keys as srcsetEntry>
+                <#local srcset=srcset + escapeFullUrl(srcsetMap[srcsetEntry], 'html') + raw(' ' + srcsetEntry + 'w')>
+                <#if !srcsetEntry?is_last><#local srcset=srcset + ", "></#if>
+            </#list>
+        </#if>
+        <#if responsiveKeys?contains('sizes')>
+            <#local sizesMap=toSimpleMap(responsiveMap)['sizes']>
+            <#list sizesMap?keys as sizesEntry>
+                <#local sizes=sizes + ("(" + sizesEntry + ") " + sizesMap[sizesEntry])>
+                <#if !sizesEntry?is_last><#local sizes=sizes + ", "></#if>
+            </#list>
+        </#if>
+    </#if>
     <#if library=="owl" || library=="slick">
         <div id="${escapeVal(id, 'html')}" class="item">
             <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
             <div>
             <#if title?has_content><h2>${escapeVal(title, 'htmlmarkup')}</h2></#if>
             <#if image?has_content>
-              <img src="${escapeFullUrl(image, 'html')}"  class="${styles.slide_image!}"/>
+                <img src="${escapeFullUrl(image, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>sizes="${sizes}"</#if></#if> class="${styles.slide_image!}"/>
             </#if>
               <#local nestedContent><#nested></#local>
               <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>
@@ -1620,7 +1640,7 @@ Slider data entry - a single slide.
             <div>
             <#if title?has_content><h2>${escapeVal(title, 'htmlmarkup')}</h2></#if>
               <#if image?has_content>
-                <img src="${escapeFullUrl(image, 'html')}" class="${styles.slide_image!}"/>
+                <img src="${escapeFullUrl(image, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>sizes="${sizes}"</#if></#if> class="${styles.slide_image!}"/>
               </#if>
               <#local nestedContent><#nested></#local>
               <#if nestedContent?has_content><div class="${styles.slide_content!}">${nestedContent}</div></#if>

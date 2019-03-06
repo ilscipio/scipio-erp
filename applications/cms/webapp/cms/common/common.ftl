@@ -701,9 +701,9 @@
           <#-- <@field type="text" inline=true name="variantSizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight required=true value="" id=""/> -->
         </@cell>
         <@cell columns=3>
-          <input type="hidden" name="variantSizeSequenceNum" required=true value=""/>
+          <input type="hidden" name="variantSizeSequenceNum" value="0"/>
         </@cell>
-      </@row>	
+      </@row>    
   </@fields>
 </#macro>
 
@@ -721,19 +721,19 @@
          jQuery('#saveAsPreset').click(saveAsPreset);
         </#if>
 
-		var customVariantSizeCount = 0;
-		var customVariantSizeFieldCount = 0;
+        var customVariantSizeCount = 0;
+        var customVariantSizeFieldCount = 0;
         var addCustomVariantSize = function() {
-        	customVariantSizeCount++;
+            customVariantSizeCount++;
             <#assign customVariantSizeForm><@customVariantSizeForm /></#assign>
             var customVariantSizeForm = $('${escapeVal(customVariantSizeForm, 'js')}');
             var variantSizeSequenceNum = customVariantSizeForm.find('input').each(function() {
-            	$(this, customVariantSizeForm).attr('id', 'customvariantsize-field-' + customVariantSizeFieldCount);
-            	if ($(this).attr('name') == 'variantSizeSequenceNum') {
-            		$(this, customVariantSizeForm).val(customVariantSizeCount);
-            	}
-            	customVariantSizeFieldCount++;
-            	console.log('input #' + $(this).attr('id') + ' name[' + $(this).attr('name') + '] = ' + $(this).val());             	
+                $(this, customVariantSizeForm).attr('id', 'customvariantsize-field-' + customVariantSizeFieldCount);
+                if ($(this).attr('name') == 'variantSizeSequenceNum') {
+                    $(this, customVariantSizeForm).val(customVariantSizeCount);
+                }
+                customVariantSizeFieldCount++;
+                console.log('input #' + $(this).attr('id') + ' name[' + $(this).attr('name') + '] = ' + $(this).val());
             });
                
             jQuery('.cmsmedia-customvariantsize-add-cnt').before(customVariantSizeForm);
@@ -742,10 +742,10 @@
 
         var customVariantSizeMethodElem = jQuery('#mediaForm input[name=customVariantSizeMethod]');
         jQuery(customVariantSizeMethodElem).click(function() {
-        	customVariantSizeMethod = $(this).val();
-        	if (customVariantSizeMethod == "customVariantSizesForm") {
-        		addCustomVariantSize();
-        	}
+            customVariantSizeMethod = $(this).val();
+            if (customVariantSizeMethod == "customVariantSizesForm") {
+                addCustomVariantSize();
+            }
             jQuery('.cmsmedia-customvariantsize-method').hide();
             jQuery('.' + customVariantSizeMethod).show();
         });
@@ -775,29 +775,29 @@
 
 <#macro responsiveImgScript>
     <@script>
-    	<#assign customResponsiveImgForm><@responsiveImgForm /></#assign>        
+        <#assign customResponsiveImgForm><@responsiveImgForm /></#assign>
         var responsiveImgCount = 0;
         var responsiveImgFieldCount = 0;
         var addResponsiveImgSize = function() {
-        	responsiveImgCount++;
-        	var customResponsiveImgForm = $('${escapeVal(customResponsiveImgForm, 'js')}');
-        	var viewPortSequenceNum = jQuery(customResponsiveImgForm).find('input').each(function() {
-        		$(this, customResponsiveImgForm).attr('id', 'responsiveimg-field-' + responsiveImgFieldCount);
-            	if ($(this).attr('name') == 'viewPortSequenceNum') {
-            		$(this, customResponsiveImgForm).val(responsiveImgCount);
-            	}
-            	responsiveImgFieldCount++;
-            	console.log('input #' + $(this).attr('id') + ' name[' + $(this).attr('name') + '] = ' + $(this).val());             	
-        	});
+            responsiveImgCount++;
+            var customResponsiveImgForm = $('${escapeVal(customResponsiveImgForm, 'js')}');
+            var viewPortSequenceNum = jQuery(customResponsiveImgForm).find('input').each(function() {
+                $(this, customResponsiveImgForm).attr('id', 'responsiveimg-field-' + responsiveImgFieldCount);
+                if ($(this).attr('name') == 'viewPortSequenceNum') {
+                    $(this, customResponsiveImgForm).val(responsiveImgCount);
+                }
+                responsiveImgFieldCount++;
+                console.log('input #' + $(this).attr('id') + ' name[' + $(this).attr('name') + '] = ' + $(this).val());
+            });
             jQuery('.cmsmedia-responsiveimg-add-cnt').before(customResponsiveImgForm);
         };
 
         $('select[name=srcsetModeEnumId]').change(function() {
            if ($(this).val() != "IMG_SRCSET_VW") {
-           	 jQuery('.cmsmedia-responsiveimg-mode').hide();             
+                jQuery('.cmsmedia-responsiveimg-mode').hide();
            } else {
-           	 jQuery('.cmsmedia-responsiveimg-mode').show();           
-           	 addResponsiveImgSize();	
+                jQuery('.cmsmedia-responsiveimg-mode').show();
+                addResponsiveImgSize();
            }
         });
 

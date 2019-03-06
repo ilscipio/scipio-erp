@@ -868,6 +868,7 @@
         <attribute mode="IN" name="variantSizeName" type="List" optional="true"/>
         <attribute mode="IN" name="variantSizeWidth" type="List" optional="true"/>
         <attribute mode="IN" name="variantSizeHeight" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeSequenceNum" type="List" optional="true"/>
         <attribute mode="IN" name="presetName" type="String" optional="true"/>
     </service>
 

@@ -956,10 +956,13 @@
     <property key="CmsMediaCustomSizeVariantsPresetId">        
         <value xml:lang="en">Preset Id</value>
     </property>
-    <property key="CmsMediaCustomSizeVariantsPresetName">        
+    <property key="CmsMediaCustomSizeVariantsPresetName">
         <value xml:lang="en">Preset Name</value>
     </property>
-    <property key="CmsMediaCustomSizeVariantsSaveAsPreset">        
+    <property key="CmsMediaViewCustomSizeVariants">
+        <value xml:lang="en">View Custom Size Variants</value>
+    </property>
+    <property key="CmsMediaCustomSizeVariantsSaveAsPreset">
         <value xml:lang="en">Save as Preset</value>
     </property>
     <property key="CmsCustomImageSizePresets">        

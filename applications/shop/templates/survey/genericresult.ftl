@@ -40,10 +40,10 @@ code package.
         <#-- standard question options -->
         <@td align='right' nowrap="nowrap">
           <#assign answerString = "answers">
-          <#if (results._total?default(0) == 1)>
+          <#if ((results._total!0) == 1)>
              <#assign answerString = "answer">
           </#if>
-          <div>${surveyQuestionAndAppl.question!} (${results._total?default(0)?string.number} ${answerString})</div>
+          <div>${surveyQuestionAndAppl.question!} (${results._total!0?string.number} ${answerString})</div>
           <#if surveyQuestionAndAppl.hint?has_content>
             <div>${surveyQuestionAndAppl.hint}</div>
           </#if>
@@ -52,12 +52,12 @@ code package.
 
         <@td align="${align}">
           <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
-            <#assign selectedOption = (answer.booleanResponse)?default("Y")>
+            <#assign selectedOption = (answer.booleanResponse)!"Y">
             <div><span style="white-space: nowrap;">
-              <#if "Y" == selectedOption><b>==>&nbsp;<font color="red"></#if>${uiLabelMap.CommonY}<#if "Y" == selectedOption></font></b></#if>&nbsp;[${results._yes_total?default(0)?string("#")} / ${results._yes_percent?default(0)?string("#")}%]
+              <#if "Y" == selectedOption><b>==>&nbsp;<font color="red"></#if>${uiLabelMap.CommonY}<#if "Y" == selectedOption></font></b></#if>&nbsp;[${results._yes_total!0?string("#")} / ${results._yes_percent!0?string("#")}%]
             </span></div>
             <div><span style="white-space: nowrap;">
-              <#if "N" == selectedOption><b>==>&nbsp;<font color="red"></#if>N<#if "N" == selectedOption></font></b></#if>&nbsp;[${results._no_total?default(0)?string("#")} / ${results._no_percent?default(0)?string("#")}%]
+              <#if "N" == selectedOption><b>==>&nbsp;<font color="red"></#if>N<#if "N" == selectedOption></font></b></#if>&nbsp;[${results._no_total!0?string("#")} / ${results._no_percent!0?string("#")}%]
             </span></div>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXTAREA">
             <div>${(answer.textResponse)!}</div>
@@ -76,11 +76,11 @@ code package.
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "GIFT_CARD">
             <div>${(answer.textResponse)!}</div>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_CURRENCY">
-            <div>${answer.currencyResponse?number?default(0)}</div>
+            <div>${answer.currencyResponse!0?number}</div>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_FLOAT">
-            <div>${answer.floatResponse?number?default(0)?string("#")}</div>
+            <div>${answer.floatResponse!0?number?string("#")}</div>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_LONG">
-            <div>${answer.numericResponse?number?default(0)?string("#")}&nbsp;[${uiLabelMap.CommonTally}: ${results._tally?default(0)?string("#")} / ${uiLabelMap.CommonAverage}: ${results._average?default(0)?string("#")}]</div>
+            <div>${answer.numericResponse!0?number?string("#")}&nbsp;[${uiLabelMap.CommonTally}: ${results._tally!0?string("#")} / ${uiLabelMap.CommonAverage}: ${results._average!0?string("#")}]</div>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "PASSWORD">
             <div>[${uiLabelMap.CommonNotShown}]</div>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CONTENT">
@@ -90,7 +90,7 @@ code package.
             </#if>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
             <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", null, sequenceSort, false)!>
-            <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
+            <#assign selectedOption = (answer.surveyOptionSeqId)!"_NA_">
             <#if options?has_content>
               <#list options as option>
                 <#assign optionResults = results.get(option.surveyOptionSeqId)!>
@@ -98,7 +98,7 @@ code package.
                     <#if option.surveyOptionSeqId == selectedOption><b>==>&nbsp;<font color="red"></#if>
                     ${option.description!}
                     <#if option.surveyOptionSeqId == selectedOption></font></b></#if>
-                    &nbsp;[${optionResults._total?default(0)?string("#")} / ${optionResults._percent?default(0?string("#"))}%]
+                    &nbsp;[${optionResults._total!0?string("#")} / ${optionResults._percent!0?string("#")}%]
                   </span></div>
               </#list>
             </#if>

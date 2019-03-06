@@ -22,11 +22,11 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -545,11 +545,11 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         // setup message lists
         List<String> eventMessageList = UtilGenerics.toList(request.getAttribute("eventMessageList"));
         if (eventMessageList == null) {
-            eventMessageList = new LinkedList<>();
+            eventMessageList = new ArrayList<>(); // SCIPIO: Now ArrayList: = new LinkedList<>();
         }
         List<String> errorMessageList = UtilGenerics.toList(request.getAttribute("errorMessageList"));
         if (errorMessageList == null) {
-            errorMessageList = new LinkedList<>();
+            errorMessageList = new ArrayList<>(); // SCIPIO: Now ArrayList: = new LinkedList<>();
         }
 
         if (request.getAttribute("_EVENT_MESSAGE_") != null) {

@@ -793,6 +793,16 @@ public class GiftCertificateServices {
         // survey information
         String surveyId = giftCertSettings.getString("purchaseSurveyId");
 
+        if (UtilValidate.isEmpty(surveyId)) { // SCIPIO: Explicit check
+            Debug.logError(UtilProperties.getMessage(resourceError,
+                    "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", Debug.getLogLocale())
+                    + "; cause: the ProductStoreFinActSetting [productStoreId=" + productStoreId
+                    + ", finAccountTypeId=" + FinAccountHelper.giftCertFinAccountTypeId
+                    + "] does not specify a purchaseSurveyId", module);
+            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                    "AccountingGiftCerticateNumberCannotFulfillFromSurveyAnswers", locale));
+        }
+        
         // get the survey response
         GenericValue surveyResponse = null;
         try {

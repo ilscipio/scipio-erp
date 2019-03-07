@@ -996,7 +996,7 @@ code package.
 
     <target name="docs-ftl-scipio-ide-ftlonly">
         <echo message="[docs-ftl-scipio-ide] ========== Start Building (FTL docs) =========="/>
-        <echo message="[docs-ftl-scipio-ide] Building Scipio template-writer-friendly FTL lib docs..."/>
+        <echo message="[docs-ftl-scipio-ide] Building Scipio IDE-friendly FTL lib docs..."/>
         <java classname="com.ilscipio.scipio.ce.webapp.ftl.doc.FtlDocCompiler" fork="true">
             <arg value="scipio-lib"/> <!-- lib format -->
             <arg value="templating"/> <!-- doc purpose -->
@@ -1018,8 +1018,6 @@ code package.
                 <path location="framework/base/lib/*"/> <!-- includes Freemarker (and some others: log4j) -->
             </classpath>
         </java>
-        <!-- NOTE: the following warning could be fixed in the java but it's not worth it, just deal with it -->
-        <echo message="[docs-ftl-scipio-ide] WARN: The output files may not be browsable locally, because the generated URLs for website may differ from the local paths (for both absolute and relative URLs)"/>
         <echo message="[docs-ftl-scipio-ide] ========== Done Building (FTL docs) =========="/>
     </target>
 

@@ -22,12 +22,38 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.product.store.ProductStoreSurveyWrapper;
 
+final module = "CustomerSurvey.groovy";
+
 partyId = userLogin?.partyId; // SCIPIO: prevent crash on missing userLogin
 paramMap = UtilHttp.getParameterMap(request);
 
 productStoreSurveyId = parameters.productStoreSurveyId;
 
-surveyAppl = from("ProductStoreSurveyAppl").where("productStoreSurveyId", productStoreSurveyId).queryOne();
+// SCIPIO: 2019-03-06: If surveyWrapper is already set in request attributes, reuse it...
+wrapper = context.surveyWrapper;
+if (wrapper == null) {
+    wrapper = request.getAttribute("surveyWrapper");
+}
+if (!(wrapper instanceof ProductStoreSurveyWrapper)) { // SCIPIO: kust in case
+    // TODO?: Can remove this log line later when sure no problems from this...
+    Debug.logInfo("Note: Received non-ProductStoreSurveyWrapper surveyWrapper from context/request; discarding", module);
+    wrapper = null;
+}
+if (wrapper != null) {
+    productStoreSurveyId = wrapper?.getProductStoreSurveyAppl()?.productStoreSurveyId;
+}
+
+// SCIPIO: 2019-03-06: The event may specify a specific action to take
+surveyAction = context.surveyAction;
+if (surveyAction == null) {
+    surveyAction = request.getAttribute("surveyAction");
+}
+if (surveyAction) {
+    context.surveyAction = surveyAction;
+}
+
+surveyAppl = wrapper?.getProductStoreSurveyAppl() ?: // SCIPIO: 2019-03-06: Reuse the record from the survey wrapper
+    from("ProductStoreSurveyAppl").where("productStoreSurveyId", productStoreSurveyId).queryOne();
 if (surveyAppl) {
     survey = surveyAppl.getRelatedOne("Survey", false);
     context.survey = survey;
@@ -35,7 +61,16 @@ if (surveyAppl) {
     if (!parameters._ERROR_MESSAGE_) {
         paramMap = [productStoreSurveyId : productStoreSurveyId];
     }
-    wrapper = new ProductStoreSurveyWrapper(surveyAppl, partyId, paramMap);
+    if (wrapper == null) { // SCIPIO: 2019-03-06: Don't recreate unless
+        wrapper = new ProductStoreSurveyWrapper(surveyAppl, partyId, paramMap);
+        if (Debug.infoOn()) {
+            Debug.logInfo("Creating ProductStoreSurveyWrapper for productStoreSurveyId '" + productStoreSurveyId + "'", module);
+        }
+    } else {
+        if (Debug.infoOn()) {
+            Debug.logInfo("Reusing ProductStoreSurveyWrapper for productStoreSurveyId '" + productStoreSurveyId + "'", module);
+        }
+    }
     context.surveyWrapper = wrapper;
 
     surveyResp = parameters.surveyResponseId;

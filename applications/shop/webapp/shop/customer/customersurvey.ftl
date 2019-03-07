@@ -8,10 +8,19 @@ code package.
 <@section title=((survey.surveyName)!)>
     <#-- Render the survey -->
     <#if surveyWrapper?has_content>
-        <form method="post" enctype="multipart/form-data" action="<@pageUrl>profilesurvey/profilesurvey</@pageUrl>">
-          ${surveyWrapper.render(context)}
+        <#-- SCIPIO: 2019-03-06: Now supports surveyAction and surveyMarkup error/missing fallback
+            NOTE: surveyWrapper.render(context) may return null/void/missing/empty upon error or upon empty output -->
+        <form method="post" enctype="multipart/form-data" action="<@pageUrl uri=surveyAction!'profilesurvey' escapeAs='html'/>">
+          <#assign surveyMarkup = surveyWrapper.render(context)!>
+          <#if surveyMarkup?has_content>
+            ${surveyMarkup}
+          <#else>
+            <@commonMsg type="result">${uiLabelMap.OrderNothingToDoHere}</@commonMsg>
+            <a href="<@pageUrl uri='main'/>" class="${styles.link_nav} ${styles.action_view}">${uiLabelMap.CommonHome}</a>
+          </#if>
         </form>
     <#else>
         <@commonMsg type="result">${uiLabelMap.OrderNothingToDoHere}</@commonMsg>
+        <a href="<@pageUrl uri='main'/>" class="${styles.link_nav} ${styles.action_view}">${uiLabelMap.CommonHome}</a>
     </#if>
 </@section>

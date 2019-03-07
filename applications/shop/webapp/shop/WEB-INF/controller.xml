@@ -194,7 +194,7 @@ code package.
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="view-last" value="showcart" save-last-view="true"/>
-        <response name="survey" type="view" value="survey"/>
+        <response name="survey" type="view" value="survey" allow-view-save="false"/><!-- SCIPIO: Do not save view so additem's success view-last can work through additemsurvey -->
         <response name="product" type="view" value="product"/>
         <response name="viewcart" type="request-redirect" value="showcart" save-request="messages"/><!-- SCIPIO: only transfer error messages -->
         <!-- SCIPIO: If there's an error, currently in most case we want to go back to the previous (product page)...
@@ -1346,6 +1346,25 @@ code package.
         <event type="service" invoke="removeCustomerDigitalDownloadProductFile"/>
         <response name="success" type="view" value="digitalproductedit"/>
         <response name="error" type="view" value="digitalproductedit"/>
+    </request-map>
+
+    <!-- ======================= Survey Requests ======================= -->
+
+    <request-map uri="takesurvey">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="profilesurvey"/>
+    </request-map>
+    <request-map uri="profilesurvey">
+        <security https="true" auth="true"/>
+        <event type="java" invoke="createSurveyResponseAndRestoreParameters" path="org.ofbiz.content.survey.SurveyEvents"/>
+        <response name="success" type="view" value="profilesurvey"/>
+        <response name="error" type="view" value="profilesurvey"/>
+    </request-map>
+    <request-map uri="minipoll">
+        <security https="true" auth="false"/><!-- SCIPIO: Restrict to https="true" -->
+        <event type="java" invoke="createSurveyResponseAndRestoreParameters" path="org.ofbiz.content.survey.SurveyEvents"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
     </request-map>
 
     <!-- ======================= Communication Event Based Messaging ======================= -->

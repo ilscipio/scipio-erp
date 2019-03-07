@@ -26,6 +26,6 @@ ${getLabel((senderName??)?then('EcommerceYouHaveBeenSentGiftCardFrom', 'Ecommerc
 
 <pre>
   ${uiLabelMap.EcommerceYourCardNumber}: ${cardNumber!}
-  ${uiLabelMap.EcommerceYourPinNumber}: ${pinNumber!}
+  <#if pinNumber?has_content>${uiLabelMap.EcommerceYourPinNumber}: ${pinNumber!}</#if>
   ${uiLabelMap.EcommerceGiftAmount}: <@ofbizCurrency amount=(amount!) isoCode=(currencyUomId!)/>
 </pre>

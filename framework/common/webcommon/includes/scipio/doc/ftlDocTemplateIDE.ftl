@@ -127,7 +127,7 @@
     
   <#if (sectionMap?size >= 2) && entryMap?has_content>
     <div >
-      <h4>Sections:</h4>
+      <h2>Sections:</h2>
       <ul>
         <#list sectionMap?keys as sectionName> 
           <#assign section = sectionMap[sectionName]>
@@ -151,7 +151,7 @@
 
   <#if entryMap?has_content>
     <div >
-      <h4><#if (sectionMap?size >= 2)>All </#if>Definitions:</h4>
+      <h2><#if (sectionMap?size >= 2)>All </#if>Definitions:</h2>
       <p>
       <#list entryMap?keys?sort as entryName>
         <a href="#entry-${entryName}">${entryName}</a><#if entryName_has_next>, </#if>
@@ -162,7 +162,7 @@
 
   <#if libMap?has_content>
     <div >
-      <h4>All libraries:</h4>
+      <h2>All libraries:</h2>
       <p>
       <#list libMap?keys?sort as libName>
         <#assign lib = libMap[libName]>
@@ -203,19 +203,19 @@
                 <#if !entryTitle?has_content>
                   <#assign entryTitle = entryName>
                 </#if>
-                public static String ${entry.type?upper_case}_${entryTitle?upper_case?replace(" ","_")?replace("(","")?replace")",""} = "
+                public static String ${entry.type?upper_case}_${entryTitle?upper_case?replace(" ","_")?replace("(","")?replace(")","")} = "
                     <@sanitize>
                       <#--
                       <hr />
                       <a name="entry-${entryName}"></a>-->
                       <div >
                         <#-- NOTE: title is sometimes same as formal name (below), but not always -->
-                        <h3 ><@labelText text=entryTitle /></h3>
+                        <h1 ><@labelText text=entryTitle /></h1>
 
                         <div >
                            <#-- type is "macro", "function" or "variable" -->
-                           <h4><span >${entry.type}</span> <span ><code>${entryName}</code></span><#if entry.isAbstract> (abstract/placeholder)</#if>
-                              <#if entry.isDeprecated> <strong>(DEPRECATED)</strong></#if><#if entry.isOverride> <strong>(override)</strong></#if></h4>
+                           <h2><span >${entry.type}</span> <span ><code>${entryName}</code></span><#if entry.isAbstract> (abstract/placeholder)</#if>
+                              <#if entry.isDeprecated> <strong>(DEPRECATED)</strong></#if><#if entry.isOverride> <strong>(override)</strong></#if></h2>
                         </div>
 
                         <#global parametersSectionRendered = false>
@@ -224,7 +224,7 @@
                         <#macro parametersSection entry entrySection={}>
                             <#if !parametersSectionRendered>
                               <div >
-                                <h4><@labelText text=entrySection.title!"Parameters" /></h4>
+                                <h2><@labelText text=entrySection.title!"Parameters" /></h2>
 
                               <#if false>
                                 <div ><#--<em>All parameters:</em>-->
@@ -239,6 +239,7 @@
                                   </#if>
                                   </p>
                                 </div>
+                                <br/><br/>
                               </#if>
                                 <#-- NOTE: there is an entry-wide paramDescMap, and each param section has one too -->
                                 <#--<#if entrySection.paramDescMap?has_content>-->
@@ -269,7 +270,7 @@
                                   <@parametersTable paramDescMaps=entry.paramDescMapPlusArgMapUnaccounted exclude=exclude defaultDesc=defaultDesc/>
                                 </#if>
                               </#if>
-                              </div>
+                              </div><br/><br/>
                             <#--</#if>-->
 
                             <#if entry.isAdvancedArgs>
@@ -286,6 +287,7 @@
                               </div>
                             </#if>
                           </div>
+                          <br/><br/>
                         </#if>
                         <#global parametersSectionRendered = true>
                     </#macro>
@@ -353,7 +355,7 @@
                           </div>
                         <#elseif entrySectionName == "examples">
                           <div >
-                            <h4><@labelText text=entrySection.title!"" /></h4>
+                            <h2><@labelText text=entrySection.title!"" /></h2>
                             <@preformedText text=entrySection.rawText!"" />
                           </div>
                         <#elseif entrySectionName == "parameters">
@@ -361,7 +363,7 @@
                         <#elseif entrySectionName == "returnValues">
                           <@parametersSection entry=entry entrySection=entrySections.parameters!{} /><#-- Guarantee parameters before return values -->
                           <div >
-                            <h4><@labelText text=entrySection.title!"" /></h4>
+                            <h2><@labelText text=entrySection.title!"" /></h2>
                             <p>
                               <@descText text=entrySection.text!"" />
                             </p>
@@ -369,7 +371,7 @@
                         <#elseif entrySectionName == "related">
                           <@parametersSection entry=entry entrySection=entrySections.parameters!{} /><#-- Guarantee parameters before related -->
                           <div >
-                             <h4><@labelText text=entrySection.title!"" /></h4>
+                             <h2><@labelText text=entrySection.title!"" /></h2>
                              <p>
                              <#list entry.relatedNames![] as name>
                                <@entryRef name=name /><#if name_has_next>, </#if>
@@ -379,7 +381,7 @@
                         <#else>
                           <#--<@parametersSection entry=entry entrySection=entrySections.parameters!{} /> Don't force parameters before others -->
                           <div >
-                            <h4><@labelText text=entrySection.title!"" /></h4>
+                            <h2><@labelText text=entrySection.title!"" /></h2>
                             <@complexContent text=entrySection.text!"" paragraphs=true />
                           </div>
                         </#if>

@@ -52,7 +52,7 @@ code package.
 
         <@td align="${align}">
           <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
-            <#assign selectedOption = (answer.booleanResponse)!"Y">
+            <#assign selectedOption = raw((answer.booleanResponse)!"Y")>
             <div><span style="white-space: nowrap;">
               <#if "Y" == selectedOption><b>==>&nbsp;<font color="red"></#if>${uiLabelMap.CommonY}<#if "Y" == selectedOption></font></b></#if>&nbsp;[${results._yes_total!0?string("#")} / ${results._yes_percent!0?string("#")}%]
             </span></div>
@@ -90,14 +90,15 @@ code package.
             </#if>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
             <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", null, sequenceSort, false)!>
-            <#assign selectedOption = (answer.surveyOptionSeqId)!"_NA_">
+            <#assign selectedOption = raw((answer.surveyOptionSeqId)!"_NA_")>
             <#if options?has_content>
               <#list options as option>
-                <#assign optionResults = results.get(option.surveyOptionSeqId)!>
+                <#assign optionSeqId = raw(option.surveyOptionSeqId!)><#-- SCIPIO: Refactored + fixed escaping -->
+                <#assign optionResults = results.get(optionSeqId)!>
                   <div><span style="white-space: nowrap;">
-                    <#if option.surveyOptionSeqId == selectedOption><b>==>&nbsp;<font color="red"></#if>
+                    <#if optionSeqId == selectedOption><b>==>&nbsp;<font color="red"></#if>
                     ${option.description!}
-                    <#if option.surveyOptionSeqId == selectedOption></font></b></#if>
+                    <#if optionSeqId == selectedOption></font></b></#if>
                     &nbsp;[${optionResults._total!0?string("#")} / ${optionResults._percent!0?string("#")}%]
                   </span></div>
               </#list>

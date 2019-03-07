@@ -3314,6 +3314,18 @@
         <value xml:lang="zh">总代理价</value>
         <value xml:lang="zh-TW">總代理價</value>
     </property>
+    <property key="ProductStore.authDeclinedMessage.DefaultShop">
+        <value xml:lang="de">Es ist ein Problem mit Ihrer Zahlungsmethode aufgetreten. Versuchen Sie es mit einer anderen Methode oder rufen Sie den Kundendienst an.</value>
+        <value xml:lang="en">There has been a problem with your method of payment. Please try a different method or call customer service.</value>
+    </property>
+    <property key="ProductStore.authFraudMessage.DefaultShop">
+        <value xml:lang="de">Ihre Bestellung wurde abgelehnt und Ihr Konto wurde aufgrund von Betrug deaktiviert.</value>
+        <value xml:lang="en">Your order has been rejected and your account has been disabled due to fraud.</value>
+    </property>
+    <property key="ProductStore.authErrorMessage.DefaultShop">
+        <value xml:lang="de">Problem beim Verbinden mit dem Zahlungsprozessor; Wir werden es weiterhin versuchen und Sie per E-Mail benachrichtigen.</value>
+        <value xml:lang="en">Problem connecting to payment processor; we will continue to retry and notify you by email.</value>
+    </property>
     <property key="ProductStoreGroup.description._NA_">
         <value xml:lang="de">Nicht anwendbar</value>
         <value xml:lang="en">Not Applicable</value>

@@ -1252,7 +1252,7 @@ public class CheckOutHelper {
 
     private static String getStoreAuthMsg(GenericValue productStore, String msgFieldName, Locale locale) { // SCIPIO: Refactored
         String msg = productStore.getString(msgFieldName, locale); // SCIPIO: 2019-03-07: Added locale lookup (for *Labels.xml-based localization)
-        return UtilValidate.isNotEmpty(msg) ? msg : UtilProperties.getMessage("OrderEntityLabels", "ProductStore." + msgFieldName + ".DefaultShop", locale);
+        return UtilValidate.isNotEmpty(msg) ? msg : UtilProperties.getMessage("ProductEntityLabels", "ProductStore." + msgFieldName + ".DefaultShop", locale);
     }
 
     /**

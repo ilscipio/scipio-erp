@@ -321,7 +321,7 @@ TODO:
 *************
 * evalAbsContainerSizeFactors
 ************   
-OVERRIDE. Calculates nested container size factors. 
+OVERRIDE for: utilities#evalAbsContainerSizeFactors. Calculates nested container size factors.
 
 TODO: Reimplement in java in com.ilscipio.scipio.ce.webapp.ftl.template.standard.StdTemplateFtlUtil.evalAbsContainerSizeFactors 
         and have this delegate to it

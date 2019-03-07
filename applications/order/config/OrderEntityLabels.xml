@@ -624,6 +624,18 @@
         <value xml:lang="zh">派工单</value>
         <value xml:lang="zh-TW">作業指令單</value>
     </property>
+    <property key="ProductStore.authDeclinedMessage.DefaultShop">
+        <value xml:lang="de">Es ist ein Problem mit Ihrer Zahlungsmethode aufgetreten. Versuchen Sie es mit einer anderen Methode oder rufen Sie den Kundendienst an.</value>
+        <value xml:lang="en">There has been a problem with your method of payment. Please try a different method or call customer service.</value>
+    </property>
+    <property key="ProductStore.authFraudMessage.DefaultShop">
+        <value xml:lang="de">Ihre Bestellung wurde abgelehnt und Ihr Konto wurde aufgrund von Betrug deaktiviert.</value>
+        <value xml:lang="en">Your order has been rejected and your account has been disabled due to fraud.</value>
+    </property>
+    <property key="ProductStore.authErrorMessage.DefaultShop">
+        <value xml:lang="de">Problem beim Verbinden mit dem Zahlungsprozessor; Wir werden es weiterhin versuchen und Sie per E-Mail benachrichtigen.</value>
+        <value xml:lang="en">Problem connecting to payment processor; we will continue to retry and notify you by email.</value>
+    </property>
     <property key="QuoteType.description.OTHER_QUOTE">
         <value xml:lang="ar">أخرى</value>
         <value xml:lang="de">Andere</value>

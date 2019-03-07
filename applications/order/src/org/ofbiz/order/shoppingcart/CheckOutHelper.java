@@ -997,9 +997,15 @@ public class CheckOutHelper {
      */
     public static Map<String, Object> processPayment(String orderId, BigDecimal orderTotal, String currencyUomId, GenericValue productStore, GenericValue userLogin, boolean faceToFace, boolean manualHold,
             LocalDispatcher dispatcher, Delegator delegator, Locale locale) throws GeneralException { // SCIPIO: 2019-03-07: Added locale
+        if (locale == null) {
+            locale = Locale.getDefault();
+            Debug.logWarning("processPayment called without a locale; using system default (" + locale + ")", module); 
+        }
+        
         // Get some payment related strings
-        String DECLINE_MESSAGE = productStore.getString("authDeclinedMessage", locale); // SCIPIO: 2019-03-07: Added locale lookup (for *Labels.xml-based localization)
-        String ERROR_MESSAGE = productStore.getString("authErrorMessage", locale);
+        // SCIPIO: 2019-03-07: Refactored
+        //String DECLINE_MESSAGE = productStore.getString("authDeclinedMessage", locale); // SCIPIO: 2019-03-07: Added locale lookup (for *Labels.xml-based localization)
+        //String ERROR_MESSAGE = productStore.getString("authErrorMessage", locale);
         String RETRY_ON_ERROR = productStore.getString("retryFailedAuths", locale);
         if (RETRY_ON_ERROR == null) {
             RETRY_ON_ERROR = "Y";
@@ -1121,7 +1127,7 @@ public class CheckOutHelper {
                         throw new GeneralException("Problem with order change; see above error");
                     }
                     if (UtilValidate.isEmpty(messages)) {
-                        return ServiceUtil.returnError(DECLINE_MESSAGE);
+                        return ServiceUtil.returnError(getStoreAuthMsg(productStore, "authDeclinedMessage", locale)); // SCIPIO: Refactored: DECLINE_MESSAGE
                     }
                     return ServiceUtil.returnError(messages);
                 } else if ("APPROVED".equals(authResp)) {
@@ -1164,14 +1170,14 @@ public class CheckOutHelper {
                     }
                     if (!faceToFace && "Y".equalsIgnoreCase(RETRY_ON_ERROR)) {
                         // never do this for a face to face purchase regardless of store setting
-                        return ServiceUtil.returnSuccess(ERROR_MESSAGE);
+                        return ServiceUtil.returnSuccess(getStoreAuthMsg(productStore, "authErrorMessage", locale)); // SCIPIO: Refactored: ERROR_MESSAGE
                     }
                     boolean ok = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
                     if (!ok) {
                         throw new GeneralException("Problem with order change; see above error");
                     }
                     if (UtilValidate.isEmpty(messages)) {
-                        return ServiceUtil.returnError(ERROR_MESSAGE);
+                        return ServiceUtil.returnError(getStoreAuthMsg(productStore, "authErrorMessage", locale)); // SCIPIO: Refactored: ERROR_MESSAGE
                     }
                     return ServiceUtil.returnError(messages);
                 } else {
@@ -1185,13 +1191,13 @@ public class CheckOutHelper {
                 }
                 if (!faceToFace && "Y".equalsIgnoreCase(RETRY_ON_ERROR)) {
                     // never do this for a face to face purchase regardless of store setting
-                    return ServiceUtil.returnSuccess(ERROR_MESSAGE);
+                    return ServiceUtil.returnSuccess(getStoreAuthMsg(productStore, "authErrorMessage", locale)); // SCIPIO: Refactored: ERROR_MESSAGE
                 }
                 boolean ok = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
                 if (!ok) {
                     throw new GeneralException("Problem with order change; see above error");
                 }
-                return ServiceUtil.returnError(ERROR_MESSAGE);
+                return ServiceUtil.returnError(getStoreAuthMsg(productStore, "authErrorMessage", locale)); // SCIPIO: Refactored: ERROR_MESSAGE
             }
         } else {
             // Get the paymentMethodTypeIds - this will need to change when ecom supports multiple payments
@@ -1242,6 +1248,11 @@ public class CheckOutHelper {
             }
         }
         return ServiceUtil.returnSuccess();
+    }
+
+    private static String getStoreAuthMsg(GenericValue productStore, String msgFieldName, Locale locale) { // SCIPIO: Refactored
+        String msg = productStore.getString(msgFieldName, locale); // SCIPIO: 2019-03-07: Added locale lookup (for *Labels.xml-based localization)
+        return UtilValidate.isNotEmpty(msg) ? msg : UtilProperties.getMessage("OrderEntityLabels", "ProductStore." + msgFieldName + ".DefaultShop", locale);
     }
 
     /**
@@ -1353,7 +1364,8 @@ public class CheckOutHelper {
     public Map<String, Object> failedBlacklistCheck(GenericValue userLogin, GenericValue productStore) {
         Map<String, Object> result;
         String errMsg=null;
-        String REJECT_MESSAGE = productStore.getString("authFraudMessage");
+        // SCIPIO: 2019-03-07: Refactored
+        //String REJECT_MESSAGE = productStore.getString("authFraudMessage");
         String orderId = this.cart.getOrderId();
 
         try {
@@ -1366,7 +1378,7 @@ public class CheckOutHelper {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            errMsg = UtilProperties.getMessage(resource_error,"checkhelper.database_error", cart.getLocale());
+            errMsg = UtilProperties.getMessage(resource_error,"checkhelper.database_error", getLocale()); // SCIPIO: Replaced: cart.getLocale()
             result = ServiceUtil.returnError(errMsg);
             return result;
         }
@@ -1374,7 +1386,7 @@ public class CheckOutHelper {
         // set the order/item status - reverse inv
         OrderChangeHelper.rejectOrder(dispatcher, userLogin, orderId);
         result = ServiceUtil.returnSuccess();
-        result.put(ModelService.ERROR_MESSAGE, REJECT_MESSAGE);
+        result.put(ModelService.ERROR_MESSAGE, getStoreAuthMsg(productStore, "authFraudMessage", getLocale()));
 
         // wipe the cart and session
         this.cart.clear();

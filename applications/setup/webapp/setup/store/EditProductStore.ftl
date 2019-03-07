@@ -68,9 +68,11 @@
         "orderNumberPrefix": "WS",
         "defaultLocaleString": defaultDefaultLocaleString!,
         "showOutOfStockProducts": "Y",
-        "authDeclinedMessage": "There has been a problem with your method of payment. Please try a different method or call customer service.",
-        "authFraudMessage": "Your order has been rejected and your account has been disabled due to fraud.",
-        "authErrorMessage": "Problem connecting to payment processor; we will continue to retry and notify you by email.",
+        
+        <!-- SCIPIO: 2017-03-07: These messages now defaults to OrderEntityLabels#ProductStore...: -->
+        "authDeclinedMessage": "", <#-- "There has been a problem with your method of payment. Please try a different method or call customer service.", -->
+        "authFraudMessage": "", <#-- "Your order has been rejected and your account has been disabled due to fraud.", -->
+        "authErrorMessage": "", <#-- "Problem connecting to payment processor; we will continue to retry and notify you by email.", -->
         
         <#--"paymentList": paymentList![]-->
         
@@ -229,6 +231,8 @@
             <#--<@field type="hidden" name="defaultLocaleString" value=(fixedParams.defaultLocaleString!)/> configurable -->
             <@field type="hidden" name="enableAutoSuggestionList" value=(params.enableAutoSuggestionList!)/>
             <@field type="hidden" name="showOutOfStockProducts" value=(fixedParams.showOutOfStockProducts!)/>
+            <#-- SCIPIO: NOTE: If ever show these message fields, they should have the default value from OrderEntityLabels
+                here as placeholder... -->
             <@field type="hidden" name="authDeclinedMessage" value=(fixedParams.authDeclinedMessage!)/>
             <@field type="hidden" name="authFraudMessage" value=(fixedParams.authFraudMessage!)/>
             <@field type="hidden" name="authErrorMessage" value=(fixedParams.authErrorMessage!)/>

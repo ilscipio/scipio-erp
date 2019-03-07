@@ -853,25 +853,25 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         ModelEntity modelEntityToUse = this.getModelEntity();
         Object resourceValue = get(this.getModelEntity(), modelEntityToUse, name, resource, locale);
         if (resourceValue == null) {
-          if (modelEntityToUse instanceof ModelViewEntity) {
-              //  now try to retrieve with the field heading from the real entity linked to the view
-              ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntityToUse;
-              Iterator<ModelAlias> it = modelViewEntity.getAliasesIterator();
-              while (it.hasNext()) {
-                  ModelAlias modelAlias = it.next();
-                  if (modelAlias.getName().equalsIgnoreCase(name)) {
-                      modelEntityToUse = modelViewEntity.getMemberModelEntity(modelAlias.getEntityAlias());
-                      name = modelAlias.getField();
-                      break;
-                  }
-              }
-              resourceValue = get(this.getModelEntity(), modelEntityToUse, name, resource, locale);
-              if (resourceValue == null) {
-                  return fieldValue;
-              }
-            return resourceValue;
-          }
-        return fieldValue;
+            if (modelEntityToUse instanceof ModelViewEntity) {
+                //  now try to retrieve with the field heading from the real entity linked to the view
+                ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntityToUse;
+                Iterator<ModelAlias> it = modelViewEntity.getAliasesIterator();
+                while (it.hasNext()) {
+                    ModelAlias modelAlias = it.next();
+                    if (modelAlias.getName().equalsIgnoreCase(name)) {
+                        modelEntityToUse = modelViewEntity.getMemberModelEntity(modelAlias.getEntityAlias());
+                        name = modelAlias.getField();
+                        break;
+                    }
+                }
+                resourceValue = get(this.getModelEntity(), modelEntityToUse, name, resource, locale);
+                if (resourceValue == null) {
+                    return fieldValue;
+                }
+                return resourceValue;
+            }
+            return fieldValue;
         }
         return resourceValue;
     }

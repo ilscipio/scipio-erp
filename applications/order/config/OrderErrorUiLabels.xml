@@ -6642,6 +6642,14 @@
         <value xml:lang="zh-CN">不能建立新的购物列表</value>
         <value xml:lang="zh-TW">不能新建購物列表。</value>
     </property>
+    <property key="shoppinglistevents.cannot_retrieve_new_shopping_list">
+        <value xml:lang="de">Einkaufsliste kann nicht abgerufen werden.</value>
+        <value xml:lang="en">Cannot get shopping list.</value>
+        <value xml:lang="es">No se ha podido obtener la lista de compras.</value>
+        <value xml:lang="fr">Impossible d'obtenir la liste d'achats.</value>
+        <value xml:lang="it">Impossibile ottenere la lista della spesa.</value>
+        <value xml:lang="pt">Não é possível obter lista de compras.</value>
+    </property>
     <property key="shoppinglistevents.choose_shopping_list">
         <value xml:lang="ar">يرجى اختيار قائمة تسوق.</value>
         <value xml:lang="de">Bitte wählen Sie eine Einkaufsliste aus.</value>

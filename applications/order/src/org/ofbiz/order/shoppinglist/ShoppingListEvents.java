@@ -100,13 +100,24 @@ public class ShoppingListEvents {
 
     public static String addBulkFromCart(Delegator delegator, LocalDispatcher dispatcher, ShoppingCart cart, GenericValue userLogin, String shoppingListId, String shoppingListTypeId, String[] items, boolean allowPromo, boolean append) throws IllegalArgumentException {
         String errMsg = null;
+        
+        // SCIPIO (2019-03-07): Ensuring shoppingListId really exists, otherwise force creation. 
+        // This fixes the bug where shoppingListId passed wasn't null but didn't exist in DB. Later on, failed to create ShoppingListItems.
+        GenericValue shoppingList = null;
+        try {
+            shoppingList = delegator.findOne("ShoppingList", false, UtilMisc.toMap("shoppingListId", shoppingListId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems creating getting ShoppingList [" + shoppingListId + "]", module);
+            errMsg = UtilProperties.getMessage(resource_error,"shoppinglistevents.cannot_create_retrieve_shopping_list", cart.getLocale());
+            throw new IllegalArgumentException(errMsg);
+        }
 
         if (items == null || items.length == 0) {
             errMsg = UtilProperties.getMessage(resource_error, "shoppinglistevents.select_items_to_add_to_list", cart.getLocale());
             throw new IllegalArgumentException(errMsg);
         }
 
-        if (UtilValidate.isEmpty(shoppingListId)) {
+        if (UtilValidate.isEmpty(shoppingList)) {
             // create a new shopping list
             Map<String, Object> newListResult = null;
             try {

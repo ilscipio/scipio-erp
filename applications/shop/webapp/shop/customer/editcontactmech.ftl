@@ -39,8 +39,8 @@ code package.
   <#if !cart?? && sessionAttributes.shoppingCart??>
     <#assign cart = sessionAttributes.shoppingCart>
   </#if>-->
-  <#assign cart = cart!getCartObject()!>
-  <#if cart?? && cart.getAllShippingContactMechId()?seq_contains(contactMech.contactMechId)>
+  <#assign cart = cart!getShoppingCart()!false>
+  <#if !cart?is_boolean && cart.getAllShippingContactMechId()?seq_contains(contactMech.contactMechId)>
     <@commonMsg type="warning">${uiLabelMap.CommonWarning}: ${uiLabelMap.ShopEditingShipAddressShipCostChange}</@commonMsg>
   </#if>
 </#if>

@@ -8,7 +8,7 @@ code package.
 <#-- SCIPIO: Migrated from orderhistory.ftl -->
 <#--<@section>-->
   <#if downloadOrderRoleAndProductContentInfoList?has_content>
-    <@table type="data-list" id="availableTitleDownload" summary="This table display available title for download.">
+    <@table type="data-list" id="availableTitleDownload" summary=uiLabelMap.EcommerceDownloadsAvailableTitle>
       <@thead>
         <@tr>
           <@th>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>

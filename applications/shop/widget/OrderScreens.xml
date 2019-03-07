@@ -571,7 +571,7 @@ code package.
                                 <if-true field="userIsKnown" />
                             </condition>
                             <widgets>
-                                <screenlet>
+                                <screenlet title="${uiLabelMap.EcommerceDownloadsAvailableTitle}"><!-- SCIPIO: Added missing title -->
                                     <include-screen name="orderdownloadscontent" />
                                 </screenlet>
                             </widgets>

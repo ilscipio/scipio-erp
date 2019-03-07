@@ -91,6 +91,10 @@ public class CheckOutHelper {
         this.cart = cart;
     }
 
+    protected Locale getLocale() { // SCIPIO
+        return (cart != null ? cart.getLocale() : Locale.getDefault());
+    }
+    
     public Map<String, Object> setCheckOutShippingAddress(String shippingContactMechId) {
         List<String> errorMessages = new ArrayList<>();
         Map<String, Object> result;
@@ -961,22 +965,42 @@ public class CheckOutHelper {
     }
 
     public Map<String, Object> processPayment(GenericValue productStore, GenericValue userLogin) throws GeneralException {
-        return CheckOutHelper.processPayment(this.cart.getOrderId(), this.cart.getGrandTotal(), this.cart.getCurrency(), productStore, userLogin, false, false, dispatcher, delegator);
+        // SCIPIO: 2019-03-07: Added locale
+        return CheckOutHelper.processPayment(this.cart.getOrderId(), this.cart.getGrandTotal(), this.cart.getCurrency(), productStore, userLogin, false, false, dispatcher, delegator, getLocale());
     }
 
     public Map<String, Object> processPayment(GenericValue productStore, GenericValue userLogin, boolean faceToFace) throws GeneralException {
-        return CheckOutHelper.processPayment(this.cart.getOrderId(), this.cart.getGrandTotal(), this.cart.getCurrency(), productStore, userLogin, faceToFace, false, dispatcher, delegator);
+        // SCIPIO: 2019-03-07: Added locale
+        return CheckOutHelper.processPayment(this.cart.getOrderId(), this.cart.getGrandTotal(), this.cart.getCurrency(), productStore, userLogin, faceToFace, false, dispatcher, delegator, getLocale());
     }
 
     public Map<String, Object> processPayment(GenericValue productStore, GenericValue userLogin, boolean faceToFace, boolean manualHold) throws GeneralException {
-        return CheckOutHelper.processPayment(this.cart.getOrderId(), this.cart.getGrandTotal(), this.cart.getCurrency(), productStore, userLogin, faceToFace, manualHold, dispatcher, delegator);
+        // SCIPIO: 2019-03-07: Added locale
+        return CheckOutHelper.processPayment(this.cart.getOrderId(), this.cart.getGrandTotal(), this.cart.getCurrency(), productStore, userLogin, faceToFace, manualHold, dispatcher, delegator, getLocale());
     }
 
-    public static Map<String, Object> processPayment(String orderId, BigDecimal orderTotal, String currencyUomId, GenericValue productStore, GenericValue userLogin, boolean faceToFace, boolean manualHold, LocalDispatcher dispatcher, Delegator delegator) throws GeneralException {
+    /**
+     * processPayment (instance method).
+     * <p>
+     * NOTE: This is preferred over the static overload 
+     * SCIPIO: Added 2019-03-07.
+     */
+    public Map<String, Object> processPayment(String orderId, BigDecimal orderTotal, String currencyUomId, GenericValue productStore, GenericValue userLogin, boolean faceToFace, boolean manualHold) throws GeneralException {
+        return processPayment(orderId, orderTotal, currencyUomId, productStore, userLogin, faceToFace, manualHold, dispatcher, delegator, getLocale());
+    }
+
+    /**
+     * processPayment (static method).
+     * <p>
+     * SCIPIO: NOTE: It is recommended to *not* use this method and rather use the instance methods with the same name
+     * (e.g. {@link #processPayment(String, BigDecimal, String, GenericValue, GenericValue, boolean, boolean)} where possible, due to this breaking abstraction, wher
+     */
+    public static Map<String, Object> processPayment(String orderId, BigDecimal orderTotal, String currencyUomId, GenericValue productStore, GenericValue userLogin, boolean faceToFace, boolean manualHold,
+            LocalDispatcher dispatcher, Delegator delegator, Locale locale) throws GeneralException { // SCIPIO: 2019-03-07: Added locale
         // Get some payment related strings
-        String DECLINE_MESSAGE = productStore.getString("authDeclinedMessage");
-        String ERROR_MESSAGE = productStore.getString("authErrorMessage");
-        String RETRY_ON_ERROR = productStore.getString("retryFailedAuths");
+        String DECLINE_MESSAGE = productStore.getString("authDeclinedMessage", locale); // SCIPIO: 2019-03-07: Added locale lookup (for *Labels.xml-based localization)
+        String ERROR_MESSAGE = productStore.getString("authErrorMessage", locale);
+        String RETRY_ON_ERROR = productStore.getString("retryFailedAuths", locale);
         if (RETRY_ON_ERROR == null) {
             RETRY_ON_ERROR = "Y";
         }
@@ -1220,6 +1244,15 @@ public class CheckOutHelper {
         return ServiceUtil.returnSuccess();
     }
 
+    /**
+     * @deprecated SCIPIO: 2019-03-07: Please use a {@link #processPayment} overload that accepts a Locale instead (for messages).
+     */
+    @Deprecated
+    public static Map<String, Object> processPayment(String orderId, BigDecimal orderTotal, String currencyUomId, GenericValue productStore, GenericValue userLogin, boolean faceToFace, boolean manualHold,
+            LocalDispatcher dispatcher, Delegator delegator) throws GeneralException {
+        return processPayment(orderId, orderTotal, currencyUomId, productStore, userLogin, faceToFace, manualHold, dispatcher, delegator, null);
+    }
+    
     public static void adjustFaceToFacePayment(String orderId, BigDecimal cartTotal, List<GenericValue> allPaymentPrefs, GenericValue userLogin, Delegator delegator) throws GeneralException {
         BigDecimal prefTotal = BigDecimal.ZERO;
         if (allPaymentPrefs != null) {

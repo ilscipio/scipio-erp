@@ -4773,7 +4773,8 @@ public class OrderServices {
             Map<String, Object> paymentResp = null;
             try {
                 Debug.logInfo("Calling process payments...", module);
-                paymentResp = CheckOutHelper.processPayment(orderId, orh.getOrderGrandTotal(), orh.getCurrency(), productStore, userLogin, false, false, dispatcher, delegator);
+                paymentResp = CheckOutHelper.processPayment(orderId, orh.getOrderGrandTotal(), orh.getCurrency(), productStore, userLogin, false, false,
+                        dispatcher, delegator, locale); // SCIPIO: 2019-03-07: Added locale
             } catch (GeneralException | GeneralRuntimeException e) {
                 Debug.logError(e, module);
                 return ServiceUtil.returnError(e.getMessage());

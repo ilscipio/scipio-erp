@@ -744,6 +744,16 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         return object == null ? null : object.toString();
     }
 
+    public String getString(String name, Locale locale) { // SCIPIO: 2019-03-07: Added overload
+        Object object = get(name, locale);
+        return object == null ? null : object.toString();
+    }
+
+    public String getString(String name, String resource, Locale locale) { // SCIPIO: 2019-03-07: Added overload
+        Object object = get(name, resource, locale);
+        return object == null ? null : object.toString();
+    }
+
     public java.sql.Timestamp getTimestamp(String name) {
         return (java.sql.Timestamp) get(name);
     }

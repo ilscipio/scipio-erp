@@ -3548,7 +3548,11 @@ public class OrderServices {
                             allProductContent = new LinkedList<>();
                         }
                         if (parentProduct != null) {
-                            allProductContent.addAll(parentProduct.getRelated("ProductContent", null, null, false));
+                            // SCIPIO (2019-03-07): Filter by productContentTypeId also for the parentProduct
+                            List<EntityExpr> parentExprs = new ArrayList<>();
+                            parentExprs.add(EntityCondition.makeCondition("productContentTypeId", EntityOperator.IN, UtilMisc.toList("FULFILLMENT_EXTASYNC", "FULFILLMENT_EXTSYNC", "FULFILLMENT_EMAIL", "DIGITAL_DOWNLOAD")));
+                            parentExprs.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, parentProduct.getString("productId")));
+                            allProductContent = EntityQuery.use(delegator).from("ProductContent").where(parentExprs).queryList();
                         }
                     }
 
@@ -3619,7 +3623,9 @@ public class OrderServices {
                             // Nothing to do for here. Downloads are made available to the user
                             // though a query of OrderItems with related ProductContent.
                         } else {
-                            Debug.logError("Invalid fulfillment type : " + fulfillmentType + " not supported.", module);
+                            // SCIPIO (2019-03-07): By filtering parentProduct (see above comment) this is unlikely to happen. 
+                            // In case it happens, lowering log level to warning, that's far from enough.
+                            Debug.logWarning("Invalid fulfillment type : " + fulfillmentType + " not supported.", module);
                         }
                     }
                 }

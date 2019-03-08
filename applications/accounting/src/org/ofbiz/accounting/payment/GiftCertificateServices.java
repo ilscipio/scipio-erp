@@ -974,7 +974,7 @@ public class GiftCertificateServices {
                 // causes ofbGcPurchase/giftCertificatePurchase to be re-run, which causes a new gift certificate to be generated at every email retry.
                 // SCIPIO: 2019-03-08: Verify that there are no ResourceBundle or other non-Serializable instances in bodyParameters
                 for(Map.Entry<String, Object> entry : answerMap.entrySet()) {
-                    if (!(entry.getValue() instanceof java.io.Serializable)) {
+                    if ((entry.getValue() != null) && !(entry.getValue() instanceof java.io.Serializable)) {
                         Debug.logWarning("giftCertificatePurchase: Non-serializable value found"
                                 + " in answerMap (bodyParameters); discarding [key=" + entry.getKey()
                                 + ", type=" + entry.getValue().getClass() + "]; if unsure, please report this issue", module);

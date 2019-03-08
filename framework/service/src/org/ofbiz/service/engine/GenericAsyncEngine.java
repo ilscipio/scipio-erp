@@ -109,8 +109,8 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
                 String jobName = Long.toString(System.currentTimeMillis());
 
                 if (errorMessageList.size() > 0) { // SCIPIO
-                    Debug.logError("runAsync: " + errorMessageList.size() + " error(s) while serializing runtimeInfo for service '"
-                            + modelService.name + "' (jobName=" + jobName + "):\n" + StringUtils.join(errorMessageList, '\n'), module);
+                    Debug.logError("Persisted job [service=" + modelService.name + ", jobName=" + jobName + "] error: " + errorMessageList.size()
+                        + " error(s) while serializing runtimeInfo (context):\n" + StringUtils.join(errorMessageList, '\n'), module);
                 }
 
                 Map<String, Object> jFields = UtilMisc.toMap("jobId", jobId, "jobName", jobName, "runTime", UtilDateTime.nowTimestamp());

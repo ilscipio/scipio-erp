@@ -608,8 +608,8 @@ public final class JobManager {
             runtimeData = delegator.createSetNextSeqId(runtimeData);
             dataId = runtimeData.getString("runtimeDataId");
             if (errorMessageList.size() > 0) {
-                Debug.logError("Schedule job: " + errorMessageList.size() + " error(s) while serializing runtimeInfo for service '"
-                        + serviceName + "' (jobName=" + jobName + "):\n" + StringUtils.join(errorMessageList, '\n'), module);
+                Debug.logError("Persisted job [service=" + serviceName + ", jobName=" + jobName + "] error: " + errorMessageList.size()
+                + " error(s) while serializing runtimeInfo (context):\n" + StringUtils.join(errorMessageList, '\n'), module);
             }
         } catch (GenericEntityException e) { //  | SerializeException | IOException e
             throw new JobManagerException(e.getMessage(), e);

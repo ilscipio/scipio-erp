@@ -9,9 +9,7 @@ code package.
 <#assign price = priceMap! />
 <#-- end variable setup -->
 
-
 <@script>
-
     var featureCount = 0; <#-- NOTE: This is overridden further below -->
     var featureIdList = [];
     var variantProductInfoMap = {};
@@ -31,14 +29,14 @@ code package.
              The following script takes into account that there may be a diverse selection of configuration options.
              Each option is validated against the tree (the following select boxes invalidated) and reactivated, once the options
              have been updated according to the variantTree. -->
-        function updateVariants(type, variantId, index){
-            if(variantId){
+        function updateVariants(type, variantId, index) {
+            if (variantId) {
                 <#-- This cannot be relied on; now using a variable
                 var selectNum = $('[id^=FT_]').length; // get number of select boxes -->
                 var selectNum = featureCount;
                 
                 currentNode.splice(index); // reset the node information & remove anything beyond the current selection
-                for(i = currentNode.length+1; i <= selectNum; i++){
+                for(i = currentNode.length+1; i <= selectNum; i++) {
                     var featureId = featureIdList[i];
                     $('#FT_'+featureId).prop( "disabled", true ); // invalidate all select boxes beyond the current selected one
                 }
@@ -51,7 +49,7 @@ code package.
                     dataObject = dataObject[node]; // traverse down the tree, based on our path
                 });
                 
-                if((index+1) >= selectNum){
+                if ((index + 1) >= selectNum) {
                     var productId;
                     if (typeof dataObject === 'string' || dataObject instanceof String) {
                         productId = dataObject;
@@ -67,7 +65,7 @@ code package.
                         
                         $('#add_product_id').val(productId);
                     }
-                }else{
+                } else {
                     $('#add_product_id').val('NULL'); <#-- make sure to reset the add_product_id! otherwise issues when starting over -->
                     var nextIndex = index+1;
                     var options = [];
@@ -85,10 +83,8 @@ code package.
                     setVariantPrice(productId); -->
                     setVariantPriceSpec(baseCurrentPrice);
 
-                    <#-- check for amount box
-                    <#-- SCIPIO: For now we'll only set this at the last step, because don't have a tangible product ID until then
-                    toggleAmt(checkAmtReq(productId)); -->
-                    toggleAmt('N');
+                    <#-- check for amount box -->
+                    toggleAmt(checkAmtReq(productId));
                 }
             } else {
                 setVariantPriceSpec("${escapeVal(uiLabelMap.OrderChooseVariations, 'js')}...");
@@ -102,8 +98,9 @@ code package.
         var productInfo = variantProductInfoMap[productId];
         if (productInfo) {
             var price = productInfo.priceFormatted;
-            if (price == null)
+            if (price == null) {
                 price = productInfo.price;
+            }
             if (price != null) {
                 setVariantPriceSpec(price);
             }
@@ -148,7 +145,7 @@ code package.
             FIXME?: OPTIONAL_FEATURE would require additional checks. -->
         <#--<#if (product.virtualVariantMethodEnum!) == "VV_FEATURETREE" && featureLists?has_content>-->
         if (featureCount > 0) {
-            for(var i=0; i < featureIdList.length; i++) {
+            for(var i = 0; i < featureIdList.length; i++) {
                 var id = featureIdList[i];
                 var val = jQuery('#FT_' + id).val();
                 if (!val) {
@@ -221,7 +218,6 @@ code package.
             jQuery("#add_amount_container").hide();
         }
     }
-
 </@script>
 
 <div id="productdetail">

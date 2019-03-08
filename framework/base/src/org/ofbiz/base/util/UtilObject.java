@@ -75,37 +75,59 @@ public final class UtilObject {
 
     /** Serialize an object to a byte array */
     public static byte[] getBytes(Object obj) {
-        byte[] data = null;
         try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            try {
-                ObjectOutputStream oos = new ObjectOutputStream(bos);
-                try {
-                    oos.writeObject(obj);
-                    data = bos.toByteArray();
-                } catch (IOException e) {
-                    Debug.logError(e, module);
-                } finally {
-                    oos.flush();
-                    oos.close();
-                }
-            } catch (IOException e) {
-                // I don't know how to force an error during flush or
-                // close of ObjectOutputStream; since OOS is wrapping
-                // BAOS, and BAOS does not throw IOException during
-                // write, I don't think this can happen.
-                Debug.logError(e, module);
-            } finally {
-                bos.close();
-            }
+            return getBytesOrEx(obj); // SCIPIO: 2019-03-08: Refactored, delegated
         } catch (IOException e) {
-            // How could this ever happen?  BAOS.close() is listed as
-            // throwing the exception, but I don't understand why this
-            // is.
             Debug.logError(e, module);
         }
+        return null;
+    }
 
+    /** SCIPIO: Serialize an object to a byte array, or exception. Refactored 2019-03-08 from {@link #getBytes(Object)}. */
+    public static byte[] getBytesOrEx(Object obj) throws IOException {
+        byte[] data = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        IOException currentEx = null;
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            try {
+                oos.writeObject(obj);
+                data = bos.toByteArray();
+            } catch (IOException e) {
+                currentEx = e;
+            } finally {
+                try {
+                    oos.flush();
+                } catch(IOException e) {
+                    currentEx = handleSecondaryException("Error flushing ObjectOutputStream", e, currentEx);
+                }
+                try {
+                    oos.close();
+                } catch(IOException e) {
+                    currentEx = handleSecondaryException("Error closing ObjectOutputStream", e, currentEx);
+                }
+            }
+        } finally {
+            try {
+                bos.close();
+            } catch(IOException e) {
+                currentEx = handleSecondaryException("Error closing ByteArrayOutputStream", e, currentEx);
+            }
+        }
+        if (currentEx != null) {
+            throw currentEx;
+        }
         return data;
+    }
+
+    private static <E extends Exception> E handleSecondaryException(String msg, E ex, E currentEx) { // SCIPIO
+        if (currentEx == null) {
+            return ex;
+        }
+        if (Debug.verboseOn()) {
+            Debug.logError(msg + ": " + ex.toString(), module);
+        }
+        return currentEx;
     }
 
     /** Returns the size of a serializable object. Non-serializable objects

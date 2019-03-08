@@ -18,7 +18,6 @@
  *******************************************************************************/
 package org.ofbiz.service.job;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +27,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.RejectedExecutionException;
 
+import org.apache.tomcat.util.buf.StringUtils;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
@@ -42,7 +42,6 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityListIterator;
@@ -602,10 +601,17 @@ public final class JobManager {
         String dataId = null;
         try {
             GenericValue runtimeData = delegator.makeValue("RuntimeData");
-            runtimeData.set("runtimeInfo", XmlSerializer.serialize(context));
+            // SCIPIO: 2019-03-08: Do not throw exceptions needlessly; instead, simply skip any non-serializable values.
+            //runtimeData.set("runtimeInfo", XmlSerializer.serialize(context));
+            List<String> errorMessageList = new ArrayList<>();
+            runtimeData.set("runtimeInfo", XmlSerializer.serializeOrNull(context, errorMessageList));
             runtimeData = delegator.createSetNextSeqId(runtimeData);
             dataId = runtimeData.getString("runtimeDataId");
-        } catch (GenericEntityException | SerializeException | IOException e) {
+            if (errorMessageList.size() > 0) {
+                Debug.logError("Schedule job: " + errorMessageList.size() + " error(s) while serializing runtimeInfo for service '"
+                        + serviceName + "' (jobName=" + jobName + "):\n" + StringUtils.join(errorMessageList, '\n'), module);
+            }
+        } catch (GenericEntityException e) { //  | SerializeException | IOException e
             throw new JobManagerException(e.getMessage(), e);
         }
         // schedule the job

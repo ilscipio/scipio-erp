@@ -29,6 +29,7 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilNumber;
@@ -392,5 +393,19 @@ public final class PaymentWorker {
      */
     public static int getNumberMaskLength() {
         return NUMBER_MASK_LENGTH;
+    }
+
+    /**
+     * SCIPIO: Applies the default number mask for general card numbers as defined in
+     * payment.properties#payment.general.number.*.
+     * <p>
+     * NOTE: This method should generally not be used for UI display as-is; added mainly for logging
+     * purposes. For UI display examples, see: component://accounting/webapp/accounting/common/acctlib.ftl.
+     * <p>
+     * TODO?: This could support unhardcoding the left- vs right- masking via properties, but it's almost always
+     * left-masking that are used...
+     */
+    public static String applyGeneralNumberMask(CharSequence number, Delegator delegator) {
+        return StringUtil.maskLeft(number, getNumberMaskLength(delegator), getNumberMaskChar(delegator));
     }
 }

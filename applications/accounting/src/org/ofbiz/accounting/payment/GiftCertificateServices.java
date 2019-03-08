@@ -970,13 +970,19 @@ public class GiftCertificateServices {
                 // send off the email async so we will retry on failed attempts
                 // SC 20060405: Changed to runSync because runAsync kept getting an error:
                 // Problem serializing service attributes (Cannot serialize object of class java.util.PropertyResourceBundle)
+                // SCIPIO: 2019-03-08: Changed back to runAsync because an error in sendMailFromScreen ([CON] or other)
+                // causes ofbGcPurchase/giftCertificatePurchase to be re-run, which causes a new gift certificate to be generated at every email retry.
                 try {
-                    Map<String, Object> serviceResults = dispatcher.runSync("sendMailFromScreen", emailCtx);
-                    if (ServiceUtil.isError(serviceResults)) {
-                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResults));
-                    }
+                    //Map<String, Object> serviceResults = dispatcher.runSync("sendMailFromScreen", emailCtx);
+                    //if (ServiceUtil.isError(serviceResults)) {
+                    //    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResults));
+                    //}
+                    dispatcher.runAsync("sendMailFromScreen", emailCtx);
                 } catch (GenericServiceException e) {
-                    Debug.logError(e, "Problem sending mail", module);
+                    // SCIPIO: 2019-03-08: Improved error message
+                    Debug.logError(e, "Problem sending gift certificate purchase information email [cardNumber="
+                            + PaymentWorker.applyGeneralNumberMask((String) createGcResult.get("cardNumber"), delegator)
+                            + ", initialAmount=" + createGcResult.get("initialAmount") + "]", module); 
                     // this is fatal; we will rollback and try again later
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                             "AccountingGiftCerticateNumberCannotSendEmailNotice",

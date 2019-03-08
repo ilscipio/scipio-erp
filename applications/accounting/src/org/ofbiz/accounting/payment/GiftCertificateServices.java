@@ -972,15 +972,6 @@ public class GiftCertificateServices {
                 // Problem serializing service attributes (Cannot serialize object of class java.util.PropertyResourceBundle)
                 // SCIPIO: 2019-03-08: Changed back to runAsync because an error in sendMailFromScreen ([CON] or other)
                 // causes ofbGcPurchase/giftCertificatePurchase to be re-run, which causes a new gift certificate to be generated at every email retry.
-                // SCIPIO: 2019-03-08: Verify that there are no ResourceBundle or other non-Serializable instances in bodyParameters
-                for(Map.Entry<String, Object> entry : answerMap.entrySet()) {
-                    if ((entry.getValue() != null) && !(entry.getValue() instanceof java.io.Serializable)) {
-                        Debug.logWarning("giftCertificatePurchase: Non-serializable value found"
-                                + " in answerMap (bodyParameters); discarding [key=" + entry.getKey()
-                                + ", type=" + entry.getValue().getClass() + "]; if unsure, please report this issue", module);
-                        entry.setValue(null);
-                    }
-                }
                 try {
                     //Map<String, Object> serviceResults = dispatcher.runSync("sendMailFromScreen", emailCtx);
                     //if (ServiceUtil.isError(serviceResults)) {

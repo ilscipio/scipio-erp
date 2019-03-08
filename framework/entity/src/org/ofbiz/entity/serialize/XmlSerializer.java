@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -71,12 +72,52 @@ public class XmlSerializer {
 
     private volatile static WeakReference<DateFormat> simpleDateFormatter;
 
-    public static String serialize(Object object) throws SerializeException, FileNotFoundException, IOException {
+    // SCIPIO: 2019-03-08: Renamed to *Core, added errorMessageList (if non-null, accumulates errors instead of throwing exception)
+    private static String serializeCore(Object object, List<? super String> errorMessageList) throws SerializeException, FileNotFoundException, IOException {
         Document document = UtilXml.makeEmptyXmlDocument("ofbiz-ser");
         Element rootElement = document.getDocumentElement();
 
-        rootElement.appendChild(serializeSingle(object, document));
-        return UtilXml.writeXmlDocument(document);
+        rootElement.appendChild(serializeSingle(object, document, errorMessageList));
+        if (errorMessageList != null) {
+            try {
+                return UtilXml.writeXmlDocument(document);
+            } catch (IOException e) {
+                errorMessageList.add("Unable to write serialized XML for value: " + e.toString());
+                return null;
+            }
+        } else {
+            return UtilXml.writeXmlDocument(document);
+        }
+    }
+
+    // SCIPIO: 2019-03-08: New overload
+    public static String serialize(Object object, List<? super String> errorMessageList) throws SerializeException, FileNotFoundException, IOException {
+        if (errorMessageList != null) {
+            try {
+                return serializeCore(object, errorMessageList);
+            } catch(IOException e) {
+                errorMessageList.add("Unable to write serialized XML for value: " + e.toString());
+                return null;
+            }
+        } else {
+            return serializeCore(object, errorMessageList);
+        }
+    }
+
+    public static String serialize(Object object) throws SerializeException, FileNotFoundException, IOException {
+        return serializeCore(object, null); // SCIPIO: 2019-03-08: Refactored, delegated
+    }
+
+    // SCIPIO: 2019-03-08: New method
+    public static String serializeOrNull(Object object, List<? super String> errorMessageList) {
+        try {
+            return serializeCore(object, errorMessageList);
+        } catch (IOException | SerializeException e) {
+            if (errorMessageList != null) {
+                errorMessageList.add("Unable to write serialized XML for value: " + e.toString());
+            }
+            return null;
+        }
     }
 
     /** Deserialize a Java object from an XML string. <p>This method should be used with caution.
@@ -128,7 +169,35 @@ public class XmlSerializer {
         return deserializeSingle((Element) curChild, delegator);
     }
 
+    // SCIPIO: 2019-03-08: Added safe flag
+    public static Element serializeSingle(Object object, Document document, List<? super String> errorMessageList) throws SerializeException {
+        if (errorMessageList != null) {
+            try {
+                return serializeSingleCore(object, document, errorMessageList);
+            } catch(SerializeException e) {
+                errorMessageList.add("Cannot serialize object of class " + object.getClass().getName() + ": " + e.toString());
+                return null;
+            }
+        } else {
+            return serializeSingleCore(object, document, errorMessageList); // SCIPIO: 2019-03-08: Refactored, delegated
+        }
+    }
+
     public static Element serializeSingle(Object object, Document document) throws SerializeException {
+        return serializeSingleCore(object, document, null); // SCIPIO: 2019-03-08: Refactored, delegated
+    }
+
+    // SCIPIO: 2019-03-08: New method
+    public static Element serializeSingleOrNull(Object object, Document document, List<? super String> errorMessageList) {
+        try {
+            return serializeSingle(object, document, errorMessageList);
+        } catch (SerializeException e) {
+            return null; // already logged
+        }
+    }
+
+    // SCIPIO: Renamed to *Core, added safe flag
+    private static Element serializeSingleCore(Object object, Document document, List<? super String> errorMessageList) throws SerializeException {
         if (document == null) {
             return null;
         }
@@ -200,7 +269,7 @@ public class XmlSerializer {
             Iterator<?> iter = value.iterator();
 
             while (iter.hasNext()) {
-                element.appendChild(serializeSingle(iter.next(), document));
+                element.appendChild(serializeSingle(iter.next(), document, errorMessageList)); // SCIPIO: 2019-03-08: Added safe flag
             }
             return element;
         } else if (object instanceof GenericPK) {
@@ -246,31 +315,82 @@ public class XmlSerializer {
                 Element key = document.createElement("map-Key");
 
                 entryElement.appendChild(key);
-                key.appendChild(serializeSingle(entry.getKey(), document));
+                key.appendChild(serializeSingle(entry.getKey(), document, errorMessageList)); // SCIPIO: 2019-03-08: Added safe flag
                 Element mapValue = document.createElement("map-Value");
 
                 entryElement.appendChild(mapValue);
-                mapValue.appendChild(serializeSingle(entry.getValue(), document));
+                mapValue.appendChild(serializeSingle(entry.getValue(), document, errorMessageList)); // SCIPIO: 2019-03-08: Added safe flag
             }
             return element;
         }
 
-        return serializeCustom(object, document);
+        return serializeCustom(object, document, errorMessageList); // SCIPIO: 2019-03-08: Safe flag
     }
 
-    public static Element serializeCustom(Object object, Document document) throws SerializeException {
-        if (object instanceof Serializable) {
-            byte[] objBytes = UtilObject.getBytes(object);
-            if (objBytes == null) {
-                throw new SerializeException("Unable to serialize object; null byte array returned");
-            }
-            String byteHex = StringUtil.toHexString(objBytes);
-            Element element = document.createElement("cus-obj");
-            // this is hex encoded so does not need to be in a CDATA block
-            element.appendChild(document.createTextNode(byteHex));
-            return element;
+    /**
+     * SCIPIO: Performs serialization using {@link org.ofbiz.base.util.UtilObject#getBytes(Object)}; assumes the object is Serializable.
+     * Added 2019-03-08.
+     */
+    private static Element serializeCustomCore(Object object, Document document) throws SerializeException {
+        // SCIPIO: Avoid this overload to avoid double-logging and to give a better error
+        //byte[] objBytes = UtilObject.getBytes(object);
+        byte[] objBytes;
+        try {
+            objBytes = UtilObject.getBytesOrEx(object);
+        } catch (Exception e) {
+            throw new SerializeException("Unable to serialize object: " + e.getMessage(), e);
         }
-        throw new SerializeException("Cannot serialize object of class " + object.getClass().getName());
+        if (objBytes == null) {
+            throw new SerializeException("Unable to serialize object; null byte array returned");
+        }
+        String byteHex = StringUtil.toHexString(objBytes);
+        Element element = document.createElement("cus-obj");
+        // this is hex encoded so does not need to be in a CDATA block
+        element.appendChild(document.createTextNode(byteHex));
+        return element;
+    }
+
+    /**
+     * SCIPIO: Performs serialization using {@link org.ofbiz.base.util.UtilObject#getBytes(Object)} if the object is serializable; otherwise, if safe true, logs
+     * a warning or error, while if safe false, throws a SerializeException.
+     */
+    public static Element serializeCustom(Object object, Document document, List<? super String> errorMessageList) throws SerializeException {
+        if (object instanceof Serializable) {
+            if (errorMessageList != null) {
+                try {
+                    return serializeCustomCore(object, document); // SCIPIO: 2019-03-08: Refactored
+                } catch(SerializeException e) {
+                    errorMessageList.add("Cannot serialize object of class " + object.getClass().getName() + ": " + e.toString());
+                }
+            } else {
+                return serializeCustomCore(object, document); // SCIPIO: 2019-03-08: Refactored
+            }
+        }
+        if (errorMessageList != null) {
+            errorMessageList.add("Cannot serialize object of class " + object.getClass().getName());
+        } else {
+            throw new SerializeException("Cannot serialize object of class " + object.getClass().getName());
+        }
+        return null;
+    }
+
+    /**
+     * Performs serialization using {@link org.ofbiz.base.util.UtilObject#getBytes(Object)} if the object is serializable; otherwise throws a SerializeException.
+     * SCIPIO: NOTE: This is the original stock method.
+     */
+    public static Element serializeCustom(Object object, Document document) throws SerializeException {
+        return serializeCustom(object, document, null);
+    }
+
+    /**
+     * SCIPIO: Performs serialization using {@link org.ofbiz.base.util.UtilObject#getBytes(Object)} if the object is serializable; otherwise returns null.
+     */
+    public static Element serializeCustomOrNull(Object object, Document document, List<? super String> errorMessageList) {
+        try {
+            return serializeCustom(object, document, errorMessageList);
+        } catch (SerializeException e) {
+            return null; // already printed
+        }
     }
 
     public static Element makeElement(String elementName, Object value, Document document) {

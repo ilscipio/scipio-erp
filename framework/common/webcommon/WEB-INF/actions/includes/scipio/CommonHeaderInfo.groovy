@@ -1,5 +1,5 @@
 /**
- * SCIPIO: [FIXME: Insert description and original file this was based off here]
+ * SCIPIO: Based on component://accounting/webapp/accounting/WEB-INF/actions/order/CompanyHeader.groovy.
  */
 
 import org.ofbiz.base.util.*;

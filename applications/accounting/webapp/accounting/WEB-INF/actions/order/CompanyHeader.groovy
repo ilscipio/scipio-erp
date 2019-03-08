@@ -17,11 +17,14 @@
  * under the License.
  */
 
- // this script is used to get the company's logo header information for orders, invoices, and returns.  It can either take order, invoice, returnHeader from
- // parameters or use orderId, invoiceId, or returnId to look them up.
- // if none of these parameters are available then fromPartyId is used or "ORGANIZATION_PARTY" from general.properties as fallback
+/**
+ * SCIPIO: Duplicated from component://order/webapp/ordermgr/WEB-INF/actions/order/CompanyHeader.groovy.
+ * <p>
+ * this script is used to get the company's logo header information for orders, invoices, and returns.
+ * It can either take order, invoice, returnHeader from parameters or use orderId, invoiceId, or returnId to look them up.
+ * if none of these parameters are available then fromPartyId is used or "ORGANIZATION_PARTY" from general.properties as fallback
+ */
 
- /**SCIPIO: Duplicate from CompanyHeader.groovy */
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;

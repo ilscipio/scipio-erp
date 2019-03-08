@@ -835,7 +835,9 @@ public class StringUtil {
      * the string is less than the absolute value of maskLength, returns the original string.
      */
     public static String maskLeft(CharSequence str, int maskLength, char maskChar) {
-        if (str == null || str.length() == 0 || maskLength == 0) {
+        if (str == null) {
+            return null;
+        } else if (str.length() == 0 || maskLength == 0) {
             return str.toString();
         }
         StringBuilder sb = new StringBuilder(str.length());
@@ -866,7 +868,9 @@ public class StringUtil {
      * the string is less than the absolute value of maskLength, returns the original string.
      */
     public static String maskRight(CharSequence str, int maskLength, char maskChar) {
-        if (str == null || str.length() == 0 || maskLength == 0) {
+        if (str == null) {
+            return null;
+        } else if (str.length() == 0 || maskLength == 0) {
             return str.toString();
         }
         StringBuilder sb = new StringBuilder(str.length());

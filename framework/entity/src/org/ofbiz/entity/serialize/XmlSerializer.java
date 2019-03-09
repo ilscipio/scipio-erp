@@ -269,7 +269,7 @@ public class XmlSerializer {
             Iterator<?> iter = value.iterator();
 
             while (iter.hasNext()) {
-                element.appendChild(serializeSingle(iter.next(), document, errorMessageList)); // SCIPIO: 2019-03-08: Added safe flag
+                element.appendChild(serializeSingleOrNullEntry(iter.next(), document, errorMessageList)); // SCIPIO: 2019-03-08: Added safe flag
             }
             return element;
         } else if (object instanceof GenericPK) {
@@ -315,11 +315,11 @@ public class XmlSerializer {
                 Element key = document.createElement("map-Key");
 
                 entryElement.appendChild(key);
-                key.appendChild(serializeSingle(entry.getKey(), document, errorMessageList)); // SCIPIO: 2019-03-08: Added safe flag
+                key.appendChild(serializeSingleOrNullEntry(entry.getKey(), document, errorMessageList)); // SCIPIO: 2019-03-08: Added safe flag
                 Element mapValue = document.createElement("map-Value");
 
                 entryElement.appendChild(mapValue);
-                mapValue.appendChild(serializeSingle(entry.getValue(), document, errorMessageList)); // SCIPIO: 2019-03-08: Added safe flag
+                mapValue.appendChild(serializeSingleOrNullEntry(entry.getValue(), document, errorMessageList)); // SCIPIO: 2019-03-08: Added safe flag
             }
             return element;
         }
@@ -327,6 +327,12 @@ public class XmlSerializer {
         return serializeCustom(object, document, errorMessageList); // SCIPIO: 2019-03-08: Safe flag
     }
 
+    // SCIPIO
+    private static Element serializeSingleOrNullEntry(Object value, Document document, List<? super String> errorMessageList) throws SerializeException {
+        Element serializedValue = serializeSingle(value, document, errorMessageList);
+        return (serializedValue != null) ? serializedValue : makeElement("null", null, document);
+    }
+    
     /**
      * SCIPIO: Performs serialization using {@link org.ofbiz.base.util.UtilObject#getBytes(Object)}; assumes the object is Serializable.
      * Added 2019-03-08.

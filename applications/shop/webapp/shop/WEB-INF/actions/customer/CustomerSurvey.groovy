@@ -105,7 +105,10 @@ if (surveyAppl) {
     surveyResp = parameters.surveyResponseId;
     if (surveyResp) {
         wrapper.setThisResponseId(surveyResp);
-        wrapper.callResult(true);
+        // SCIPIO: 2019-03-11: REMOVED this flag: it forced ProductStoreSurveyWrapper.render
+        // to ignore Survey.allowMultiple - reason unknown, but it prevents re-ordering the
+        // same gift cards twice - clearly a bug...
+        //wrapper.callResult(true);
     }
 }
 

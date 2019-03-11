@@ -339,6 +339,10 @@ public class SurveyWrapper {
         return responseId;
     }
 
+    public String getCurrentResponseId() { // SCIPIO: new method
+        return responseId;
+    }
+    
     /**
      * Sets the response ID.
      * <p>
@@ -350,7 +354,7 @@ public class SurveyWrapper {
             if (EntityQuery.use(delegator).from("SurveyResponse")
                     .where("surveyId", surveyId, "surveyResponseId", responseId, "partyId", partyId)
                     .queryCount() > 0) {
-                this.responseId = responseId;
+                setThisResponseIdOnly(responseId);
             } else {
                 Debug.logError("Cannot set response '" + responseId + "' for survey '" + surveyId + "'"
                         + " and party '" + partyId + "'; there is no SurveyResponse association record", module);
@@ -360,6 +364,10 @@ public class SurveyWrapper {
         }
     }
 
+    protected void setThisResponseIdOnly(String responseId) { // SCIPIO
+        this.responseId = responseId;
+    }
+    
     public long getNumberResponses() throws SurveyWrapperException {
         long responses = 0;
         try {

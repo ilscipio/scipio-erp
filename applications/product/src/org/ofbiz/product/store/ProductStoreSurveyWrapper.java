@@ -76,8 +76,8 @@ public class ProductStoreSurveyWrapper extends SurveyWrapper {
             return renderResult(parentContext);
         } else {
             // SCIPIO: 2019-03-06: Template can't safely catch this, so this can't be safely handled
-            Debug.logError("Cannot render survey; either already filled or no result template defined! (productStoreSurveyId: "
-                    + productStoreSurveyAppl.get("productStoreSurveyId") + ")", module);
+            Debug.logWarning("Cannot render survey result: no result template defined [productStoreSurveyId="
+                    + productStoreSurveyAppl.get("productStoreSurveyId") + ", callResult=" + callResult + "]", module);
             //throw new SurveyWrapperException("Error template not implemented yet; cannot update survey; no result template defined!");
             return null;
         }
@@ -93,5 +93,9 @@ public class ProductStoreSurveyWrapper extends SurveyWrapper {
 
     public GenericValue getProductStoreSurveyAppl() { // SCIPIO
         return productStoreSurveyAppl;
+    }
+
+    public String getResultTemplate() { // SCIPIO
+        return resultTemplate;
     }
 }

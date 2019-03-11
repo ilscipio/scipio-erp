@@ -24,7 +24,8 @@ import org.ofbiz.product.store.ProductStoreSurveyWrapper;
 
 final module = "CustomerSurvey.groovy";
 
-def getParamSafe(name) { // SCIPIO
+def allowParams = ("POST" == context.requestMethod && "Y" == parameters.surveySubmit); // SCIPIO
+getParamSafe = { name -> // SCIPIO
     def value = context[name];
     if (value != null) {
         return value;
@@ -33,7 +34,7 @@ def getParamSafe(name) { // SCIPIO
     if (value != null) {
         return value;
     }
-    if ("POST" == context.requestMethod) {
+    if (allowParams) {
         // SCIPIO: TODO: VERIFY: security: We need to get surveyAction/others from params, but for security reasons,
         // allow this param only if it's a POST. However, this could cause problems if the survey screen
         // is invoked through a "view-last" (will not be "post" in that case); for that case, we currently
@@ -105,10 +106,21 @@ if (surveyAppl) {
     surveyResp = parameters.surveyResponseId;
     if (surveyResp) {
         wrapper.setThisResponseId(surveyResp);
-        // SCIPIO: 2019-03-11: REMOVED this flag: it forced ProductStoreSurveyWrapper.render
+        // SCIPIO: 2019-03-11: REMOVED this flag for CART_ADD: it forced ProductStoreSurveyWrapper.render
         // to ignore Survey.allowMultiple - reason unknown, but it prevents re-ordering the
         // same gift cards twice - clearly a bug...
-        //wrapper.callResult(true);
+        // callResult was _probably_ intended (?) as a flag to allow to show the results template
+        // after the survey form was filled, because surveyResponseId will be received as a request
+        // parameter here in that case.
+        // We should show this only on a successful form submit
+        if (allowParams && !context.isError) {
+            if (wrapper.getResultTemplate()) {
+                wrapper.callResult(true);
+            } else {
+                Debug.logWarning("Survey [productStoreSurveyId=" + productStoreSurveyId
+                    + ", surveyId=" + survey?.surveyId + "] does not define a resultTemplate; showing input template instead", module);
+            }
+        }
     }
 }
 

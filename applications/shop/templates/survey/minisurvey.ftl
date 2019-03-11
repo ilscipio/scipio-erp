@@ -23,6 +23,9 @@ code package.
 <#-- survey ID -->
 <input type="hidden" name="surveyId" value="${survey.surveyId}"/>
 
+<#-- SCIPIO: An extra flag to detect successful survey submits (along with POST check) -->
+<input type="hidden" name="surveySubmit" value="Y"/>
+
 <@table type="data-complex">
   <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
     <#-- get an answer from the answerMap -->

@@ -4367,7 +4367,7 @@ code package.
         <relation rel-entity-name="DatevDataCategory" type="one">
             <key-map field-name="dataCategoryId"/>
         </relation>
-  	</entity>
+      </entity>
 
     <entity entity-name="DatevGeneralSetting" package-name="com.ilscipio.scipio.accounting.external.datev"
         title="DATEV - General settings">

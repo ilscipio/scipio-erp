@@ -56,7 +56,7 @@ context.orderContainsSubscriptionItemsOnly = orh.orderContainsSubscriptionItemsO
 
 
 List<GenericValue> allSubscriptionAdjustments = [];
-if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {	
+if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {    
     Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = [:];
     subscriptionItems = context.subscriptionItems.keySet();
     for (Iterator<GenericValue> iterSubscription; iterSubscription = subscriptionItems.iterator(); iterSubscription.hasNext()) {

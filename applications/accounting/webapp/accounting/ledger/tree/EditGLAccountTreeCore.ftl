@@ -22,7 +22,7 @@
     <#macro egltDefMarkupMenuItemDisabled args={}><@menuitem type="link" href="" text="" disabled=true/></#macro>
     <#macro egltDefMarkupMenuItemDivider args={}><@menuitem type="generic"><hr/></@menuitem></#macro>
     <#macro egltDefMarkupPostMenuItems args={}>
-    	<#--  <@menuitem type="link" href="javascript:void(0);" onClick="egltHandler.execNewGlAccount();" text=uiLabelMap.CommonCreate /> -->
+        <#--  <@menuitem type="link" href="javascript:void(0);" onClick="egltHandler.execNewGlAccount();" text=uiLabelMap.CommonCreate /> -->
         <#-- <@menuitem type="link" href="javascript:void(0);" onClick="egltHandler.execImport();" text=uiLabelMap.CommonImport /> -->        
     </#macro>
     <#macro egltDefMarkupMenu args={}>
@@ -97,7 +97,7 @@ if (typeof egltHandler === 'undefined') {
 egltHandler = new ScpAccountingTreeHandler({
     treeId: "${escapeVal(egltTreeId!, 'js')}",
     topGlAccountId: <@objectAsScript object=(topGlAccountId!) lang='js'/>,
-  	topGlAccountEntity: <@objectAsScript object=(topGlAccount!) lang='js'/>,
+      topGlAccountEntity: <@objectAsScript object=(topGlAccount!) lang='js'/>,
     actionProps: <@objectAsScript object=(egltActionProps!{}) lang='js'/>,
     hideShowFormIds: <@objectAsScript object=(egltAllHideShowFormIds![]) lang='js'/>,
     labels: {
@@ -113,7 +113,7 @@ egltHandler = new ScpAccountingTreeHandler({
     },
     markupSelectors: <@objectAsScript object=egltDefMarkupSelectors lang='js'/>,
     links: {           
-    	getGlAccountExtendedData: '<@pageUrl uri="getGlAccountExtendedData" escapeAs="js"/>',
+        getGlAccountExtendedData: '<@pageUrl uri="getGlAccountExtendedData" escapeAs="js"/>',
     },
     callbacks: <@objectAsScript object=(egltCallbacks!{}) lang='js'/>,
     targetNodeInfo: <@objectAsScript object=(egltTargetNodeInfo!{}) lang='js'/>,
@@ -127,7 +127,7 @@ egltHandler = new ScpAccountingTreeHandler({
 });
 
 $(document).ready(function() {
-	 egltHandler.initBindAll();
+     egltHandler.initBindAll();
 });
 </@script>
 
@@ -160,12 +160,12 @@ $(document).ready(function() {
         <@section title=uiLabelMap.AccountingAccounts>
            <@treemenu id=egltTreeId settings=treeSettings plugins=treePlugins events=treeEvents>
                 <#list treeMenuData as node>
-                    <#if node.isParent!false>                            	 
-                    	 <@treeitem text=(node.text!"") id=(node.id!) parent=(node.parent!"#") 
+                    <#if node.isParent!false>                                 
+                         <@treeitem text=(node.text!"") id=(node.id!) parent=(node.parent!"#") 
                             attribs={"data":{
                                 "type": node.type!,
                                 "li_attr": node.li_attr!{},
-                                "glAccountEntity": node.glAccountEntity!{},		                                
+                                "glAccountEntity": node.glAccountEntity!{},                                        
                                 "isParent": node.isParent!false
                             }} 
                             state=(node.state!{})
@@ -176,7 +176,7 @@ $(document).ready(function() {
                             attribs={"data":{
                                 "type": node.type!,
                                 "li_attr": node.li_attr!{},
-                                "glAccountEntity": node.glAccountEntity!{},		                                
+                                "glAccountEntity": node.glAccountEntity!{},                                        
                                 "isParent": node.isParent!false
                             }} 
                             state=(node.state!{})
@@ -193,13 +193,13 @@ $(document).ready(function() {
     
     <@cell medium=3 large=3>    
       <#-- ACTIONS MENU -->
-      <@section title=uiLabelMap.CommonActions>	        
+      <@section title=uiLabelMap.CommonActions>            
         <#-- MENU -->
-        <@acctgMarkupOut dir=egltMarkupMenu!egltDefMarkupMenu/>	        
+        <@acctgMarkupOut dir=egltMarkupMenu!egltDefMarkupMenu/>            
         <#-- DISPLAY EXTRAS (OPTIONS, ETC.) -->
-        <@acctgMarkupOut dir=egltActionExtrasArea!/>	
-      </@section>	      
+        <@acctgMarkupOut dir=egltActionExtrasArea!/>    
+      </@section>          
       <#-- DISPLAY EXTRAS (OPTIONS, ETC.) -->
       <@acctgMarkupOut dir=egltExtrasArea!/>      
-	</@cell>
+    </@cell>
 </@row>

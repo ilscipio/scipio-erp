@@ -18,7 +18,7 @@
         }
     },
     "glAccount": {
-    	"add": {
+        "add": {
             "type": "link",
             "target": "_top",
             "url": makeServerUrl({"uri":'/accounting/control/EditGlobalGlAccount', "extLoginKey":true})            

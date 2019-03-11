@@ -1458,7 +1458,7 @@ public class ContentManagementServices {
             }
             orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
             if (orderHeader == null) {
-            	 String msg = UtilProperties.getMessage(resource, "ContentNoOrderHeaderFound", UtilMisc.toMap("orderId", orderId), locale);
+                 String msg = UtilProperties.getMessage(resource, "ContentNoOrderHeaderFound", UtilMisc.toMap("orderId", orderId), locale);
                 return ServiceUtil.returnError(msg);
             }
             Timestamp orderCreatedDate = (Timestamp) orderHeader.get("orderDate");

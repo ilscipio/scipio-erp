@@ -150,9 +150,9 @@ code package.
                             <@td>${customTimePeriod.customTimePeriodId}</@td>
                             <@td>
                                 <#if customTimePeriod.parentPeriodId?has_content>
-	                                <#assign parentPeriod = delegator.findOne("CustomTimePeriod", {"customTimePeriodId" : customTimePeriod.parentPeriodId}, false)>
-	                                <#assign parentPeriodType = parentPeriod.getRelatedOne("PeriodType", true)>
-	                                ${parentPeriodType.description}: ${parentPeriod.periodNum!} [${parentPeriod.customTimePeriodId}]
+                                    <#assign parentPeriod = delegator.findOne("CustomTimePeriod", {"customTimePeriodId" : customTimePeriod.parentPeriodId}, false)>
+                                    <#assign parentPeriodType = parentPeriod.getRelatedOne("PeriodType", true)>
+                                    ${parentPeriodType.description}: ${parentPeriod.periodNum!} [${parentPeriod.customTimePeriodId}]
                                 </#if>
                             </@td>
                             <@td>${customTimePeriod.organizationPartyId!}</@td>

@@ -42,20 +42,20 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
         "PARTY_ENABLED"
     ]
     
-	public String getDataType() {
-		return DataTypeEnum.PARTY;
-	}
-	
-	public void init() {				
+    public String getDataType() {
+        return DataTypeEnum.PARTY;
+    }
+    
+    public void init() {                
         List<GenericValue> roleTypeIds = from("RoleType").cache(false).queryList();
-        context.roleTypeIds = roleTypeIds;		
+        context.roleTypeIds = roleTypeIds;        
     }
     
     List prepareData(int index, AbstractDataObject partyData) throws Exception {
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
-        List<GenericValue> partyEntries = new ArrayList<GenericValue>();		
-		
-		AbstractDataGenerator generator = context.generator;
+        List<GenericValue> partyEntries = new ArrayList<GenericValue>();        
+        
+        AbstractDataGenerator generator = context.generator;
         
         if (partyData) {
             String partyId = "GEN_" + delegator.getNextSeqId("demo-partyId");
@@ -85,40 +85,40 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
             GenericValue person = delegator.makeValue("Person", fields);
             toBeStored.add(person);
             
-			if (generator.getHelper().generateUserLogin()) {
-	            DemoDataUserLogin demoDataUserLogin = partyData.getUserLogin();
-	            String userLoginId = demoDataUserLogin.getUserLoginId();
-	            String currentPassword = demoDataUserLogin.getCurrentPassword();
-	            if (!context.generatePassword)
-	                currentPassword = DEFAULT_USER_LOGIN_PWD;
-	            boolean useEncryption = "true".equals(EntityUtilProperties.getPropertyValue("security.properties", "password.encrypt", delegator));
-	            if (useEncryption)
-	                currentPassword = HashCrypt.cryptUTF8(LoginServices.getHashType(), null, currentPassword)
-	            userLoginEnabled = "Y";
-	            if (partyStatusId.equals("PARTY_DISABLED"))
-	                userLoginEnabled = "N";
-	            
-	            fields = UtilMisc.toMap("partyId", partyId, "userLoginId", userLoginId, "currentPassword", currentPassword, "enabled", userLoginEnabled);
-	            GenericValue userLogin = delegator.makeValue("UserLogin", fields);
-	            toBeStored.add(userLogin);
-			}
-			
-			if (generator.getHelper().generateAddress()) {
-				DemoDataAddress demoDataAddress = partyData.getAddress();
-				
-				GenericValue countryGeo = EntityUtil.getFirst(delegator.findByAnd("Geo", UtilMisc.toMap("geoCode", demoDataAddress.country, "geoTypeId", "COUNTRY"), UtilMisc.toList("geoId"), true));				
-				if (countryGeo) {					
-					String contactMechId = "GEN_" + delegator.getNextSeqId("demo-contactMechId");
-					List<GenericValue> postalAddressToStore = [];
-					GenericValue contactMech = delegator.makeValue("ContactMech", ["contactMechTypeId" : "POSTAL_ADDRESS", "contactMechId" : contactMechId]);
-					postalAddressToStore.add(contactMech);
-					postalAddressToStore.add(delegator.makeValue("PostalAddress", 
-						["contactMechId" : contactMech.contactMechId, "countryGeoId" : countryGeo.geoId, "address1" : demoDataAddress.street, "city" : demoDataAddress.city, "postalCode" : demoDataAddress.zip]));
-					postalAddressToStore.add(delegator.makeValue("PartyContactMech", ["partyId" : partyId, "contactMechId" : contactMech.contactMechId, "fromDate" : UtilDateTime.nowTimestamp()]));
-					postalAddressToStore.add(delegator.makeValue("PartyContactMechPurpose", ["partyId" : partyId, "contactMechId" : contactMech.contactMechId, "contactMechPurposeTypeId" : "GENERAL_LOCATION", "fromDate" : UtilDateTime.nowTimestamp()]));
-					toBeStored.addAll(postalAddressToStore);
-				}
-			}
+            if (generator.getHelper().generateUserLogin()) {
+                DemoDataUserLogin demoDataUserLogin = partyData.getUserLogin();
+                String userLoginId = demoDataUserLogin.getUserLoginId();
+                String currentPassword = demoDataUserLogin.getCurrentPassword();
+                if (!context.generatePassword)
+                    currentPassword = DEFAULT_USER_LOGIN_PWD;
+                boolean useEncryption = "true".equals(EntityUtilProperties.getPropertyValue("security.properties", "password.encrypt", delegator));
+                if (useEncryption)
+                    currentPassword = HashCrypt.cryptUTF8(LoginServices.getHashType(), null, currentPassword)
+                userLoginEnabled = "Y";
+                if (partyStatusId.equals("PARTY_DISABLED"))
+                    userLoginEnabled = "N";
+                
+                fields = UtilMisc.toMap("partyId", partyId, "userLoginId", userLoginId, "currentPassword", currentPassword, "enabled", userLoginEnabled);
+                GenericValue userLogin = delegator.makeValue("UserLogin", fields);
+                toBeStored.add(userLogin);
+            }
+            
+            if (generator.getHelper().generateAddress()) {
+                DemoDataAddress demoDataAddress = partyData.getAddress();
+                
+                GenericValue countryGeo = EntityUtil.getFirst(delegator.findByAnd("Geo", UtilMisc.toMap("geoCode", demoDataAddress.country, "geoTypeId", "COUNTRY"), UtilMisc.toList("geoId"), true));                
+                if (countryGeo) {                    
+                    String contactMechId = "GEN_" + delegator.getNextSeqId("demo-contactMechId");
+                    List<GenericValue> postalAddressToStore = [];
+                    GenericValue contactMech = delegator.makeValue("ContactMech", ["contactMechTypeId" : "POSTAL_ADDRESS", "contactMechId" : contactMechId]);
+                    postalAddressToStore.add(contactMech);
+                    postalAddressToStore.add(delegator.makeValue("PostalAddress", 
+                        ["contactMechId" : contactMech.contactMechId, "countryGeoId" : countryGeo.geoId, "address1" : demoDataAddress.street, "city" : demoDataAddress.city, "postalCode" : demoDataAddress.zip]));
+                    postalAddressToStore.add(delegator.makeValue("PartyContactMech", ["partyId" : partyId, "contactMechId" : contactMech.contactMechId, "fromDate" : UtilDateTime.nowTimestamp()]));
+                    postalAddressToStore.add(delegator.makeValue("PartyContactMechPurpose", ["partyId" : partyId, "contactMechId" : contactMech.contactMechId, "contactMechPurposeTypeId" : "GENERAL_LOCATION", "fromDate" : UtilDateTime.nowTimestamp()]));
+                    toBeStored.addAll(postalAddressToStore);
+                }
+            }
         }
         return toBeStored;
     }

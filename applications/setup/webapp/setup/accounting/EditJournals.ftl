@@ -36,7 +36,7 @@
         <@field type="hidden" name="isAddGlJournal" value=(formActionType == "add")?string("Y", "N")/>
         <@field type="hidden" name="isCreateGlJournal" value=(formActionType == "new")?string("Y", "N")/>
 
-		<@field type="hidden" name="organizationPartyId" value=orgPartyId!/>
+        <@field type="hidden" name="organizationPartyId" value=orgPartyId!/>
         <#assign fieldsRequired = true>
         <#if formActionType == "edit">
             <@field type="display" label=uiLabelMap.FormFieldTitle_glJournalId><#rt/>
@@ -84,11 +84,11 @@
             <@section title=uiLabelMap.AccountingGlJournals>
                 <@table>
                     <#if glJournals?has_content>
-                    	<@thead>
-	                        <@tr>
-	                            <@td>${uiLabelMap.FormFieldTitle_glJournalId}</@td>
-	                            <@td>${uiLabelMap.FormFieldTitle_glJournalName!}</@td>
-	                        </@tr>
+                        <@thead>
+                            <@tr>
+                                <@td>${uiLabelMap.FormFieldTitle_glJournalId}</@td>
+                                <@td>${uiLabelMap.FormFieldTitle_glJournalName!}</@td>
+                            </@tr>
                         </@thead>
                         <#list glJournals as glJournal>
                             <@tr>

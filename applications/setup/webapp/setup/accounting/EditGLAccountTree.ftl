@@ -19,7 +19,7 @@
         }
     },
     "glAccount": {
-    	"add": {
+        "add": {
             "type": "form",
             "mode": "show",
             "id": "acctg-newglaccount"          

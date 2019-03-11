@@ -44,7 +44,7 @@
             </@field><#lt/>
             <@field type="hidden" name="taxAuthGeoId" value=(params.taxAuthGeoId!) class="+acctg-inputfield"/>
         <#else>          
-        	<@field type="input" name="taxAuthPartyId" label=uiLabelMap.FormFieldTitle_taxAuthPartyId value=(params.taxAuthPartyId!) class="+acctg-inputfield"/>        	
+            <@field type="input" name="taxAuthPartyId" label=uiLabelMap.FormFieldTitle_taxAuthPartyId value=(params.taxAuthPartyId!) class="+acctg-inputfield"/>            
             <@field type="input" name="groupName" label=uiLabelMap.AccountingTaxAuthority value=(params.groupName!) class="+acctg-inputfield"/>            
             <@field type="lookup" name="taxAuthGeoId" label=uiLabelMap.FormFieldTitle_taxAuthGeoId value=(params.taxAuthPartyId!) fieldFormName="LookupGeo" class="+ect-inputfield" required=true/>            
         </#if>
@@ -89,24 +89,24 @@
         <@cell medium=9 large=9>
             <@section title=uiLabelMap.AccountingTaxAuthorities>    
                 <@table>
-                	<#if partyTaxAuthInfos?has_content>
-                		<@thead>
-	                        <@tr>
-	                            <@td>${uiLabelMap.FormFieldTitle_taxAuthPartyId}</@td>
-	                            <@td>${uiLabelMap.FormFieldTitle_taxAuthGeoId!}</@td>
-	                        </@tr>
+                    <#if partyTaxAuthInfos?has_content>
+                        <@thead>
+                            <@tr>
+                                <@td>${uiLabelMap.FormFieldTitle_taxAuthPartyId}</@td>
+                                <@td>${uiLabelMap.FormFieldTitle_taxAuthGeoId!}</@td>
+                            </@tr>
                         </@thead>
                         <#list partyTaxAuthInfos as partyTaxAuthInfo>
-		                	<@tr>
-		                        <@td>${partyTaxAuthInfo.taxAuthPartyId!}</@td>
-		                        <@td>${partyTaxAuthInfo.taxAuthGeoId!}</@td>		                    
-		                	</@tr>
-		                </#list>
-		            <#else>
-		                <@tr type="meta">
-		                  <@td colspan="9"><@commonMsg type="result-norecord">${uiLabelMap.CommonNoRecordFound}</@commonMsg></@td>
-		              	</@tr>
-                  	</#if>
+                            <@tr>
+                                <@td>${partyTaxAuthInfo.taxAuthPartyId!}</@td>
+                                <@td>${partyTaxAuthInfo.taxAuthGeoId!}</@td>                            
+                            </@tr>
+                        </#list>
+                    <#else>
+                        <@tr type="meta">
+                          <@td colspan="9"><@commonMsg type="result-norecord">${uiLabelMap.CommonNoRecordFound}</@commonMsg></@td>
+                          </@tr>
+                      </#if>
                 </@table>
             </@section>  
         </@cell>

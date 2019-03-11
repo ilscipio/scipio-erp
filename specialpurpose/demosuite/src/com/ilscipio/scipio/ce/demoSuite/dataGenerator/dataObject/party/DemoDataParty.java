@@ -7,32 +7,32 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLog
 
 public class DemoDataParty implements AbstractDataObject {
 
-	DemoDataAddress address;
-	DemoDataPerson person;
-	DemoDataUserLogin userLogin;
+    DemoDataAddress address;
+    DemoDataPerson person;
+    DemoDataUserLogin userLogin;
 
-	public DemoDataAddress getAddress() {
-		return address;
-	}
+    public DemoDataAddress getAddress() {
+        return address;
+    }
 
-	public void setAddress(DemoDataAddress address) {
-		this.address = address;
-	}
+    public void setAddress(DemoDataAddress address) {
+        this.address = address;
+    }
 
-	public DemoDataPerson getPerson() {
-		return person;
-	}
+    public DemoDataPerson getPerson() {
+        return person;
+    }
 
-	public void setPerson(DemoDataPerson person) {
-		this.person = person;
-	}
+    public void setPerson(DemoDataPerson person) {
+        this.person = person;
+    }
 
-	public DemoDataUserLogin getUserLogin() {
-		return userLogin;
-	}
+    public DemoDataUserLogin getUserLogin() {
+        return userLogin;
+    }
 
-	public void setUserLogin(DemoDataUserLogin userLogin) {
-		this.userLogin = userLogin;
-	}
+    public void setUserLogin(DemoDataUserLogin userLogin) {
+        this.userLogin = userLogin;
+    }
 
 }

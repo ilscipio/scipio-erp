@@ -8,7 +8,7 @@ code package.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/widget-screen.xsd">
  
-	<screen name="DatevImportResult">
+    <screen name="DatevImportResult">
         <section>
             <actions>
                 <script location="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevImportResult.groovy" />

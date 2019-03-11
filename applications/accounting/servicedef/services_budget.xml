@@ -156,7 +156,7 @@ code package.
         <auto-attributes mode="IN" include="nonpk" optional="true"/>
     </service>
     <service name="deleteBudgetRevision" default-entity-name="BudgetRevision" engine="entity-auto" invoke="delete" auth="true">
-        <description>Delete an existing Budget Revision Record. BudgetRevision entity contains historical data, hence this service ideally will not +	 be used.</description>
+        <description>Delete an existing Budget Revision Record. BudgetRevision entity contains historical data, hence this service ideally will not +     be used.</description>
         <auto-attributes mode="IN" include="pk"/>
     </service>
     <service name="createBudgetScenario" default-entity-name="BudgetScenario" engine="entity-auto" invoke="create" auth="true">

@@ -10,7 +10,7 @@ code package.
     <description>Entity Group Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
-	
+    
     <!-- EntitySyncIncludeGroup services -->
     <service name="createEntitySyncIncludeGroup" default-entity-name="EntitySyncIncludeGroup" engine="entity-auto" invoke="create" auth="true">
         <description>Create a EntitySyncIncludeGroup record</description>

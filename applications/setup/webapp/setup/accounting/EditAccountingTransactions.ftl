@@ -200,7 +200,7 @@
                 if (typeAction[2] == "add" || typeAction[2] == "edit") {
                     props = actionAcctgTransProps[typeAction[1]][typeAction[2]];
                     if (props.type == 'form' && props.mode == "show") {
-                    	if (acctgTransHideShowFormIds) {
+                        if (acctgTransHideShowFormIds) {
                             jQuery.each(acctgTransHideShowFormIds, function(i, e) {
                                 jQuery('#'+e).fadeOut();
                             });
@@ -311,8 +311,8 @@
         <#if formActionType == "edit">
             <@field type="display" label=uiLabelMap.FormFieldTitle_acctgTransEntryTypeId><#rt/>
                 <span class="acctg-managefield acctg-managefield-for-acctgTransEntryTypeId">
-                	${params.acctgTransEntryTypeId!}
-               	</span><#t/>
+                    ${params.acctgTransEntryTypeId!}
+                   </span><#t/>
             </@field><#lt/>
             <@field type="hidden" name="acctgTransEntryTypeId" value=(params.acctgTransEntryTypeId!) class="+acctg-inputfield"/>
         <#else>

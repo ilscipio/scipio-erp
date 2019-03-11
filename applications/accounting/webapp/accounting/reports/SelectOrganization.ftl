@@ -25,10 +25,10 @@
             </#if>
         </@field>
         <@menu type="button" id="acctg-selectOrg-submit-buttons" class="+acctg-selectOrg-submit-buttons">
-        	<@menuitem type="link" contentId="acctg-selectOrg-submit" href="javascript:document.forms['acctg-selectOrg-form'].submit();" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_update!}"/>        	
-       	</@menu>
+            <@menuitem type="link" contentId="acctg-selectOrg-submit" href="javascript:document.forms['acctg-selectOrg-form'].submit();" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_update!}"/>            
+           </@menu>
         
-	</@field>    
+    </@field>    
 </@form>
   
   

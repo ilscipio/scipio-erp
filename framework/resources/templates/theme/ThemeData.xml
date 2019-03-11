@@ -23,7 +23,7 @@
     <!-- GENERAL -->
     <!-- Styles -->
     <!-- Scripts -->
-	<!--
+    <!--
     <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery/dist/jquery.min.js" sequenceId="01"/>
     <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" sequenceId="02"/>-->
 
@@ -31,9 +31,9 @@
     <!-- THEME SPECIFIC --> <!-- ToDo: Migrate to own subfolders -->
     <!-- Styles -->
     <!--
-	<VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/@webapp-name@/stylesheets/style.css" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/@webapp-name@/stylesheets/style.css" sequenceId="01"/>
     <VisualThemeResource visualThemeId="@theme-id@" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/font-awesome/css/font-awesome.min.css" sequenceId="02"/>
-	-->
+    -->
 
     
     <!-- Right-to-Left support -->

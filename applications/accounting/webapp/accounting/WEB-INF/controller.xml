@@ -345,7 +345,7 @@ code package.
         <response name="success" type="view" value="GlAccountNavigate"/>
     </request-map>
     
-	<request-map uri="getGlAccountExtendedData">
+    <request-map uri="getGlAccountExtendedData">
         <security https="true" auth="true"/>
         <event type="service" invoke="getGlAccountAndAssocs"/>
         <response name="success" type="request" value="json"/>

@@ -277,8 +277,8 @@
                 
                 var webappWebsite = [];
                 <#list webappWebsiteMap.keySet() as webappInfo>
-            	 	webappWebsite['${webappWebsiteMap.get(webappInfo)}'] = '${webappInfo.getName()}';           	 	
-            	</#list>
+                     webappWebsite['${webappWebsiteMap.get(webappInfo)}'] = '${webappInfo.getName()}';                    
+                </#list>
                 
                 
                 var storeNameVirgin = <#if storeParams.storeName?has_content>false<#else>true</#if>;
@@ -311,9 +311,9 @@
                     siteNameVirgin = false;
                 });
                 
-                jQuery('#${submitFormIdJs} select[name=webSiteId]').change(function () {                	
-                	var siteNameElem = jQuery('#${submitFormIdJs} input[name=siteName]');
-                	siteNameElem.val(webappWebsite[$(this).val()]);
+                jQuery('#${submitFormIdJs} select[name=webSiteId]').change(function () {                    
+                    var siteNameElem = jQuery('#${submitFormIdJs} input[name=siteName]');
+                    siteNameElem.val(webappWebsite[$(this).val()]);
                 });
               
             });
@@ -338,19 +338,19 @@
             </@field><#lt/>
             <@field type="hidden" name="webSiteId" value=(params.webSiteId!)/> 
           <#else>
-          	 <@field type="select" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId required=true>
-            	<#list webappWebsiteMap.keySet() as webappInfo>            		
-            		<#assign websiteId = webappWebsiteMap.get(webappInfo)>
-            		<#assign selected = "">
-            		<#if params.webSiteId?has_content>
-            			<#if params.webSiteId == websiteId>
-            				<#assign selected = "selected=selected"/>
-            			</#if>
-            		<#elseif defaultInitialWebSiteId?has_content && websiteId == defaultInitialWebSiteId>
-            			<#assign selected = "selected=selected"/>	
-            		</#if>
-            	 	<option value="${websiteId}" ${selected}>${websiteId}</option>
-            	</#list>
+               <@field type="select" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId required=true>
+                <#list webappWebsiteMap.keySet() as webappInfo>                    
+                    <#assign websiteId = webappWebsiteMap.get(webappInfo)>
+                    <#assign selected = "">
+                    <#if params.webSiteId?has_content>
+                        <#if params.webSiteId == websiteId>
+                            <#assign selected = "selected=selected"/>
+                        </#if>
+                    <#elseif defaultInitialWebSiteId?has_content && websiteId == defaultInitialWebSiteId>
+                        <#assign selected = "selected=selected"/>    
+                    </#if>
+                     <option value="${websiteId}" ${selected}>${websiteId}</option>
+                </#list>
             </@field>
           </#if>
             

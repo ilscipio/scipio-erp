@@ -10,7 +10,7 @@
     "acctg-newtimeperiod", "acctg-edittimeperiod"
 ]>
 <#assign efpActionProps = {
-	"default": {
+    "default": {
         "add": {
             "type": "form",
             "mode": "show",
@@ -18,24 +18,24 @@
             "defaultParams": wrapRawScript("function() { return defaultGlAccountParams; }")
         }
     }, 
-	"timePeriod": {   
-	    "add": {
-	        "type": "form",
-	        "mode": "show",
-	        "id": "acctg-newtimeperiod"
-	    },
-	    "edit": {
-	    	"type": "form",
-	        "mode": "show",
-	        "id": "acctg-edittimeperiod"	        
-	    },
-	    "remove": {
-	    	"type": "form",
+    "timePeriod": {   
+        "add": {
+            "type": "form",
+            "mode": "show",
+            "id": "acctg-newtimeperiod"
+        },
+        "edit": {
+            "type": "form",
+            "mode": "show",
+            "id": "acctg-edittimeperiod"            
+        },
+        "remove": {
+            "type": "form",
             "mode": "submit",
             "confirmMsg": rawLabel('CommonConfirmDeleteRecordPermanent'),
             "id": "acctg-removetimeperiod-form"
-	    },
-	    "manage": {
+        },
+        "manage": {
             "type": "link",
             "target": "_blank",
             "url": makeServerUrl({"uri":'/accounting/control/EditCustomTimePeriod', "extLoginKey":true}),
@@ -59,4 +59,4 @@
 </#macro>
 
 <#-- CORE INCLUDE -->
-<#include "component://accounting/webapp/accounting/period/tree/EditCustomTimePeriodCore.ftl">		
+<#include "component://accounting/webapp/accounting/period/tree/EditCustomTimePeriodCore.ftl">        

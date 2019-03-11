@@ -16,6 +16,6 @@
         server="default-server"
         location="webapp/@webapp-name@"
         mount-point="/@webapp-name@"
-		app-bar-display="false"
-		menu-name="secondary"/>
+        app-bar-display="false"
+        menu-name="secondary"/>
 </ofbiz-component>

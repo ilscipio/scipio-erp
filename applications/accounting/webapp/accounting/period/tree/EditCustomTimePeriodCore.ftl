@@ -22,7 +22,7 @@
     <#macro efpDefMarkupMenuItemDisabled args={}><@menuitem type="link" href="" text="" disabled=true/></#macro>
     <#macro efpDefMarkupMenuItemDivider args={}><@menuitem type="generic"><hr/></@menuitem></#macro>
     <#macro efpDefMarkupPostMenuItems args={}>
-    	<#--  <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execNewGlAccount();" text=uiLabelMap.CommonCreate /> -->
+        <#--  <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execNewGlAccount();" text=uiLabelMap.CommonCreate /> -->
         <#-- <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execImport();" text=uiLabelMap.CommonImport /> -->   
         <#-- <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execNewTimePeriod();" text=uiLabelMap.CommonAdd/><#t/> -->
     </#macro>
@@ -50,41 +50,41 @@
   
 <#-- Javascript functions -->
 <@script>    
-	if (typeof efptHandler === 'undefined') {
-	    var efpHandler;
-	}
-	efpHandler = new ScpAccountingTreeHandler({
-	    treeId: "${escapeVal(efpTreeId!, 'js')}",	    
-	    actionProps: <@objectAsScript object=(efpActionProps!{}) lang='js'/>,
-	    hideShowFormIds: <@objectAsScript object=(efpAllHideShowFormIds![]) lang='js'/>,
-	    labels: {
-	        error: "${escapeVal(uiLabelMap.CommonError, 'js')}",
-	        errorfromserver: "${escapeVal(rawLabel('PartyServer'), 'js')}", <#-- FIXME -->
-	        servercommerror: "${escapeVal(uiLabelMap.CommonServerCommunicationError, 'js')}",            
-	        edit: "${escapeVal(uiLabelMap.CommonEdit, 'js')}",       
-	        remove: "${escapeVal(uiLabelMap.CommonRemove, 'js')}",                  
-	        add: "${escapeVal(uiLabelMap.CommonAdd, 'js')}",
-	        create: "${escapeVal(uiLabelMap.CommonCreate, 'js')}",           
-	        manage: "${escapeVal(uiLabelMap.CommonManage, 'js')}"           
-	    },
-	    markupSelectors: <@objectAsScript object=efpDefMarkupSelectors lang='js'/>,
-	    links: {           
-	    	getTimePeriodExtendedData: '<@pageUrl uri="getTimePeriodExtendedData" escapeAs="js"/>',
-	    },
-	    callbacks: <@objectAsScript object=(efpCallbacks!{}) lang='js'/>,
-	    targetNodeInfo: <@objectAsScript object=(efpTargetNodeInfo!{}) lang='js'/>,
-	    submittedFormId: "${escapeVal(efpSubmittedFormId!, 'js')}",
-	    initialParams: <@objectAsScript object=(efpInitialParams!requestParameters!{}) lang='js'/>,
-	    initialSettings: <@objectAsScript object=(efpInitialSettings!{}) lang='js'/>,
-	    popupMsgModalId: "${escapeVal(efpPopupMsgModalId!(efpDialogIdModalPrefix+"generic-popupmsg"), 'js')}",
-	    confirmMsgModalId: "${escapeVal(efpConfirmMsgModalId!(efpDialogIdModalPrefix+"generic-confirmmsg"), 'js')}",
-	    dialogIdPrefix: "${escapeVal(efpDialogIdModalPrefix, 'js')}",
-	    objectLocFields: <@objectAsScript object=(efpObjectLocalizedFields!{}) lang='js' />
-	});
-	
-	$(document).ready(function() {
-		 efpHandler.initBindAll();
-	});
+    if (typeof efptHandler === 'undefined') {
+        var efpHandler;
+    }
+    efpHandler = new ScpAccountingTreeHandler({
+        treeId: "${escapeVal(efpTreeId!, 'js')}",        
+        actionProps: <@objectAsScript object=(efpActionProps!{}) lang='js'/>,
+        hideShowFormIds: <@objectAsScript object=(efpAllHideShowFormIds![]) lang='js'/>,
+        labels: {
+            error: "${escapeVal(uiLabelMap.CommonError, 'js')}",
+            errorfromserver: "${escapeVal(rawLabel('PartyServer'), 'js')}", <#-- FIXME -->
+            servercommerror: "${escapeVal(uiLabelMap.CommonServerCommunicationError, 'js')}",            
+            edit: "${escapeVal(uiLabelMap.CommonEdit, 'js')}",       
+            remove: "${escapeVal(uiLabelMap.CommonRemove, 'js')}",                  
+            add: "${escapeVal(uiLabelMap.CommonAdd, 'js')}",
+            create: "${escapeVal(uiLabelMap.CommonCreate, 'js')}",           
+            manage: "${escapeVal(uiLabelMap.CommonManage, 'js')}"           
+        },
+        markupSelectors: <@objectAsScript object=efpDefMarkupSelectors lang='js'/>,
+        links: {           
+            getTimePeriodExtendedData: '<@pageUrl uri="getTimePeriodExtendedData" escapeAs="js"/>',
+        },
+        callbacks: <@objectAsScript object=(efpCallbacks!{}) lang='js'/>,
+        targetNodeInfo: <@objectAsScript object=(efpTargetNodeInfo!{}) lang='js'/>,
+        submittedFormId: "${escapeVal(efpSubmittedFormId!, 'js')}",
+        initialParams: <@objectAsScript object=(efpInitialParams!requestParameters!{}) lang='js'/>,
+        initialSettings: <@objectAsScript object=(efpInitialSettings!{}) lang='js'/>,
+        popupMsgModalId: "${escapeVal(efpPopupMsgModalId!(efpDialogIdModalPrefix+"generic-popupmsg"), 'js')}",
+        confirmMsgModalId: "${escapeVal(efpConfirmMsgModalId!(efpDialogIdModalPrefix+"generic-confirmmsg"), 'js')}",
+        dialogIdPrefix: "${escapeVal(efpDialogIdModalPrefix, 'js')}",
+        objectLocFields: <@objectAsScript object=(efpObjectLocalizedFields!{}) lang='js' />
+    });
+    
+    $(document).ready(function() {
+         efpHandler.initBindAll();
+    });
 </@script> 
   
 <#assign treeEvents = {
@@ -107,50 +107,50 @@
     "multiple": false, <#-- TODO: in future could implement partial multiple operations (remove/move/copy) -->
     "check_callback": wrapRawScript("function(operation, node, node_parent, node_position, more) { return efpHandler.treeCheckCallback(operation, node, node_parent, node_position, more); }")
 } + toSimpleMap(efpTreeSettings!{})>
-	
+    
 <@section id="mainCustomTimePeriodSection" >
-	<@row>
-	    <@cell medium=9 large=9>	
-	    	<@section title=uiLabelMap.AccountingTimePeriod>
-	    		<@treemenu id=efpTreeId settings=treeSettings plugins=treePlugins events=treeEvents>
-	                <#list treeMenuData as node>
-	                    <#if node.isParent!false>                            	 
-	                    	 <@treeitem text=(node.text!"") id=(node.id!) parent=(node.parent!"#") 
-	                            attribs={"data":{
-	                                "type": node.type!,
-	                                "li_attr": node.li_attr!{},
-	                                "customTimePeriodEntity": node.customTimePeriodEntity!{},		                                
-	                                "isParent": node.isParent!false
-	                            }} 
-	                            state=(node.state!{})
-	                            icon="${styles.text_color_secondary!} ${styles.icon!} ${styles.icon_prefix!}folder"/>
-	                    <#else>
-	                        <#-- Root item -->
-	                        <@treeitem text=(node.text!"") id=(node.id!) parent=(node.parent!"#") 
-	                            attribs={"data":{
-	                                "type": node.type!,
-	                                "li_attr": node.li_attr!{},
-	                                "customTimePeriodEntity": node.customTimePeriodEntity!{},		                                
-	                                "isParent": node.isParent!false
-	                            }} 
-	                            state=(node.state!{})
-	                            icon="${styles.text_color_secondary!} ${styles.icon!} ${styles.icon_prefix!}file"/>
-	                    </#if>
-	                </#list>    
-	            </@treemenu>
-			</@section>
-			
-     		<#-- POST-JSTREE (ACTION FORMS, ETC.) -->
-      		<@acctgMarkupOut dir=efpPostTreeArea!/>
-		</@cell>
-		<@cell medium=3 large=3>    
-	      <#-- ACTIONS MENU -->
-	      <@section title=uiLabelMap.CommonActions>	      	
-	      	<@efpDefMarkupMenu>
-	      		<@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execNewTimePeriod();" text=uiLabelMap.CommonAdd/><#t/>
-	      	</@efpDefMarkupMenu>
-	      </@section>
-	   </@cell>	       
-	</@row>			
-</@section>	
-	
+    <@row>
+        <@cell medium=9 large=9>    
+            <@section title=uiLabelMap.AccountingTimePeriod>
+                <@treemenu id=efpTreeId settings=treeSettings plugins=treePlugins events=treeEvents>
+                    <#list treeMenuData as node>
+                        <#if node.isParent!false>                                 
+                             <@treeitem text=(node.text!"") id=(node.id!) parent=(node.parent!"#") 
+                                attribs={"data":{
+                                    "type": node.type!,
+                                    "li_attr": node.li_attr!{},
+                                    "customTimePeriodEntity": node.customTimePeriodEntity!{},                                        
+                                    "isParent": node.isParent!false
+                                }} 
+                                state=(node.state!{})
+                                icon="${styles.text_color_secondary!} ${styles.icon!} ${styles.icon_prefix!}folder"/>
+                        <#else>
+                            <#-- Root item -->
+                            <@treeitem text=(node.text!"") id=(node.id!) parent=(node.parent!"#") 
+                                attribs={"data":{
+                                    "type": node.type!,
+                                    "li_attr": node.li_attr!{},
+                                    "customTimePeriodEntity": node.customTimePeriodEntity!{},                                        
+                                    "isParent": node.isParent!false
+                                }} 
+                                state=(node.state!{})
+                                icon="${styles.text_color_secondary!} ${styles.icon!} ${styles.icon_prefix!}file"/>
+                        </#if>
+                    </#list>    
+                </@treemenu>
+            </@section>
+            
+             <#-- POST-JSTREE (ACTION FORMS, ETC.) -->
+              <@acctgMarkupOut dir=efpPostTreeArea!/>
+        </@cell>
+        <@cell medium=3 large=3>    
+          <#-- ACTIONS MENU -->
+          <@section title=uiLabelMap.CommonActions>              
+              <@efpDefMarkupMenu>
+                  <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execNewTimePeriod();" text=uiLabelMap.CommonAdd/><#t/>
+              </@efpDefMarkupMenu>
+          </@section>
+       </@cell>           
+    </@row>            
+</@section>    
+    

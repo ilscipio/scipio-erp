@@ -64,7 +64,7 @@ code package.
         </@field>
          -->
         <@field type="select" name="stateProvinceGeoId" label=uiLabelMap.CommonStateProvince disabled=disabled required=true>
-        	<option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
+            <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
             <#-- <@render resource="component://common/widget/CommonScreens.xml#states" ctxVars={"currentStateProvinceGeoId":(postalFields.stateProvinceGeoId)!, statesPreselectFirst:true}/>  -->
             <@render resource="component://common/widget/CommonScreens.xml#states" ctxVars={"currentStateProvinceGeoId":(postalFields.stateProvinceGeoId)!, "statesPreselect":false}/>
         </@field>

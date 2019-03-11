@@ -84,11 +84,11 @@ code package.
 
     <#assign fieldsRequired = true>
 
-    <#if !getUsername?has_content || (getUsername?has_content && getUsername)>    	      
-        <#macro extraFieldContent args={}>	          
+    <#if !getUsername?has_content || (getUsername?has_content && getUsername)>              
+        <#macro extraFieldContent args={}>              
           <@field type="checkbox" checkboxType="simple-standard" name="UNUSEEMAIL" id="UNUSEEMAIL" value="on" onClick="setEmailUsername();" onFocus="setLastFocused(this);" label=uiLabelMap.SetupUseEmailAddress checked=((parameters.UNUSEEMAIL!) == "on")/>
         </#macro>
-        <#assign fieldStyle = "">    	        
+        <#assign fieldStyle = "">                
         <#if !userUserLogin?has_content>
            <#if ((parameters.UNUSEEMAIL!) == "on")>
               <#assign fieldStyle = "display:none;">
@@ -100,7 +100,7 @@ code package.
         <#else>
            <@field type="display" value=(userUserLogin.userLoginId!) label=uiLabelMap.CommonUsername />
            <@field type="hidden" name="USERNAME" value=(params.userLoginId!)/>
-        </#if>    	      
+        </#if>              
     </#if>
 
     <#if (!createAllowPassword?has_content) || createAllowPassword>
@@ -108,7 +108,7 @@ code package.
       <#assign pwRequired = ((!userUserLogin.userLoginId?has_content)!true)>-->
       <#assign pwRequired = (!userParty??)>
       <@field type="password" name="PASSWORD" id="PASSWORD" onFocus="setLastFocused(this);" label=uiLabelMap.CommonPassword required=pwRequired />      
-      <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" label=uiLabelMap.PartyRepeatPassword required=pwRequired />		      
+      <@field type="password" name="CONFIRM_PASSWORD" id="CONFIRM_PASSWORD" value="" maxlength="50" label=uiLabelMap.PartyRepeatPassword required=pwRequired />              
     <#else>
       <@commonMsg type="info-important">${uiLabelMap.PartyReceivePasswordByEmail}.</@commonMsg>
     </#if>
@@ -222,7 +222,7 @@ code package.
         </@fields>
     </@field>
 
-	<hr/> 
+    <hr/> 
 
     <input type="hidden" name="emailProductStoreId" value="${productStoreId}"/>    
     <@personalTitleField name="USER_TITLE" label=uiLabelMap.CommonTitle personalTitle=(params.personalTitle!params.USER_TITLE!) /> 
@@ -248,7 +248,7 @@ code package.
             <@fields args={"type":"default", "ignoreParentField":true}>
                 <#-- Do not mark postal fields required if this is an existing user with no address; but
                     in all other cases mark as required -->
-        	    <#assign postalFieldsRequired = fieldsRequired && !(userParty?? && !userInfo.USER_ADDRESS_CONTACTMECHID?has_content)>
+                <#assign postalFieldsRequired = fieldsRequired && !(userParty?? && !userInfo.USER_ADDRESS_CONTACTMECHID?has_content)>
                 <@render resource="component://setup/widget/ProfileScreens.xml#postalAddressFields" 
                       ctxVars={
                         "pafFieldNamePrefix":"USER_",
@@ -306,7 +306,7 @@ code package.
         </div>
     </@field>
 
-	<#if userInfo?? && params.USER_WORK_CONTACTMECHID?has_content>
+    <#if userInfo?? && params.USER_WORK_CONTACTMECHID?has_content>
         <@field type="hidden" name="USER_WORK_CONTACTMECHID" value=(params.USER_WORK_CONTACTMECHID!)/>
     </#if>
     <@telecomNumberField label=uiLabelMap.PartyContactWorkPhoneNumber params=params

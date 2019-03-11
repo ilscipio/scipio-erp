@@ -111,7 +111,7 @@ code package.
             <@td nowrap="nowrap" class="${styles.text_right!}" headers="salesTax" id="completedCartTotalSalesTax"><@ofbizCurrency amount=shoppingCart.getDisplayTaxIncluded() isoCode=shoppingCart.getCurrency()/></@td>
             <@td>&nbsp;</@td>
           </@tr>
-		<@tr>
+        <@tr>
            <@td id="vatTax" scope="row" colspan=2>${uiLabelMap.OrderTotalSalesTax}</@td>
            <@td nowrap="nowrap" class="${styles.text_right!}" headers="vatTax" id="completedCartTotalVatTax"><@ofbizCurrency amount=shoppingCart.getTotalVATTax() isoCode=shoppingCart.getCurrency()/></@td>
            <@td>&nbsp;</@td>

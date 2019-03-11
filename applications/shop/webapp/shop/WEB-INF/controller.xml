@@ -206,7 +206,7 @@ code package.
         <security https="true" auth="false"/>
         <event type="java" invoke="createSurveyResponseAndRestoreParameters" path="org.ofbiz.content.survey.SurveyEvents"/>
         <response name="success" type="request" value="additem"/>
-        <response name="error" type="view" value="main"/>
+        <response name="error" type="view" value="survey" allow-view-save="false"/><!-- SCIPIO: Switched to additem: value="main" -->
     </request-map>
 
     <request-map uri="addordertocart">

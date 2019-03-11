@@ -47,7 +47,18 @@ if (wrapper != null) {
 surveyAction = context.surveyAction;
 if (surveyAction == null) {
     surveyAction = request.getAttribute("surveyAction");
+    if (surveyAction == null) {
+        // TODO: VERIFY: security: We need to get surveyAction from params, but for security reasons,
+        // allow this param only if it's a POST. However, this could cause problems if the survey screen
+        // is invoked through a "view-last" (will not be "post" in that case); for that case, we currently
+        // count of the behavior where the parameters will actually have been dumped as request attributes,
+        // so will already have been caught by request.getAttribute("surveyAction")...
+        if ("post".equals(request.getMethod().toLowerCase())) { 
+            surveyAction = parameters.surveyAction?.toString();
+        }
+    }
 }
+Debug.logInfo("surveyAction: " + surveyAction, module)
 if (surveyAction) {
     context.surveyAction = surveyAction;
 }
@@ -59,7 +70,15 @@ if (surveyAppl) {
     context.survey = survey;
 
     if (!parameters._ERROR_MESSAGE_) {
-        paramMap = [productStoreSurveyId : productStoreSurveyId];
+        // SCIPIO: 2019-03-11: Added _ORIG_PARAM_MAP_ID_ to match ShoppingCartEvents.addToCart;
+        // required for case resubmit after form errors.
+        // TODO: REVIEW: Any possible security implications?
+        origParamMapId = parameters._ORIG_PARAM_MAP_ID_;
+        if (origParamMapId) {
+            paramMap = [productStoreSurveyId : productStoreSurveyId, _ORIG_PARAM_MAP_ID_ : origParamMapId];
+        } else {
+            paramMap = [productStoreSurveyId : productStoreSurveyId];
+        }
     }
     if (wrapper == null) { // SCIPIO: 2019-03-06: Don't recreate unless
         wrapper = new ProductStoreSurveyWrapper(surveyAppl, partyId, paramMap);

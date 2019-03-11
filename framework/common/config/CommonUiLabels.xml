@@ -8019,6 +8019,20 @@
         <value xml:lang="zh">没有选项：_NA_</value>
         <value xml:lang="zh-TW">沒有選項:_NA_</value>
     </property>
+    <property key="CommonNoOptionsLabel">
+        <value xml:lang="ar">لا يوجد خيار</value>
+        <value xml:lang="cs">Žádné volby</value>
+        <value xml:lang="de">Keine Optionen</value>
+        <value xml:lang="en">No options</value>
+        <value xml:lang="es">Sin opciones</value>
+        <value xml:lang="fr">Aucun option</value>
+        <value xml:lang="ja">オプションなし</value>
+        <value xml:lang="pt-BR">Sem opções</value>
+        <value xml:lang="ru">Нету выбора</value>
+        <value xml:lang="vi">Không có tùy chọn</value>
+        <value xml:lang="zh">没有选项</value>
+        <value xml:lang="zh-TW">沒有選項</value>
+    </property>
     <property key="CommonNoParent">
         <value xml:lang="ar">لا والد</value>
         <value xml:lang="cs">Žádný rodič</value>

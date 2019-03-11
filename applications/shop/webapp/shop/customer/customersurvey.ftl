@@ -11,6 +11,7 @@ code package.
         <#-- SCIPIO: 2019-03-06: Now supports surveyAction and surveyMarkup error/missing fallback
             NOTE: surveyWrapper.render(context) may return null/void/missing/empty upon error or upon empty output -->
         <form method="post" enctype="multipart/form-data" action="<@pageUrl uri=surveyAction!'profilesurvey' escapeAs='html'/>">
+          <input type="hidden" name="surveyAction" value="${surveyAction!'profilesurvey'}"/><#-- SCIPIO: need for error case -->
           <#assign surveyMarkup = surveyWrapper.render(context)!>
           <#if surveyMarkup?has_content>
             ${surveyMarkup}

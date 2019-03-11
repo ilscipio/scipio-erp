@@ -7,7 +7,7 @@ code package.
 <#macro renderSurveyQuestionText surveyQuestionAndAppl>
   <label>${surveyQuestionAndAppl.question!} <#if (surveyQuestionAndAppl.requiredField!"N") == "Y">*</#if></label>
   <#if surveyQuestionAndAppl.hint?has_content>
-    <em>${surveyQuestionAndAppl.hint}</em>
+    <div><em>${surveyQuestionAndAppl.hint}</em></div>
   </#if>
 </#macro>
 
@@ -18,8 +18,8 @@ code package.
       <#if (surveyQuestionAndAppl.requiredField!"N") != "Y">
         <option value=""></option>
       </#if>
-      <option <#if "Y" == selectedOption>selected="selected"</#if>>Y</option>
-      <option <#if "N" == selectedOption>selected="selected"</#if>>N</option>
+      <option<#if "Y" == selectedOption> selected="selected"</#if>>Y</option>
+      <option<#if "N" == selectedOption> selected="selected"</#if>>N</option>
     </select>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXTAREA">
     <textarea cols="40" rows="5" name="${questionFieldName}">${(answer.textResponse)!}</textarea>
@@ -60,10 +60,10 @@ code package.
       </#if>
       <#if options?has_content>
         <#list options as option>
-          <option value="${option.surveyOptionSeqId}" <#if option.surveyOptionSeqId == selectedOption>selected="selected"</#if>>${option.description!}</option>
+          <option value="${option.surveyOptionSeqId}"<#if option.surveyOptionSeqId == selectedOption> selected="selected"</#if>>${option.description!}</option>
         </#list>
       <#else>
-        <option value="">Nothing to choose</option>
+        <option value="">${uiLabelMap.CommonNoOptionsLabel}</option>
       </#if>
     </select>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "ENUMERATION">
@@ -119,7 +119,7 @@ code package.
 
 <#if additionalFields?has_content>
   <#list additionalFields.keySet() as field>
-    <input type="hidden" name="${field}" value="${additionalFields.get(field)}"/>
+    <input type="hidden" name="${field}" value="${additionalFields.get(raw(field))}"/>
   </#list>
 </#if>
 

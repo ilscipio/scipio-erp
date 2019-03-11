@@ -5,25 +5,17 @@ code package.
 -->
 
 <#macro renderSurveyQuestionText surveyQuestionAndAppl>
-  <div>${surveyQuestionAndAppl.question!}</div>
+  <label>${surveyQuestionAndAppl.question!} <#if (surveyQuestionAndAppl.requiredField!"N") == "Y">*</#if></label>
   <#if surveyQuestionAndAppl.hint?has_content>
-    <div>${surveyQuestionAndAppl.hint}</div>
-  </#if>
-</#macro>
-
-<#macro renderSurveyQuestionRequired surveyQuestionAndAppl>
-  <#if surveyQuestionAndAppl.requiredField?default("N") == "Y">
-    <span>*[required]</span>
-  <#else>
-    <span>[optional]</span>
+    <em>${surveyQuestionAndAppl.hint}</em>
   </#if>
 </#macro>
 
 <#macro renderSurveyQuestionInput surveyQuestionAndAppl questionFieldName>
   <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
-    <#assign selectedOption = (answer.booleanResponse)?default("Y")>
+    <#assign selectedOption = (answer.booleanResponse)!("Y")>
     <select name="${questionFieldName}">
-      <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
+      <#if (surveyQuestionAndAppl.requiredField!"N") != "Y">
         <option value=""></option>
       </#if>
       <option <#if "Y" == selectedOption>selected="selected"</#if>>Y</option>
@@ -32,27 +24,27 @@ code package.
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXTAREA">
     <textarea cols="40" rows="5" name="${questionFieldName}">${(answer.textResponse)!}</textarea>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_SHORT">
-    <input type="text" size="15" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="15" name="${questionFieldName}" value="${(answer.textResponse)!(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_LONG">
-    <input type="text" size="35" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="35" name="${questionFieldName}" value="${(answer.textResponse)!(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "EMAIL">
-    <input type="text" size="30" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="30" name="${questionFieldName}" value="${(answer.textResponse)!(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "URL">
-    <input type="text" size="40" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="40" name="${questionFieldName}" value="${(answer.textResponse)!(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "DATE">
-    <input type="text" size="12" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="12" name="${questionFieldName}" value="${(answer.textResponse)!(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CREDIT_CARD">
-    <input type="text" size="20" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="20" name="${questionFieldName}" value="${(answer.textResponse)!(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "GIFT_CARD">
-    <input type="text" size="20" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="text" size="20" name="${questionFieldName}" value="${(answer.textResponse)!(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_CURRENCY">
-    <input type="text" size="6" name="${questionFieldName}" value="${(answer.currencyResponse)?default(defValue!)}" />
+    <input type="text" size="6" name="${questionFieldName}" value="${(answer.currencyResponse)!(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_FLOAT">
-    <input type="text" size="6" name="${questionFieldName}" value="${(answer.floatResponse)?default(defValue!)}" />
+    <input type="text" size="6" name="${questionFieldName}" value="${(answer.floatResponse)!(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "NUMBER_LONG">
-    <input type="text" size="6" name="${questionFieldName}" value="${(answer.numericResponse?default(defValue)?string("#"))!}" />
+    <input type="text" size="6" name="${questionFieldName}" value="${(answer.numericResponse!(defValue)?string("#"))!}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "PASSWORD">
-    <input type="password" size="30" class="textBox" name="${questionFieldName}" value="${(answer.textResponse)?default(defValue!)}" />
+    <input type="password" size="30" class="textBox" name="${questionFieldName}" value="${(answer.textResponse)!(defValue!)}" />
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CONTENT">
      <#if (answer.contentId)?has_content>
       <#assign content = answer.getRelatedOne("Content", false)>
@@ -61,9 +53,9 @@ code package.
     <input type="file" size="15" name="${questionFieldName}"/>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
     <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", null, sequenceSort, false)!/>
-    <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")/>
+    <#assign selectedOption = (answer.surveyOptionSeqId)!("_NA_")/>
     <select name="${questionFieldName}">
-      <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
+      <#if (surveyQuestionAndAppl.requiredField!"N") != "Y">
         <option value=""></option>
       </#if>
       <#if options?has_content>
@@ -150,6 +142,7 @@ code package.
 <p>${survey.comments}</p>
 </#if>
 
+<#-- SCIPIO: DEV NOTE: This must return a table (not @fields) because of multi-response (multi-column) support. -->
 <@table type="generic" width="100%" border="0" cellpadding="2" cellspacing="0">
   <#assign lastSurveyMultiRespId = ""/>
   <#assign haveOpenMultiRespHeader = false/>
@@ -189,17 +182,14 @@ code package.
       <#assign haveOpenMultiRespHeader = true/>
       <@tr width="100%" open=true close=false />
         <@td colspan="5" width="100%" open=true close=false />
-          <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%" open=true close=false />
+          <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%" open=true close=false/>
             <@tr>
-              <@td>
-                <div class="tableheadtext">${surveyMultiResp.multiRespTitle?default("&nbsp;")}</div>
-              </@td>
+              <@th>${surveyMultiResp.multiRespTitle!("&nbsp;")}</@th>
               <#list surveyMultiRespColumnList as surveyMultiRespColumn>
-                <@td align="center">
-                  <div class="tableheadtext">${surveyMultiRespColumn.columnTitle?default("&nbsp;")}</div>
-                </@td>
+                <@th align="center">
+                  ${surveyMultiRespColumn.columnTitle!("&nbsp;")}
+                </@th>
               </#list>
-              <@td><div class="tableheadtext">Required?</div></@td><#-- placeholder for required/optional column -->
             </@tr>
     </#if>
 
@@ -228,9 +218,6 @@ code package.
           <@renderSurveyQuestionInput surveyQuestionAndAppl=surveyQuestionAndAppl questionFieldName=questionFieldName/>
         </@td>
       </#list>
-      <@td>
-        <@renderSurveyQuestionRequired surveyQuestionAndAppl=surveyQuestionAndAppl/>
-      </@td>
     </@tr>
   <#else>
     <#-- special formatting for select boxes -->
@@ -255,21 +242,17 @@ code package.
     <#if surveyQuestionAndAppl?? && surveyQuestionAndAppl.surveyQuestionTypeId?has_content>
       <#-- seperator options -->
       <#if surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_TEXT">
-        <@td colspan="5">${surveyQuestionAndAppl.question!}</@td>
+        <@td colspan="4">${surveyQuestionAndAppl.question!}</@td>
       <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_LINE">
-        <@td colspan="5"><hr /></@td>
+        <@td colspan="4"><hr /></@td>
       <#else>
         <#-- standard question options -->
         <@td align="right">
           <@renderSurveyQuestionText surveyQuestionAndAppl=surveyQuestionAndAppl/>
         </@td>
-        <@td width="1">&nbsp;</@td>
-        <@td align="${align}">
+        <@td align=align>
           <#assign questionFieldName = "answers_" + surveyQuestionAndAppl.surveyQuestionId/>
           <@renderSurveyQuestionInput surveyQuestionAndAppl=surveyQuestionAndAppl questionFieldName=questionFieldName/>
-        </@td>
-        <@td>
-          <@renderSurveyQuestionRequired surveyQuestionAndAppl=surveyQuestionAndAppl/>
         </@td>
         <@td width="20%">&nbsp;</@td>
       </#if>
@@ -280,13 +263,10 @@ code package.
   </#list>
   <#-- one last check for a multi-resp table left open before moving on, will happen if last question was in a multi-resp -->
     <#if haveOpenMultiRespHeader>
-          <@table close=true open=false />
-        <@td close=true open=false />
-      <@tr close=true open=false />
+          <@table close=true open=false/>
+        <@td close=true open=false/>
+      <@tr close=true open=false/>
     </#if>
-  <@tr>
-    <@td>&nbsp;</@td>
-    <@td>&nbsp;</@td>
-    <@td colspan="2"><input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else>Submit</#if>"/></@td>
-  </@tr>
 </@table>
+
+<@field type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value=submitCaption?has_content?then(survey.submitCaption, uiLabelMap.CommonSubmit)/>

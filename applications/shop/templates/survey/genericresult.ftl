@@ -32,9 +32,9 @@ code package.
 
       <#-- seperator options -->
       <#if surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_TEXT">
-        <@td colspan="5">${surveyQuestionAndAppl.question!}</@td>
+        <@td colspan="4">${surveyQuestionAndAppl.question!}</@td>
       <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "SEPERATOR_LINE">
-        <@td colspan="5"><hr /></@td>
+        <@td colspan="4"><hr /></@td>
       <#else>
 
         <#-- standard question options -->
@@ -48,9 +48,8 @@ code package.
             <div>${surveyQuestionAndAppl.hint}</div>
           </#if>
         </@td>
-        <@td width='1'>&nbsp;</@td>
 
-        <@td align="${align}">
+        <@td align=align>
           <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
             <#assign selectedOption = raw((answer.booleanResponse)!"Y")>
             <div><span style="white-space: nowrap;">

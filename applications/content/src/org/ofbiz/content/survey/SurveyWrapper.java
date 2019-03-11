@@ -339,8 +339,25 @@ public class SurveyWrapper {
         return responseId;
     }
 
-    protected void setThisResponseId(String responseId) {
-        this.responseId = responseId;
+    /**
+     * Sets the response ID.
+     * <p>
+     * SCIPIO: 2019-03-11: This is now verified to make sure it exists, and is now public
+     * because it was exposed in CustomerSurvey.groovy.
+     */
+    public void setThisResponseId(String responseId) { // SCIPIO: protected
+        try {
+            if (EntityQuery.use(delegator).from("SurveyResponse")
+                    .where("surveyId", surveyId, "surveyResponseId", responseId, "partyId", partyId)
+                    .queryCount() > 0) {
+                this.responseId = responseId;
+            } else {
+                Debug.logError("Cannot set response '" + responseId + "' for survey '" + surveyId + "'"
+                        + " and party '" + partyId + "'; there is no SurveyResponse association record", module);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
     }
 
     public long getNumberResponses() throws SurveyWrapperException {

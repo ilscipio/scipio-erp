@@ -53,7 +53,7 @@ if (surveyAction == null) {
         // is invoked through a "view-last" (will not be "post" in that case); for that case, we currently
         // count of the behavior where the parameters will actually have been dumped as request attributes,
         // so will already have been caught by request.getAttribute("surveyAction")...
-        if ("post".equals(request.getMethod().toLowerCase())) { 
+        if ("post".equals(request.getMethod().toLowerCase())) {
             surveyAction = parameters.surveyAction?.toString();
         }
     }
@@ -73,9 +73,8 @@ if (surveyAppl) {
         // SCIPIO: 2019-03-11: Added _ORIG_PARAM_MAP_ID_ to match ShoppingCartEvents.addToCart;
         // required for case resubmit after form errors.
         // TODO: REVIEW: Any possible security implications?
-        origParamMapId = parameters._ORIG_PARAM_MAP_ID_;
-        if (origParamMapId) {
-            paramMap = [productStoreSurveyId : productStoreSurveyId, _ORIG_PARAM_MAP_ID_ : origParamMapId];
+        if ("post".equals(request.getMethod().toLowerCase()) && parameters._ORIG_PARAM_MAP_ID_) {
+            paramMap = [productStoreSurveyId : productStoreSurveyId, _ORIG_PARAM_MAP_ID_ : parameters._ORIG_PARAM_MAP_ID_];
         } else {
             paramMap = [productStoreSurveyId : productStoreSurveyId];
         }

@@ -308,7 +308,6 @@ code package.
         </section>
     </screen>
 
-    <!-- SCIPIO: TODO: screen requires re-implement + re-test -->
     <screen name="customersurvey">
         <section>
             <actions>

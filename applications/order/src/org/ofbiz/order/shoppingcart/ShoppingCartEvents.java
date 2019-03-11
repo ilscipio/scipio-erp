@@ -613,6 +613,7 @@ public class ShoppingCartEvents {
                     request.setAttribute("surveyWrapper", wrapper);
                     request.setAttribute("surveyAction", formAction); // will be used as the form action of the survey
                     request.setAttribute("productStoreSurveyId", survey.get("productStoreSurveyId")); // SCIPIO: 2019-03-06: for backward-compatibility (missing in stock)
+                    request.setAttribute("_ORIG_PARAM_MAP_ID_", origParamMapId); // SCIPIO: 2019-03-06: for backward-compatibility (missing in stock)
                     return "survey";
                 }
             }

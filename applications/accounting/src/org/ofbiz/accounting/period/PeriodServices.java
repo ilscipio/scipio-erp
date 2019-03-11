@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -41,6 +42,8 @@ public class PeriodServices {
 
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "AccountingUiLabels";
+    
+    private static final String module = PeriodServices.class.getName();
 
     /*
      * find the date of the last closed CustomTimePeriod, or, if none available, the
@@ -96,12 +99,15 @@ public class PeriodServices {
                 if (timePeriod != null && UtilValidate.isNotEmpty(timePeriod.get("fromDate"))) {
                     lastClosedDate = timePeriod.getTimestamp("fromDate");
                 } else {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingPeriodCannotGet", locale));
+                    // SCIPIO (2019-03-11): This is too drastic, just log a warning
+                    //return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingPeriodCannotGet", locale));
+                    Debug.logWarning(UtilProperties.getMessage(resource, "AccountingPeriodCannotGet", locale), module);
                 }
             }
 
             result.put("lastClosedTimePeriod", lastClosedTimePeriod); // ok if this is null - no time periods have been closed
-            result.put("lastClosedDate", lastClosedDate); // should have a value - not null
+            result.put("lastClosedDate", lastClosedDate); // should have a value - not null 
+            // SCIPIO (2019-03-11): Why not? if null means that there's no CustomTimePeriod thus we must point users to CustomTimePeriod creation
             return result;
         } catch (GenericEntityException ex) {
             return (ServiceUtil.returnError(ex.getMessage()));

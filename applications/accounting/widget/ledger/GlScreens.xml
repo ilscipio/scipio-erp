@@ -51,8 +51,18 @@ code package.
                 <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
                     <field-map field-name="organizationPartyId" from-field="organizationPartyId"/>
                 </service>
-                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp" default-value="${findLastClosedDateOutMap.lastClosedDate}"/>
-                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>                
+                <if>
+                    <condition>
+                        <not><if-empty field="findLastClosedDateOutMap.lastClosedDate"/></not>
+                    </condition>
+                    <then>
+                        <set field="fromDate" from-field="parameters.fromDate" type="Timestamp" default-value="${findLastClosedDateOutMap.lastClosedDate}"/>                        
+                    </then>
+                    <else>
+                        <set field="fromDate" value="${nowTimestamp}" type="Timestamp"/>
+                    </else>
+                </if>
+                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
                 <script location="component://accounting/webapp/accounting/WEB-INF/actions/accountSummary/StatsAccountSummaryTotal.groovy"/>
             </actions>
             <widgets>

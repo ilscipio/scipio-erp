@@ -92,12 +92,12 @@ if (surveyAppl) {
         }
         //}
         wrapper = new ProductStoreSurveyWrapper(surveyAppl, partyId, paramMap);
-        if (Debug.infoOn()) {
-            Debug.logInfo("Creating ProductStoreSurveyWrapper for productStoreSurveyId '" + productStoreSurveyId + "'", module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Creating ProductStoreSurveyWrapper for productStoreSurveyId '" + productStoreSurveyId + "'", module);
         }
     } else {
-        if (Debug.infoOn()) {
-            Debug.logInfo("Reusing ProductStoreSurveyWrapper for productStoreSurveyId '" + productStoreSurveyId + "'", module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Reusing ProductStoreSurveyWrapper for productStoreSurveyId '" + productStoreSurveyId + "'", module);
         }
     }
     context.surveyWrapper = wrapper;

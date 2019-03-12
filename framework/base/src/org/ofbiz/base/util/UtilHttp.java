@@ -1755,24 +1755,50 @@ public final class UtilHttp {
         }
     }
 
-    public static void restoreStashedParameterMap(HttpServletRequest request, String paramMapId) {
-        HttpSession session = request.getSession();
+    public static Map<String, Object> getStashedParameterMap(HttpServletRequest request, String paramMapId) { // SCIPIO: New method
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return null;
+        }
         Map<String, Map<String, Object>> paramMapStore = UtilGenerics.checkMap(session.getAttribute("_PARAM_MAP_STORE_"));
         if (paramMapStore != null) {
-            // SCIPIO: Don't do get + remove when a single remove can do it, so it can be done atomically and thread-safe
-            //Map<String, Object> paramMap = paramMapStore.get(paramMapId);
-            Map<String, Object> paramMap = paramMapStore.remove(paramMapId);
-            if (paramMap != null) {
-                //paramMapStore.remove(paramMapId);
-                for (Map.Entry<String, Object> paramEntry : paramMap.entrySet()) {
-                    if (request.getAttribute(paramEntry.getKey()) != null) {
-                        Debug.logWarning("Skipped loading parameter [" + paramEntry.getKey() + "] because it would have overwritten a request attribute" , module);
-                        continue;
-                    }
-                    request.setAttribute(paramEntry.getKey(), paramEntry.getValue());
+            return paramMapStore.get(paramMapId);
+        }
+        return null;
+    }
+    
+    public static Map<String, Object> removeStashedParameterMap(HttpServletRequest request, String paramMapId) { // SCIPIO: New method
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return null;
+        }
+        Map<String, Map<String, Object>> paramMapStore = UtilGenerics.checkMap(session.getAttribute("_PARAM_MAP_STORE_"));
+        if (paramMapStore != null) {
+            return paramMapStore.remove(paramMapId);
+        }
+        return null;
+    }
+
+    public static void restoreStashedParameterMap(HttpServletRequest request, Map<String, ?> paramMap) { // SCIPIO: New method
+        // SCIPIO: Refactored from the original restoreStashedParameterMap
+        if (paramMap != null) {
+            //paramMapStore.remove(paramMapId);
+            for (Map.Entry<String, ?> paramEntry : paramMap.entrySet()) {
+                if (request.getAttribute(paramEntry.getKey()) != null) {
+                    Debug.logWarning("Skipped loading parameter [" + paramEntry.getKey() + "] because it would have overwritten a request attribute" , module);
+                    continue;
                 }
+                request.setAttribute(paramEntry.getKey(), paramEntry.getValue());
             }
         }
+    }
+
+    public static void restoreStashedParameterMap(HttpServletRequest request, String paramMapId) { // SCIPIO: NOTE: Original stock method, refactored + delegated
+        restoreStashedParameterMap(request, removeStashedParameterMap(request, paramMapId));
+    }
+
+    public static void restoreStashedParameterMapNoRemove(HttpServletRequest request, String paramMapId) { // SCIPIO: New method
+        restoreStashedParameterMap(request, getStashedParameterMap(request, paramMapId));
     }
 
     /**

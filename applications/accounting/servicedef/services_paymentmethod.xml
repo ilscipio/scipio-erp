@@ -118,14 +118,24 @@ code package.
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentMethodId" type="String" mode="INOUT" optional="true"/>
         -->
-        <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
+        <attribute name="cardNumber" type="String" mode="IN" optional="false">
+            <description>Note: If cardNumber is masked (************XXXX), it is not verified for validity.</description>
+        </attribute>
         <attribute name="pinNumber" type="String" mode="IN" optional="true"/>
         <attribute name="expireDate" type="String" mode="IN" optional="true"/>
         <attribute name="expMonth" type="String" mode="IN" optional="true"/>
         <attribute name="expYear" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="verifyGiftCardIgnoreMasked" engine="java"
+            location="org.ofbiz.accounting.payment.PaymentMethodServices" invoke="verifyGiftCardIgnoreMasked" auth="true">
+        <description>SCIPIO: Verifies if the given gift card number and pin are valid (best-effort)
+            (based on: org.ofbiz.order.shoppingcart.CheckOutHelper#checkGiftCard), but ignores cardNumber if it
+            is in masked format (************XXXX)</description>
+        <implements service="verifyGiftCard"/>
     </service>
 
     <service name="createVerifyGiftCard" engine="group" auth="true">
@@ -139,7 +149,7 @@ code package.
     <service name="updateVerifyGiftCard" engine="group" auth="true">
         <description>SCIPIO: Update and verify GiftCard (best-effort)</description>
         <group>
-            <invoke name="verifyGiftCard"/>
+            <invoke name="verifyGiftCardIgnoreMasked"/>
             <invoke name="updateGiftCard"/>
         </group>
     </service>

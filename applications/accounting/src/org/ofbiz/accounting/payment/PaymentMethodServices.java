@@ -489,7 +489,14 @@ public class PaymentMethodServices {
             return result;
         }
 
-        List<GenericValue> toBeStored = new LinkedList<>();
+        // SCIPIO: 2019-03-12: Deny any modified masked numbers (causes issues for verifyGiftCard and other places)
+        String cardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
+        Character maskChar = PaymentWorker.getNumberMaskChar(delegator);
+        if (maskChar != null && cardNumber.indexOf(maskChar) >= 0) {
+            return ServiceUtil.returnError(UtilProperties.getMessage("AccountingUiLabels", "AccountingCardNumberIncorrect", locale));
+        }
+
+        List<GenericValue> toBeStored = new ArrayList<>(); // SCIPIO: Switched to ArrayList
         GenericValue newPm = delegator.makeValue("PaymentMethod");
         toBeStored.add(newPm);
         GenericValue newGc = delegator.makeValue("GiftCard");
@@ -510,7 +517,7 @@ public class PaymentMethodServices {
         newPm.set("thruDate", context.get("thruDate"));
         newPm.set("description",context.get("description"));
 
-        newGc.set("cardNumber", context.get("cardNumber"));
+        newGc.set("cardNumber", cardNumber); // SCIPIO: Use number with trimmed spaces: context.get("cardNumber")
         newGc.set("pinNumber", context.get("pinNumber"));
         newGc.set("expireDate", context.get("expireDate"));
 
@@ -577,7 +584,6 @@ public class PaymentMethodServices {
                     UtilMisc.toMap("partyId", partyId, "paymentMethodId", paymentMethodId), locale));
         }
 
-
         // card number (masked)
         String cardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
         /* SCIPIO: This test was too strict; prevented the UI from deciding masking behavior
@@ -609,6 +615,9 @@ public class PaymentMethodServices {
             // compare the two masked numbers
             if (StringUtil.matchesMaskedAny(origCardNumber, cardNumber, maskChar)) {
                 cardNumber = origCardNumber;
+            } else {
+                // SCIPIO: 2019-03-12: Deny any modified masked numbers (causes issues for verifyGiftCard and other places)
+                return ServiceUtil.returnError(UtilProperties.getMessage("AccountingUiLabels", "AccountingCardNumberIncorrect", locale));
             }
         }
         context.put("cardNumber", cardNumber);
@@ -676,17 +685,23 @@ public class PaymentMethodServices {
      * SCIPIO: Verifies if the given gift card number and pin are valid (best-effort)
      * (based on: {@link org.ofbiz.order.shoppingcart.CheckOutHelper#checkGiftCard}).
      */
-    public static Map<String, Object> verifyGiftCard(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> verifyGiftCard(DispatchContext dctx, Map<String, Object> context, boolean ignoreMasked) {
         final String resource_error = "OrderErrorUiLabels";
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         List<String> errorMessages = new ArrayList<>();
         String errMsg = null;
 
-        String gcNum = (String) context.get("cardNumber");
+        String gcNum = StringUtil.removeSpaces((String) context.get("cardNumber"));
         String gcPin = (String) context.get("pinNumber");
         String productStoreId = (String) context.get("productStoreId");
 
+        boolean maskedNum = false;
+        if (ignoreMasked) {
+            Character maskChar = PaymentWorker.getNumberMaskChar(delegator);
+            maskedNum = (maskChar != null && gcNum != null && gcNum.indexOf(maskChar) >= 0);
+        }
+        
         if (UtilValidate.isEmpty(gcNum)) {
             errMsg = UtilProperties.getMessage(resource_error,"checkhelper.enter_gift_card_number", locale);
             errorMessages.add(errMsg);
@@ -702,7 +717,11 @@ public class PaymentMethodServices {
         if (isValidateGCFinAccount(delegator, productStoreId)) {
             try {
                 // No PIN required - validate gift card number against account code
-                if (!isPinRequiredForGC(delegator, productStoreId)) {
+                // SCIPIO: Don't bother if masked card number (see createGiftCard/updateGiftCard)
+                // SCIPIO: TODO: REVIEW: technically we should probably use paymentMethodId to lookup GiftCard the same way updateGiftCard does,
+                // so we can deny any changes to the gift card number; however, in practice, this will precede updateGiftCard or similar
+                // calls, so it doesn't add much exception make the lookup slower...
+                if (!maskedNum && !isPinRequiredForGC(delegator, productStoreId)) { 
                     GenericValue finAccount = FinAccountHelper.getFinAccountFromCode(gcNum, delegator);
                     if (finAccount == null) {
                         errMsg = UtilProperties.getMessage(resource_error,"checkhelper.gift_card_does_not_exist", locale);
@@ -724,6 +743,23 @@ public class PaymentMethodServices {
         return (errorMessages.size() > 0) ? ServiceUtil.returnError(errorMessages) : ServiceUtil.returnSuccess();
     }
 
+    /**
+     * SCIPIO: Verifies if the given gift card number and pin are valid (best-effort)
+     * (based on: {@link org.ofbiz.order.shoppingcart.CheckOutHelper#checkGiftCard}).
+     */
+    public static Map<String, Object> verifyGiftCard(DispatchContext dctx, Map<String, Object> context) {
+        return verifyGiftCard(dctx, context, false);
+    }
+
+    /**
+    * SCIPIO: Verifies if the given gift card number and pin are valid (best-effort)
+    * (based on: {@link org.ofbiz.order.shoppingcart.CheckOutHelper#checkGiftCard}),
+    * but ignores cardNumber if it is in masked format (************XXXX)
+    */
+    public static Map<String, Object> verifyGiftCardIgnoreMasked(DispatchContext dctx, Map<String, Object> context) {
+        return verifyGiftCard(dctx, context, true);
+    }
+    
     private static GenericValue getGiftCertSettingFromStore(Delegator delegator, String productStoreId) throws GenericEntityException { // SCIPIO: Copied from ShoppingCart
         return EntityQuery.use(delegator).from("ProductStoreFinActSetting")
                 .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId).cache().queryOne();

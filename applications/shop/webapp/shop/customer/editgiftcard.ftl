@@ -14,13 +14,6 @@ code package.
   </@menu>
 <#else>
 
-<#-- SCIPIO: This was a message to explain to "Go Back" kludge; however I have now recoded controller and screen
-    to redirect automatically.
-<@commonMsg type="info-important">${uiLabelMap.ShopSaveGoBackExplanation}</@commonMsg>-->
-
-<#-- SCIPIO: FIXME -->
-<@commonMsg type="warning">${uiLabelMap.CommonWarning}: This form currently bypasses gift card product store settings and validation (for testing purposes).</@commonMsg>
-
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
     <@menuitem type="link" href=makePageUrl(donePage) class="+${styles.action_nav!} ${styles.action_cancel!}" text=uiLabelMap.CommonGoBack />

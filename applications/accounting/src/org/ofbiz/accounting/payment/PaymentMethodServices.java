@@ -19,6 +19,7 @@
 package org.ofbiz.accounting.payment;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.order.finaccount.FinAccountHelper;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -668,6 +670,99 @@ public class PaymentMethodServices {
         result.put("oldPaymentMethodId", paymentMethodId);
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
+    }
+    
+    /**
+     * SCIPIO: Verifies if the given gift card number and pin are valid (best-effort)
+     * (based on: {@link org.ofbiz.order.shoppingcart.CheckOutHelper#checkGiftCard}).
+     */
+    public static Map<String, Object> verifyGiftCard(DispatchContext dctx, Map<String, Object> context) {
+        final String resource_error = "OrderErrorUiLabels";
+        Delegator delegator = dctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
+        List<String> errorMessages = new ArrayList<>();
+        String errMsg = null;
+
+        String gcNum = (String) context.get("cardNumber");
+        String gcPin = (String) context.get("pinNumber");
+        String productStoreId = (String) context.get("productStoreId");
+
+        if (UtilValidate.isEmpty(gcNum)) {
+            errMsg = UtilProperties.getMessage(resource_error,"checkhelper.enter_gift_card_number", locale);
+            errorMessages.add(errMsg);
+        }
+        if (isPinRequiredForGC(delegator, productStoreId)) {
+            //  if a PIN is required, make sure the PIN is valid
+            if (UtilValidate.isEmpty(gcPin)) {
+                errMsg = UtilProperties.getMessage(resource_error,"checkhelper.enter_gift_card_pin_number", locale);
+                errorMessages.add(errMsg);
+            }
+        }
+        // See if we should validate gift card code against FinAccount's accountCode
+        if (isValidateGCFinAccount(delegator, productStoreId)) {
+            try {
+                // No PIN required - validate gift card number against account code
+                if (!isPinRequiredForGC(delegator, productStoreId)) {
+                    GenericValue finAccount = FinAccountHelper.getFinAccountFromCode(gcNum, delegator);
+                    if (finAccount == null) {
+                        errMsg = UtilProperties.getMessage(resource_error,"checkhelper.gift_card_does_not_exist", locale);
+                        errorMessages.add(errMsg);
+                    } else if ((finAccount.getBigDecimal("availableBalance") == null) ||
+                            !((finAccount.getBigDecimal("availableBalance")).compareTo(FinAccountHelper.ZERO) > 0)) {
+                        // if account's available balance (including authorizations) is not greater than zero, then return an error
+                        errMsg = UtilProperties.getMessage(resource_error,"checkhelper.gift_card_has_no_value", locale);
+                        errorMessages.add(errMsg);
+                    }
+                }
+                // TODO: else case when pin is required - we should validate gcNum and gcPin
+            } catch (GenericEntityException ex) {
+                errorMessages.add(ex.getMessage());
+            }
+        }
+
+        // see whether we need to return an error or not
+        return (errorMessages.size() > 0) ? ServiceUtil.returnError(errorMessages) : ServiceUtil.returnSuccess();
+    }
+
+    private static GenericValue getGiftCertSettingFromStore(Delegator delegator, String productStoreId) throws GenericEntityException { // SCIPIO: Copied from ShoppingCart
+        return EntityQuery.use(delegator).from("ProductStoreFinActSetting")
+                .where("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId).cache().queryOne();
+    }
+
+    private static boolean isPinRequiredForGC(Delegator delegator, String productStore) { // SCIPIO: Copied from ShoppingCart
+        try {
+            GenericValue giftCertSettings = getGiftCertSettingFromStore(delegator, productStore);
+            if (giftCertSettings != null) {
+                if ("Y".equals(giftCertSettings.getString("requirePinCode"))) {
+                    return true;
+                }
+                return false;
+            }
+            Debug.logWarning("No product store gift certificate settings found for store [" + productStore + "]",
+                    module);
+            return true;
+        } catch (GenericEntityException ex) {
+            Debug.logError("Error checking if store requires pin number for GC: " + ex.getMessage(), module);
+            return true;
+        }
+    }
+
+    private static boolean isValidateGCFinAccount(Delegator delegator, String productStore) { // SCIPIO: Copied from ShoppingCart
+        try {
+            GenericValue giftCertSettings = getGiftCertSettingFromStore(delegator, productStore);
+            if (giftCertSettings != null) {
+                if ("Y".equals(giftCertSettings.getString("validateGCFinAcct"))) {
+                    return true;
+                }
+                return false;
+            }
+            Debug.logWarning("No product store gift certificate settings found for store [" + productStore + "]",
+                    module);
+            return false;
+        } catch (GenericEntityException ex) {
+            Debug.logError("Error checking if store requires pin number for GC: " + ex.getMessage(), module);
+            return false;
+        }
     }
 
     /**

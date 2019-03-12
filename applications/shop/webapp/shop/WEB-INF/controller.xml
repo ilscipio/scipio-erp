@@ -1182,8 +1182,14 @@ code package.
     </request-map>
     <request-map uri="createGiftCard">
         <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
-        <!-- SCIPIO: FIXME: This event bypasses GC product store validation!!! -->
-        <event type="service" invoke="createGiftCard"/>
+        <!-- SCIPIO: Ensure productStoreId and validate card beforehand
+        <event type="service" invoke="createGiftCard"/>-->
+        <event type="groovy"><script><![CDATA[
+            import org.ofbiz.product.store.ProductStoreWorker; import org.ofbiz.webapp.event.EventUtil;
+            ctx = EventUtil.getServiceEventParamMap(request, "createVerifyGiftCard");
+            ctx.productStoreId = ProductStoreWorker.getProductStoreId(request);
+            return EventUtil.runServiceAsEvent(request, response, "createVerifyGiftCard", ctx);
+        ]]></script></event>
         <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editgiftcard"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>
@@ -1191,8 +1197,14 @@ code package.
     </request-map>
     <request-map uri="updateGiftCard">
         <security https="true" auth="false"/><!-- SCIPIO: CHANGED TO AUTH FALSE so may support anon checkout -->
-        <!-- SCIPIO: FIXME: This event bypasses GC product store validation!!! -->
-        <event type="service" invoke="updateGiftCard"/>
+        <!-- SCIPIO: Ensure productStoreId and validate card beforehand
+        <event type="service" invoke="updateGiftCard"/>-->
+        <event type="groovy"><script><![CDATA[
+            import org.ofbiz.product.store.ProductStoreWorker; import org.ofbiz.webapp.event.EventUtil;
+            ctx = EventUtil.getServiceEventParamMap(request, "updateVerifyGiftCard");
+            ctx.productStoreId = ProductStoreWorker.getProductStoreId(request);
+            return EventUtil.runServiceAsEvent(request, response, "updateVerifyGiftCard", ctx);
+        ]]></script></event>
         <!-- SCIPIO: Changed to support better redirects and forward
         <response name="success" type="view" value="editgiftcard"/>-->
         <response name="success" type="request" value="handleProfileTargetPage"/>

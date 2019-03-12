@@ -1185,9 +1185,8 @@ code package.
         <!-- SCIPIO: Ensure productStoreId and validate card beforehand
         <event type="service" invoke="createGiftCard"/>-->
         <event type="groovy"><script><![CDATA[
-            import org.ofbiz.product.store.ProductStoreWorker; import org.ofbiz.webapp.event.EventUtil;
             ctx = EventUtil.getServiceEventParamMap(request, "createVerifyGiftCard");
-            ctx.productStoreId = ProductStoreWorker.getProductStoreId(request);
+            ctx.productStoreId = org.ofbiz.product.store.ProductStoreWorker.getProductStoreId(request);
             return EventUtil.runServiceAsEvent(request, response, "createVerifyGiftCard", ctx);
         ]]></script></event>
         <!-- SCIPIO: Changed to support better redirects and forward
@@ -1200,9 +1199,8 @@ code package.
         <!-- SCIPIO: Ensure productStoreId and validate card beforehand
         <event type="service" invoke="updateGiftCard"/>-->
         <event type="groovy"><script><![CDATA[
-            import org.ofbiz.product.store.ProductStoreWorker; import org.ofbiz.webapp.event.EventUtil;
             ctx = EventUtil.getServiceEventParamMap(request, "updateVerifyGiftCard");
-            ctx.productStoreId = ProductStoreWorker.getProductStoreId(request);
+            ctx.productStoreId = org.ofbiz.product.store.ProductStoreWorker.getProductStoreId(request);
             return EventUtil.runServiceAsEvent(request, response, "updateVerifyGiftCard", ctx);
         ]]></script></event>
         <!-- SCIPIO: Changed to support better redirects and forward

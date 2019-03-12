@@ -56,7 +56,7 @@ code package.
             <@td>
               <select name="productFeatureApplTypeId_o_${rowCount}" size="1">
                 <#list productFeatureApplTypes as productFeatureApplType>
-                  <option value="${productFeatureApplType.productFeatureApplTypeId}" <#if (selectedFeatureApplTypeId?has_content) && (productFeatureApplType.productFeatureApplTypeId == selectedFeatureApplTypeId)>selected="selected"</#if>>${productFeatureApplType.get("description", locale)}</option>
+                  <option value="${productFeatureApplType.productFeatureApplTypeId}"<#if (selectedFeatureApplTypeId?has_content) && (productFeatureApplType.productFeatureApplTypeId == selectedFeatureApplTypeId)> selected="selected"</#if>>${productFeatureApplType.get("description", locale)}</option>
                 </#list>
               </select>
             </@td>

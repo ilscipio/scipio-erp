@@ -53,7 +53,7 @@ code package.
                             <@field type="select" name="shipmentBoxTypeId">
                                 <option value="">&nbsp;</option>
                                 <#list boxTypes as boxType>
-                                    <option value="${boxType.shipmentBoxTypeId}" <#if shipmentPackage.shipmentBoxTypeId?? && shipmentPackage.shipmentBoxTypeId == boxType.shipmentBoxTypeId>selected="selected"</#if>>${boxType.get("description",locale)}</option>
+                                    <option value="${boxType.shipmentBoxTypeId}"<#if shipmentPackage.shipmentBoxTypeId?? && shipmentPackage.shipmentBoxTypeId == boxType.shipmentBoxTypeId> selected="selected"</#if>>${boxType.get("description",locale)}</option>
                                 </#list>
                             </@field>
                         </@td>

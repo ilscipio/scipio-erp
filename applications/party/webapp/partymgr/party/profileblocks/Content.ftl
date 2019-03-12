@@ -50,7 +50,7 @@ code package.
         <#-- SCIPIO: 2018-04-10: obscure, impossible to understand what this does here
         <@field type="select" label=uiLabelMap.PartySelectRole name="roleTypeId">
           <#list roles as role>
-            <option value="${role.roleTypeId}" <#if role.roleTypeId == "_NA_">selected="selected"</#if>>${role.get("description", locale)!(role.roleTypeId)}</option>
+            <option value="${role.roleTypeId}"<#if role.roleTypeId == "_NA_"> selected="selected"</#if>>${role.get("description", locale)!(role.roleTypeId)}</option>
           </#list>
         </@field>-->
    

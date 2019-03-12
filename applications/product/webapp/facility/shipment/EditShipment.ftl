@@ -85,13 +85,13 @@
         <@field type="select" name="originFacilityId" label=uiLabelMap.ProductOriginFacility>
             <option value=""></option>
             <#list facilityList as facility>
-                <option value="${facility.facilityId}" <#if shipment?has_content && shipment.originFacilityId?has_content && shipment.originFacilityId == facility.facilityId>selected="selected"</#if>>${facility.facilityName}</option>
+                <option value="${facility.facilityId}"<#if shipment?has_content && shipment.originFacilityId?has_content && shipment.originFacilityId == facility.facilityId> selected="selected"</#if>>${facility.facilityName}</option>
             </#list>
         </@field>
         <@field type="select" name="destinationFacilityId" label=uiLabelMap.ProductDestinationFacility>
             <option value=""></option>
             <#list facilityList as facility>
-                <option value="${facility.facilityId}" <#if shipment?has_content && shipment.destinationFacilityId?has_content && shipment.destinationFacilityId == facility.facilityId>selected="selected"</#if>>${facility.facilityName}</option>
+                <option value="${facility.facilityId}"<#if shipment?has_content && shipment.destinationFacilityId?has_content && shipment.destinationFacilityId == facility.facilityId> selected="selected"</#if>>${facility.facilityName}</option>
             </#list>
         </@field>
         

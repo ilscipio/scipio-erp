@@ -222,19 +222,19 @@ code package.
                   </#if>
                   <select name="intervalNumber">
                     <option value="">${uiLabelMap.EcommerceSelectInterval}</option>
-                    <option value="1" <#if (recurrenceRule.intervalNumber)?default(0) == 1>selected="selected"</#if>>${uiLabelMap.EcommerceEveryDay}</option>
-                    <option value="2" <#if (recurrenceRule.intervalNumber)?default(0) == 2>selected="selected"</#if>>${uiLabelMap.EcommerceEveryOther}</option>
-                    <option value="3" <#if (recurrenceRule.intervalNumber)?default(0) == 3>selected="selected"</#if>>${uiLabelMap.EcommerceEvery3rd}</option>
-                    <option value="6" <#if (recurrenceRule.intervalNumber)?default(0) == 6>selected="selected"</#if>>${uiLabelMap.EcommerceEvery6th}</option>
-                    <option value="9" <#if (recurrenceRule.intervalNumber)?default(0) == 9>selected="selected"</#if>>${uiLabelMap.EcommerceEvery9th}</option>
+                    <option value="1"<#if (recurrenceRule.intervalNumber)?default(0) == 1> selected="selected"</#if>>${uiLabelMap.EcommerceEveryDay}</option>
+                    <option value="2"<#if (recurrenceRule.intervalNumber)?default(0) == 2> selected="selected"</#if>>${uiLabelMap.EcommerceEveryOther}</option>
+                    <option value="3"<#if (recurrenceRule.intervalNumber)?default(0) == 3> selected="selected"</#if>>${uiLabelMap.EcommerceEvery3rd}</option>
+                    <option value="6"<#if (recurrenceRule.intervalNumber)?default(0) == 6> selected="selected"</#if>>${uiLabelMap.EcommerceEvery6th}</option>
+                    <option value="9"<#if (recurrenceRule.intervalNumber)?default(0) == 9> selected="selected"</#if>>${uiLabelMap.EcommerceEvery9th}</option>
                   </select>
                   &nbsp;
                   <select name="frequency">
                     <option value="">${uiLabelMap.EcommerceSelectFrequency}</option>
-                    <option value="4" <#if (recurrenceRule.frequency)?default("") == "DAILY">selected="selected"</#if>>${uiLabelMap.CommonDay}</option>
-                    <option value="5" <#if (recurrenceRule.frequency)?default("") == "WEEKLY">selected="selected"</#if>>${uiLabelMap.CommonWeek}</option>
-                    <option value="6" <#if (recurrenceRule.frequency)?default("") == "MONTHLY">selected="selected"</#if>>${uiLabelMap.CommonMonth}</option>
-                    <option value="7" <#if (recurrenceRule.frequency)?default("") == "YEARLY">selected="selected"</#if>>${uiLabelMap.CommonYear}</option>
+                    <option value="4"<#if (recurrenceRule.frequency)?default("") == "DAILY"> selected="selected"</#if>>${uiLabelMap.CommonDay}</option>
+                    <option value="5"<#if (recurrenceRule.frequency)?default("") == "WEEKLY"> selected="selected"</#if>>${uiLabelMap.CommonWeek}</option>
+                    <option value="6"<#if (recurrenceRule.frequency)?default("") == "MONTHLY"> selected="selected"</#if>>${uiLabelMap.CommonMonth}</option>
+                    <option value="7"<#if (recurrenceRule.frequency)?default("") == "YEARLY"> selected="selected"</#if>>${uiLabelMap.CommonYear}</option>
                   </select>
                 </@td>
                 <@td>&nbsp;</@td>
@@ -302,7 +302,7 @@ code package.
                     <#list paymentMethodList as paymentMethod>
                       <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                         <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>
-                        <option value="${paymentMethod.paymentMethodId}" <#if (shoppingList.paymentMethodId)?default("") == paymentMethod.paymentMethodId>selected="selected"</#if>>CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</option>
+                        <option value="${paymentMethod.paymentMethodId}"<#if (shoppingList.paymentMethodId)?default("") == paymentMethod.paymentMethodId> selected="selected"</#if>>CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</option>
                       <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                         <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
                         <option value="${paymentMethod.paymentMethodId}">EFT:&nbsp;${eftAccount.bankName!}: ${eftAccount.accountNumber!}</option>

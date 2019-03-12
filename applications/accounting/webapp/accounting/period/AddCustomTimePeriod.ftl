@@ -35,7 +35,7 @@
                                 <#assign isDefault = true>
                             </#if>
                         </#if>
-                        <option value="${periodType.periodTypeId}" <#if isDefault>selected="selected"</#if>>${periodType.description} [${periodType.periodTypeId}]</option>
+                        <option value="${periodType.periodTypeId}"<#if isDefault> selected="selected"</#if>>${periodType.description} [${periodType.periodTypeId}]</option>
                     </#list>
                 </@field>                  
                 <@field type="input" size="4" name="periodNum" label=uiLabelMap.AccountingPeriodNumber />                      

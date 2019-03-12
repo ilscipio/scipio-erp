@@ -137,7 +137,7 @@ code package.
               <@td>
                 <select name="returnTypeId_o_${rowCount}">
                   <#list returnTypes as type>
-                  <option value="${type.returnTypeId}" <#if type.returnTypeId=="RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
+                  <option value="${type.returnTypeId}"<#if type.returnTypeId=="RTN_REFUND"> selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
                   </#list>
                 </select>
               </@td>
@@ -204,7 +204,7 @@ code package.
               <@td>
                 <select name="returnTypeId_o_${rowCount}">
                   <#list returnTypes as type>
-                  <option value="${type.returnTypeId}" <#if type.returnTypeId == "RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
+                  <option value="${type.returnTypeId}"<#if type.returnTypeId == "RTN_REFUND"> selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
                   </#list>
                 </select>
               </@td>
@@ -247,7 +247,7 @@ code package.
               <@td>
                 <select name="returnTypeId_o_${rowCount}">
                   <#list returnTypes as type>
-                  <option value="${type.returnTypeId}" <#if type.returnTypeId == "RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
+                  <option value="${type.returnTypeId}"<#if type.returnTypeId == "RTN_REFUND"> selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
                   </#list>
                 </select>
               </@td>

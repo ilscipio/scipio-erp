@@ -14,14 +14,14 @@ code package.
     <@field type="select" label=uiLabelMap.WebtoolsLabelManagerComponentName name="labelComponentName">
             <option value="">${uiLabelMap.WebtoolsLabelManagerAllComponents}</option>
             <#list componentNamesFound as componentNameFound>
-              <option <#if parameters.labelComponentName?? && parameters.labelComponentName == componentNameFound>selected="selected"</#if> value="${componentNameFound}">${componentNameFound}</option>
+              <option<#if parameters.labelComponentName?? && parameters.labelComponentName == componentNameFound> selected="selected"</#if> value="${componentNameFound}">${componentNameFound}</option>
             </#list>
      </@field>
      <@field type="select" label=uiLabelMap.WebtoolsLabelManagerFileName name="labelFileName">
             <option value="">${uiLabelMap.WebtoolsLabelManagerAllFiles}</option>
             <#list filesFound as fileInfo>
               <#assign fileName = fileInfo.getFileName()/>
-              <option <#if parameters.labelFileName?? && parameters.labelFileName == fileName>selected="selected"</#if> value="${fileName}">${fileName}</option>
+              <option<#if parameters.labelFileName?? && parameters.labelFileName == fileName> selected="selected"</#if> value="${fileName}">${fileName}</option>
             </#list>
      </@field>
      <@field type="select" label=uiLabelMap.WebtoolsLabelManagerLocale name="labelLocaleName">
@@ -35,7 +35,7 @@ code package.
                   <#assign langDir = "rtl">
                 </#if>
               </#if>
-              <option <#if parameters.labelLocaleName?? && parameters.labelLocaleName == localeFound>selected="selected"</#if> value="${localeFound}" lang="${langAttr}" dir="${langDir}"><#if locale?? && locale?has_content>${locale.getDisplayName(locale)}<#else>${localeFound}</#if></option>
+              <option<#if parameters.labelLocaleName?? && parameters.labelLocaleName == localeFound> selected="selected"</#if> value="${localeFound}" lang="${langAttr}" dir="${langDir}"><#if locale?? && locale?has_content>${locale.getDisplayName(locale)}<#else>${localeFound}</#if></option>
             </#list>
         </@field>
         <@field type="checkbox" name="onlyNotUsedLabels" value="Y" checked=requestParameters.onlyNotUsedLabels!"N" label=uiLabelMap.WebtoolsLabelManagerOnlyNotUsedLabels/>

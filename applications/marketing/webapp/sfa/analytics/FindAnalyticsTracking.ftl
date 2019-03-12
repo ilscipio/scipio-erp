@@ -24,7 +24,7 @@
         <@field name="marketingCampaignId" id="marketingCampaignId" type="select" label=uiLabelMap.MarketingCampaignId>
             <option value="">--</option>
             <#list marketingCampaignList as marketingCampaign>
-                <option value="${marketingCampaign.marketingCampaignId}" <#if parameters.marketingCampaignId?has_content && parameters.marketingCampaignId == marketingCampaign.marketingCampaignId>selected="selected"</#if>>
+                <option value="${marketingCampaign.marketingCampaignId}"<#if parameters.marketingCampaignId?has_content && parameters.marketingCampaignId == marketingCampaign.marketingCampaignId> selected="selected"</#if>>
                     ${marketingCampaign.campaignName}
                 </option>
             </#list>

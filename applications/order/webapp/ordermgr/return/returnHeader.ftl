@@ -48,7 +48,7 @@ code package.
             </#if>
             <option value="">${uiLabelMap.FacilityNoFacility}</option>
             <#list facilityList as facility>
-              <option value="${facility.facilityId}" <#if (facilityList?size == 1)>selected="selected"</#if>>${facility.facilityName!facility.facilityId}</option>
+              <option value="${facility.facilityId}"<#if (facilityList?size == 1)> selected="selected"</#if>>${facility.facilityName!facility.facilityId}</option>
             </#list>
           </@field>
         <#if billingAccountList?has_content>

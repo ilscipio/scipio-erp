@@ -44,7 +44,7 @@ code package.
                         <select name="fileName">
                             <#list filesFound as fileInfo>
                               <#assign fileName = fileInfo.file.getName()/>
-                              <option <#if parameters.fileName?? && parameters.fileName == fileName>selected="selected"</#if> value="${fileName}">${fileName}</option>
+                              <option<#if parameters.fileName?? && parameters.fileName == fileName> selected="selected"</#if> value="${fileName}">${fileName}</option>
                             </#list>
                         </select>
                     </#if>

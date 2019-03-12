@@ -52,8 +52,7 @@ code package.
                                     <@field type="select" label=uiLabelMap.OrderOrderTermType name="termTypeId">
                                             <option value=""></option>
                                             <#list termTypes! as termType>
-                                                <option value="${termType.termTypeId}"
-                                                    <#if termTypeId?default('') == termType.termTypeId>selected="selected"</#if>
+                                                <option value="${termType.termTypeId}"<#if termTypeId?default('') == termType.termTypeId> selected="selected"</#if>
                                                 >${termType.get('description', locale)}</option>
                                             </#list>
                                     </@field>

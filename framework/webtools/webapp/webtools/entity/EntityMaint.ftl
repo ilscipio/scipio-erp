@@ -12,7 +12,7 @@ code package.
         <@field type="select" name="filterByGroupName" label=uiLabelMap.WebtoolsGroupName>
              <option value="">${uiLabelMap.CommonAll}</option>
              <#list entityGroups as group>
-                <option value="${group}" <#if filterByGroupName??><#if group == filterByGroupName>selected="selected"</#if></#if>>${group}</option>
+                <option value="${group}"<#if filterByGroupName??><#if group == filterByGroupName> selected="selected"</#if></#if>>${group}</option>
              </#list>
         </@field>
         <@field type="input" name= "filterByEntityName" value=(parameters.filterByEntityName!) label=uiLabelMap.WebtoolsEntityName/>

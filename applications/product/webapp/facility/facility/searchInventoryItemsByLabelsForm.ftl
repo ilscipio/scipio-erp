@@ -18,7 +18,7 @@ code package.
           <select name="inventoryItemLabelId_${index}">
             <option></option>
             <#list labels as label>
-            <option value="${label.inventoryItemLabelId}" <#if parameters["inventoryItemLabelId_" + index]?has_content && parameters["inventoryItemLabelId_" + index] == label.inventoryItemLabelId>selected="selected"</#if>>${label.description!} [${label.inventoryItemLabelId}]</option>
+            <option value="${label.inventoryItemLabelId}"<#if parameters["inventoryItemLabelId_" + index]?has_content && parameters["inventoryItemLabelId_" + index] == label.inventoryItemLabelId> selected="selected"</#if>>${label.description!} [${label.inventoryItemLabelId}]</option>
             </#list>
           </select>
       </@td>

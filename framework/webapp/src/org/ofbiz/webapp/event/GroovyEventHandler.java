@@ -100,7 +100,7 @@ public class GroovyEventHandler implements EventHandler {
                 Class<?> scriptClass;
                 if (event.getScriptBody() != null) {
                     if (event.getCompiledScript() == null) {
-                        scriptClass = GroovyUtil.GroovyLangVariant.STANDARD.getCommonGroovyClassLoader().parseClass(event.getScriptBody());
+                        scriptClass = GroovyUtil.GroovyLangVariant.EVENT.getCommonGroovyClassLoader().parseClass(event.getScriptBody());
                         event.setCompiledScript(scriptClass);
                     }
                     scriptClass = (Class<?>) event.getCompiledScript();  

@@ -28,6 +28,7 @@ import javax.script.ScriptContext;
 
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -199,7 +200,7 @@ public class GroovyUtil {
     /**
      * Evaluate a Groovy condition or expression (SCIPIO: legacy stock method)
      * @deprecated <strong>SCIPIO: WARNING:</strong> This stock method was non-caching (script recompiled at every call).
-     * This method should only have been used for performance-insensitive applications 
+     * This method should only have been used for performance-insensitive applications
      * and cases where arbitrary scripts are expected to be passed (such as admin webapp's TemplateTest).
      * However, in addition, this method dumps the binding variables back into context, which is unusual
      * and unwanted behavior for *.groovy scripts in Scipio, so the method has been deprecated for Scipio
@@ -296,7 +297,7 @@ public class GroovyUtil {
     public static Binding getBinding(Map<String, Object> context) {
         return getBinding(context, GroovyLangVariant.STANDARD);
     }
-    
+
     /**
      * SCIPIO: Stock code factored out from {@link #getBinding(Map)}, for use
      * by {@link GroovyLangVariant#createBinding(Map)}.
@@ -515,7 +516,7 @@ public class GroovyUtil {
          * <p>
          * Uses base script class defined in groovy.properties.
          * <p>
-         * Missing variables are treated as null instead of 
+         * Missing variables are treated as null instead of
          * throwing <code>MissingPropertyException</code>.
          */
         public static final GroovyLangVariant SIMPLE = new SimpleVariantConfig();
@@ -546,6 +547,15 @@ public class GroovyUtil {
          * This is mainly for tests.
          */
         public static final GroovyLangVariant STOCK = new StockVariantConfig();
+
+        /**
+         * Event groovy language, for use with controller inlined groovy events.
+         * <p>
+         * Uses base script class defined in groovy.properties.
+         * <p>
+         * Missing variables throw <code>MissingPropertyException</code>.
+         */
+        public static final GroovyLangVariant EVENT = new SimpleEventVariantConfig();
 
         private static final Map<String, GroovyLangVariant> nameMap;
         static {
@@ -673,6 +683,43 @@ public class GroovyUtil {
             }
         }
 
+        public static class SimpleEventVariantConfig extends GroovyLangVariant {
+            private static final CompilerConfiguration eventGroovyCompilerConfiguration;
+            private static final GroovyClassLoader eventGroovyClassLoader;
+            static {
+                CompilerConfiguration conf = new CompilerConfiguration(GroovyUtil.groovyScriptCompilerConfig);
+                conf.addCompilationCustomizers(new ImportCustomizer()
+                        // TODO?: Make imports customizable in *.properties?
+                        .addStarImports("org.ofbiz.base.util", "org.ofbiz.entity", "org.ofbiz.service")
+                        .addImports("org.ofbiz.webapp.event.EventUtil")
+                );
+                eventGroovyCompilerConfiguration = conf;
+                eventGroovyClassLoader = new GroovyClassLoader(GroovyUtil.groovyScriptClassLoader, conf);
+            }
+
+            protected SimpleEventVariantConfig() {}
+
+            @Override
+            public String getName() {
+                return "event";
+            }
+
+            @Override
+            public CompilerConfiguration getGroovyCompilerConfiguration() {
+                return eventGroovyCompilerConfiguration;
+            }
+
+            @Override
+            public GroovyClassLoader getCommonGroovyClassLoader() {
+                return eventGroovyClassLoader;
+            }
+
+            @Override
+            public GroovyClassLoader createGroovyClassLoader() {
+                return new GroovyClassLoader(GroovyUtil.groovyScriptClassLoader, getGroovyCompilerConfiguration());
+            }
+        }
+
         public static class StockVariantConfig extends GroovyLangVariant {
             private static final CompilerConfiguration stockGroovyCompilerConfiguration;
             private static final GroovyClassLoader stockGroovyClassLoader;
@@ -680,7 +727,7 @@ public class GroovyUtil {
                 stockGroovyCompilerConfiguration = CompilerConfiguration.DEFAULT;
                 stockGroovyClassLoader = new GroovyClassLoader(GroovyUtil.class.getClassLoader(), stockGroovyCompilerConfiguration);
             }
-            
+
             protected StockVariantConfig() {}
 
             @Override

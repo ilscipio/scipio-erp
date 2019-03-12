@@ -84,13 +84,17 @@ public final class UtilHttp {
      * SCIPIO: The name of a session attribute that contains an object to synchronize on for
      * whole-session synchronization. Should be accessed using {@link #getSessionSyncObject(HttpSession)}.
      */
-    public static final String SESSION_SYNC_OBJECT = "scpSessSyncObj";
+    public static final String SESSION_SYNCOBJ = "scpSessSyncObj";
+    @Deprecated
+    public static final String SESSION_SYNC_OBJECT = SESSION_SYNCOBJ;
 
     /**
      * SCIPIO: The name of a servlet context attribute that contains an object to synchronize on for
      * whole-session synchronization. Should be accessed using {@link #getServletContextSyncObject(HttpSession)}.
      */
-    public static final String SERVLETCONTEXT_SYNC_OBJECT = "scpApplSyncObj";
+    public static final String SERVLETCONTEXT_SYNCOBJ = "scpApplSyncObj";
+    @Deprecated
+    public static final String SERVLETCONTEXT_SYNC_OBJECT = SERVLETCONTEXT_SYNCOBJ;
 
     /**
      * SCIPIO: The name of a servlet context attribute that contains names of session attributes which
@@ -1921,20 +1925,20 @@ public final class UtilHttp {
      * Added 2018-12-03.
      */
     public static Object getSessionSyncObject(HttpSession session) {
-        Object syncObj = session.getAttribute(SESSION_SYNC_OBJECT);
+        Object syncObj = session.getAttribute(SESSION_SYNCOBJ);
         if (syncObj != null) {
             return syncObj;
         }
         // The sync object should always be there, but if for some reason it got removed, add one...
         // NOTE: For BEST-EFFORT emergency reasons, we'll lock on HttpSession here, but it is likely to do nothing.
         synchronized(session) {
-            syncObj = session.getAttribute(SESSION_SYNC_OBJECT);
+            syncObj = session.getAttribute(SESSION_SYNCOBJ);
             if (syncObj != null) {
                 return null;
             }
             syncObj = createSessionSyncObject();
-            session.setAttribute(SESSION_SYNC_OBJECT, syncObj);
-            Debug.logWarning("Session synchronization object (" + SESSION_SYNC_OBJECT
+            session.setAttribute(SESSION_SYNCOBJ, syncObj);
+            Debug.logWarning("Session synchronization object (" + SESSION_SYNCOBJ
                     + ") not found in session attributes; creating", module); // log after to minimize exposure
         }
         return syncObj;
@@ -1976,7 +1980,7 @@ public final class UtilHttp {
             if (Debug.verboseOn()) {
                 Debug.logVerbose("Initialized session sync object", module);
             }
-            se.getSession().setAttribute(SESSION_SYNC_OBJECT, createSessionSyncObject());
+            se.getSession().setAttribute(SESSION_SYNCOBJ, createSessionSyncObject());
         }
         @Override
         public void sessionDestroyed(HttpSessionEvent se) {

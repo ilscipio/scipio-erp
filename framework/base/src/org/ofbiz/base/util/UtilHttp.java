@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.net.ssl.SSLContext;
 import javax.servlet.ServletContext;
@@ -1730,22 +1731,39 @@ public final class UtilHttp {
         HttpSession session = request.getSession();
         Map<String, Map<String, Object>> paramMapStore = UtilGenerics.checkMap(session.getAttribute("_PARAM_MAP_STORE_"));
         if (paramMapStore == null) {
-            paramMapStore = new HashMap<>();
-            session.setAttribute("_PARAM_MAP_STORE_", paramMapStore);
+            // SCIPIO: Synchronize the creation of this map to prevent lost entries, and
+            // make sure it's thread-safe
+            //paramMapStore = new HashMap<>();
+            //session.setAttribute("_PARAM_MAP_STORE_", paramMapStore);
+            synchronized (getSessionSyncObject(request)) {
+                paramMapStore = UtilGenerics.checkMap(session.getAttribute("_PARAM_MAP_STORE_"));
+                if (paramMapStore == null) {
+                    paramMapStore = new ConcurrentHashMap<>();
+                    session.setAttribute("_PARAM_MAP_STORE_", paramMapStore);
+                }
+            }
         }
         Map<String, Object> parameters = getParameterMap(request);
-        String paramMapId = RandomStringUtils.randomAlphanumeric(10);
-        paramMapStore.put(paramMapId, parameters);
-        return paramMapId;
+        // SCIPIO: Just in case of conflict, loop this
+        //String paramMapId = RandomStringUtils.randomAlphanumeric(10);
+        //paramMapStore.put(paramMapId, parameters);
+        while(true) {
+            String paramMapId = RandomStringUtils.randomAlphanumeric(10);
+            if (paramMapStore.putIfAbsent(paramMapId, parameters) == null) {
+                return paramMapId;
+            }
+        }
     }
 
     public static void restoreStashedParameterMap(HttpServletRequest request, String paramMapId) {
         HttpSession session = request.getSession();
         Map<String, Map<String, Object>> paramMapStore = UtilGenerics.checkMap(session.getAttribute("_PARAM_MAP_STORE_"));
         if (paramMapStore != null) {
-            Map<String, Object> paramMap = paramMapStore.get(paramMapId);
+            // SCIPIO: Don't do get + remove when a single remove can do it, so it can be done atomically and thread-safe
+            //Map<String, Object> paramMap = paramMapStore.get(paramMapId);
+            Map<String, Object> paramMap = paramMapStore.remove(paramMapId);
             if (paramMap != null) {
-                paramMapStore.remove(paramMapId);
+                //paramMapStore.remove(paramMapId);
                 for (Map.Entry<String, Object> paramEntry : paramMap.entrySet()) {
                     if (request.getAttribute(paramEntry.getKey()) != null) {
                         Debug.logWarning("Skipped loading parameter [" + paramEntry.getKey() + "] because it would have overwritten a request attribute" , module);

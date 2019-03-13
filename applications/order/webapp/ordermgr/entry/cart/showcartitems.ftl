@@ -116,10 +116,12 @@ code package.
                    </#if>
                     <#-- show links to survey response for this item -->
                     <#if cartLine.getAttribute("surveyResponses")?has_content>
-                        <br />Surveys:
-                       <#list cartLine.getAttribute("surveyResponses") as surveyResponseId>
-                        <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>
-                       </#list>
+                        <br />${uiLabelMap.CommonSurveys}:
+                      <#list cartLine.getAttribute("surveyResponses") as surveyResponseId>
+                        <#-- SCIPIO: 2019-03-11: This page contains other survey responses and is very confusing
+                        <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>-->
+                        <a href="<@serverUrl>/content/control/EditSurveyResponse?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>
+                      </#list>
                     </#if>
             </@td></@tr>
             <#if cartLine.getRequirementId()?has_content>

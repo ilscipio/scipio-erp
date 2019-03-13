@@ -90,7 +90,7 @@ code package.
                                         <#-- SCIPIO: order by ProductContent.sequenceNum -->
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"}, ["sequenceNum ASC"], true)/>
                                         <#if downloadContents?has_content>
-                                           <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload linkClass="${styles.link_nav!} ${styles.action_export!}">
+                                           <@modal id="${raw(orderId)}_${raw(orderItem.orderItemSeqId)}_downloads" label=uiLabelMap.ContentDownload linkClass="${styles.link_nav!} ${styles.action_export!}">
                                               <@heading relLevel=+1>${getLabel("EcommerceDownloadsAvailableTitle", "EcommerceUiLabels")}</@heading>
                                               <ol>
                                               <#list downloadContents as downloadContent>
@@ -191,7 +191,7 @@ code package.
                                                             <#assign shortfalledQuantity = shortfalledQuantity + orderItemShipGrpInvRes.quantityNotAvailable/>
                                                         </#if>
                                                     </#list>
-                                        <@modal id="${productId}_q" label=effTotalQuantity?string.number><#-- SCIPIO: inappropriate, includes cancelled: (orderItem.quantity!0)?string.number -->   
+                                        <@modal id="${raw(productId)}_q" label=effTotalQuantity?string.number><#-- SCIPIO: inappropriate, includes cancelled: (orderItem.quantity!0)?string.number -->   
                                             <@table type="data-complex">
                                                 <@tr valign="top">
                                                     <@td><b>${uiLabelMap.OrderOrdered}</b></@td>

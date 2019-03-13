@@ -652,7 +652,8 @@
 </#macro>
 
 <#macro formattedGiftCardShort giftCard paymentMethod={} verbose=true>
-  ${getGiftCardDisplayNumber(giftCard)!}<#t>
+  <#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
+  ${acctlib.getGiftCardDisplayNumber(giftCard)!}<#t>
 </#macro>
 
 <#macro formattedGiftCardDetail giftCard paymentMethod={} verbose=true>

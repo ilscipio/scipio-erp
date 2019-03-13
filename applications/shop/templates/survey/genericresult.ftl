@@ -4,10 +4,11 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#assign uiLabelMap = Static["org.ofbiz.base.util.UtilProperties"].getResourceBundleMap("CommonUiLabels", locale)>
+<#if !uiLabelMap??>
+  <#assign uiLabelMap = Static["org.ofbiz.base.util.UtilProperties"].getResourceBundleMap("CommonUiLabels", locale)>
+</#if>
 
-<h1>${survey.description!}</h1>
-<br />
+<@heading>${survey.get("description", locale)!}</@heading>
 
 <@table type="data-complex">
   <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
@@ -38,7 +39,7 @@ code package.
       <#else>
 
         <#-- standard question options -->
-        <@td align='right' nowrap="nowrap">
+        <@td align='right' nowrap="nowrap" width="30%"><#-- SCIPIO: Set 30% here (instead of the 90% further below) -->
           <#assign answerString = "answers">
           <#if ((results._total!0) == 1)>
              <#assign answerString = "answer">
@@ -106,7 +107,8 @@ code package.
             <div>${uiLabelMap.EcommerceUnsupportedQuestionType}: ${surveyQuestionAndAppl.surveyQuestionTypeId}</div>
           </#if>
         </@td>
-        <@td width="90%">&nbsp;</@td>
+        <#-- SCIPIO: I fail to see how this helps anything
+        <@td width="90%">&nbsp;</@td>-->
       </#if>
     </@tr>
   </#list>

@@ -84,9 +84,9 @@ public class SurveyWrapper {
         this.checkParameters();
     }
 
-     public SurveyWrapper(Delegator delegator, String responseId, String partyId, String surveyId, Map<String, Object> passThru) {
-         this(delegator, responseId, partyId, surveyId, passThru, null);
-     }
+    public SurveyWrapper(Delegator delegator, String responseId, String partyId, String surveyId, Map<String, Object> passThru) {
+        this(delegator, responseId, partyId, surveyId, passThru, null);
+    }
 
     public SurveyWrapper(Delegator delegator, String surveyId) {
         this(delegator, null, null, surveyId, null);

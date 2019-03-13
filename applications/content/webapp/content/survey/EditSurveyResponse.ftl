@@ -14,5 +14,5 @@ code package.
     ${raw(surveyString)}
   </form>
 <#else>
-  <@commonMsg type="error">Problem rendering the survey.</@commonMsg>
+  <@commonMsg type="error">${uiLabelMap.ContentSurveyRenderProblem}</@commonMsg>
 </#if>

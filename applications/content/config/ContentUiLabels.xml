@@ -3442,6 +3442,10 @@
         <value xml:lang="zh">问题</value>
         <value xml:lang="zh-TW">問題</value>
     </property>
+    <property key="ContentSurveyRenderProblem">
+        <value xml:lang="de">Problem beim Rendern der Umfrage.</value>
+        <value xml:lang="en">Problem rendering the survey.</value>
+    </property>
     <property key="ContentSurveyResponse">
         <value xml:lang="ar">جواب</value>
         <value xml:lang="da">Svar</value>

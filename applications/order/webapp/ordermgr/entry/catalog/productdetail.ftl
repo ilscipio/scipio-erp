@@ -214,9 +214,7 @@ code package.
     function toggleAmt(toggle) {
         if (toggle == 'Y') {
             jQuery("#add_amount_container").show();
-        }
-
-        if (toggle == 'N') {
+        } else {
             jQuery("#add_amount_container").hide();
         }
     }

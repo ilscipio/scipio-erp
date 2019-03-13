@@ -84,7 +84,13 @@ code package.
                     setVariantPriceSpec(baseCurrentPriceFmtd);
 
                     <#-- check for amount box -->
-                    toggleAmt(checkAmtReq(productId));
+                    <#-- SCIPIO: If productId is null (usually it is here), try to use a heuristic to determine if need to show amount box -->
+                    if (productId) {
+                        toggleAmt(checkAmtReq(productId));
+                    } else {
+                        <#--console.log("dataObject: " + JSON.stringify(dataObject));-->
+                        toggleAmt(checkAmtReqFromVariants(dataObject));
+                    }
                 }
             } else {
                 setVariantPriceSpec("${escapeVal(uiLabelMap.OrderChooseVariations, 'js')}...");
@@ -94,7 +100,7 @@ code package.
     </#if>
 
     function setVariantPrice(productId) {
-        console.log("setting variant price for productId: " + productId);       
+        console.log("Setting variant price for productId: " + productId);       
         var productInfo = variantProductInfoMap[productId];
         if (productInfo) {
             var price = productInfo.priceFormatted;
@@ -124,11 +130,44 @@ code package.
                 if (requireAmount) {
                     return requireAmount;
                 }
+            } else {
+                console.log("Product info not found for productId: " + productId);<#-- SCIPIO: Should not happen -->
             }
         }
         return 'N'; <#-- SCIPIO: hide it by default -->
     }
-    
+
+    <#-- SCIPIO: Gathers all the child feature/variant products and returns true only if all of them have requireAmount="Y"
+        TODO: Optimize: This could be pre-calculated in groovy and output as a map -->
+    function checkAmtReqFromVariants(vTreeNode) {
+        var requireAmount = null;
+        if ($.type(vTreeNode) === 'string') {
+            var productInfo = variantProductInfoMap[vTreeNode];
+            if (productInfo) {
+                requireAmount = productInfo.requireAmount;
+            } else {
+                console.log("Product info not found for productId: " + productId);<#-- SCIPIO: Should not happen -->
+            }
+        } else if ($.type(vTreeNode) === 'object') {
+            $.each(vTreeNode, function(k, v) {
+                requireAmount = checkAmtReqFromVariants(v);
+                if (requireAmount !== 'Y') {
+                    requireAmount = 'N';
+                    return false;
+                }
+            });
+        } else if ($.type(vTreeNode) === 'array') {
+            $.each(vTreeNode, function(i, e) {
+                requireAmount = checkAmtReqFromVariants(e);
+                if (requireAmount !== 'Y') {
+                    requireAmount = 'N';
+                    return false;
+                }
+            });
+        }
+        return requireAmount ? requireAmount : 'N';
+    }
+
     <#-- SCIPIO: Handles final addItem submit -->
     function addItem() {
         var productId = jQuery('#add_product_id').val();

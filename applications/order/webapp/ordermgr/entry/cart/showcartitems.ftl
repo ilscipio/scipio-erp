@@ -116,11 +116,26 @@ code package.
                    </#if>
                     <#-- show links to survey response for this item -->
                     <#if cartLine.getAttribute("surveyResponses")?has_content>
-                        <br />${uiLabelMap.CommonSurveys}:
-                      <#list cartLine.getAttribute("surveyResponses") as surveyResponseId>
+                        <br /><em>${uiLabelMap.CommonSurveys}:</em>
+                      <#list cartLine.getSurveyResponses() as surveyResponse>
+                        <#assign surveyResponseId = surveyResponse.surveyResponseId!>
                         <#-- SCIPIO: 2019-03-11: This page contains other survey responses and is very confusing
-                        <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>-->
-                        <a href="<@serverUrl>/content/control/EditSurveyResponse?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>
+                        <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"
+                          class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>-->
+                        <@modal id="${raw(surveyResponseId)}_surveyresp" label=surveyResponseId linkClass="${styles.link_nav_info_id!} ${styles.action_view!}">
+                          <#-- DEV NOTE: Must use @section instead of @heading so that the heading levels in the details start at the right level -->
+                          <@section title=getLabel("DataResourceType.description.SURVEY_RESPONSE", "ContentEntityLabels") relHeadingLevel=+1>
+                          <#-- SCIPIO: FIXME: This should not render any templates under /shop -->
+                          <@render resource="component://content/widget/SurveyScreens.xml#SurveyResponseDetails" ctxVars={"surveyResponse":surveyResponse}/>
+                          <#-- SCIPIO: TODO: REVIEW: The screens linked here are (besides being in /content) extremely confusing
+                            and do not actually allow editing the survey response for the other - it confusingly creates new responses
+                          <p>
+                            <a href="<@serverUrl>/content/control/EditSurveyResponse?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"
+                              class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonEdit}</a>
+                          </p>
+                          -->
+                          </@section>
+                        </@modal>
                       </#list>
                     </#if>
             </@td></@tr>

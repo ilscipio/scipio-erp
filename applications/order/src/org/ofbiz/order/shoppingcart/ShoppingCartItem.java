@@ -2883,4 +2883,28 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         return itemDescription;
     }
+    
+    public List<String> getSurveyResponseIdList() { // SCIPIO
+        return UtilGenerics.checkList(getAttribute("surveyResponses"));
+    }
+
+    public List<GenericValue> getSurveyResponses() { // SCIPIO
+        List<String> surveyResponseIdList = getSurveyResponseIdList();
+        List<GenericValue> responses = new ArrayList<>(surveyResponseIdList.size());
+        if (surveyResponseIdList != null) {
+            for(String responseId : surveyResponseIdList) {
+                try {
+                    GenericValue response = this.getDelegator().findOne("SurveyResponse", UtilMisc.toMap("surveyResponseId", responseId), false);
+                    if (response == null) {
+                        Debug.logError("Could not find SurveyResponse for surveyResponseId '" + responseId + "'", module);
+                    } else {
+                        responses.add(response);
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Unable to obtain SurveyResponse record for ID : " + responseId, module);
+                }
+            }
+        }
+        return responses;
+    }
 }

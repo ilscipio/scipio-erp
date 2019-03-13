@@ -325,4 +325,27 @@ code package.
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO: Widget: Simple non-interactive survey response info - see ordermgr showcartitems.ftl for reference usage -->
+    <screen name="SurveyResponseDetails">
+        <section>
+            <actions>
+                <script location="component://content/webapp/content/WEB-INF/actions/survey/SurveyResponseDetails.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition><not><if-empty field="surveyResponse"/></not></condition>
+                    <widgets>
+                        <platform-specific><html><html-template><![CDATA[
+                            <#if surveyString?has_content>
+                              ${raw(surveyString)}
+                            <#else>
+                              <@commonMsg type="error">${getLabel('ContentSurveyRenderProblem', 'ContentUiLabels')}</@commonMsg>
+                            </#if>
+                        ]]></html-template></html></platform-specific>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
 </screens>

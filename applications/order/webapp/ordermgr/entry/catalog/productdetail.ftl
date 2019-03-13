@@ -84,7 +84,7 @@ code package.
                         SCIPIO: TODO?: Currently can't do this here, at least not by productId...
                             so if we changed any box, just reset the price to the original virtual for now...
                     setVariantPrice(productId); -->
-                    setVariantPriceSpec(baseCurrentPrice);
+                    setVariantPriceSpec(baseCurrentPriceFmtd);
 
                     <#-- check for amount box -->
                     toggleAmt(checkAmtReq(productId));
@@ -285,14 +285,16 @@ code package.
                     <span id="product-price_old"><del><@ofbizCurrency amount=oldPrice isoCode=price.currencyUsed /></del></span>
                 </#if>
                  
+                <#assign currentPriceFmtd><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></#assign>
                 <#if ((product.isVirtual?has_content && product.isVirtual!?upper_case == "Y"))>
-                    <span id="product-price"><strong id="product-price-value"><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong>
+                    <span id="product-price"><strong id="product-price-value">${currentPriceFmtd}</strong>
                     </br>${uiLabelMap.OrderChooseVariations}...</span>
                 <#elseif currentPrice?has_content>
-                    <span id="product-price"><strong id="product-price-value"><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong></span>
+                    <span id="product-price"><strong id="product-price-value">${currentPriceFmtd}</strong></span>
                 </#if>
                     <@script>
                         var baseCurrentPrice = "${currentPrice}";
+                        var baseCurrentPriceFmtd = "${escapeVal(currentPriceFmtd, 'js')}";
                     </@script>
                 </p>
                 

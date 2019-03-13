@@ -449,9 +449,6 @@
                  ${entry.type} <code>${entryName}</code> <#if entry.isAbstract> (abstract/placeholder)</#if>
                   <#if entry.isDeprecated> <strong>(DEPRECATED)</strong></#if><#if entry.isOverride> <strong>(override)</strong></#if>
 
-                  <p><i>Press CTRL+Q for more Information</i></p>
-
-
                   <#--
                   <#if libFilename?has_content>
                             <br/>Further info:
@@ -493,11 +490,11 @@
                       <#elseif entrySectionName == "examples">
                       <div >
                           <br/><em><@labelText text=entrySection.title!"" /></em>:
-                          ${entrySection.rawText!""}<br/><br/>
+                          <@preformedText text=entrySection.rawText!"" /><br/><br/>
                       </div>
                       <#elseif entrySectionName == "parameters">
-                      <@parametersSection entry=entry entrySection=entrySection /><br/>
-                      <#--<#elseif entrySectionName == "returnValues">
+                      <#--<@parametersSection entry=entry entrySection=entrySection /><br/>
+                      <#elseif entrySectionName == "returnValues">
                       <@parametersSection entry=entry entrySection=entrySections.parameters!{} />
                       <div >
                           <em><@labelText text=entrySection.title!"" /></em>:

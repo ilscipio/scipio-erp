@@ -1509,7 +1509,6 @@ code package.
       <relation type="many" fk-name="SRVYQST_ENUM" rel-entity-name="Enumeration">
         <key-map field-name="enumTypeId"/>
       </relation>
-
     </entity>
     <view-entity entity-name="SurveyQuestionAndAppl"
             package-name="org.ofbiz.content.survey"

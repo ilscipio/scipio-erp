@@ -4,8 +4,8 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#-- SCIPIO: NOTE: This template is duplicated also at:
-        component://content/template/survey/genericresult.ftl
+<#-- SCIPIO: Duplicated from:
+        component://shop/templates/survey/genericresult.ftl
     The Shop template (the original) displays for frontend while the Content one displays for backend apps. -->
 
 <#if !uiLabelMap??>

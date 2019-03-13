@@ -39,6 +39,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilIO;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
@@ -216,7 +217,19 @@ public class SurveyWrapper {
         templateContext.put("additionalFields", passThru);
         templateContext.put("defaultValues", defaultValues);
         templateContext.put("delegator", this.delegator);
-        templateContext.put("locale", Locale.getDefault());
+        // SCIPIO: 2019-03-11: Stock error: only put locale if it's not already there
+        //templateContext.put("locale", Locale.getDefault());
+        Locale locale = (Locale) templateContext.get("locale");
+        if (locale == null) {
+            locale = Locale.getDefault();
+            Debug.logWarning("Survey render context has no locale; using system default", module);
+            templateContext.put("locale", locale);
+        }
+        
+        // SCIPIO: 2019-03-11: If it's not already there, add uiLabelMap
+        if (templateContext.get("uiLabelMap") == null) {
+            templateContext.put("uiLabelMap", UtilProperties.getResourceBundle("CommonUiLabels", locale));
+        }
 
         Template template = this.getTemplate(templateUrl);
         try {
@@ -273,10 +286,7 @@ public class SurveyWrapper {
         }
 
         GenericValue survey = this.getSurvey();
-        if (!"Y".equals(survey.getString("allowMultiple")) && !"Y".equals(survey.getString("allowUpdate"))) {
-            return false;
-        }
-        return true;
+        return !(!"Y".equals(survey.getString("allowMultiple")) && !"Y".equals(survey.getString("allowUpdate")));
     }
 
     public boolean canRespond() {
@@ -285,10 +295,7 @@ public class SurveyWrapper {
             return true;
         }
         GenericValue survey = this.getSurvey();
-        if ("Y".equals(survey.getString("allowMultiple"))) {
-            return true;
-        }
-        return false;
+        return "Y".equals(survey.getString("allowMultiple"));
     }
 
     // returns a list of SurveyQuestions (in order by sequence number) for the current Survey

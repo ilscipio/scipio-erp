@@ -125,15 +125,23 @@ code package.
                         <@modal id="${raw(surveyResponseId)}_surveyresp" label=surveyResponseId linkClass="${styles.link_nav_info_id!} ${styles.action_view!}">
                           <#-- DEV NOTE: Must use @section instead of @heading so that the heading levels in the details start at the right level -->
                           <@section title=getLabel("DataResourceType.description.SURVEY_RESPONSE", "ContentEntityLabels") relHeadingLevel=+1>
-                          <#-- SCIPIO: FIXME: This should not render any templates under /shop -->
-                          <@render resource="component://content/widget/SurveyScreens.xml#SurveyResponseDetails" ctxVars={"surveyResponse":surveyResponse}/>
-                          <#-- SCIPIO: TODO: REVIEW: The screens linked here are (besides being in /content) extremely confusing
-                            and do not actually allow editing the survey response for the other - it confusingly creates new responses
-                          <p>
-                            <a href="<@serverUrl>/content/control/EditSurveyResponse?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"
-                              class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonEdit}</a>
-                          </p>
-                          -->
+                          <@fields type="default" ignoreParentField=true>
+                            <#-- SCIPIO: TODO?: Link to real edit forms -->
+                            <@field type="display" label=getLabel("FormFieldTitle_surveyResponseId")>${surveyResponseId}</@field>
+                            <@field type="display" label=getLabel("ContentSurveySurveyId")>
+                                <a target="_blank" href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"<#t>
+                                    class="${styles.link_nav_info_id!} ${styles.action_view!}">${surveyResponse.surveyId}</a><#t>
+                            </@field>
+                            <#-- SCIPIO: FIXME: This should not render any templates under /shop -->
+                            <@render resource="component://content/widget/SurveyScreens.xml#SurveyResponseDetails" ctxVars={"surveyResponse":surveyResponse}/>
+                            <#-- SCIPIO: TODO: REVIEW: The screens linked here are (besides being in /content) extremely confusing
+                              and do not actually allow editing the survey response for the other - it confusingly creates new responses
+                            <p>
+                              <a href="<@serverUrl>/content/control/EditSurveyResponse?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"
+                                class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonEdit}</a>
+                            </p>
+                            -->
+                          </@fields>
                           </@section>
                         </@modal>
                       </#list>

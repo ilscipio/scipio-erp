@@ -72,7 +72,10 @@ code package.
                     </decorator-section>
                     <decorator-section name="body">
                         <!-- SCIPIO: content user interface is largely deprecated -->
-                        <label text="${uiLabelMap.ContentWebAppUiDeprecated}" style="common-msg-warning" />
+                        <section>
+                            <condition><not><if-empty field="userLogin"/></not></condition>
+                            <widgets><label text="${uiLabelMap.ContentWebAppUiDeprecated}" style="common-msg-warning" /></widgets>
+                        </section>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>

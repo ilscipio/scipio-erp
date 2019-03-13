@@ -24,7 +24,7 @@
 import org.ofbiz.content.survey.*
 import org.ofbiz.base.util.*
 
-final module = "SurveyResponseDetails.groovy";
+final module = "SurveyResponseDetail.groovy";
 
 def surveyResponse = context.surveyResponse;
 def surveyResponseId = surveyResponse?.surveyResponseId ?: context.surveyResponseId ?: parameters.surveyResponseId;

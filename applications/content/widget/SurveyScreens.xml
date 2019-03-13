@@ -325,12 +325,12 @@ code package.
             </widgets>
         </section>
     </screen>
-    
+
     <!-- SCIPIO: Widget: Simple non-interactive survey response info - see ordermgr showcartitems.ftl for reference usage -->
-    <screen name="SurveyResponseDetails">
+    <screen name="SurveyResponseDetail">
         <section>
             <actions>
-                <script location="component://content/webapp/content/WEB-INF/actions/survey/SurveyResponseDetails.groovy"/>
+                <script location="component://content/webapp/content/WEB-INF/actions/survey/SurveyResponseDetail.groovy"/>
             </actions>
             <widgets>
                 <section>

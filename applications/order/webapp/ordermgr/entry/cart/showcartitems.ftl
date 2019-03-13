@@ -133,7 +133,7 @@ code package.
                                     class="${styles.link_nav_info_id!} ${styles.action_view!}">${surveyResponse.surveyId}</a><#t>
                             </@field>
                             <#-- SCIPIO: FIXME: This should not render any templates under /shop -->
-                            <@render resource="component://content/widget/SurveyScreens.xml#SurveyResponseDetails" ctxVars={"surveyResponse":surveyResponse}/>
+                            <@render resource="component://content/widget/SurveyScreens.xml#SurveyResponseDetail" ctxVars={"surveyResponse":surveyResponse}/>
                             <#-- SCIPIO: TODO: REVIEW: The screens linked here are (besides being in /content) extremely confusing
                               and do not actually allow editing the survey response for the other - it confusingly creates new responses
                             <p>

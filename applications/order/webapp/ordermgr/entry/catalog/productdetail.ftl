@@ -111,8 +111,7 @@ code package.
     }
     
     function setVariantPriceSpec(price) {
-        <#-- SCIPIO: TODO -->
-        $("#product-price strong").text(price);
+        $("#product-price-value").text(price);
     }    
   
     function checkAmtReq(productId) {
@@ -287,10 +286,10 @@ code package.
                 </#if>
                  
                 <#if ((product.isVirtual?has_content && product.isVirtual!?upper_case == "Y"))>
-                    <span id="product-price"><strong><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong>
+                    <span id="product-price"><strong id="product-price-value"><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong>
                     </br>${uiLabelMap.OrderChooseVariations}...</span>
                 <#elseif currentPrice?has_content>
-                    <span id="product-price"><strong><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong></span>
+                    <span id="product-price"><strong id="product-price-value"><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong></span>
                 </#if>
                     <@script>
                         var baseCurrentPrice = "${currentPrice}";

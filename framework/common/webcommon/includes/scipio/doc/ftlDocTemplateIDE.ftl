@@ -64,8 +64,7 @@
 <#global docPurpose = "dev">-->
 
 <#-- Maps docPurpose to pat. This matches against the label part of the note, exluding "?" and ":" -->
-<#assign notesToOmitPats = {
-  <#--"templating" : "(DEV\\s+NOTES?|IMPL\\s+NOTES?|IMPLEMENTATION\\s+NOTES?|FIXME|TODO)",-->
+<#assign notesToOmitPats ={
   "templating" : "(DEV\\s+NOTES?|FIXME|TODO)",
   "theming" : "(DEV\\s+NOTES?|FIXME|TODO)",
   "dev" : false
@@ -77,7 +76,7 @@
 </#macro>
 <#macro sanitize>
     <#local captured><#nested></#local>
-        ${ captured?replace("<a.*?</a>","","rms")?replace("\"", "'") }
+        ${ captured?replace("\"", "'") }
 </#macro>
 <#-- 
 *************************************
@@ -216,6 +215,32 @@
                            <#-- type is "macro", "function" or "variable" -->
                            <h2><span >${entry.type}</span> <span ><code>${entryName}</code></span><#if entry.isAbstract> (abstract/placeholder)</#if>
                               <#if entry.isDeprecated> <strong>(DEPRECATED)</strong></#if><#if entry.isOverride> <strong>(override)</strong></#if></h2>
+
+                           <#if libFilename?has_content>
+                            <p>More information on: &nbsp;
+                            <#if escapeText(libFilename) == "standard/htmlStructure.ftl">
+                                <a href="https://www.scipioerp.com/community/developer/freemarker-macros/htmlstructure/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                            <#if escapeText(libFilename) == "standard/htmlContent.ftl">
+                              <a href="https://www.scipioerp.com/community/developer/freemarker-macros/htmlcontent/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                            <#if escapeText(libFilename) == "standard/htmlInfo.ftl">
+                              <a href="https://www.scipioerp.com/community/developer/freemarker-macros/htmlinfo/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                            <#if escapeText(libFilename) == "standard/htmlForm.ftl">
+                              <a href="https://www.scipioerp.com/community/developer/freemarker-macros/htmlform/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                            <#if escapeText(libFilename) == "standard/htmlNav.ftl">
+                              <a href="https://www.scipioerp.com/community/developer/freemarker-macros/htmlnav/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                            <#if escapeText(libFilename) == "standard/htmlScript.ftl">
+                              <a href="https://www.scipioerp.com/community/developer/freemarker-macros/htmlscript/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                            <#if escapeText(libFilename) == "utilities.ftl">
+                              <a href="https://www.scipioerp.com/community/developer/freemarker-macros/utilities/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                            </p>
+                          </#if>
                         </div>
 
                         <#global parametersSectionRendered = false>
@@ -224,7 +249,7 @@
                         <#macro parametersSection entry entrySection={}>
                             <#if !parametersSectionRendered>
                               <div >
-                                <h2><@labelText text=entrySection.title!"Parameters" /></h2>
+                                <em><@labelText text=entrySection.title!"Parameters" /></em>:<br/>
 
                               <#if false>
                                 <div ><#--<em>All parameters:</em>-->
@@ -256,16 +281,17 @@
                                       <#list entrySection.paramSectionMap?keys as paramSectionName>
                                         <#assign paramSection = entrySection.paramSectionMap[paramSectionName]>
                                         <div >
-                                          <h5><@labelText text=paramSection.title /></h5>
+                                          <em><@labelText text=paramSection.title /></em>
                                           <@parametersTable paramDescMaps=paramSection.paramDescMap exclude=exclude defaultDesc=defaultDesc />
                                         </div>
                                       </#list>
+                                      <#--
                                       <#if entry.argMapUnaccounted?has_content>
-                                    <div >
-                                      <h5><@labelText text="Other" /></h5>
-                                      <@parametersTable paramDescMaps=entry.argMapUnaccounted exclude=exclude defaultDesc=defaultDesc />
-                                    </div>
-                                  </#if>
+                                        <div >
+                                          <h5><@labelText text="Other" /></h5>
+                                          <@parametersTable paramDescMaps=entry.argMapUnaccounted exclude=exclude defaultDesc=defaultDesc />
+                                        </div>
+                                      </#if>-->
                                 <#else>
                                   <@parametersTable paramDescMaps=entry.paramDescMapPlusArgMapUnaccounted exclude=exclude defaultDesc=defaultDesc/>
                                 </#if>
@@ -289,7 +315,6 @@
                           </div>
                           <br/><br/>
                         </#if>
-                        <#global parametersSectionRendered = true>
                     </#macro>
 
                     <#macro parametersTable paramDescMaps exclude=[] defaultDesc={}>
@@ -360,16 +385,16 @@
                           </div>
                         <#elseif entrySectionName == "parameters">
                           <@parametersSection entry=entry entrySection=entrySection />
-                        <#elseif entrySectionName == "returnValues">
-                          <@parametersSection entry=entry entrySection=entrySections.parameters!{} /><#-- Guarantee parameters before return values -->
+                          <#-- <#elseif entrySectionName == "returnValues">
+                          <@parametersSection entry=entry entrySection=entrySections.parameters!{} />
                           <div >
                             <h2><@labelText text=entrySection.title!"" /></h2>
                             <p>
                               <@descText text=entrySection.text!"" />
                             </p>
                           </div>
-                        <#elseif entrySectionName == "related">
-                          <@parametersSection entry=entry entrySection=entrySections.parameters!{} /><#-- Guarantee parameters before related -->
+                       <#elseif entrySectionName == "related">
+                          <@parametersSection entry=entry entrySection=entrySections.parameters!{} />
                           <div >
                              <h2><@labelText text=entrySection.title!"" /></h2>
                              <p>
@@ -377,7 +402,7 @@
                                <@entryRef name=name /><#if name_has_next>, </#if>
                              </#list>
                              </p>
-                          </div>
+                          </div>-->
                         <#else>
                           <#--<@parametersSection entry=entry entrySection=entrySections.parameters!{} /> Don't force parameters before others -->
                           <div >
@@ -387,7 +412,7 @@
                         </#if>
 
                     </#list>
-                    <@parametersSection entrySection=entrySections.parameters!{} entry=entry />
+                    <#--<@parametersSection entrySection=entrySections.parameters!{} entry=entry />-->
 
                     <#if entry.isTransform || (entry.isAdvancedArgs!false)>
                       <div >
@@ -401,6 +426,102 @@
                   </@sanitize>";
           </#if>
           </#compress>
+          </@compress_single_line>
+          <@compress_single_line>
+            <#compress>
+              <#assign entry = section.entryMap[entryName]>
+              <#if entry.isImplemented>
+                <#assign entryTitle = entry.title!"">
+                <#if !entryTitle?has_content>
+                  <#assign entryTitle = entryName>
+                </#if>
+              public static String INFO_${entry.type?upper_case}_${entryTitle?upper_case?replace(" ","_")?replace("(","")?replace(")","")} = "
+                  <@sanitize>
+                  <#--
+                  <hr />
+                  <a name="entry-${entryName}"></a>-->
+                  <div >
+                      <#-- NOTE: title is sometimes same as formal name (below), but not always -->
+                  ${entry.type} Name: <em><@labelText text=entryTitle /></em><br/>
+
+                      <div >
+                         <#-- type is "macro", "function" or "variable" -->
+                 ${entry.type} <code>${entryName}</code> <#if entry.isAbstract> (abstract/placeholder)</#if>
+                  <#if entry.isDeprecated> <strong>(DEPRECATED)</strong></#if><#if entry.isOverride> <strong>(override)</strong></#if>
+
+                  <p><i>Press CTRL+Q for more Information</i></p>
+
+
+                  <#--
+                  <#if libFilename?has_content>
+                            <br/>Further info:
+                            <#if escapeText(libFilename) == "standard/htmlStructure.ftl">
+                      <a href="https://www.scipioerp.com/community/developer/freemarker-macros/htmlstructure/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                  <#if escapeText(libFilename) == "standard/htmlContent.ftl">
+                      <a href="https://www.scipioerp.com/community/developer/freemarker-macros/htmlcontent/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                  <#if escapeText(libFilename) == "standard/htmlInfo.ftl">
+                      <a href="https://www.scipioerp.com/community/developer/freemarker-macros/htmlinfo/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                  <#if escapeText(libFilename) == "standard/htmlForm.ftl">
+                      <a href="https://www.scipioerp.com/community/developer/freemarker-macros/htmlform/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                  <#if escapeText(libFilename) == "standard/htmlNav.ftl">
+                      <a href="https://www.scipioerp.com/community/developer/freemarker-macros/htmlnav/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                  <#if escapeText(libFilename) == "standard/htmlScript.ftl">
+                      <a href="https://www.scipioerp.com/community/developer/freemarker-macros/htmlscript/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                  <#if escapeText(libFilename) == "utilities.ftl">
+                      <a href="https://www.scipioerp.com/community/developer/freemarker-macros/utilities/#entry-${entryName}">${entryName}</a>
+                            </#if>
+                  </#if>-->
+                      </div>
+                <#assign entrySections = entry.sections>
+                  <#list entrySections?keys as entrySectionName>
+                    <#assign entrySection = entrySections[entrySectionName]>
+
+                    <#if entrySectionName == "mainDesc">
+                      <div >
+                        <@contentGroup>
+                        <#if (entrySection.shortDesc)?has_content>
+                          <p ><@descText text=entrySection.shortDesc /></p>
+                          </#if>
+                      </@contentGroup>
+                      </div>
+                      <#elseif entrySectionName == "examples">
+                      <div >
+                          <br/><em><@labelText text=entrySection.title!"" /></em>:
+                          ${entrySection.rawText!""}<br/><br/>
+                      </div>
+                      <#elseif entrySectionName == "parameters">
+                      <@parametersSection entry=entry entrySection=entrySection /><br/>
+                      <#--<#elseif entrySectionName == "returnValues">
+                      <@parametersSection entry=entry entrySection=entrySections.parameters!{} />
+                      <div >
+                          <em><@labelText text=entrySection.title!"" /></em>:
+                          <p>
+                            <@descText text=entrySection.text!"" /><br/>
+                      </p>
+                        </div>
+                      -->
+                      <#else>
+                      <#--<@parametersSection entry=entry entrySection=entrySections.parameters!{} /> Don't force parameters before others -->
+
+                      <div >
+                          <em><@labelText text=entrySection.title!"" /></em>:
+                          <@complexContent text=entrySection.text!"" paragraphs=true />
+                      </div>
+                      </#if>
+
+                  </#list>
+                  <#--<@parametersSection entrySection=entrySections.parameters!{} entry=entry />-->
+
+                  </div>
+                </@sanitize>";
+              </#if>
+            </#compress>
           </@compress_single_line>
         </#list>
       <#else>

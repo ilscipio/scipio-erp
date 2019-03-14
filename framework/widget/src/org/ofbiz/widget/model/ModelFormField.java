@@ -1812,6 +1812,10 @@ public class ModelFormField implements Serializable {
                 if (UtilValidate.isNotEmpty(this.currency)) {
                     isoCode = this.currency.expandString(context);
                 }
+                // SCIPIO (2010-14-03): if isoCode is null, take the system default one
+                if (UtilValidate.isEmpty(isoCode)) {
+                    isoCode = UtilProperties.getMessage("general", "currency.uom.id.default", locale);
+                }
 
                 try {
                     BigDecimal parsedRetVal = (BigDecimal) ObjectType.simpleTypeConvert(retVal, "BigDecimal", null, null, locale,

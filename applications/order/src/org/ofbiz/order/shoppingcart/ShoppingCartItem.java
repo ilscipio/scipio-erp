@@ -24,6 +24,7 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -2890,19 +2891,20 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     public List<GenericValue> getSurveyResponses() { // SCIPIO
         List<String> surveyResponseIdList = getSurveyResponseIdList();
+        if (UtilValidate.isEmpty(surveyResponseIdList)) {
+            return Collections.emptyList();
+        }
         List<GenericValue> responses = new ArrayList<>(surveyResponseIdList.size());
-        if (surveyResponseIdList != null) {
-            for(String responseId : surveyResponseIdList) {
-                try {
-                    GenericValue response = this.getDelegator().findOne("SurveyResponse", UtilMisc.toMap("surveyResponseId", responseId), false);
-                    if (response == null) {
-                        Debug.logError("Could not find SurveyResponse for surveyResponseId '" + responseId + "'", module);
-                    } else {
-                        responses.add(response);
-                    }
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Unable to obtain SurveyResponse record for ID : " + responseId, module);
+        for(String responseId : surveyResponseIdList) {
+            try {
+                GenericValue response = this.getDelegator().findOne("SurveyResponse", UtilMisc.toMap("surveyResponseId", responseId), false);
+                if (response == null) {
+                    Debug.logError("Could not find SurveyResponse for surveyResponseId '" + responseId + "'", module);
+                } else {
+                    responses.add(response);
                 }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Unable to obtain SurveyResponse record for ID : " + responseId, module);
             }
         }
         return responses;

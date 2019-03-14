@@ -5114,7 +5114,7 @@
     <property key="cart.addToCart.chooseVariationBeforeAddingToCart">
         <value xml:lang="ar">اختر التفريع قبل الإضافة للعربة</value>
         <value xml:lang="de">Wählen sie eine Variante bevor sie es zum Warenkorb hinzufügen</value>
-        <value xml:lang="en">Choose Variation Before Adding to Cart</value>
+        <value xml:lang="en">Choose variation before adding to cart</value>
         <value xml:lang="es">Seleccione una variante antes de añadir al carro</value>
         <value xml:lang="fr">Choisir la variante avant d'ajouter au panier</value>
         <value xml:lang="it">Scegli variante prima di aggiungerlo al carrello</value>

@@ -18,13 +18,17 @@
  */
 
 /**
- * SCIPIO: Based on EditSurveyResponse.groovy.
+ * SCIPIO: Renders a SurveyResponse using the template specified by the "surveyTmplLoc" context field
+ * or, if surveyTmplLoc is empty, performs the data preparation but without rendering.
+ * Based on EditSurveyResponse.groovy.
  */
 
 import org.ofbiz.content.survey.*
 import org.ofbiz.base.util.*
 
-final module = "SurveyResponseDetail.groovy";
+final module = "RenderSurveyResponse.groovy";
+
+def surveyTmplLoc = context.surveyTmplLoc;
 
 def surveyResponse = context.surveyResponse;
 def surveyResponseId = surveyResponse?.surveyResponseId ?: context.surveyResponseId ?: parameters.surveyResponseId;
@@ -33,7 +37,7 @@ if (!surveyResponse) {
         surveyResponse = from("SurveyResponse").where("surveyResponseId", surveyResponseId).queryOne();
     }
     if (!surveyResponse) {
-        Debug.logError("No SurveyResponse to render [surveyResponseId=" + surveyResponseId + "]", module);
+        Debug.logError("SurveyResponse not found [surveyResponseId=" + surveyResponseId + "]", module);
         return
     }
 }
@@ -42,17 +46,18 @@ context.surveyPartyId = partyId;
 def surveyId = surveyResponse.surveyId;
 context.surveyId = surveyId;
 
+def surveyString = null;
 def surveyWrapper = new SurveyWrapper(delegator, surveyResponseId, partyId, surveyId, null);
 surveyWrapper.setEdit(false);
-
-def tmplLoc = "component://content/template/survey/genericresult.ftl";
-def surveyString = null;
-try {
-    surveyString = surveyWrapper.render(tmplLoc, context);
-    if (!surveyString) {
-        Debug.logWarning("SurveyResponse '" + surveyResponseId + "' render produced no output", module);
+if (surveyTmplLoc) {
+    try {
+        surveyString = surveyWrapper.render(surveyTmplLoc, context);
+        if (!surveyString) {
+            Debug.logWarning("SurveyResponse '" + surveyResponseId + "' render produced no output", module);
+        }
+    } catch(Exception e) {
+        Debug.logError("Error rendering SurveyResponse '" + surveyResponseId + "': " + e.toString() + " [surveyResponse=" + surveyResponse +"]", module)
     }
-} catch(Exception e) {
-    Debug.logError("Error rendering SurveyResponse '" + surveyResponseId + "': " + e.toString() + " [surveyResponse=" + surveyResponse +"]", module)
 }
+context.surveyWrapper = surveyWrapper;
 context.surveyString = surveyString;

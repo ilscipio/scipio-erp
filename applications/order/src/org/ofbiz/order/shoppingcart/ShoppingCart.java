@@ -4499,6 +4499,21 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         return allInfos;
     }
 
+    /** SCIPIO: make a map of orderItemSeqId to SurveyResponse */
+    public Map<String, List<GenericValue>> makeAllOrderItemSurveyResponsesByOrderItemSeqId() {
+        Map<String, List<GenericValue>> allInfos = new HashMap<>();
+        for (ShoppingCartItem item : this) {
+            List<GenericValue> surveyResponses = item.getSurveyResponses();
+            // TODO: REVIEW: Is it safe or a good idea to set orderId and/or orderItemSeqId here?
+            // It might be used as an "order not placed yet" flag somewhere....
+            //response.set("orderItemSeqId", item.getOrderItemSeqId());
+            if (UtilValidate.isNotEmpty(surveyResponses)) {
+                allInfos.put(item.getOrderItemSeqId(), surveyResponses);
+            }
+        }
+        return allInfos;
+    }
+
     /** make a list of OrderContactMechs from the ShoppingCart and the ShoppingCartItems */
     public List<GenericValue> makeAllOrderContactMechs() {
         List<GenericValue> allOrderContactMechs = new ArrayList<>();

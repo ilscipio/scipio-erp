@@ -1433,6 +1433,7 @@ code package.
       <field name="allowMultiple" type="indicator"><description>Allow multiple responses to this survey (if Y), or just a single answer (if N)?</description></field>
       <field name="allowUpdate" type="indicator"><description>Allow change to responses?</description></field>
       <field name="acroFormContentId" type="id-ne"><description>Points to PDF with AcroForm</description></field>
+      <field name="showOnInvoice" type="indicator"><description>SCIPIO: Show brief survey results on invoices and/or in shopping cart (if Y; default N). Added 2019-03-14.</description></field>
       <prim-key field="surveyId"/>
     </entity>
     <entity entity-name="SurveyApplType"

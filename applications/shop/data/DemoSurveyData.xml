@@ -6,8 +6,8 @@ code package.
 -->
 
 <entity-engine-xml>
-    <Survey surveyId="1000" description="Gift Card Purchase Information" isAnonymous="Y" allowMultiple="Y" allowUpdate="N"/>
-    <Survey surveyId="1001" description="Gift Card Reload Information" isAnonymous="Y" allowMultiple="Y" allowUpdate="N"/>
+    <Survey surveyId="1000" description="Gift Card Purchase Information" isAnonymous="Y" allowMultiple="Y" allowUpdate="N" showOnInvoice="Y"/><!-- SCIPIO: 2019-03-14: Added showOnInvoice -->
+    <Survey surveyId="1001" description="Gift Card Reload Information" isAnonymous="Y" allowMultiple="Y" allowUpdate="N" showOnInvoice="Y"/>
     <Survey surveyId="1002" surveyName="Shopping Survey" description="Tell us about your on-line shopping patterns" submitCaption="Complete Survey" comments="Your answers will help us serve you better" isAnonymous="N" allowMultiple="Y" allowUpdate="Y"/>
     <Survey surveyId="1003" surveyName="Mini-Poll Poll" description="Tell us where the mini-poll should go" submitCaption="Vote!" isAnonymous="N" allowMultiple="N" allowUpdate="N"/>
     <Survey surveyId="1004" surveyName="Mouse Hand Poll" description="Your mouse hand is" isAnonymous="N" allowMultiple="N" allowUpdate="N"/>

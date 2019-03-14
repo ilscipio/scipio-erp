@@ -326,25 +326,41 @@ code package.
         </section>
     </screen>
 
+    <!-- SCIPIO: Widget: Simple survey response info. Input fields: surveyTmplLoc (optional; if empty, skips the template render) -->
+    <screen name="RenderSurveyResponse">
+        <section>
+            <actions>
+                <script location="component://content/webapp/content/WEB-INF/actions/survey/RenderSurveyResponse.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition><not><if-empty field="surveyString"/></not></condition>
+                    <widgets>
+                        <platform-specific><html><html-template><![CDATA[${raw(surveyString!)}]]></html-template></html></platform-specific>
+                    </widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: Widget: Simple non-interactive survey response info - see ordermgr showcartitems.ftl for reference usage -->
+    <screen name="SurveyResponseMini">
+        <section>
+            <actions>
+                <set field="surveyTmplLoc" value="component://content/template/survey/miniresult.ftl"/>
+            </actions>
+            <widgets>
+                <include-screen name="RenderSurveyResponse"/>
+            </widgets>
+        </section>
+    </screen>
     <!-- SCIPIO: Widget: Simple non-interactive survey response info - see ordermgr showcartitems.ftl for reference usage -->
     <screen name="SurveyResponseDetail">
         <section>
             <actions>
-                <script location="component://content/webapp/content/WEB-INF/actions/survey/SurveyResponseDetail.groovy"/>
+                <set field="surveyTmplLoc" value="component://content/template/survey/genericresult.ftl"/>
             </actions>
             <widgets>
-                <section>
-                    <condition><not><if-empty field="surveyResponse"/></not></condition>
-                    <widgets>
-                        <platform-specific><html><html-template><![CDATA[
-                            <#if surveyString?has_content>
-                              ${raw(surveyString)}
-                            <#else>
-                              <@commonMsg type="error">${getLabel('ContentSurveyRenderProblem', 'ContentUiLabels')}</@commonMsg>
-                            </#if>
-                        ]]></html-template></html></platform-specific>
-                    </widgets>
-                </section>
+                <include-screen name="RenderSurveyResponse"/>
             </widgets>
         </section>
     </screen>

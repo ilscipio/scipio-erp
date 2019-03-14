@@ -163,3 +163,5 @@ orderItemAttrMap = cart.makeAllOrderItemAttributesByOrderItemSeqId();
 context.orderItemAttrMap = orderItemAttrMap;
 orderItemProdCfgMap = cart.getProductConfigWrappersByOrderItemSeqId();
 context.orderItemProdCfgMap = orderItemProdCfgMap;
+orderItemSurvResMap = cart.makeAllOrderItemSurveyResponsesByOrderItemSeqId();
+context.orderItemSurvResMap = orderItemSurvResMap;

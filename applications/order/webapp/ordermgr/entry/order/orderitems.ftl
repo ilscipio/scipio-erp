@@ -3,6 +3,9 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
+
+<#import "component://order/webapp/ordermgr/common/orderlib.ftl" as orderlib>
+
 <@section title=uiLabelMap.OrderOrderItems>
         <@menu type="button"> <#-- class="boxlink" -->
           <#if (maySelectItems!false) == true>
@@ -28,6 +31,7 @@ code package.
             </#if>
           </@tr>
           </@thead>
+
         <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
         <#macro orderItemAttrInfo orderItem>
             <#local orderItemSeqId = raw(orderItem.orderItemSeqId!)>
@@ -59,6 +63,7 @@ code package.
                 </ul>
             </#if>
         </#macro>
+
           <#list (orderItems!) as orderItem>
             <#assign itemType = orderItem.getRelatedOne("OrderItemType", false)!>
             <@tr>
@@ -67,6 +72,7 @@ code package.
                   <b><div> &gt;&gt; ${orderItem.itemDescription}</div></b>
                     <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
                     <@orderItemAttrInfo orderItem=orderItem/>
+                    <@orderlib.orderItemSurvResMini survResList=(orderlib.getOrderItemSurvResList(orderItem)!) classPrefix="orderentry-" interactive=false/>
                 </@td>
               <#else>
                 <@td valign="top">
@@ -76,6 +82,7 @@ code package.
                       <b>${(itemType.description)!}</b> : ${orderItem.itemDescription!}
                     </#if>
                     <@orderItemAttrInfo orderItem=orderItem/>
+                    <@orderlib.orderItemSurvResMini survResList=(orderlib.getOrderItemSurvResList(orderItem)!) classPrefix="orderentry-"/><#-- NOTE: could do this, but limits for nothing: interactive=false -->
                 </@td>
                 <#assign effTotalQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)))><#-- SCIPIO -->
                 <@td class="${styles.text_right!}" valign="top">${effTotalQuantity?string.number}</@td><#-- SCIPIO: inappropriate, includes cancelled: orderItem.quantity?string.number -->

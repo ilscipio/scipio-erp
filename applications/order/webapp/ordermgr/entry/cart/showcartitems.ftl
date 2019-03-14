@@ -4,6 +4,8 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
+<#import "component://order/webapp/ordermgr/common/orderlib.ftl" as orderlib>
+
 <#-- Continuation of showcart.ftl:  List of order items and forms to modify them. -->
 <#macro showAssoc productAssoc>
   <#assign productAssocType = (delegator.findOne("ProductAssocType", {"productAssocTypeId" : productAssoc.productAssocTypeId}, false))/>
@@ -114,38 +116,11 @@ code package.
                    <#if features?has_content>
                      <br /><i>${uiLabelMap.ProductFeatures}: <#list features as feature>${feature.description!""} </#list></i>
                    </#if>
-                    <#-- show links to survey response for this item -->
-                    <#if cartLine.getAttribute("surveyResponses")?has_content>
-                        <br /><em>${uiLabelMap.CommonSurveys}:</em>
-                      <#list cartLine.getSurveyResponses() as surveyResponse>
-                        <#assign surveyResponseId = surveyResponse.surveyResponseId!>
-                        <#-- SCIPIO: 2019-03-11: This page contains other survey responses and is very confusing
-                        <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"
-                          class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>-->
-                        <@modal id="${raw(surveyResponseId)}_surveyresp" label=surveyResponseId linkClass="${styles.link_nav_info_id!} ${styles.action_view!}">
-                          <#-- DEV NOTE: Must use @section instead of @heading so that the heading levels in the details start at the right level -->
-                          <@section title=getLabel("DataResourceType.description.SURVEY_RESPONSE", "ContentEntityLabels") relHeadingLevel=+1>
-                          <@fields type="default" ignoreParentField=true>
-                            <#-- SCIPIO: TODO?: Link to real edit forms -->
-                            <@field type="display" label=getLabel("FormFieldTitle_surveyResponseId")>${surveyResponseId}</@field>
-                            <@field type="display" label=getLabel("ContentSurveySurveyId")>
-                                <a target="_blank" href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"<#t>
-                                    class="${styles.link_nav_info_id!} ${styles.action_view!}">${surveyResponse.surveyId}</a><#t>
-                            </@field>
-                            <#-- SCIPIO: FIXME: This should not render any templates under /shop -->
-                            <@render resource="component://content/widget/SurveyScreens.xml#SurveyResponseDetail" ctxVars={"surveyResponse":surveyResponse}/>
-                            <#-- SCIPIO: TODO: REVIEW: The screens linked here are (besides being in /content) extremely confusing
-                              and do not actually allow editing the survey response for the other - it confusingly creates new responses
-                            <p>
-                              <a href="<@serverUrl>/content/control/EditSurveyResponse?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"
-                                class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonEdit}</a>
-                            </p>
-                            -->
-                          </@fields>
-                          </@section>
-                        </@modal>
-                      </#list>
-                    </#if>
+                   <#-- show links to survey response for this item -->
+                   <#assign surveyResponses = cartLine.getSurveyResponses()!>
+                   <#if surveyResponses?has_content>
+                     <@orderlib.orderItemSurvResMini survResList=surveyResponses classPrefix="orderentry-"/>
+                   </#if>
             </@td></@tr>
             <#if cartLine.getRequirementId()?has_content>
                 <@tr>

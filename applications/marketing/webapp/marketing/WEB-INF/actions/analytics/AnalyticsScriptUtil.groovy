@@ -160,7 +160,9 @@ def readChartTimeParams() {
     maxThruDateTimestamp = thruDateTimestamp;
     if (!maxThruDateTimestamp) {
         dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, iCount, fromDateTimestamp, context.locale, context.timeZone);
-        maxThruDateTimestamp = dateIntervals.getDateEnd();
+        if (dateIntervals) {
+        	maxThruDateTimestamp = dateIntervals.getDateEnd();
+        }
     }
     
     if (debugMode) {

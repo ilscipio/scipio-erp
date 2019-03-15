@@ -11248,6 +11248,14 @@
         <value xml:lang="zh-CN">选择</value>
         <value xml:lang="zh-TW">選擇</value>
     </property>
+    <property key="CommonSemester">        
+        <value xml:lang="de">Semester</value>
+        <value xml:lang="en">Semester</value>
+        <value xml:lang="es">Semestre</value>
+        <value xml:lang="fr">Semestre</value>
+        <value xml:lang="it">Semestre</value>
+        <value xml:lang="pt">Semestre</value>
+    </property>
     <property key="CommonSend">
         <value xml:lang="ar">ارسال</value>
         <value xml:lang="cs">Odeslat</value>

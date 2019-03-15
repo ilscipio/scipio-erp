@@ -60,7 +60,7 @@ public final class UtilDateTime {
         {"168", "week"}
     };
 
-    public static final String[] TIME_INTERVALS =  {"hour", "day", "week", "month", "quarter", "semester", "year"};
+    public static final List<String> TIME_INTERVALS =  UtilMisc.toList("hour", "day", "week", "month", "quarter", "semester", "year");
 
 
     private static final DecimalFormat df = new DecimalFormat("0.00;-0.00");
@@ -1479,7 +1479,7 @@ public final class UtilDateTime {
      *         constant TIME_INTERVALS
      */
     public static boolean checkValidInterval(String interval) {
-        return Arrays.asList(TIME_INTERVALS).contains(interval);
+        return TIME_INTERVALS.contains(interval);
     }
 
     public static Timestamp getTimeStampFromIntervalScope(String iScope) {
@@ -1571,6 +1571,12 @@ public final class UtilDateTime {
         }
     }
 
+    // SCIPIO (2019-15-03): Implemented this method to be accessed by FTLs. For some reason BeanWrapper don't make static fields accessible, I think.
+    // FIXME: Review in near future
+    public static List<String> getTimeIntervals() {
+    	return TIME_INTERVALS;
+    }
+    
     /**
      * SCIPIO: DO NOT USE: Returns a "dummy" static instance, for use by <code>FreeMarkerWorker</code>.
      * Subject to change without notice.

@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#import "component://order/webapp/ordermgr/common/orderlib.ftl" as orderlib>
+<#include "component://order/webapp/ordermgr/common/common.ftl">
 
 <@section title=uiLabelMap.OrderOrderItems>
         <@menu type="button"> <#-- class="boxlink" -->
@@ -72,7 +72,8 @@ code package.
                   <b><div> &gt;&gt; ${orderItem.itemDescription}</div></b>
                     <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
                     <@orderItemAttrInfo orderItem=orderItem/>
-                    <@orderlib.orderItemSurvResMini survResList=(orderlib.getOrderItemSurvResList(orderItem)!) classPrefix="orderentry-" interactive=false/>
+                    <#-- SCIPIO: show application survey response QA list for this item -->
+                    <@orderlib.orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/><#-- NOTE: could do this, but limits for nothing: interactive=false -->
                 </@td>
               <#else>
                 <@td valign="top">
@@ -82,7 +83,8 @@ code package.
                       <b>${(itemType.description)!}</b> : ${orderItem.itemDescription!}
                     </#if>
                     <@orderItemAttrInfo orderItem=orderItem/>
-                    <@orderlib.orderItemSurvResMini survResList=(orderlib.getOrderItemSurvResList(orderItem)!) classPrefix="orderentry-"/><#-- NOTE: could do this, but limits for nothing: interactive=false -->
+                    <#-- SCIPIO: show application survey response QA list for this item -->
+                    <@orderlib.orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/><#-- NOTE: could do this, but limits for nothing: interactive=false -->
                 </@td>
                 <#assign effTotalQuantity = (((orderItem.quantity!0) - (orderItem.cancelQuantity!0)))><#-- SCIPIO -->
                 <@td class="${styles.text_right!}" valign="top">${effTotalQuantity?string.number}</@td><#-- SCIPIO: inappropriate, includes cancelled: orderItem.quantity?string.number -->

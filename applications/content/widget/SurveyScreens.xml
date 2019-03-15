@@ -343,10 +343,10 @@ code package.
         </section>
     </screen>
     <!-- SCIPIO: Widget: Simple non-interactive survey response info - see ordermgr showcartitems.ftl for reference usage -->
-    <screen name="SurveyResponseMini">
+    <screen name="SurveyResponseQaList">
         <section>
             <actions>
-                <set field="surveyTmplLoc" value="component://content/template/survey/miniresult.ftl"/>
+                <set field="surveyTmplLoc" value="component://content/template/survey/qalistresult.ftl"/>
             </actions>
             <widgets>
                 <include-screen name="RenderSurveyResponse"/>

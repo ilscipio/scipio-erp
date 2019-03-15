@@ -6,20 +6,24 @@ code package.
 
 <#-- SCIPIO: Based on:
         component://shop/templates/survey/genericresult.ftl
-    The Shop template (the original) displays for frontend while the Content one displays for backend apps. -->
+    The Shop template (the original) displays for frontend while the Content one displays for backend apps.
+    NOTE: There is a second frontend-only template at:
+        component://shop/templates/survey/qalistresult.ftl -->
 
 <#if !uiLabelMap??>
   <#assign uiLabelMap = Static["org.ofbiz.base.util.UtilProperties"].getResourceBundleMap("CommonUiLabels", locale)>
 </#if>
 
 <#-- Render options -->
-<#assign minOn = survresQaMinimal!true>
-<#assign expOptOn = survresQaExpandOpt!(!minOn)>
-<#assign statsOn = survresQaStats!(!minOn)>
-<#assign maxEntries = survresQaMax!-1>
+<#assign srqaArgs = srqaArgs!{}>
+<#assign minOn = srqaArgs.minimal!true>
+<#assign unselOn = srqaArgs.showUnsel!(!minOn)>
+<#assign statsOn = srqaArgs.stats!(!minOn)>
+<#assign maxEntries = srqaArgs.max!-1>
+<#assign listClass = srqaArgs.listClass!"">
 
 <#assign maxReached = false>
-<ul class="survres-qa-list survres-qa-minilist<#if survresQaClass?has_content> ${survresQaClass}</#if>">
+<ul<@compiledClassAttribStr class=addClassArgDefault(listClass, "survres-qa-list")/>>
   <#list surveyQuestionAndAppls as surveyQuestionAndAppl>
     <#if (surveyQuestionAndAppl?index == maxEntries)>
       <li class="survres-qa-entry survres-qa-entry-ellipse">...</li>
@@ -57,7 +61,7 @@ code package.
           <#if ((results._total!0) == 1)>
              <#assign answerString = "answer">
           </#if>
-          <span class="survres-qtn-qtn">${surveyQuestionAndAppl.question!}<#if expOptOn> (${results._total!0?string.number} ${answerString})</#if></span>
+          <span class="survres-qtn-qtn">${surveyQuestionAndAppl.question!}<#if unselOn> (${results._total!0?string.number} ${answerString})</#if></span>
           <#if surveyQuestionAndAppl.hint?has_content>
             <span class="survres-qtn-hint">${surveyQuestionAndAppl.hint}</span>
           </#if>
@@ -66,7 +70,7 @@ code package.
         <span class="survres-answer survres-answer-type-${surveyQuestionAndAppl.surveyQuestionTypeId!?lower_case?replace("[^a-z0-9]","","r")}">
           <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
             <#assign selectedOption = raw((answer.booleanResponse)!"Y")>
-            <#if expOptOn>
+            <#if unselOn>
               <span style="white-space: nowrap;">
                 <#if "Y" == selectedOption><strong class="survres-selected">${uiLabelMap.CommonY}</strong><#else>${uiLabelMap.CommonY}</#if><#rt/>
                 <#lt/><#if statsOn>&nbsp;[${results._yes_total!0?string("#")} / ${results._yes_percent!0?string("#")}%]</#if>
@@ -115,11 +119,11 @@ code package.
               <#list options as option>
                 <#assign optionSeqId = raw(option.surveyOptionSeqId!)><#-- SCIPIO: Refactored + fixed escaping -->
                 <#assign optionResults = results.get(optionSeqId)!>
-                  <#if !expOptOn || optionSeqId == selectedOption>
+                  <#if !unselOn || optionSeqId == selectedOption>
                     <span class="survres-answer-option-entry" style="white-space: nowrap;">
-                      <#if !expOptOn && optionSeqId == selectedOption><strong class="survres-selected"></#if>
+                      <#if !unselOn && optionSeqId == selectedOption><strong class="survres-selected"></#if>
                       ${option.description!}
-                      <#if !expOptOn && optionSeqId == selectedOption></strong></#if><#rt/>
+                      <#if !unselOn && optionSeqId == selectedOption></strong></#if><#rt/>
                       <#if statsOn>&nbsp;[${optionResults._total!0?string("#")} / ${optionResults._percent!0?string("#")}%]</#if>
                     </span>
                   </#if>

@@ -4,6 +4,9 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <#escape x as x?xml>
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+<#import "component://content/webapp/content/common/contentlib.ftl" as contentlib>
+
 <#if orderHeader?has_content><fo:block font-size="16pt" font-weight="bold" margin-bottom="5mm">${orderHeader.getRelatedOne("OrderType", false).get("description",locale)}</fo:block></#if>
 
 
@@ -115,6 +118,31 @@ code package.
         </#if>
       </#if>
     </#macro>
+    
+    <#-- SCIPIO: Based on orderlib macro -->
+    <#macro orderItemSurvResList survResList srqaArgs={} useTitleLine=false interactive=false maxInline=-1 class="" listClass="">
+      <#if survResList?has_content>
+      <#local class = addClassArgDefault(class, "order-item-survres-list")>
+        <#list survResList as surveyResponse>
+            <fo:table-row height="8mm" line-height="8mm">
+              <fo:table-cell number-columns-spanned="5">
+                <fo:block text-align="left" font-size="8pt">
+            <#local survey = surveyResponse.getRelatedOne("Survey")!>
+            <#if useTitleLine>
+              <#local surveyDesc = survey.get("description", locale)!>
+              <#if surveyDesc?has_content>${surveyDesc}</#if>
+            </#if>
+            <#if (maxInline != 0) && ("Y" == survey.showOnInvoice!)>
+              <@contentlib.renderSurveyResponse surveyResponse=surveyResponse tmplLoc="component://content/template/survey/qalistresult.fo.ftl"
+                srqaArgs=({"listClass":listClass, "max":maxInline} + srqaArgs)/>
+            </#if>
+                </fo:block>
+              </fo:table-cell>
+            </fo:table-row>
+        </#list>
+      </#if>
+    </#macro>
+
     <fo:table-body font-size="10pt" table-layout="fixed" width="100%">
         <#list orderItemList as orderItem>
             <#assign orderItemType = orderItem.getRelatedOne("OrderItemType", false)!>
@@ -158,7 +186,9 @@ code package.
             </fo:table-row>
 
             <#-- SCIPIO: NOTE: You may (un)comment or modify this call to control the verbosity -->
-            <@orderItemAttrInfo orderItem=orderItem showCfgOpt=true showItemAttr=true/>  
+            <@orderItemAttrInfo orderItem=orderItem showCfgOpt=true showItemAttr=true/>
+            <#-- SCIPIO: show application survey response QA list for this item -->
+            <@orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/>
         </#list>
                 
         <#-- blank line -->

@@ -4,7 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<#import "component://order/webapp/ordermgr/common/orderlib.ftl" as orderlib>
+<#include "component://order/webapp/ordermgr/common/common.ftl">
 
 <#-- Continuation of showcart.ftl:  List of order items and forms to modify them. -->
 <#macro showAssoc productAssoc>
@@ -116,10 +116,10 @@ code package.
                    <#if features?has_content>
                      <br /><i>${uiLabelMap.ProductFeatures}: <#list features as feature>${feature.description!""} </#list></i>
                    </#if>
-                   <#-- show links to survey response for this item -->
+                   <#-- show links to survey response for this item (SCIPIO: Improved) -->
                    <#assign surveyResponses = cartLine.getSurveyResponses()!>
                    <#if surveyResponses?has_content>
-                     <@orderlib.orderItemSurvResMini survResList=surveyResponses classPrefix="orderentry-"/>
+                     <@orderlib.orderItemSurvResList survResList=surveyResponses/>
                    </#if>
             </@td></@tr>
             <#if cartLine.getRequirementId()?has_content>

@@ -3,7 +3,9 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-<#-- SCIPIO: ToDo: Rewrite the following javascript -->
+<#include "component://shop/webapp/shop/cart/cartcommon.ftl">
+
+<#-- SCIPIO: TODO: Rewrite the following javascript -->
 <@script>
 function addToList() {
     var cform = document.cartform;
@@ -162,7 +164,12 @@ function setAlternateGwp(field) {
                             </#if>
                             -->
                         </#if>
-
+                        <#-- SCIPIO: show application survey response QA list for this item -->
+                        <#assign surveyResponses = cartLine.getSurveyResponses()!>
+                        <#if surveyResponses?has_content>
+                          <@orderItemSurvResList survResList=surveyResponses/>
+                        </#if>
+                   
                         </@td>
                         <#-- giftWrap & promotion info -->
                         <@td>

@@ -182,6 +182,8 @@ code package.
               <@td>
                 ${escapeVal(orderItem.itemDescription!"", 'htmlmarkup', {"allow":"internal"})} <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
                 <@orderItemAttrInfo orderItem=orderItem/>
+                <#-- SCIPIO: show application survey response QA list for this item -->
+                <@orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/>
               </@td>
             <#else>
               <#-- product item -->
@@ -227,6 +229,10 @@ code package.
                       [${uiLabelMap.CommonDepth}: ${product.productDepth!} ${((depthUom.abbreviation)!(product.depthUomId))!}]
                   </#if>
                 </#if>
+
+                <#-- SCIPIO: show application survey response QA list for this item -->
+                <@orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/>
+
                 <#if maySelect>
                   <#assign returns = orderItem.getRelated("ReturnItem", null, null, false)!>
                   <#if returns?has_content>

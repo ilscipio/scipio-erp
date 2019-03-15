@@ -3,6 +3,9 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
+
+<#include "component://order/webapp/ordermgr/common/common.ftl">
+
 <#if orderHeader?has_content>
 <@section title=uiLabelMap.OrderOrderItems>
             <@table type="data-complex" role="grid">
@@ -68,6 +71,8 @@ code package.
                             <#if raw(productId) == "shoppingcart.CommentLine">
                                 <@td> &gt;&gt; ${orderItem.itemDescription}</@td>
                                 <@orderItemAttrInfo orderItem=orderItem/>
+                                <#-- SCIPIO: show application survey response QA list for this item -->
+                                <@orderlib.orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/>
                             <#else>
                                 <@td>
                                         <#if orderItem.supplierProductId?has_content>
@@ -86,6 +91,8 @@ code package.
                                             ${orderItem.itemDescription!}
                                         </#if>
                                         <@orderItemAttrInfo orderItem=orderItem/>
+                                        <#-- SCIPIO: show application survey response QA list for this item -->
+                                        <@orderlib.orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/>
 
                                         <#-- SCIPIO: order by ProductContent.sequenceNum -->
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"}, ["sequenceNum ASC"], true)/>

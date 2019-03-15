@@ -3,6 +3,7 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
+<#include "component://shop/webapp/shop/cart/cartcommon.ftl">
 
 <#if shoppingCart?has_content && (shoppingCart.size() > 0)>
   <@section title="${rawLabel('EcommerceStep')} 1: ${rawLabel('PageTitleShoppingCart')}">
@@ -62,12 +63,15 @@ code package.
                   <img src="<@contentUrl ctxPrefix=true>${smallImageUrl}</@contentUrl>" alt="Product Image" />
                 -->
                 <a href="<@catalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
-                <#-- For configurable products, the selected options are shown -->
-                <@orderItemAttrInfo cartLine=cartLine/>
               <#else>
                 <#-- non-product item -->
                 ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!}  
-                <@orderItemAttrInfo cartLine=cartLine/>
+              </#if>
+              <@orderItemAttrInfo cartLine=cartLine/>
+              <#-- SCIPIO: show application survey response QA list for this item -->
+              <#assign surveyResponses = cartLine.getSurveyResponses()!>
+              <#if surveyResponses?has_content>
+                <@orderItemSurvResList survResList=surveyResponses/>
               </#if>
             </@td>
             <@td headers="description"></@td>
@@ -182,42 +186,15 @@ code package.
                         </#if>
                       -->
                     <a href="<@catalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
-                    <#-- For configurable products, the selected options are shown -->
-                    <#if cartLine.getConfigWrapper()??>
-                      <#assign selectedOptions = cartLine.getConfigWrapper().getSelectedOptions()! />
-                      <#if selectedOptions??>
-                        <ul class="order-item-attrib-list">
-                        <#list selectedOptions as option>
-                            <li>${option.getDescription()}</li>
-                        </#list>
-                        </ul>
-                      </#if>
-                    </#if>
-                    <#assign attrs = cartLine.getOrderItemAttributes()/>
-                    <#if attrs?has_content>
-                        <#assign attrEntries = attrs.entrySet()/>
-                        <ul class="order-item-attrib-list">
-                        <#list attrEntries as attrEntry>
-                            <li>
-                                ${attrEntry.getKey()}: ${attrEntry.getValue()}
-                            </li>
-                        </#list>
-                        </ul>
-                    </#if>
                   <#else>
                     <#-- non-product item -->
                     ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!} 
-                    <#assign attrs = cartLine.getOrderItemAttributes()/>
-                    <#if attrs?has_content>
-                        <#assign attrEntries = attrs.entrySet()/>
-                        <ul class="order-item-attrib-list">
-                        <#list attrEntries as attrEntry>
-                            <li>
-                                ${attrEntry.getKey()}: ${attrEntry.getValue()}
-                            </li>
-                        </#list>
-                        </ul>
-                    </#if>
+                  </#if>
+                  <@orderItemAttrInfo cartLine=cartLine/>
+                  <#-- SCIPIO: show application survey response QA list for this item -->
+                  <#assign surveyResponses = cartLine.getSurveyResponses()!>
+                  <#if surveyResponses?has_content>
+                    <@orderItemSurvResList survResList=surveyResponses/>
                   </#if>
                 </@td>
                 <@td headers="editDescription"></@td>

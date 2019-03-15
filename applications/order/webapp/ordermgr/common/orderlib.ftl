@@ -769,46 +769,50 @@
 
 </#macro>
 
-<#macro orderItemSurvResMini survResList classPrefix="" interactive=true maxInline=-1>
+<#macro orderItemSurvResList survResList srqaArgs={} useTitleLine=true interactive=true maxInline=-1 class="" listClass="+order-item-attrib-list">
   <#if survResList?has_content>
-  <div class="${classPrefix}survres-mini">
+  <#local class = addClassArgDefault(class, "order-item-survres-list")>
+  <div<@compiledClassAttribStr class=class/>>
     <#list survResList as surveyResponse>
-      <div class="${classPrefix}survres-entry">
-        <em class="${classPrefix}survres-label">${uiLabelMap.ContentSurvey}:</em>
-        <#local surveyResponseId = surveyResponse.surveyResponseId!>
+      <div class="survres-entry">
         <#local survey = surveyResponse.getRelatedOne("Survey")!>
-        <#if interactive>
-          <#-- SCIPIO: 2019-03-11: This page contains other survey responses and is very confusing
-          <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"
-            class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>-->
-          <@modal id="${raw(surveyResponseId)}_surveyresp" label=surveyResponseId linkClass="${styles.link_nav_info_id!} ${styles.action_view!}">
-            <#-- DEV NOTE: Must use @section instead of @heading so that the heading levels in the details start at the right level -->
-            <@section title=getLabel("DataResourceType.description.SURVEY_RESPONSE", "ContentEntityLabels") relHeadingLevel=+1>
-              <@fields type="default" ignoreParentField=true>
-                <#-- SCIPIO: TODO?: Link to real edit forms -->
-                <@field type="display" label=getLabel("FormFieldTitle_surveyResponseId")>${surveyResponseId}</@field>
-                <@field type="display" label=getLabel("ContentSurveySurveyId")>
-                    <a target="_blank" href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"<#t>
-                        class="${styles.link_nav_info_id!} ${styles.action_view!}">${surveyResponse.surveyId!}</a><#t>
-                </@field>
-                <#-- SCIPIO: FIXME: This should not render any templates under /shop -->
-                <@render resource="component://content/widget/SurveyScreens.xml#SurveyResponseDetail" ctxVars={"surveyResponse":surveyResponse}/>
-                <#-- SCIPIO: TODO: REVIEW: The screens linked here are (besides being in /content) extremely confusing
-                  and do not actually allow editing the survey response for the other - it confusingly creates new responses
-                <p>
-                  <a href="<@serverUrl>/content/control/EditSurveyResponse?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"
-                    class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonEdit}</a>
-                </p>
-                -->
-              </@fields>
-            </@section>
-          </@modal>
+        <#if useTitleLine>
+          <em class="survres-label">${uiLabelMap.ContentSurvey}:</em>
+          <#local surveyResponseId = surveyResponse.surveyResponseId!>
+          <#if interactive>
+            <#-- SCIPIO: 2019-03-11: This page contains other survey responses and is very confusing
+            <a href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"
+              class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>-->
+            <@modal id="${raw(surveyResponseId)}_surveyresp" label=surveyResponseId linkClass="${styles.link_nav_info_id!} ${styles.action_view!}">
+              <#-- DEV NOTE: Must use @section instead of @heading so that the heading levels in the details start at the right level -->
+              <@section title=getLabel("DataResourceType.description.SURVEY_RESPONSE", "ContentEntityLabels") relHeadingLevel=+1>
+                <@fields type="default" ignoreParentField=true>
+                  <#-- SCIPIO: TODO?: Link to real edit forms -->
+                  <@field type="display" label=getLabel("FormFieldTitle_surveyResponseId")>${surveyResponseId}</@field>
+                  <@field type="display" label=getLabel("ContentSurveySurveyId")>
+                      <a target="_blank" href="<@serverUrl>/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"<#t>
+                          class="${styles.link_nav_info_id!} ${styles.action_view!}">${surveyResponse.surveyId!}</a><#t>
+                  </@field>
+                  <#-- SCIPIO: FIXME: This should not render any templates under /shop -->
+                  <@render resource="component://content/widget/SurveyScreens.xml#SurveyResponseDetail" ctxVars={"surveyResponse":surveyResponse}/>
+                  <#-- SCIPIO: TODO: REVIEW: The screens linked here are (besides being in /content) extremely confusing
+                    and do not actually allow editing the survey response for the other - it confusingly creates new responses
+                  <p>
+                    <a href="<@serverUrl>/content/control/EditSurveyResponse?surveyResponseId=${surveyResponseId}${raw(externalKeyParam)}</@serverUrl>"
+                      class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonEdit}</a>
+                  </p>
+                  -->
+                </@fields>
+              </@section>
+            </@modal>
+          </#if>
+          <#local surveyDesc = survey.get("description", locale)!>
+          <#if surveyDesc?has_content><#if interactive> - </#if><span class="survres-desc">${surveyDesc}</span></#if>
         </#if>
-        <#local surveyDesc = survey.get("description", locale)!>
-        <#if surveyDesc?has_content><#if interactive> - </#if><span class="${classPrefix}survres-desc">${surveyDesc}</span></#if>
         <#if (maxInline != 0) && ("Y" == survey.showOnInvoice!)>
-          <@render resource="component://content/widget/SurveyScreens.xml#SurveyResponseMini"
-            ctxVars={"surveyResponse":surveyResponse, "survresQaClass":"order-item-attrib-list", "survresQaMax":maxInline}/>
+          <#import "component://content/webapp/content/common/contentlib.ftl" as contentlib>
+          <@contentlib.renderSurveyResponse surveyResponse=surveyResponse tmplLoc="component://content/template/survey/qalistresult.ftl"
+            srqaArgs=({"listClass":listClass, "max":maxInline} + srqaArgs)/>
         </#if>
       </div>
     </#list>
@@ -817,10 +821,13 @@
 </#macro>
 
 <#function getOrderItemSurvResList orderItem>
-   <#local orderItemSeqId = raw(orderItem.orderItemSeqId)>
-   <#if orderItemSurvResMap??>
-     <#return orderItemSurvResMap[orderItemSeqId]![]>
-   <#else>
-     <#return delegator.from("SurveyResponse").where("orderId", "orderItemSeqId", orderItemSeqId)>
-   </#if>
+  <#local orderItemSeqId = raw((orderItem.orderItemSeqId)!)>
+  <#if !orderItemSeqId?has_content>
+    <#return []>
+  </#if>
+  <#if orderItemSurvResMap??>
+    <#return orderItemSurvResMap[orderItemSeqId]![]>
+  <#else>
+    <#return delegator.from("SurveyResponse").where("orderId", raw(orderItem.orderId!), "orderItemSeqId", orderItemSeqId).orderBy("orderItemSeqId").queryList()><#-- This less accurately reproduces cart order: .orderBy("-responseDate") -->
+  </#if>
 </#function>

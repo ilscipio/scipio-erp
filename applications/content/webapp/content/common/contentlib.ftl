@@ -171,3 +171,8 @@
     </#if>
   </@containerMarkup>
 </#macro>
+
+<#macro renderSurveyResponse surveyResponse tmplLoc srqaArgs={}>
+  <@render resource="component://content/widget/SurveyScreens.xml#RenderSurveyResponse"
+    ctxVars={"surveyResponse":surveyResponse, "surveyTmplLoc":tmplLoc, "srqaArgs":srqaArgs}/>
+</#macro>

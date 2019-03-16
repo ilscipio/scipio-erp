@@ -302,6 +302,10 @@ ul.order-item-attrib-list, .order-item-attrib-list ul {
 
 }
 
+ul.order-item-attrib-list.order-item-gift-card-info, .order-item-attrib-list.order-item-gift-card-info ul {
+  margin-bottom: 0;
+}
+
 .order-item-attrib-list li {
     /*font-size: 0.875rem;*/
     font-size: 0.8em;

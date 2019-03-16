@@ -904,6 +904,14 @@ public final class InvoiceWorker {
     }
 
     /**
+     * SCIPIO: Get the orderItem+orderItemSeqId for a specific invoice item.
+     * NOTE: This does not necessarily give an OrderItem value.
+     */
+    public static Map<String, Object> getInvoiceItemOrderItemInfo(Delegator delegator, Map<String, ?> invoiceItem) throws GenericEntityException {
+        return getInvoiceItemOrderItemInfo(delegator, (String) invoiceItem.get("invoiceId"), (String) invoiceItem.get("invoiceItemSeqId"));
+    }
+
+    /**
      * SCIPIO: Get the OrderItem for a specific invoice item.
      */
     public static GenericValue getInvoiceItemOrderItem(Delegator delegator, String invoiceId, String invoiceItemSeqId) throws GenericEntityException {
@@ -911,6 +919,13 @@ public final class InvoiceWorker {
             .where("invoiceId", invoiceId, "invoiceItemSeqId", invoiceItemSeqId)
             .queryFirst();
         return (oib != null) ? oib.getRelatedOne("OrderItem") : null;
+    }
+
+    /**
+     * SCIPIO: Get the OrderItem for a specific invoice item.
+     */
+    public static GenericValue getInvoiceItemOrderItem(Delegator delegator, Map<String, ?> invoiceItem) throws GenericEntityException {
+        return getInvoiceItemOrderItem(delegator, (String) invoiceItem.get("invoiceId"), (String) invoiceItem.get("invoiceItemSeqId"));
     }
 
     /**

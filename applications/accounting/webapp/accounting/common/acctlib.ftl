@@ -22,6 +22,16 @@
   </#if>
 </#function>
 
+<#function getOrderItemGiftCardInfoList orderItem orderId="" product={}>
+  <#if isObjectType("map", orderItem)>
+    <#local orderId = orderItem.orderId!/>
+    <#local orderItemSeqId = orderItem.orderItemSeqId!>
+  <#else>
+    <#local orderItemSeqId = orderItem>
+  </#if>
+  <#return delegator.from("GiftCardFulfillment").where("orderId", orderId, "orderItemSeqId", orderItemSeqId).queryList()![]>
+</#function>
+
 <#function getCreditCardDisplayNumber val payMeth={} args={}>
   <#if isObjectType("map", val)>
     <#local val = val.cardNumber!/>

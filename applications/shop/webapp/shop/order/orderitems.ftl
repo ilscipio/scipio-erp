@@ -4,6 +4,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
 
 <#-- SCIPIO: TODO?: Create shopping list from order (commented) -->
 <#-- SCIPIO: TODO: This is unable to list selected config product options (harder than showcart) -->
@@ -25,7 +26,6 @@ code package.
 <#-- NOTE: this template is used for the orderstatus screen in shop AND for order notification emails through the OrderNoticeEmail.ftl file -->
 <#-- the "urlPrefix" value will be prepended to URLs by the ofbizUrl transform if/when there is no "request" object in the context -->
 <#if baseEcommerceSecureUrl??><#assign urlPrefix = baseEcommerceSecureUrl/></#if>
-
 
 <#-- SCIPIO: extra dummy column by default
 <#assign numColumns = 8>-->
@@ -83,6 +83,7 @@ code package.
         </@tr>
         </@thead>
         <@tbody>
+
         <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
         <#macro orderItemAttrInfo orderItem>
             <#local orderItemSeqId = raw(orderItem.orderItemSeqId!)>
@@ -116,6 +117,15 @@ code package.
                 </ul>
             </#if>
         </#macro>
+        
+        <#macro orderItemGiftCardActInfo gcInfoList>
+            <ul class="order-item-attrib-list order-item-gift-card-info">
+              <#list gcInfoList as gcInfo>
+                <li>${uiLabelMap.AccountingCardNumber} : ${acctlib.getGiftCardDisplayNumber(gcInfo.cardNumber!)}</li>
+              </#list>
+            </ul>
+        </#macro>
+
         <#list orderItems as orderItem>
          
           <#-- get info from workeffort and calculate rental quantity, if it was a rental item -->
@@ -178,10 +188,16 @@ code package.
               <#assign mayCancelItem = (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
             </#if>
             <#if !orderItem.productId?? || orderItem.productId == "_?_">
+              <#assign product = {}><#-- SCIPIO -->
               <#-- non-product item -->
               <@td>
                 ${escapeVal(orderItem.itemDescription!"", 'htmlmarkup', {"allow":"internal"})} <#if !printable && maySelect && mayCancelItem> <@cancelLinkContent /></#if>
                 <@orderItemAttrInfo orderItem=orderItem/>
+                <#-- SCIPIO: Show purchased account brief/masked info -->
+                <#assign gcInfoList = acctlib.getOrderItemGiftCardInfoList(orderItem)!>
+                <#if gcInfoList?has_content>
+                  <@orderItemGiftCardActInfo gcInfoList=gcInfoList/>
+                </#if>
                 <#-- SCIPIO: show application survey response QA list for this item -->
                 <@orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/>
               </@td>
@@ -230,6 +246,11 @@ code package.
                   </#if>
                 </#if>
 
+                <#-- SCIPIO: Show purchased account brief/masked info -->
+                <#assign gcInfoList = acctlib.getOrderItemGiftCardInfoList(orderItem, "", product)!>
+                <#if gcInfoList?has_content>
+                  <@orderItemGiftCardActInfo gcInfoList=gcInfoList/>
+                </#if>
                 <#-- SCIPIO: show application survey response QA list for this item -->
                 <@orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/>
 

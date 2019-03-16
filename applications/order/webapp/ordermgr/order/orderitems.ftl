@@ -5,6 +5,7 @@ code package.
 -->
 
 <#include "component://order/webapp/ordermgr/common/common.ftl">
+<#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
 
 <#if orderHeader?has_content>
 <@section title=uiLabelMap.OrderOrderItems>
@@ -19,6 +20,7 @@ code package.
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.OrderSubTotal}</@th>
                 </@tr>
                 </@thead>
+
                 <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
                 <#macro orderItemAttrInfo orderItem>
                     <#local orderItemSeqId = raw(orderItem.orderItemSeqId!)>
@@ -50,6 +52,15 @@ code package.
                         </ul>
                     </#if>
                 </#macro>
+
+                <#macro orderItemGiftCardActInfo gcInfoList>
+                    <ul class="order-item-attrib-list order-item-gift-card-info">
+                      <#list gcInfoList as gcInfo>
+                        <li>${uiLabelMap.AccountingCardNumber} : ${acctlib.getGiftCardDisplayNumber(gcInfo.cardNumber!)}</li>
+                      </#list>
+                    </ul>
+                </#macro>
+
                 <#if !orderItemList?has_content>
                     <@tr type="meta">
                         <@td colspan="6">
@@ -71,8 +82,6 @@ code package.
                             <#if raw(productId) == "shoppingcart.CommentLine">
                                 <@td> &gt;&gt; ${orderItem.itemDescription}</@td>
                                 <@orderItemAttrInfo orderItem=orderItem/>
-                                <#-- SCIPIO: show application survey response QA list for this item -->
-                                <@orderlib.orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/>
                             <#else>
                                 <@td>
                                         <#if orderItem.supplierProductId?has_content>
@@ -90,7 +99,13 @@ code package.
                                         <#else>
                                             ${orderItem.itemDescription!}
                                         </#if>
+                                        
                                         <@orderItemAttrInfo orderItem=orderItem/>
+                                        <#-- SCIPIO: Show purchased account brief/masked info -->
+                                        <#assign gcInfoList = acctlib.getOrderItemGiftCardInfoList(orderItem, "", product)!>
+                                        <#if gcInfoList?has_content>
+                                          <@orderItemGiftCardActInfo gcInfoList=gcInfoList/>
+                                        </#if>
                                         <#-- SCIPIO: show application survey response QA list for this item -->
                                         <@orderlib.orderItemSurvResList survResList=(orderlib.getOrderItemSurvResList(orderItem)!)/>
 

@@ -406,7 +406,7 @@
         <#list entrySections?keys as entrySectionName>
             <#assign entrySection = entrySections[entrySectionName]>
             <#if entrySectionName == "mainDesc">
-        put("desc","<@compress_single_line><@sanitize>
+        put("desc","<@code_compress><@sanitize>
         <@contentGroup>
             <#if (entrySection.shortDesc)?has_content>
                 <p ><@descText text=entrySection.shortDesc /></p>
@@ -417,7 +417,7 @@
                 </#list>
             </#if>
         </@contentGroup>
-        </@sanitize>");</@compress_single_line>
+        </@sanitize>");</@code_compress>
             <#elseif entrySectionName == "examples"><#t>
         put("examples","<@compress_single_line><@sanitize><h2><@labelText text=entrySection.title!"" /></h2><@code_compress><@preformedText text=entrySection.rawText!"" /></@code_compress></@sanitize>");</@compress_single_line>
             <#elseif entrySectionName == "parameters"><#t>

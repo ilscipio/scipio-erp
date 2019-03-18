@@ -28,7 +28,7 @@
             <link target="initialsetup"/>- ->
             <link target="setupWizardNew" link-type="anchor"/>
         </menu-item>-->
-        <menu-item name="wizard" title="${uiLabelMap.SetupSetupWizard} (WIP)" sort-mode="off">
+        <menu-item name="wizard" title="${uiLabelMap.SetupSetupWizard}" sort-mode="off">
             <!-- TODO: REVIEW: for now linking this to the "current" step (instead of starting over),
                     but could want setupWizardNew here instead... -->
             <link target="setupWizard" link-type="anchor">

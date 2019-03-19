@@ -354,10 +354,6 @@ public final class SetupDataUtil {
             GenericValue partyAcctgPreference = delegator.findOne("PartyAcctgPreference", false, UtilMisc.toMap("partyId", orgPartyId));
             if (UtilValidate.isNotEmpty(partyAcctgPreference)) {
                 result.put("acctgPreferences", partyAcctgPreference);
-            } else {
-                 // SCIPIO (10/25/2018): Making sure a bare partyAcctgPreference is always created
-                 partyAcctgPreference = delegator.makeValue("PartyAcctgPreference", UtilMisc.toMap("partyId", orgPartyId));
-                 partyAcctgPreference.create();
             }
 
             if (topGlAccount != null) {

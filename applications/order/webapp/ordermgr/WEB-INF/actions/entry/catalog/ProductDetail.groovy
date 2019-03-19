@@ -172,6 +172,9 @@ if (product) {
             context.productStore = productStore; // SCIPIO: This may be missing in orderentry
         }
     }
+    
+    /* SCIPIO: 2019-03: This is already done by ShoppingCartEvents.addToCart and this is the wrong groovy file for this;
+     * the stashParameterMap call creates a memory leak
     // get a defined survey
     productSurvey = ProductStoreWorker.getProductSurveys(delegator, productStoreId, productId, "CART_ADD");
     if (productSurvey) {
@@ -182,6 +185,7 @@ if (product) {
         wrapper = new ProductStoreSurveyWrapper(survey, surveyPartyId, surveyContext);
         context.surveyWrapper = wrapper;
     }
+    */
 
     // get the product price
     catalogId = CatalogWorker.getCurrentCatalogId(request);

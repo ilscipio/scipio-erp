@@ -58,7 +58,7 @@
         <if-compare field="parameters.USE_ADDRESS" operator="equals" value="false">
             <!-- address not used, do nothing -->
             <else>
-                <set field="cutn" value="" set-if-null="true"/>
+                <set field="cutn" value="" set-if-null="true" type="NewMap" />
                 <set field="cutn.contactMechId" from-field="parameters.USER_ADDRESS_CONTACTMECHID"/>
                 <set field="cutn.updateIgnoreEmpty" from-field="parameters.USER_ADDRESS_UPDIGNEMPTY"/>
                 <script lang="groovy"><![CDATA[

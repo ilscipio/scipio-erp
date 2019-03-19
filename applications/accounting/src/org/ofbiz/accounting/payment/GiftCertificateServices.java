@@ -122,7 +122,14 @@ public class GiftCertificateServices {
                 }
 
             } else {
-                acctResult = dispatcher.runSync("createFinAccountForStore", UtilMisc.<String, Object>toMap("productStoreId", productStoreId, "finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId, "userLogin", userLogin));
+                Map<String, Object> createAccountCtx = new HashMap<>();
+                createAccountCtx.put("ownerPartyId", partyId);
+                createAccountCtx.put("finAccountTypeId", FinAccountHelper.giftCertFinAccountTypeId);
+                createAccountCtx.put("productStoreId", productStoreId);
+                createAccountCtx.put("currencyUomId", currencyUom); // SCIPIO: Fixed duplication
+                createAccountCtx.put("finAccountName", accountName + " for party ["+partyId+"]"); // SCIPIO: Fixed space
+                createAccountCtx.put("userLogin", userLogin);
+                acctResult = dispatcher.runSync("createFinAccountForStore", createAccountCtx);
                 if (ServiceUtil.isError(acctResult)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(acctResult));
                 }
@@ -1534,10 +1541,7 @@ public class GiftCertificateServices {
 
     private static boolean checkNumberInDatabase(Delegator delegator, String number) throws GenericEntityException {
         GenericValue finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", number).queryOne();
-        if (finAccount == null) {
-            return true;
-        }
-        return false;
+        return finAccount == null;
     }
 
     private static boolean checkCardNumber(String number) {

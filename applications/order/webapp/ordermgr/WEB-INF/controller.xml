@@ -505,8 +505,9 @@ code package.
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="request" value="orderentry"/>
-        <response name="survey" type="view" value="survey"/>
+        <response name="survey" type="view" value="survey" allow-view-save="false"/><!-- SCIPIO: Do not save view so additem's success view-last can work through additemsurvey -->
         <response name="product" type="view" value="product"/>
+        <response name="viewcart" type="request-redirect" value="orderentry" save-request="messages"/><!-- SCIPIO -->
         <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="additemsurvey">
@@ -514,6 +515,8 @@ code package.
         <event type="java" invoke="createSurveyResponseAndRestoreParameters" path="org.ofbiz.content.survey.SurveyEvents"/>
         <response name="success" type="request" value="additem"/>
         <response name="error" type="request" value="orderentry"/>
+        <!-- SCIPIO: FIXME: this is desirable but currently entry/survey.ftl will not work with this:
+        <response name="error" type="view" value="survey" allow-view-save="false"/>-->
     </request-map>
     <request-map uri="addRequirementsToCart">
         <security https="true" auth="true"/>

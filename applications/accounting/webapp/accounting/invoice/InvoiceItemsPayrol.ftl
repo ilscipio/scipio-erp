@@ -4,10 +4,10 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 <form method="post" action="createInvoiceItemPayrol">
-    <input type="hidden" name="invoiceId" value="${invoice.invoiceId}" />
+    <input type="hidden" name="invoiceId" value="${invoice.invoiceId}"/>
     <@row>        
         <#if PayrolGroup?has_content>
-            <#assign last=false />
+            <#assign last=false/>
             <#list PayrolGroup as payrolGroup>                
                 <#if payrolGroup == PayrolGroup?last>
                     <#assign last = true>
@@ -36,6 +36,6 @@ code package.
         </#if>
     </@row>
     <@field type="submitarea" label=uiLabelMap.CommonAdd>
-        <input type="submit" value="Add" class="${styles.link_run_sys!} ${styles.action_add!}" />        
+        <input type="submit" value="Add" class="${styles.link_run_sys!} ${styles.action_add!}"/>
     </@field>
 </form>

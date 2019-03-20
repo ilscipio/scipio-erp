@@ -21,7 +21,7 @@
 <#macro addressUpdateLink address updateLink class="">
   <#local class = addClassArg(class, styles.action_update!)>
   <#local class = addClassArgDefault(class, styles.link_nav_inline!)>
-  <a href="${escapeFullUrl(updateLink, 'html')}"<@compiledClassAttribStr class=class />>${uiLabelMap.CommonUpdate}</a><#t>
+  <a href="${escapeFullUrl(updateLink, 'html')}"<@compiledClassAttribStr class=class/>>${uiLabelMap.CommonUpdate}</a><#t>
 </#macro>
 
 <#macro formattedAddressBasic address emphasis=false abbrev=false verbose=true>

@@ -23,6 +23,7 @@ code package.
                 <@tr>
                     <@td>
                         <a href="<@pageUrl>ViewGeneric?${record.findString}</@pageUrl>">${uiLabelMap.CommonView}</a>
+                        <a href="<@pageUrl>ViewGeneric?${record.findString}&amp;enableEdit=true</@pageUrl>">${uiLabelMap.CommonEdit}</a>
                     </@td>
                     <#list fieldList as field>
                         <@td>

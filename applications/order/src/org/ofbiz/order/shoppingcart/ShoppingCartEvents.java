@@ -599,10 +599,26 @@ public class ShoppingCartEvents {
                     String origParamMapId = UtilHttp.stashParameterMap(request);
                     Map<String, Object> surveyContext = UtilMisc.<String, Object>toMap("_ORIG_PARAM_MAP_ID_", origParamMapId,
                             "productStoreSurveyId", survey.get("productStoreSurveyId")); // SCIPIO: 2019-03-06: Added productStoreSurveyId
-                    GenericValue userLogin = cart.getUserLogin();
+                    // SCIPIO: Logic error: in orderentry it's the placing party whose login should be set here
+                    //GenericValue userLogin = cart.getUserLogin();
+                    //String partyId = null;
+                    //if (userLogin != null) {
+                    //    partyId = userLogin.getString("partyId");
+                    //}
                     String partyId = null;
-                    if (userLogin != null) {
-                        partyId = userLogin.getString("partyId");
+                    if ("SALES_ORDER".equals(cart.getOrderType())) {
+                        partyId = cart.getPlacingCustomerPartyId();
+                    }
+                    if (UtilValidate.isEmpty(partyId)) {
+                        if ("PURCHASE_ORDER".equals(cart.getOrderType())) {
+                            partyId = cart.getSupplierAgentPartyId();       
+                        }
+                        if (UtilValidate.isEmpty(partyId)) { // fallback (stock case)
+                            GenericValue userLogin = cart.getUserLogin();
+                            if (userLogin != null) {
+                                partyId = userLogin.getString("partyId");
+                            }
+                        }
                     }
                     String formAction = "/additemsurvey";
                     String nextPage = RequestHandler.getOverrideViewUri(request.getPathInfo());

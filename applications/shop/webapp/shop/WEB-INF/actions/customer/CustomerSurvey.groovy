@@ -48,7 +48,22 @@ getParamSafe = { name -> // SCIPIO
     return null;
 }
 
-partyId = userLogin?.partyId; // SCIPIO: prevent crash on missing userLogin
+// SCIPIO: New logic duplicated from corrected code in ShoppingCartEvents.addToCart
+//partyId = userLogin?.partyId; // SCIPIO: prevent crash on missing userLogin
+def cart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObjectIfExists(request);
+def partyId = null;
+if (cart != null && "SALES_ORDER".equals(cart.getOrderType())) {
+    partyId = cart.getPlacingCustomerPartyId();
+}
+if (!partyId) {
+    if (cart != null && "PURCHASE_ORDER".equals(cart.getOrderType())) {
+        partyId = cart.getSupplierAgentPartyId();
+    }
+}
+if (!partyId) {
+    partyId = userLogin?.partyId;
+}
+
 paramMap = UtilHttp.getParameterMap(request);
 
 productStoreSurveyId = parameters.productStoreSurveyId;

@@ -33,6 +33,7 @@
 .pc
 .DS_Store
 .idea
+/out/
 *.iml
 *~
 *#

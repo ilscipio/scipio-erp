@@ -610,6 +610,7 @@ public final class SetupDataUtil {
         Set<String> productStoreIdSet = productStoreList.stream().map(value -> value.getString("productStoreId")).collect(Collectors.toSet());
         result.put("productStoreIdSet", productStoreIdSet);
 
+        boolean productStoreCompleted = false;
         if (productStore != null) {
             result.put("coreCompleted", true);
             productStoreId = productStore.getString("productStoreId");
@@ -618,7 +619,6 @@ public final class SetupDataUtil {
                 result.put("productStore", productStore);
             }
 
-            boolean productStoreCompleted = false;
             String facilityId = productStore.getString("inventoryFacilityId");
             if (UtilValidate.isNotEmpty(facilityId)) {
                 Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId, "facilityId", facilityId);
@@ -637,22 +637,21 @@ public final class SetupDataUtil {
                 result.put("facilityId", facilityId);
             }
             result.put("productStoreCompleted", productStoreCompleted);
+        }
+        if (includeWebsite) {
+            Map<String, Object> websiteParams = new HashMap<>(params);
+            websiteParams.put("productStoreId", productStoreId);
+            // TODO: REVIEW: not sure if will be needed
+            //websiteParams.put("unspecReqWebsite", isNewOrFailedCreate);
+            Map<String, Object> websiteResult = getWebsiteStepStateData(delegator, dispatcher, websiteParams, useCache);
+            result.putAll(websiteResult); // this magically works for now
 
-            if (includeWebsite) {
-                Map<String, Object> websiteParams = new HashMap<>(params);
-                websiteParams.put("productStoreId", productStoreId);
-                // TODO: REVIEW: not sure if will be needed
-                //websiteParams.put("unspecReqWebsite", isNewOrFailedCreate);
-                Map<String, Object> websiteResult = getWebsiteStepStateData(delegator, dispatcher, websiteParams, useCache);
-                result.putAll(websiteResult); // this magically works for now
+            boolean websiteCompleted = Boolean.TRUE.equals(websiteResult.get("completed"));
+            result.put("websiteCompleted", websiteCompleted);
 
-                boolean websiteCompleted = Boolean.TRUE.equals(websiteResult.get("completed"));
-                result.put("websiteCompleted", websiteCompleted);
-
-                result.put("completed", productStoreCompleted && websiteCompleted);
-            } else {
-                result.put("completed", productStoreCompleted);
-            }
+            result.put("completed", productStoreCompleted && websiteCompleted);
+        } else {
+            result.put("completed", productStoreCompleted);
         }
         return result;
     }

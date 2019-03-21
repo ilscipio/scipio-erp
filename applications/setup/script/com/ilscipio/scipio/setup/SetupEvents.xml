@@ -1078,9 +1078,10 @@
             </if-empty>
             <else>
                 <!-- check if already exists so can give friendlier message -->
-                <entity-one entity-name="WebSite" value-field="webSite">
+                <entity-and entity-name="WebSite" list="webSites" >
                     <field-map field-name="webSiteId" from-field="parameters.webSiteId"/>
-                </entity-one>
+                    <field-map field-name="productStoreId" from-field="productStoreId"/>
+                </entity-and>
                 <if-not-empty field="webSite">
                     <add-error>
                         <fail-property resource="ScipioSetupErrorUiLabels" property="SetupWebSiteIdAlreadyInUse"/>

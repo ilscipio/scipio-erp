@@ -18,7 +18,13 @@ for (WebappInfo webappInfo in ComponentConfig.getAllWebappResourceInfos()) {
         Debug.log("webappInfo[" + webappInfo.getName() + "]:               [" + webappInfo.getTitle() + "] > websiteId: " + websiteId);
     }
     if (UtilValidate.isNotEmpty(websiteId)) {
-        webappWebsiteMap.put(webappInfo, websiteId);
+        existingWebsite = delegator.findOne("WebSite", [webSiteId:websiteId], false);
+        Debug.log("existingWebsite[" + websiteId + "] ===> " + existingWebsite);
+        // SCIPIO (2019-03-21): Filtering the ones that already exist, they cannot be used anymore
+        if (!existingWebsite) {
+            Debug.log("adding to webappWebsiteMap");
+            webappWebsiteMap.put(webappInfo, websiteId);
+        }
     }
 }
 context.webappWebsiteMap = webappWebsiteMap;

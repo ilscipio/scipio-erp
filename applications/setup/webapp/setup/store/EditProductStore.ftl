@@ -338,7 +338,26 @@
             </@field><#lt/>
             <@field type="hidden" name="webSiteId" value=(params.webSiteId!)/> 
           <#else>
-
+               <#-- SCIPIO: Dropdown will be rendered only when we got webSiteIds defined in shop web.xml that do not exist in DB yet. 
+                    Alternatively, we provide a text input so user can add a new one that doesn't exist in DB and web.xml -->
+               <#if webappWebsiteMap?has_content || existingDBWebsiteIds?has_content>
+                   <a id="showHideNewWebSiteId" href="#">${uiLabelMap.SetupNewWebSiteId}</a>
+                   <@script>
+                        $(document).ready(function() {
+                            var existingDBWebsiteIds = [<#list existingDBWebsiteIds as dbWebSiteId>'${dbWebSiteId}'<#sep>,</#list>];
+                            $('#showHideNewWebSiteId').click(function() {
+                                if ($('#availableWebSiteId').is(':visible')) {
+                                    $('#availableWebSiteId').hide();
+                                    $('#newWebSiteId').show();
+                                } else {
+                                    $('#availableWebSiteId').show();
+                                    $('#newWebSiteId').hide();
+                                    $('input[name=isCreateWebsite]').value('Y');
+                                }
+                            });
+                        });
+                   </@script>
+               </#if>
                <#if webappWebsiteMap?has_content>
                     <@field id="availableWebSiteId" type="select" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId required=true>
                         <#list webappWebsiteMap.keySet() as webappInfo>
@@ -354,24 +373,22 @@
                              <option value="${websiteId}" ${selected}>${websiteId}</option>
                         </#list>
                     </@field>
-                    <@field id="newWebSiteId" type="text" name="webSiteId" value=(params.webSiteId!) style="display: hidden;" />
-                    <a id="showHideNewWebSiteId" href="#">${getLabel("CommonNewWebSite")}</a>
-                    <@script>
-                        $(document).ready(function() {
-                            $('#showHideNewWebSiteId').click(function() {
-                                if ($('#availableWebSiteId').is(':visible')) {
-                                    $('#availableWebSiteId').hide();
-                                    $('#newWebSiteId').show();
-                                } else {
-                                    $('#availableWebSiteId').show();
-                                    $('#newWebSiteId').hide();
-                                }
-                            });
-                        });
-                    </@script>
-                <#else>
-                    <@field id="newWebSiteId" type="text" name="webSiteId" value=(params.webSiteId!) label=uiLabelMap.FormFieldTitle_webSiteId />
+                <#elseif existingDBWebsiteIds?has_content>
+                    <@field id="availableWebSiteId" type="select" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId required=true>
+                        <#list existingDBWebsiteIds as websiteId>
+                            <#assign selected = "">
+                            <#if params.webSiteId?has_content>
+                                <#if params.webSiteId == websiteId>
+                                    <#assign selected = "selected=selected"/>
+                                </#if>
+                            <#elseif defaultInitialWebSiteId?has_content && websiteId == defaultInitialWebSiteId>
+                                <#assign selected = "selected=selected"/>
+                            </#if>
+                             <option value="${websiteId}" ${selected}>${websiteId}</option>
+                        </#list>
+                    </@field>
                </#if>
+               <@field id="newWebSiteId" type="text" name="webSiteId" value=(params.webSiteId!) style="display: none;" label=uiLabelMap.FormFieldTitle_webSiteId required=true />
           </#if>
             
           <@field type="input" name="siteName" label=uiLabelMap.FormFieldTitle_siteName value=(params.siteName!"${uiLabelMap.ProductProductStore} - ${uiLabelMap.ContentWebSite}")  required=true size="30" maxlength="60"/>

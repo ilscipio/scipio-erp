@@ -173,6 +173,11 @@
         <value xml:lang="en">Multiple WebSite records are associated to this ProductStore; this configuration cannot be fully managed using the setup wizard. Please follow the links below for advanced editing options.</value>
         <value xml:lang="fr">Plusieurs enregistrements WebSite sont associés à ce ProductStore; Cette configuration ne peut pas être entièrement gérée à l'aide de l'assistant d'installation. Veuillez suivre les liens ci-dessous pour les options d'édition avancées.</value>
     </property>
+    <property key="SetupNewWebSiteId">
+        <value xml:lang="de">Neue Website-ID</value>
+        <value xml:lang="en">New Web Site Id</value>
+        <value xml:lang="fr">Nouvel identifiant de site web</value>
+    </property>
     <property key="SetupNoAddressDefinedNotice">
         <value xml:lang="de">Derzeit ist keine passende Adresse definiert (${purposes}).</value>
         <value xml:lang="en">No appropriate address is currently defined (${purposes}).</value>

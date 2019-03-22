@@ -67,7 +67,7 @@
                     props = actionTaxAuthProps[typeAction[1]][typeAction[2]];
                     if (props.type == 'form' && props.mode == "show") {
                         if (taxAuthHideShowFormIds) {
-                            jQuery.each(glJournalHideShowFormIds, function(i, e) {
+                            jQuery.each(taxAuthHideShowFormIds, function(i, e) {
                                 jQuery('#'+e).fadeOut();
                             });
                         }

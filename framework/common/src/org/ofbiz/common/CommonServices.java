@@ -219,6 +219,16 @@ public class CommonServices {
         Debug.set(Debug.INFO, "Y".equalsIgnoreCase((String) context.get("info")));
         Debug.set(Debug.TIMING, "Y".equalsIgnoreCase((String) context.get("timing")));
         Debug.set(Debug.VERBOSE, "Y".equalsIgnoreCase((String) context.get("verbose")));
+        
+        // SCIPIO (2019-03-22): This serves as a way to test active logging levels after adjusting
+        Debug.logFatal("Logging a fatal log", module);
+        Debug.logError("Logging an error log", module);
+        Debug.logWarning("Logging a warning log", module);
+        Debug.logImportant("Logging an important log", module);
+        Debug.logInfo("Logging an info log", module);
+        Debug.logTiming("Logging an timming log", module);
+        Debug.logVerbose("Logging an verbose log", module);
+        Debug.log("Logging a debug log", module);
 
         return ServiceUtil.returnSuccess();
     }

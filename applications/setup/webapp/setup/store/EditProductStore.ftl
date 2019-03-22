@@ -341,7 +341,7 @@
                <#-- SCIPIO: Dropdown will be rendered only when we got webSiteIds defined in shop web.xml that do not exist in DB yet. 
                     Alternatively, we provide a text input so user can add a new one that doesn't exist in DB and web.xml -->
                <#if webappWebsiteMap?has_content || existingDBWebsiteIds?has_content>
-                   <a id="showHideNewWebSiteId" href="#">${uiLabelMap.SetupNewWebSiteId}</a>
+                   <a id="showHideNewWebSiteId" href="#">${uiLabelMap.SetupNewWebSiteId}</a><br/>
                    <@script>
                         $(document).ready(function() {
                             var existingDBWebsiteIds = [<#list existingDBWebsiteIds as dbWebSiteId>'${dbWebSiteId}'<#sep>,</#list>];
@@ -349,17 +349,35 @@
                                 if ($('#availableWebSiteId').is(':visible')) {
                                     $('#availableWebSiteId').hide();
                                     $('#newWebSiteId').show();
+                                    $('input[name=isCreateWebsite]').val('Y');
+                                    $('#showHideNewWebSiteId').text('${uiLabelMap.SetupNewWebSiteId}');
+                                    $('#availableWebSiteId select[name=webSiteId]').attr('disable', true);
+                                    $('#newWebSiteId input[name=webSiteId]').attr('disable', false);
                                 } else {
                                     $('#availableWebSiteId').show();
                                     $('#newWebSiteId').hide();
-                                    $('input[name=isCreateWebsite]').val('Y');
+                                    $('input[name=isCreateWebsite]').val('N');
+                                    $('#showHideNewWebSiteId').text('${uiLabelMap.SetupUseExistingWebSiteId}');
+                                    $('#availableWebSiteId select[name=webSiteId]').attr('disable', false);
+                                    $('#newWebSiteId input[name=webSiteId]').attr('disable', true);
                                 }
+                            });
+                            $('#${submitFormId}').submit(function(e) {
+                                   console.log("submitting form");
+                                   webSiteIdVal = $('#availableWebSiteId').val();
+                                   if (webSiteIdVal) {
+                                       webSiteExists = $.inArray(webSiteIdVal, existingDBWebsiteIds);
+                                       if (!webSiteExists) {
+                                           console.log("website doesn't exist in DB ==> " + newWebSiteId);
+                                           $('input[name=isCreateWebsite]').val('Y');
+                                       }
+                                   }
                             });
                         });
                    </@script>
                </#if>
                <#if webappWebsiteMap?has_content>
-                    <@field id="availableWebSiteId" type="select" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId required=true>
+                    <@field containerId="availableWebSiteId" type="select" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId required=true>
                         <#list webappWebsiteMap.keySet() as webappInfo>
                             <#assign websiteId = webappWebsiteMap.get(webappInfo)>
                             <#assign selected = "">
@@ -374,7 +392,7 @@
                         </#list>
                     </@field>
                 <#elseif existingDBWebsiteIds?has_content>
-                    <@field id="availableWebSiteId" type="select" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId required=true>
+                    <@field containerId="availableWebSiteId" type="select" name="webSiteId" label=uiLabelMap.FormFieldTitle_webSiteId required=true>
                         <#list existingDBWebsiteIds as websiteId>
                             <#assign selected = "">
                             <#if params.webSiteId?has_content>
@@ -388,7 +406,7 @@
                         </#list>
                     </@field>
                </#if>
-               <@field id="newWebSiteId" type="text" name="webSiteId" value=(params.webSiteId!) style="display: none;" label=uiLabelMap.FormFieldTitle_webSiteId required=true />
+               <@field containerId="newWebSiteId" type="text" name="webSiteId" value=(params.webSiteId!) containerStyle="display: none;" label=uiLabelMap.FormFieldTitle_webSiteId required=true />
           </#if>
             
           <@field type="input" name="siteName" label=uiLabelMap.FormFieldTitle_siteName value=(params.siteName!"${uiLabelMap.ProductProductStore} - ${uiLabelMap.ContentWebSite}")  required=true size="30" maxlength="60"/>

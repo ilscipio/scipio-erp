@@ -290,4 +290,9 @@
         <value xml:lang="en">Note: This user is associated to stores in multiple roles. This must be managed using the Catalog Manager:</value>
         <value xml:lang="fr">Remarque: cet utilisateur est associé à des magasins dans plusieurs rôles. Cela doit être géré à l'aide du gestionnaire de catalogue:</value>
     </property>
+    <property key="SetupUseExistingWebSiteId">
+        <value xml:lang="de">Vorhandene Website-ID verwenden</value>
+        <value xml:lang="en">Use existing Web Site Id</value>
+        <value xml:lang="fr">Utiliser un identifiant de site Web existan</value>
+    </property>
 </resource>

@@ -352,7 +352,7 @@
                                 } else {
                                     $('#availableWebSiteId').show();
                                     $('#newWebSiteId').hide();
-                                    $('input[name=isCreateWebsite]').value('Y');
+                                    $('input[name=isCreateWebsite]').val('Y');
                                 }
                             });
                         });

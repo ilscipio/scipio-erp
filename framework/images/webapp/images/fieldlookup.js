@@ -175,6 +175,7 @@ function initiallyCollapseDelayed() {
  ******************************************************************************/
 var Lookup = function(options) {
     var _newInputBoxId, _lookupId, _inputBox, _lookupContainer, _backgroundCloseClickEvent;
+    var styles = (typeof scipioStyles !== 'undefined') ? (scipioStyles || {}) : {}; // SCIPIO
 
     options = {
         requestUrl : options.requestUrl || "",
@@ -183,8 +184,8 @@ var Lookup = function(options) {
         dialogOptionalTarget : options.dialogOptionalTarget || "",
         lookupId: options.lookupId || GLOBAL_LOOKUP_REF.createNextKey(),
         formName : options.formName || "",
-        width : options.width || "640",
-        height : options.height || "500",
+        width : options.width || styles.field_lookup_width || "640",
+        height : options.height || styles.field_lookup_height || "500",
         position : options.position || "",
         modal : options.modal || "true",
         ajaxUrl : options.ajaxUrl || "",

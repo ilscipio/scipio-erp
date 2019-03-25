@@ -1147,8 +1147,12 @@ context.styles = [
     
     /* submit type styles */
     "field_submit_default_text" : "#PROP:CommonSubmit",   /* can be a property label from CommonUiLabels; prefix with "#PROP:". */
-    
-    /* generic type styles */
+
+    /* lookup type styles */
+    "field_lookup_width" : "640",   /* default field lookup window width (NOTE: original default in fieldlookup.js) */
+    "field_lookup_height" : "800",   /* default field lookup window height (NOTE: original default in fieldlookup.js) */
+
+  /* generic type styles */
     "field_generic_tooltip" : "has-tip field-tooltip-wrap",
     
     /* default, for all fields */

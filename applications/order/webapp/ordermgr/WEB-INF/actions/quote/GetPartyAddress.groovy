@@ -28,5 +28,3 @@ if (context.party) {
         context.toPostalAddress = toPostalAddress;
     }
 }
-
-Debug.log("quote =====> " + quote);

@@ -75,6 +75,7 @@ code package.
     <form name="listLookupSupplierProduct" list-name="listIt" title="" type="list" paginate-target="LookupSupplierProduct"
         odd-row-style="alternate-row" view-size="20"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
+            <set field="fieldList" value="${groovy:['productId','partyId','lastPrice','shippingPrice','currencyUomId','supplierProductName','supplierProductId','canDropShip']}" type="List"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="SupplierProductAndProduct"/>

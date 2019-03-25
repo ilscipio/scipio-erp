@@ -14,7 +14,14 @@ code package.
                         <fo:block>
                             <fo:block font-weight="bold">${uiLabelMap.OrderAddress}: </fo:block>
                             <#if quote.partyId?has_content>
-                                <#assign quotePartyNameResult = runService("getPartyNameForDate", {"partyId":quote.partyId, "compareDate":quote.issueDate?date, "userLogin":userLogin})/>
+                                <#assign getPartyNameForDateCtx = {"userLogin":userLogin}>
+                                <#if quote.partyId?has_content>
+                                    <#assign getPartyNameForDateCtx += {"partyId":quote.partyId}>
+                                </#if>
+                                <#if quote.issueDate?has_content>
+                                    <#assign getPartyNameForDateCtx += {"compareDate":quote.issueDate?date}>
+                                </#if>
+                                <#assign quotePartyNameResult = runService("getPartyNameForDate", getPartyNameForDateCtx)/>
                                 <fo:block>${quotePartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}</fo:block>
                             <#else>
                                 <fo:block>[${uiLabelMap.OrderPartyNameNotFound}]</fo:block>

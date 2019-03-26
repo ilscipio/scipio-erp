@@ -577,8 +577,8 @@ if not requested, however.
                               NOTE: Not all parameters above apply to CMS page link generation.
 
   * History *
-    Integrated @cmsPageUrl function (id/name) for 1.14.5.
-    Renamed from @ofbizUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
+    Integrated @cmsPageUrl function (id/name) for 2.0.0.
+    Renamed from @ofbizUrl (2019-01-28) for 2.0.0. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
@@ -623,7 +623,7 @@ NOTE: 2016-11-04: The return value behavior for #makePageUrl ''may'' be changed 
     @pageUrl
     
   * History *
-    Renamed from #makePageUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
+    Renamed from #makePageUrl (2019-01-28) for 2.0.0. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
@@ -668,7 +668,7 @@ NOTE: This macro is subject to escaping particularities - see its cousin @pageUr
     @pageUrl
     
   * History *
-    Renamed from @ofbizWebappUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
+    Renamed from @ofbizWebappUrl (2019-01-28) for 2.0.0. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
@@ -700,7 +700,7 @@ NOTE: This function is subject to escaping particularities - see its cousin #mak
     @pageUrl
     
   * History *
-    Renamed from #makeAppUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
+    Renamed from #makeAppUrl (2019-01-28) for 2.0.0. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
@@ -747,7 +747,7 @@ NOTE: This macro is subject to escaping particularities - see its cousin @pageUr
     @pageUrl
     
   * History *
-    Renamed from @ofbizInterWebappUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
+    Renamed from @ofbizInterWebappUrl (2019-01-28) for 2.0.0. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
@@ -785,7 +785,7 @@ NOTE:
     @pageUrl
     
   * History *
-    Renamed from #makeOfbizInterWebappUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
+    Renamed from #makeOfbizInterWebappUrl (2019-01-28) for 2.0.0. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
@@ -914,8 +914,8 @@ NOTE: 2017-07-04: The {{{variant}}} parameter's usage in filenames has been fixe
                               Added 2018-08-17.
 
   * History *
-    Renamed from @ofbizContentUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
-    Enhanced for 1.14.5 (secure and type flags)
+    Renamed from @ofbizContentUrl (2019-01-28) for 2.0.0. Note: Old name will remain working.
+    Enhanced for 2.0.0 (secure and type flags)
     Enhanced for 1.14.4 (variant parameter enhancement; autoVariant parameters added).
     Enhanced for 1.14.2.
 -->
@@ -944,7 +944,7 @@ NOTE: This function is subject to escaping particularities - see its cousin #mak
     @contentUrl
     
   * History *
-    Renamed from #makeOfbizContentUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
+    Renamed from #makeOfbizContentUrl (2019-01-28) for 2.0.0. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
@@ -986,7 +986,7 @@ NOTE: This function is subject to escaping particularities - see its cousin #mak
     @contentUrl
     
   * History *
-    Renamed from #makeOfbizContentCtxPrefixUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
+    Renamed from #makeOfbizContentCtxPrefixUrl (2019-01-28) for 2.0.0. Note: Old name will remain working.
     Enhanced for 1.14.2.
 -->
 <#function makeContentCtxPrefixUrl args variant="">
@@ -1051,8 +1051,8 @@ NOTE: This macro is subject to escaping particularities - see its cousin @pageUr
     params                  = Extra query parameters, as a string.
                               
   * History *
-    Renamed from @ofbizContentAltUrl (2019-01-28) for 1.14.5. Note: Old name will remain working.
-    Fixed and new params for 1.14.5.
+    Renamed from @ofbizContentAltUrl (2019-01-28) for 2.0.0. Note: Old name will remain working.
+    Fixed and new params for 2.0.0.
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
@@ -1360,7 +1360,7 @@ DEV NOTE: It is not possible to add custom locale here; already loaded into the 
     #getPropertyMsg
     
   * History *
-    Fixed inconsistent return values when missing for 1.14.5.
+    Fixed inconsistent return values when missing for 2.0.0.
 -->
 <#function getLabel name resource="" msgArgs=true>
   <#if name?has_content>
@@ -1546,7 +1546,7 @@ TODO: implement as transform.
     optional                = (boolean, default: false) If true, missing label returns empty; if false returns key name
 
   * History *
-    Added optional flag and fixed description for 1.14.5.
+    Added optional flag and fixed description for 2.0.0.
 -->
 <#function getPropertyMsg resource name msgArgs=false locale=true optional=false>
   <#if locale?is_boolean>
@@ -1596,7 +1596,7 @@ TODO: implement as transform.
     #getPropertyMsg
 
   * History *
-    Added optional flag and fixed description for 1.14.5.
+    Added optional flag and fixed description for 2.0.0.
 -->
 <#function getPropertyMsgFromLocExpr resourceExpr msgArgs=false locale=true optional=false>
   <#local parts = resourceExpr?split("#")>
@@ -1627,7 +1627,7 @@ If no such prefix in textExpr, returns the text as-is.
     locale                  = ((locale)|(boolean), default: -true / locale from context-) Explicit locale
     
   * History *
-    Fixed inconsistent return values when missing for 1.14.5.
+    Fixed inconsistent return values when missing for 2.0.0.
 -->
 <#function getTextLabelFromExpr textExpr msgArgs=false locale=true>
   <#if textExpr?starts_with("#LABEL:")>
@@ -2239,7 +2239,7 @@ NOTE: 2019-02-14: This is very similar to the FreeMarker 2.3.27+ built-in, {{{?n
     #rewrapString
 
   * History *
-    Enhanced for 1.14.5.
+    Enhanced for 2.0.0.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function raw value...>
@@ -4248,7 +4248,7 @@ NOTE: The result is automatically HTML-escaped, so you may need to use #rawStrin
     maskChar                = ((string), default: "*") The mask character (should be length 1)
 
   * History *
-    Added for 1.14.5.
+    Added for 2.0.0.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function maskValueLeft value maskLength maskChar>
@@ -4279,7 +4279,7 @@ NOTE: The result is automatically HTML-escaped, so you may need to use #rawStrin
     maskChar                = ((string), default: "*") The mask character (should be length 1)
 
   * History *
-    Added for 1.14.5.
+    Added for 2.0.0.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function maskValueRight value maskLength maskChar>
@@ -5263,7 +5263,7 @@ OR a single args map.
     The service result OR void/missing if the service threw an exception.
                         
   * History *
-    Added for 1.14.5.
+    Added for 2.0.0.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
 <#function runService args ctx newTrans exMode>

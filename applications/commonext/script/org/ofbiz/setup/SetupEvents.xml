@@ -534,6 +534,10 @@
             <check-errors/>
         </if-empty>
 
+        <!-- SCIPIO: 2019-03-26: Ensuring organizationPartyId has the role CARRIER assigned -->
+        <set field="ensurePartyRoleCtx.partyId" from-field="organizationPartyId"/>
+        <set field="ensurePartyRoleCtx.roleTypeId" value="CARRIER"/>
+        <call-service service-name="ensurePartyRole" in-map-name="ensurePartyRoleCtx"/>
         <!-- SCIPIO: 2017-10-05: new reservation handling -->
         <call-simple-method method-name="createProductStoreShipMethIdRange"/>
         <check-errors/>
@@ -569,6 +573,7 @@
 
         <property-to-field resource="scipiosetup" property="store.productStoreData.productStoreShipMethId.bankSize" field="pssmBankSize" default="100"/>
         <set field="pssmBankSize" type="Integer" from-field="pssmBankSize"/>
+        
 
         <set field="productStoreShipMethIdBase" type="Long" value="" set-if-null="true"/><!-- SCIPIO: 2018-11-02: set-if-null="true" required to set null -->
         <if-not-empty field="parameters.productStoreShipMethIdBase">

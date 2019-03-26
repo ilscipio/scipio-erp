@@ -205,8 +205,10 @@ fixedValues = special: params that were hardcoded to preset values in stock ofbi
   </#if>
   <#local submitVarSuffixJs = ""><#-- WARN: no support duplicate -->
   <@menu type="button">
-    <@menuitem type="link" href=(nextAvailSetupStep?has_content?then(makeSetupStepUrl(nextAvailSetupStep), "")) text=uiLabelMap.SetupSkip class="+${styles.action_nav!} ${styles.action_view!}" 
-        disabled=!(allowSkip && nextAvailSetupStep?has_content)/>
+    <#if nextSetupStep?? && nextSetupStep?has_content>
+        <@menuitem type="link" href=(nextAvailSetupStep?has_content?then(makeSetupStepUrl(nextAvailSetupStep), "")) text=uiLabelMap.SetupSkip class="+${styles.action_nav!} ${styles.action_view!}" 
+            disabled=!(allowSkip && nextAvailSetupStep?has_content)/>
+    </#if>
     <#if submitFormId?has_content && setupStep?has_content>
       <@menuitem type="link" href="javascript:setupControlMenu${submitVarSuffixJs}.submitSave();" text=uiLabelMap.CommonSave class="+${styles.action_run_sys!} ${styles.action_update!}"/>
       <@menuitem type="link" href="javascript:setupControlMenu${submitVarSuffixJs}.submitSaveContinue();" text=uiLabelMap.SetupSaveAndContinue class="+${styles.action_run_sys!} ${styles.action_continue!}"/>

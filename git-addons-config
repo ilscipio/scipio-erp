@@ -33,7 +33,7 @@ declare -A SCIPIO_ADDON_MAP
 # * addon-directory - filesystem target component directory for the addon
 # * [ce|ee] - distribution type, community or enterprise (used to select the correct SCIPIO_ADDONS_URL_* base url)
 # * addon-repo-name-or-full-url - addon repo name or absolute url, with or without .git extension
-# * branch-prefix - prefix of the branch, omitting the trailing /[master|1.14|...]; use '/' for no prefix
+# * branch-prefix - prefix of the branch, omitting the trailing /[master|2.x|...]; use '/' for no prefix
 
 SCIPIO_ADDON_MAP[accountingat]="accountingat addons/accountingat ee accountingat /"
 SCIPIO_ADDON_MAP[accountingde]="accountingde addons/accountingde ee accountingde /"

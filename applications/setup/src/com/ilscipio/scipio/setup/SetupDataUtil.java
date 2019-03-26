@@ -364,7 +364,7 @@ public final class SetupDataUtil {
                             "roleTypeId", "INTERNAL_ORGANIZATIO", "fromDate", UtilDateTime.nowTimestamp()));
                     delegator.create(glAccountOrganization);
                 }
-                Timestamp now = UtilDateTime.nowTimestamp();
+                //Timestamp now = UtilDateTime.nowTimestamp();
                 List<EntityCondition> openedCurrentFiscalPeriodsCond = UtilMisc.toList(EntityCondition.makeCondition("isClosed", EntityOperator.NOT_EQUAL, "Y"));
 
                 GenericValue openedCurrentFiscalPeriods = EntityQuery.use(delegator).from("CustomTimePeriod").where(openedCurrentFiscalPeriodsCond, EntityOperator.AND).filterByDate().queryFirst();

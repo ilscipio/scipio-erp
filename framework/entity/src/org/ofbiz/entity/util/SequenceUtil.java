@@ -211,7 +211,9 @@ public class SequenceUtil {
                         String sql = null;
                         // 1 - run an update with no changes to get a lock on the record
                         if (stmt.executeUpdate(updateForLockStatement) <= 0) {
-                            Debug.logWarning("Lock failed; no sequence row was found, will try to add a new one for sequence: " + seqName, module);
+                            // SCIPIO: This occurs normally and frequently; counterproductive to log as warning since almost never an error
+                            //Debug.logWarning("Lock failed; no sequence row was found, will try to add a new one for sequence: " + seqName, module);
+                            Debug.logInfo("Lock failed; no sequence row was found, will try to add a new one for sequence: " + seqName, module);
                             sql = "INSERT INTO " + SequenceUtil.this.tableName + " (" + SequenceUtil.this.nameColName + ", " + SequenceUtil.this.idColName + ") VALUES ('" + this.seqName + "', " + startSeqId + ")";
                             try {
                                 stmt.executeUpdate(sql);

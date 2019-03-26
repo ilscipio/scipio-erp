@@ -366,10 +366,10 @@ public final class SetupDataUtil {
                 }
                 Timestamp now = UtilDateTime.nowTimestamp();
                 List<EntityCondition> openedCurrentFiscalPeriodsCond = UtilMisc.toList(EntityCondition.makeCondition("isClosed", EntityOperator.NOT_EQUAL, "Y"));
-                openedCurrentFiscalPeriodsCond.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, now)));
-                openedCurrentFiscalPeriodsCond.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, now)));
+//                openedCurrentFiscalPeriodsCond.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, now)));
+//                openedCurrentFiscalPeriodsCond.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, now)));
 
-                GenericValue openedCurrentFiscalPeriods = EntityQuery.use(delegator).from("CustomTimePeriod").where(openedCurrentFiscalPeriodsCond, EntityOperator.AND).queryFirst();
+                GenericValue openedCurrentFiscalPeriods = EntityQuery.use(delegator).from("CustomTimePeriod").where(openedCurrentFiscalPeriodsCond, EntityOperator.AND).filterByDate().queryFirst();
                 if (UtilValidate.isNotEmpty(openedCurrentFiscalPeriods)) {
                     isFiscalPeriodSet = true;
                 }
